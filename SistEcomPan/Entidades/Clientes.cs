@@ -16,6 +16,7 @@ namespace Entidades
         public string Correo { get; set; }
         public string Direccion { get; set; }
         public string Telefono { get; set; }
+        public int IdDistrito { get; set; }
         public Distritos Distrito { get; set; }
         public string NombreUsuario { get; set; }
         public string Clave { get; set; }

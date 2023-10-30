@@ -10,6 +10,7 @@ namespace Entidades
     {
         public int IdMensaje { get; set; }
         public int IdCliente { get; set; }
+        public Clientes Cliente { get; set; }
         public string Asunto { get; set; }
         public string Descripcion{ get; set; }
         public DateTime Fecha { get; set; }

@@ -9,6 +9,7 @@ namespace Entidades
     public class Descuentos
     {
         public int IdDescuento { get; set; }
+        public int IdProducto { get; set; }
         public Productos Producto { get; set; }
         public decimal Descuento { get; set; }
         public bool Estado { get; set; }
