@@ -12,8 +12,9 @@ namespace IOC
 {
     public static class Dependencia
     {
-        public static void InyectarDependencias(this IServiceCollection services,IConfiguration configuration)
+        public static void InyectarDependencias(this IServiceCollection services)
         {
+            
 
         }
     }
