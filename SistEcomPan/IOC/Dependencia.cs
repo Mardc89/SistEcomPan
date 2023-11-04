@@ -15,7 +15,7 @@ namespace IOC
     {
         public static void InyectarDependencias(this IServiceCollection services)
         {
-            services.AddTransient<IDataBaseService,DataBaseService>();
+            services.AddTransient<IPedidoRepository,PedidoRepository>();
 
         }
     }
