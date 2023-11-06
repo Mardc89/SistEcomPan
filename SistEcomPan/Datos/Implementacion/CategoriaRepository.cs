@@ -2,10 +2,12 @@
 using Entidades;
 using Microsoft.Extensions.Configuration;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -38,6 +40,9 @@ namespace Datos.Implementacion
                         {
                             IdCategoria = Convert.ToInt32(dr["IdCategoria"]),
                             TipoDeCategoria = dr["TipoDeCategoria"].ToString(),
+                            FechaRegistro = dr.GetDateTime(dr.GetOrdinal("FechaRegistro")),
+                            Estado= dr.GetBoolean(dr.GetOrdinal("Estado"))
+
                         });
                     }
                 }
@@ -46,20 +51,75 @@ namespace Datos.Implementacion
             return lista;
         }
 
-        public Task<bool> Delete(int d)
+        public async Task<bool> Guardar(Categorias modelo)
         {
-            throw new NotImplementedException();
+            using (var conexion = new SqlConnection(_cadenaSQL))
+            {
+                conexion.Open();
+                SqlCommand cmd = new SqlCommand("SPGuardarCategorias", conexion);
+                cmd.Parameters.AddWithValue("TipoDeCategoria", modelo.TipoDeCategoria);
+                cmd.Parameters.AddWithValue("FechaRegistro", modelo.FechaRegistro);
+                cmd.Parameters.AddWithValue("Estado", modelo.Estado);
+                cmd.CommandType = CommandType.StoredProcedure;
+
+                int filaAfectada = await cmd.ExecuteNonQueryAsync();
+
+                if (filaAfectada> 0)
+                    return true;
+                else
+                    return false;
+
+
+            }
         }
 
-        public Task<bool> Editar(Categorias modelo)
+
+
+
+        public async Task<bool> Editar(Categorias modelo)
         {
-            throw new NotImplementedException();
+            using (var conexion = new SqlConnection(_cadenaSQL))
+            {
+                conexion.Open();
+                SqlCommand cmd = new SqlCommand("SPEditarCategorias", conexion);
+                cmd.Parameters.AddWithValue("IdCategoria", modelo.IdCategoria);
+                cmd.Parameters.AddWithValue("TipoDeCategoria", modelo.TipoDeCategoria);
+                cmd.Parameters.AddWithValue("FechaRegistro", modelo.FechaRegistro);
+                cmd.Parameters.AddWithValue("Estado", modelo.Estado);
+                cmd.CommandType = CommandType.StoredProcedure;
+
+                int filaAfectada = await cmd.ExecuteNonQueryAsync();
+
+                if (filaAfectada > 0)
+                    return true;
+                else
+                    return false;
+
+
+            }
+
         }
 
-        public Task<bool> Guardar(Categorias modelo)
+        public async Task<bool> Delete(int id)
         {
-            throw new NotImplementedException();
+            using (var conexion = new SqlConnection(_cadenaSQL))
+            {
+                conexion.Open();
+                SqlCommand cmd = new SqlCommand("SPEliminarCategorias", conexion);
+                cmd.Parameters.AddWithValue("IdCategoria",id);
+                cmd.CommandType = CommandType.StoredProcedure;
+
+                int filaAfectada = await cmd.ExecuteNonQueryAsync();
+
+                if (filaAfectada > 0)
+                    return true;
+                else
+                    return false;
+
+
+            }
         }
+
 
 
     }
