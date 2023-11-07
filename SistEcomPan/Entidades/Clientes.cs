@@ -25,11 +25,5 @@ namespace Entidades
         public string UrlFoto  { get; set; }
         public string NombreFoto{ get; set; }
 
-
-
-
-
-
-
     }
 }
