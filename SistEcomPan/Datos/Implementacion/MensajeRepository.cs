@@ -7,38 +7,41 @@ using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Datos.Interfaces;
 
 namespace Datos.Implementacion
 {
-    public class DistritoRepository:IGenericRepository<Distritos>
+     public class MensajeRepository
     {
         private readonly string _cadenaSQL = "";
 
-        public DistritoRepository(IConfiguration configuration)
+        public MensajeRepository(IConfiguration configuration)
         {
             _cadenaSQL = configuration.GetConnectionString("cadenaSQL");
 
         }
 
-        public async Task<List<Distritos>> Lista()
+        public async Task<List<Mensajes>> Lista()
         {
-            List<Distritos> lista = new List<Distritos>();
+            List<Mensajes> lista = new List<Mensajes>();
             using (var conexion = new SqlConnection(_cadenaSQL))
             {
                 conexion.Open();
-                SqlCommand cmd = new SqlCommand("SPListaDistritos", conexion);
+                SqlCommand cmd = new SqlCommand("SPListaMensajes", conexion);
                 cmd.CommandType = CommandType.StoredProcedure;
 
                 using (var dr = await cmd.ExecuteReaderAsync())
                 {
                     while (await dr.ReadAsync())
                     {
-                        lista.Add(new Distritos
+                        lista.Add(new Mensajes
                         {
-                            IdDistrito = Convert.ToInt32(dr["IdDistrito"]),
-                            NombreDistrito = dr["NombreDistrito"].ToString()
-                        }) ;
+                            IdMensaje = Convert.ToInt32(dr["IdMensaje"]),
+                            IdCliente = Convert.ToInt32(dr["IdCliente"]),
+                            Asunto = dr["Asunto"].ToString(),
+                            Descripcion = dr["Descripcion"].ToString(),
+                            Fecha = dr.GetDateTime(dr.GetOrdinal("Fecha"))
+
+                        });
                     }
                 }
             }
@@ -46,13 +49,17 @@ namespace Datos.Implementacion
             return lista;
         }
 
-        public async Task<bool> Guardar(Distritos modelo)
+        public async Task<bool> Guardar (Mensajes modelo)
         {
             using (var conexion = new SqlConnection(_cadenaSQL))
             {
                 conexion.Open();
-                SqlCommand cmd = new SqlCommand("SPGuardarDistritos", conexion);
-                cmd.Parameters.AddWithValue("NombreDistrito", modelo.NombreDistrito);
+                SqlCommand cmd = new SqlCommand("SPGuardarCategorias", conexion);
+                cmd.Parameters.AddWithValue("IdCliente", modelo.IdCliente);
+                cmd.Parameters.AddWithValue("Asunto", modelo.Asunto);
+                cmd.Parameters.AddWithValue("Descripcion", modelo.Descripcion);
+                cmd.Parameters.AddWithValue("Fecha", modelo.Fecha);
+
                 cmd.CommandType = CommandType.StoredProcedure;
 
                 int filaAfectada = await cmd.ExecuteNonQueryAsync();
@@ -69,14 +76,17 @@ namespace Datos.Implementacion
 
 
 
-        public async Task<bool> Editar(Distritos modelo)
+        public async Task<bool> Editar(Mensajes modelo)
         {
             using (var conexion = new SqlConnection(_cadenaSQL))
             {
                 conexion.Open();
-                SqlCommand cmd = new SqlCommand("SPEditarDistritos", conexion);
-                cmd.Parameters.AddWithValue("IdDistrito", modelo.IdDistrito);
-                cmd.Parameters.AddWithValue("NombreDistrito", modelo.NombreDistrito);
+                SqlCommand cmd = new SqlCommand("SPEditarMensajes", conexion);
+                cmd.Parameters.AddWithValue("IdMensaje", modelo.IdMensaje);
+                cmd.Parameters.AddWithValue("IdCliente", modelo.IdCliente);
+                cmd.Parameters.AddWithValue("Descuento", modelo.Asunto);
+                cmd.Parameters.AddWithValue("Asunto", modelo.Descripcion);
+                cmd.Parameters.AddWithValue("Fecha", modelo.Fecha);
                 cmd.CommandType = CommandType.StoredProcedure;
 
                 int filaAfectada = await cmd.ExecuteNonQueryAsync();
@@ -96,8 +106,8 @@ namespace Datos.Implementacion
             using (var conexion = new SqlConnection(_cadenaSQL))
             {
                 conexion.Open();
-                SqlCommand cmd = new SqlCommand("SPEliminarDistritos", conexion);
-                cmd.Parameters.AddWithValue("IdDistrito", id);                                                                                                                                                                                             
+                SqlCommand cmd = new SqlCommand("SPEliminarMensajes", conexion);
+                cmd.Parameters.AddWithValue("IdMensaje", id);
                 cmd.CommandType = CommandType.StoredProcedure;
 
                 int filaAfectada = await cmd.ExecuteNonQueryAsync();
@@ -110,7 +120,6 @@ namespace Datos.Implementacion
 
             }
         }
-
 
     }
 }
