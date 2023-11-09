@@ -42,8 +42,7 @@ namespace Datos.Implementacion
                             PagoDelCliente = Convert.ToDecimal(dr["PagoDelCliente"]),
                             VueltoDelCliente = Convert.ToDecimal(dr["VueltoDelCliente"]),
                             MontoDeuda = Convert.ToDecimal(dr["MontoDeuda"]),
-                            FechaDeuda = dr.GetDateTime(dr.GetOrdinal("FechaDeuda"))
-                            
+                            FechaDeuda = Convert.ToDateTime(dr["FechaDeuda"])
                         });
                     }
                 }

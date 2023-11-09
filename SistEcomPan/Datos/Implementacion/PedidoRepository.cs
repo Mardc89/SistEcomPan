@@ -42,7 +42,7 @@ namespace Datos.Implementacion
                             Codigo = dr["Codigo"].ToString(),
                             MontoTotal = Convert.ToDecimal(dr["MontoTotal"]),
                             Estado = dr["Estado"].ToString(),                          
-                            FechaPedido = dr.GetDateTime(dr.GetOrdinal("FechaPedido"))
+                            FechaPedido = Convert.ToDateTime(dr["FechaPedido"])
                         });
                     }
                 }

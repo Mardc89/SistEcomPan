@@ -11,47 +11,44 @@ using Datos.Interfaces;
 
 namespace Datos.Implementacion
 {
-    public class ClienteRepository:IGenericRepository<Clientes>
+    public class UsuarioRepository:IGenericRepository<Usuarios>
     {
         private readonly string _cadenaSQL = "";
 
-        public ClienteRepository(IConfiguration configuration)
+        public UsuarioRepository(IConfiguration configuration)
         {
             _cadenaSQL = configuration.GetConnectionString("cadenaSQL");
 
         }
 
-        public async Task<List<Clientes>> Lista()
+        public async Task<List<Usuarios>> Lista()
         {
-            List<Clientes> lista = new List<Clientes>();
+            List<Usuarios> lista = new List<Usuarios>();
             using (var conexion = new SqlConnection(_cadenaSQL))
             {
                 conexion.Open();
-                SqlCommand cmd = new SqlCommand("SPListaClientes", conexion);
+                SqlCommand cmd = new SqlCommand("SPListaUsuarios", conexion);
                 cmd.CommandType = CommandType.StoredProcedure;
 
                 using (var dr = await cmd.ExecuteReaderAsync())
                 {
                     while (await dr.ReadAsync())
                     {
-                        lista.Add(new Clientes
+                        lista.Add(new Usuarios
                         {
-                            IdCliente = Convert.ToInt32(dr["IdCliente"]),
-                            TipoCliente = dr["TipoCliente"].ToString(),
+                            IdUsuario = Convert.ToInt32(dr["Idusuario"]),
                             Dni = dr["Dni"].ToString(),
                             Nombres = dr["Nombres"].ToString(),
                             Apellidos = dr["Apellidos"].ToString(),
-                            Correo = dr["Correo"].ToString(),
-                            Direccion = dr["Direccion"].ToString(),
-                            Telefono = dr["Telefono"].ToString(),
-                            IdDistrito =Convert.ToInt32(dr["IdDistrito"]),
+                            Correo = dr["Correo"].ToString(),                        
                             NombreUsuario = dr["NombreUsuario"].ToString(),
-                            Clave = dr["Clave"].ToString(),
+                            Clave = dr["Clave"].ToString(), 
+                            IdRol = Convert.ToInt32(dr["IdRol"]),
                             FechaRegistro = Convert.ToDateTime(dr["FechaRegistro"]),
-                            Estado = dr.GetBoolean(dr.GetOrdinal("Estado")),
-                            UrlFoto= dr["UrlFoto"].ToString(),
-                            NombreFoto= dr["NombreFoto"].ToString()
-                        }); 
+                            Estado = Convert.ToBoolean(dr["Estado"]),
+                            UrlFoto = dr["UrlFoto"].ToString(),
+                            NombreFoto = dr["NombreFoto"].ToString()                         
+                        });
                     }
                 }
             }
@@ -59,22 +56,19 @@ namespace Datos.Implementacion
             return lista;
         }
 
-        public async Task<bool> Guardar(Clientes modelo)
+        public async Task<bool> Guardar(Usuarios modelo)
         {
             using (var conexion = new SqlConnection(_cadenaSQL))
             {
                 conexion.Open();
-                SqlCommand cmd = new SqlCommand("SPGuardarClientes", conexion);
-                cmd.Parameters.AddWithValue("TipoCliente", modelo.TipoCliente);
+                SqlCommand cmd = new SqlCommand("SPGuardarUsuarios", conexion);
                 cmd.Parameters.AddWithValue("Dni", modelo.Dni);
                 cmd.Parameters.AddWithValue("Nombres", modelo.Nombres);
                 cmd.Parameters.AddWithValue("Apellidos", modelo.Apellidos);
-                cmd.Parameters.AddWithValue("Correo", modelo.Correo);
-                cmd.Parameters.AddWithValue("Direccion", modelo.Direccion);
-                cmd.Parameters.AddWithValue("Telefono", modelo.Telefono);
-                cmd.Parameters.AddWithValue("IdDistrito", modelo.IdDistrito);
-                cmd.Parameters.AddWithValue("NombreUsuario", modelo.NombreUsuario);
+                cmd.Parameters.AddWithValue("Correo", modelo.Correo);   
+                cmd.Parameters.AddWithValue("NombreUsuario", modelo.NombreUsuario);    
                 cmd.Parameters.AddWithValue("Clave", modelo.Clave);
+                cmd.Parameters.AddWithValue("IdRol", modelo.IdRol);                       
                 cmd.Parameters.AddWithValue("FechaRegistro", modelo.FechaRegistro);
                 cmd.Parameters.AddWithValue("Estado", modelo.Estado);
                 cmd.Parameters.AddWithValue("UrlFoto", modelo.UrlFoto);
@@ -95,23 +89,20 @@ namespace Datos.Implementacion
 
 
 
-        public async Task<bool> Editar(Clientes modelo)
+        public async Task<bool> Editar(Usuarios modelo)
         {
             using (var conexion = new SqlConnection(_cadenaSQL))
             {
                 conexion.Open();
-                SqlCommand cmd = new SqlCommand("SPEditarClientes", conexion);
-                cmd.Parameters.AddWithValue("IdCliente", modelo.IdCliente);
-                cmd.Parameters.AddWithValue("TipoCliente", modelo.TipoCliente);
+                SqlCommand cmd = new SqlCommand("SPEditarUsuarios", conexion);
+                cmd.Parameters.AddWithValue("IdUsuario", modelo.IdUsuario);
                 cmd.Parameters.AddWithValue("Dni", modelo.Dni);
                 cmd.Parameters.AddWithValue("Nombres", modelo.Nombres);
                 cmd.Parameters.AddWithValue("Apellidos", modelo.Apellidos);
                 cmd.Parameters.AddWithValue("Correo", modelo.Correo);
-                cmd.Parameters.AddWithValue("Direccion", modelo.Direccion);
-                cmd.Parameters.AddWithValue("Telefono", modelo.Telefono);
-                cmd.Parameters.AddWithValue("IdDistrito", modelo.IdDistrito);
                 cmd.Parameters.AddWithValue("NombreUsuario", modelo.NombreUsuario);
                 cmd.Parameters.AddWithValue("Clave", modelo.Clave);
+                cmd.Parameters.AddWithValue("IdRol", modelo.IdRol);
                 cmd.Parameters.AddWithValue("FechaRegistro", modelo.FechaRegistro);
                 cmd.Parameters.AddWithValue("Estado", modelo.Estado);
                 cmd.Parameters.AddWithValue("UrlFoto", modelo.UrlFoto);
@@ -136,8 +127,8 @@ namespace Datos.Implementacion
             using (var conexion = new SqlConnection(_cadenaSQL))
             {
                 conexion.Open();
-                SqlCommand cmd = new SqlCommand("SPEliminarClientes", conexion);
-                cmd.Parameters.AddWithValue("IdCliente", id);
+                SqlCommand cmd = new SqlCommand("SPEliminarUsuarios", conexion);
+                cmd.Parameters.AddWithValue("IdUsuario", id);
                 cmd.CommandType = CommandType.StoredProcedure;
 
                 int filaAfectada = await cmd.ExecuteNonQueryAsync();
@@ -150,7 +141,5 @@ namespace Datos.Implementacion
 
             }
         }
-
     }
-
 }

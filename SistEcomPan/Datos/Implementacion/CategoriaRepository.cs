@@ -40,8 +40,8 @@ namespace Datos.Implementacion
                         {
                             IdCategoria = Convert.ToInt32(dr["IdCategoria"]),
                             TipoDeCategoria = dr["TipoDeCategoria"].ToString(),
-                            FechaRegistro = dr.GetDateTime(dr.GetOrdinal("FechaRegistro")),
-                            Estado= dr.GetBoolean(dr.GetOrdinal("Estado"))
+                            FechaRegistro = Convert.ToDateTime(dr["FechaRegistro"]),
+                            Estado = dr.GetBoolean(dr.GetOrdinal("Estado"))
 
                         });
                     }

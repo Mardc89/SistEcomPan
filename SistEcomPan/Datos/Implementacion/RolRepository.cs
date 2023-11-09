@@ -7,39 +7,38 @@ using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Datos.Interfaces;
 
 namespace Datos.Implementacion
 {
-     public class MensajeRepository
+    public class RolRepository:IGenericRepository<Roles>
     {
         private readonly string _cadenaSQL = "";
 
-        public MensajeRepository(IConfiguration configuration)
+        public RolRepository(IConfiguration configuration)
         {
             _cadenaSQL = configuration.GetConnectionString("cadenaSQL");
 
         }
 
-        public async Task<List<Mensajes>> Lista()
+        public async Task<List<Roles>> Lista()
         {
-            List<Mensajes> lista = new List<Mensajes>();
+            List<Roles> lista = new List<Roles>();
             using (var conexion = new SqlConnection(_cadenaSQL))
             {
                 conexion.Open();
-                SqlCommand cmd = new SqlCommand("SPListaMensajes", conexion);
+                SqlCommand cmd = new SqlCommand("SPListaRoles", conexion);
                 cmd.CommandType = CommandType.StoredProcedure;
 
                 using (var dr = await cmd.ExecuteReaderAsync())
                 {
                     while (await dr.ReadAsync())
                     {
-                        lista.Add(new Mensajes
+                        lista.Add(new Roles
                         {
-                            IdMensaje = Convert.ToInt32(dr["IdMensaje"]),
-                            IdCliente = Convert.ToInt32(dr["IdCliente"]),
-                            Asunto = dr["Asunto"].ToString(),
-                            Descripcion = dr["Descripcion"].ToString(),
-                            Fecha = Convert.ToDateTime(dr["Fecha"]),
+                            IdRol = Convert.ToInt32(dr["IdRol"]),
+                            NombreRol = dr["NombreRol"].ToString(),
+                            Estado = Convert.ToBoolean(dr["Estado"])
 
                         });
                     }
@@ -49,17 +48,14 @@ namespace Datos.Implementacion
             return lista;
         }
 
-        public async Task<bool> Guardar (Mensajes modelo)
+        public async Task<bool> Guardar(Roles modelo)
         {
             using (var conexion = new SqlConnection(_cadenaSQL))
             {
                 conexion.Open();
-                SqlCommand cmd = new SqlCommand("SPGuardarCategorias", conexion);
-                cmd.Parameters.AddWithValue("IdCliente", modelo.IdCliente);
-                cmd.Parameters.AddWithValue("Asunto", modelo.Asunto);
-                cmd.Parameters.AddWithValue("Descripcion", modelo.Descripcion);
-                cmd.Parameters.AddWithValue("Fecha", modelo.Fecha);
-
+                SqlCommand cmd = new SqlCommand("SPGuardarRoles", conexion);
+                cmd.Parameters.AddWithValue("NombreRol", modelo.NombreRol);
+                cmd.Parameters.AddWithValue("Estado", modelo.Estado);
                 cmd.CommandType = CommandType.StoredProcedure;
 
                 int filaAfectada = await cmd.ExecuteNonQueryAsync();
@@ -76,17 +72,15 @@ namespace Datos.Implementacion
 
 
 
-        public async Task<bool> Editar(Mensajes modelo)
+        public async Task<bool> Editar(Roles modelo)
         {
             using (var conexion = new SqlConnection(_cadenaSQL))
             {
                 conexion.Open();
-                SqlCommand cmd = new SqlCommand("SPEditarMensajes", conexion);
-                cmd.Parameters.AddWithValue("IdMensaje", modelo.IdMensaje);
-                cmd.Parameters.AddWithValue("IdCliente", modelo.IdCliente);
-                cmd.Parameters.AddWithValue("Descuento", modelo.Asunto);
-                cmd.Parameters.AddWithValue("Asunto", modelo.Descripcion);
-                cmd.Parameters.AddWithValue("Fecha", modelo.Fecha);
+                SqlCommand cmd = new SqlCommand("SPEditarRoles", conexion);
+                cmd.Parameters.AddWithValue("IdRol", modelo.IdRol);
+                cmd.Parameters.AddWithValue("NombreRol", modelo.NombreRol);
+                cmd.Parameters.AddWithValue("Estado", modelo.Estado);
                 cmd.CommandType = CommandType.StoredProcedure;
 
                 int filaAfectada = await cmd.ExecuteNonQueryAsync();
@@ -106,8 +100,8 @@ namespace Datos.Implementacion
             using (var conexion = new SqlConnection(_cadenaSQL))
             {
                 conexion.Open();
-                SqlCommand cmd = new SqlCommand("SPEliminarMensajes", conexion);
-                cmd.Parameters.AddWithValue("IdMensaje", id);
+                SqlCommand cmd = new SqlCommand("SPEliminarRoles", conexion);
+                cmd.Parameters.AddWithValue("IdRol", id);
                 cmd.CommandType = CommandType.StoredProcedure;
 
                 int filaAfectada = await cmd.ExecuteNonQueryAsync();
@@ -120,6 +114,5 @@ namespace Datos.Implementacion
 
             }
         }
-
     }
 }
