@@ -1,5 +1,6 @@
 ﻿using Entidades;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Hosting;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
@@ -8,17 +9,20 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Datos.Interfaces;
+using Microsoft.AspNetCore.Http;
 
 namespace Datos.Implementacion
 {
-    public class UsuarioRepository:IGenericRepository<Usuarios>
+    public class UsuarioRepository:IGenericRepository<Usuarios>,IUsuarioRepository
     {
         private readonly string _cadenaSQL = "";
+        private readonly IHostEnvironment _environment;
+        
 
-        public UsuarioRepository(IConfiguration configuration)
+        public UsuarioRepository(IConfiguration configuration, IHostEnvironment environment)
         {
             _cadenaSQL = configuration.GetConnectionString("cadenaSQL");
-
+            _environment = environment;
         }
 
         public async Task<List<Usuarios>> Lista()
@@ -140,6 +144,16 @@ namespace Datos.Implementacion
 
 
             }
+        }
+
+        public Task<Usuarios> Crear(Usuarios entidad,IFormFile file)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<Usuarios> Editar(Usuarios entidad, Stream foto)
+        {
+            throw new NotImplementedException();
         }
     }
 }

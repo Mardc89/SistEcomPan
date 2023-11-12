@@ -1,4 +1,5 @@
 ﻿using Entidades;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,7 +10,7 @@ namespace Datos.Interfaces
 {
     public interface IUsuarioRepository
     {
-        Task<Usuarios> Crear(Usuarios entidad,Stream foto);
+        Task<Usuarios> Crear(Usuarios entidad,IFormFile file);
         Task<Usuarios> Editar(Usuarios entidad,Stream foto);
     }
 }

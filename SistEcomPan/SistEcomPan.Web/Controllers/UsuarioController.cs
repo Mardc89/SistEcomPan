@@ -6,9 +6,9 @@ namespace SistEcomPan.Web.Controllers
 {
     public class UsuarioController : Controller
     {
-        private readonly IGenericRepository<Usuarios> _usuarios;
+        private readonly IUsuarioRepository _usuarios; 
 
-        public UsuarioController(IGenericRepository<Usuarios> usuarios)
+        public UsuarioController(IUsuarioRepository usuarios)
         {
             _usuarios = usuarios;
         }
@@ -17,8 +17,31 @@ namespace SistEcomPan.Web.Controllers
             return View();
         }
 
-        public IActionResult Crear([FromForm]IFormFile foto, [FromForm] string modelo)
+        public async Task<IActionResult> Crear([FromForm]IFormFile foto, [FromForm] string modelo)
         {
+            try
+            {
+                string nombreFoto = "";
+                
+
+                if(foto != null)
+                {
+                    string nombreEnCodigo=Guid.NewGuid().ToString("N");
+                    string extension = Path.GetExtension(foto.FileName);
+                    nombreFoto=string.Concat(nombreEnCodigo, extension);
+                   
+
+                }
+
+                Usuarios usuarioCreado = await _usuarios.Crear();
+                
+
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
             return View();
         }
     }
