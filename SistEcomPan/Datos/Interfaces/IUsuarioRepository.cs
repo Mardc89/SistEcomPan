@@ -10,7 +10,7 @@ namespace Datos.Interfaces
 {
     public interface IUsuarioRepository
     {
-        Task<Usuarios> Crear(Usuarios entidad,IFormFile file);
+        Task<Usuarios> Crear(Usuarios entidad);
         Task<Usuarios> Editar(Usuarios entidad,Stream foto);
     }
 }

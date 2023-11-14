@@ -13,7 +13,7 @@ using Microsoft.AspNetCore.Http;
 
 namespace Datos.Implementacion
 {
-    public class UsuarioRepository:IGenericRepository<Usuarios>,IUsuarioRepository
+    public class UsuarioRepository:IGenericRepository<Usuarios>
     {
         private readonly string _cadenaSQL = "";
         private readonly IHostEnvironment _environment;
