@@ -9,13 +9,13 @@ namespace SistEcomPan.Web.Controllers
     {
         private readonly IGenericRepository<Usuarios> _usuarios;
         private readonly IHostEnvironment _environment;
-        private readonly IEncriptService _encriptservice;
+        
 
-        public UsuarioController(IGenericRepository<Usuarios> usuarios ,IHostEnvironment environment, IEncriptService encriptservice)
+        public UsuarioController(IGenericRepository<Usuarios> usuarios ,IHostEnvironment environment)
         {
             _usuarios = usuarios;
             _environment=environment;
-            _encriptservice=encriptservice;
+           
 
     }
         public IActionResult Index()
@@ -27,6 +27,8 @@ namespace SistEcomPan.Web.Controllers
         {
             try
             {
+                string NombreFoto = "";
+                Stream fotoStream = null;
 
                 if (foto != null && foto.Length > 0)
                 {
@@ -40,11 +42,13 @@ namespace SistEcomPan.Web.Controllers
 
                     string fullpath = Path.Combine(path, foto.FileName);
 
+                    string nombreCodigo=Guid.NewGuid().ToString("N");
+                    string extension = Path.GetExtension(foto.FileName);
+                    NombreFoto = string.Concat(nombreCodigo, extension);
+                    fotoStream = foto.OpenReadStream();
+
+                    usuario.NombreFoto = NombreFoto;                   
                     usuario.UrlFoto = fullpath;
-                    string ClaveGenerada = _encriptservice.GenerarClave();
-                    usuario.Clave = _encriptservice.ConvertirSha256(ClaveGenerada);
-                                      
-                    bool respuesta=await _usuarios.Guardar(usuario);
 
                     using (var stream = new FileStream(fullpath, FileMode.Create))
                     {
@@ -52,9 +56,11 @@ namespace SistEcomPan.Web.Controllers
 
                     }
 
+
                     return Ok(foto);
                 }
-
+                                 
+                bool respuesta=await _usuarios.Guardar(usuario);
                 return BadRequest();
 
             }
