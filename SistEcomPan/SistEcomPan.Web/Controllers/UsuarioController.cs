@@ -7,13 +7,13 @@ namespace SistEcomPan.Web.Controllers
 {
     public class UsuarioController : Controller
     {
-        private readonly IGenericRepository<Usuarios> _usuarios;
+        private readonly IUsuarioService _usuarioServicio;
         private readonly IHostEnvironment _environment;
         
 
-        public UsuarioController(IGenericRepository<Usuarios> usuarios ,IHostEnvironment environment)
+        public UsuarioController(IUsuarioService usuarioServicio ,IHostEnvironment environment)
         {
-            _usuarios = usuarios;
+            _usuarioServicio = usuarioServicio;
             _environment=environment;
            
 
@@ -46,8 +46,7 @@ namespace SistEcomPan.Web.Controllers
                     string extension = Path.GetExtension(foto.FileName);
                     NombreFoto = string.Concat(nombreCodigo, extension);
                     fotoStream = foto.OpenReadStream();
-
-                    usuario.NombreFoto = NombreFoto;                   
+                 
                     usuario.UrlFoto = fullpath;
 
                     using (var stream = new FileStream(fullpath, FileMode.Create))
@@ -55,12 +54,9 @@ namespace SistEcomPan.Web.Controllers
                         foto.CopyTo(stream);
 
                     }
-
-
-                    return Ok(foto);
                 }
-                                 
-                bool respuesta=await _usuarios.Guardar(usuario);
+                string urlPlantillaCorreo = $"{this.Request.Scheme}://{this.Request.Host}/Plantilla/EnviarClave?correo=[correo]&clave=[clave]";
+                Usuarios usuarioCreado=await _usuarioServicio.Crear(usuario);
                 return BadRequest();
 
             }

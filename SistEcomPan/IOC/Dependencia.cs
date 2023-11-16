@@ -18,6 +18,7 @@ namespace IOC
         {
             services.AddTransient<IPedidoRepository,PedidoRepository>();
             services.AddTransient<IGenericRepository<Categorias>, CategoriaRepository>();
+            services.AddTransient<IGenericRepository<Usuarios>, ClassPr>();
 
         }
     }

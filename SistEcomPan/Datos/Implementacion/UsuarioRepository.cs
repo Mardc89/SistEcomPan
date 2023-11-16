@@ -10,6 +10,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Datos.Interfaces;
 using Microsoft.AspNetCore.Http;
+using System.Reflection;
 
 namespace Datos.Implementacion
 {
@@ -60,35 +61,7 @@ namespace Datos.Implementacion
             return lista;
         }
 
-        public async Task<bool> Guardar(Usuarios modelo)
-        {
-            using (var conexion = new SqlConnection(_cadenaSQL))
-            {
-                conexion.Open();
-                SqlCommand cmd = new SqlCommand("SPGuardarUsuarios", conexion);
-                cmd.Parameters.AddWithValue("Dni", modelo.Dni);
-                cmd.Parameters.AddWithValue("Nombres", modelo.Nombres);
-                cmd.Parameters.AddWithValue("Apellidos", modelo.Apellidos);
-                cmd.Parameters.AddWithValue("Correo", modelo.Correo);   
-                cmd.Parameters.AddWithValue("NombreUsuario", modelo.NombreUsuario);    
-                cmd.Parameters.AddWithValue("Clave", modelo.Clave);
-                cmd.Parameters.AddWithValue("IdRol", modelo.IdRol);                       
-                cmd.Parameters.AddWithValue("FechaRegistro", modelo.FechaRegistro);
-                cmd.Parameters.AddWithValue("Estado", modelo.Estado);
-                cmd.Parameters.AddWithValue("UrlFoto", modelo.UrlFoto);
-                cmd.Parameters.AddWithValue("NombreFoto", modelo.NombreFoto);
-                cmd.CommandType = CommandType.StoredProcedure;
 
-                int filaAfectada = await cmd.ExecuteNonQueryAsync();
-
-                if (filaAfectada > 0)
-                    return true;
-                else
-                    return false;
-
-
-            }
-        }
 
 
 
@@ -146,12 +119,42 @@ namespace Datos.Implementacion
             }
         }
 
-        public Task<Usuarios> Crear(Usuarios entidad,IFormFile file)
+        public async Task<Usuarios> Crear(Usuarios modelo)
+        {
+            try
+            {
+                using (var conexion = new SqlConnection(_cadenaSQL))
+                {
+                conexion.Open();
+                SqlCommand cmd = new SqlCommand("SPGuardarUsuarios", conexion);
+                cmd.Parameters.AddWithValue("Dni", modelo.Dni);
+                cmd.Parameters.AddWithValue("Nombres", modelo.Nombres);
+                cmd.Parameters.AddWithValue("Apellidos", modelo.Apellidos);
+                cmd.Parameters.AddWithValue("Correo", modelo.Correo);
+                cmd.Parameters.AddWithValue("NombreUsuario", modelo.NombreUsuario);
+                cmd.Parameters.AddWithValue("Clave", modelo.Clave);
+                cmd.Parameters.AddWithValue("IdRol", modelo.IdRol);
+                cmd.Parameters.AddWithValue("FechaRegistro", modelo.FechaRegistro);
+                cmd.Parameters.AddWithValue("Estado", modelo.Estado);
+                cmd.Parameters.AddWithValue("UrlFoto", modelo.UrlFoto);
+                cmd.Parameters.AddWithValue("NombreFoto", modelo.NombreFoto);
+                cmd.CommandType = CommandType.StoredProcedure;
+                }
+                return modelo;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+
+        }
+
+        public Task<Usuarios> Editar(Usuarios entidad, Stream foto)
         {
             throw new NotImplementedException();
         }
 
-        public Task<Usuarios> Editar(Usuarios entidad, Stream foto)
+        public Task<bool> Guardar(Usuarios modelo)
         {
             throw new NotImplementedException();
         }
