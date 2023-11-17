@@ -4,6 +4,7 @@ using Negocio.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -13,11 +14,13 @@ namespace Negocio.Implementacion
     {
         private readonly IEncriptService _encriptservice;
         private readonly IUsuarioRepository _usuarios;
-        public UsuarioService(IEncriptService encriptservice, IUsuarioRepository usuarios)
+        private readonly ICorreoService _correoService;
+        public UsuarioService(IEncriptService encriptservice, IUsuarioRepository usuarios, ICorreoService correoService)
         {
             _encriptservice = encriptservice;
-            _usuarios=usuarios;
-    }
+            _usuarios = usuarios;
+            _correoService = correoService;
+        }
 
         public Task<bool> CambiarClave(int IdUsuario, string claveActual, string claveNueva)
         {
@@ -35,11 +38,44 @@ namespace Negocio.Implementacion
                 Usuarios usuarioCreado = await _usuarios.Crear(entidad);
 
                 if (usuarioCreado.IdUsuario == 0)
-                    throw new TaskCanceledException("No se pudo crear Usuario");
+                    throw new TaskCanceledException("No se pudo crear el Usuario");
+
+                if (UrlPlantillaCorreo != "")
+                {
+                    UrlPlantillaCorreo = UrlPlantillaCorreo.Replace("[correo]", usuarioCreado.Correo).Replace("[clave]","");
+
+                    string htmlCorreo = "";
+
+                    HttpWebRequest request = (HttpWebRequest)WebRequest.Create(UrlPlantillaCorreo);
+                    HttpWebResponse response = (HttpWebResponse)request.GetResponse();
+
+                    if (response.StatusCode == HttpStatusCode.OK)
+                    {
+
+                        using (Stream dataStream = response.GetResponseStream())
+                        {
+                            StreamReader readerStream = null;
+
+                            if (response.CharacterSet == null)
+                                readerStream = new StreamReader(dataStream);
+                            else
+                                readerStream = new StreamReader(dataStream, Encoding.GetEncoding(response.CharacterSet));
+
+                            htmlCorreo = readerStream.ReadToEnd();
+                            response.Close();
+                            readerStream.Close();
+
+                        }
 
 
+                    }
 
-            return usuarioCreado;
+                    if (htmlCorreo != "")
+                        await _correoService.EnviarCorreo(usuarioCreado.Correo, "Cuenta Creada", htmlCorreo);
+                }
+
+               
+                return usuarioCreado;
             }
             catch (Exception)
             {
