@@ -133,5 +133,9 @@ namespace Datos.Implementacion
             throw new NotImplementedException();
         }
 
+        public Task<IQueryable<Pedidos>> Consultar(string consulta)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

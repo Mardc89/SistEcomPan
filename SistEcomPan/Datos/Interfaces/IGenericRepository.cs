@@ -13,6 +13,7 @@ namespace Datos.Interfaces
         Task<bool> Guardar(T modelo);
         Task<bool> Editar(T modelo);
         Task<bool> Delete(int d);
-        Task<IQueryable<T>> Consultar(Expression<Func<T, bool>> filtro = null);
+        Task<IQueryable<T>> Consultar(string consulta);
+        Task<T>Obtener(string consulta);
     }
 }

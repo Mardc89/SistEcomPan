@@ -121,9 +121,92 @@ namespace Datos.Implementacion
             }
         }
 
-        public Task<IQueryable<Categorias>> Consultar(Expression<Func<Categorias, bool>> filtro = null)
+        public async Task<IQueryable<Categorias>> Consultar(string consulta)
         {
-            throw new NotImplementedException();
+            List<Categorias> lista = new List<Categorias>();
+
+            using (var connection = new SqlConnection(_cadenaSQL))
+            {
+                using (var command = new SqlCommand("BuscarCategoria", connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+
+                    command.Parameters.Add("@Texto", SqlDbType.NVarChar, 100).Value =consulta;
+
+                    try
+                    {
+                        connection.Open();
+                        SqlDataReader dr = command.ExecuteReader();
+
+                        while (dr.Read())
+                        {
+                            lista.Add(new Categorias
+                            {
+                                IdCategoria = Convert.ToInt32(dr["IdCategoria"]),
+                                TipoDeCategoria = dr["TipoDeCategoria"].ToString(),
+                                FechaRegistro = Convert.ToDateTime(dr["FechaRegistro"]),
+                                Estado = dr.GetBoolean(dr.GetOrdinal("Estado"))
+
+                            });
+
+                        }
+
+                        dr.Close();
+                    }
+                    catch (Exception ex)
+                    {
+                        // Manejo de excepciones
+                        Console.WriteLine("Error al ejecutar el procedimiento almacenado: " + ex.Message);
+                    }
+                }
+            }
+
+            return lista.AsQueryable();
+
+        }
+
+        public async Task<Categorias> Obtener(string consulta)
+        {
+            List<Categorias> lista = new List<Categorias>();
+
+            using (var connection = new SqlConnection(_cadenaSQL))
+            {
+                using (var command = new SqlCommand("BuscarCategoria", connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+
+                    command.Parameters.Add("@Texto", SqlDbType.NVarChar, 100).Value = consulta;
+
+                    try
+                    {
+                        connection.Open();
+                        SqlDataReader dr = command.ExecuteReader();
+
+                        while (dr.Read())
+                        {
+                            lista.Add(new Categorias
+                            {
+                                IdCategoria = Convert.ToInt32(dr["IdCategoria"]),
+                                TipoDeCategoria = dr["TipoDeCategoria"].ToString(),
+                                FechaRegistro = Convert.ToDateTime(dr["FechaRegistro"]),
+                                Estado = dr.GetBoolean(dr.GetOrdinal("Estado"))
+
+                            });
+
+                        }
+
+                        dr.Close();
+                    }
+                    catch (Exception ex)
+                    {
+                        // Manejo de excepciones
+                        Console.WriteLine("Error al ejecutar el procedimiento almacenado: " + ex.Message);
+                    }
+                }
+            }
+
+            return lista;
+
         }
     }
 }
