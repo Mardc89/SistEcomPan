@@ -84,5 +84,10 @@ namespace Datos.Implementacion
         {
             throw new NotImplementedException();
         }
+
+        public Task<Configuracion> Obtener(Configuracion modelo)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

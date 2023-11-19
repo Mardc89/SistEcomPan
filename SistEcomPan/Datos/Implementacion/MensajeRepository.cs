@@ -7,10 +7,11 @@ using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Datos.Interfaces;
 
 namespace Datos.Implementacion
 {
-     public class MensajeRepository
+     public class MensajeRepository:IGenericRepository<Mensajes>
     {
         private readonly string _cadenaSQL = "";
 
@@ -121,5 +122,9 @@ namespace Datos.Implementacion
             }
         }
 
+        public Task<IQueryable<Mensajes>> Consultar(string consulta)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

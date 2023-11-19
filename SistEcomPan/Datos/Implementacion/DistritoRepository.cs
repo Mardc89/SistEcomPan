@@ -111,6 +111,9 @@ namespace Datos.Implementacion
             }
         }
 
-
+        public Task<IQueryable<Distritos>> Consultar(string consulta)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

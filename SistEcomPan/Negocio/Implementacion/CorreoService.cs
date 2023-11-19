@@ -24,7 +24,7 @@ namespace Negocio.Implementacion
         {
             try
             {
-                IQueryable<Configuracion> query = await _repositorio.Consultar("");
+                IQueryable<Configuracion> query = await _repositorio.Consultar("ServicioCorreo");
                 Dictionary<string, string> Config = query.ToDictionary(keySelector: c => c.Propiedad, elementSelector: c => c.Valor);
 
                 var credenciales = new NetworkCredential(Config["correo"], Config["clave"]);

@@ -151,6 +151,10 @@ namespace Datos.Implementacion
             }
         }
 
+        public Task<IQueryable<Clientes>> Consultar(string consulta)
+        {
+            throw new NotImplementedException();
+        }
     }
 
 }

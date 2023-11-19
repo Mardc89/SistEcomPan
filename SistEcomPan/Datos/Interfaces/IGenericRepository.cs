@@ -14,6 +14,5 @@ namespace Datos.Interfaces
         Task<bool> Editar(T modelo);
         Task<bool> Delete(int d);
         Task<IQueryable<T>> Consultar(string consulta);
-        Task<T>Obtener(string consulta);
     }
 }

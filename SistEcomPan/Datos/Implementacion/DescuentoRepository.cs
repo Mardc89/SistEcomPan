@@ -118,5 +118,9 @@ namespace Datos.Implementacion
             }
         }
 
+        public Task<IQueryable<Descuentos>> Consultar(string consulta)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

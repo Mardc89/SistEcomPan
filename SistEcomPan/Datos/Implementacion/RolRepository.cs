@@ -114,5 +114,15 @@ namespace Datos.Implementacion
 
             }
         }
+
+        public Task<IQueryable<Roles>> Consultar(string consulta)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<Roles> Obtener(Roles modelo)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

@@ -126,5 +126,10 @@ namespace Datos.Implementacion
 
             }
         }
+
+        public Task<IQueryable<Pagos>> Consultar(string consulta)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

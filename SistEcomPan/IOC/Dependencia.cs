@@ -9,6 +9,8 @@ using Microsoft.Extensions;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Entidades;
+using Negocio.Implementacion;
+using Negocio.Interfaces;
 
 namespace IOC
 {
@@ -18,7 +20,10 @@ namespace IOC
         {
             services.AddTransient<IPedidoRepository,PedidoRepository>();
             services.AddTransient<IGenericRepository<Categorias>, CategoriaRepository>();
-            services.AddTransient<IGenericRepository<Usuarios>, ClassPr>();
+            services.AddScoped<ICorreoService,CorreoService>();
+            services.AddScoped<IEncriptService,EncriptService>();
+            services.AddScoped<IGenericRepository<Roles>,RolRepository>();
+            services.AddScoped<IRolService, RolService>();
 
         }
     }
