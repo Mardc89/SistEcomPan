@@ -1,4 +1,5 @@
-﻿using Datos.Interfaces;
+﻿using Datos.Implementacion;
+using Datos.Interfaces;
 using Entidades;
 using Negocio.Interfaces;
 using System;
@@ -12,14 +13,14 @@ namespace Negocio.Implementacion
 {
     public class UsuarioService : IUsuarioService
     {
+        private readonly IGenericRepository<Usuarios> _repositorio;
         private readonly IEncriptService _encriptservice;
-        private readonly IUsuarioRepository _usuarios;
         private readonly ICorreoService _correoService;
-        public UsuarioService(IEncriptService encriptservice, IUsuarioRepository usuarios, ICorreoService correoService)
+        public UsuarioService(IEncriptService encriptservice, ICorreoService correoService, IGenericRepository<Usuarios> repositorio)
         {
             _encriptservice = encriptservice;
-            _usuarios = usuarios;
             _correoService = correoService;
+            _repositorio = repositorio;
         }
 
         public Task<bool> CambiarClave(int IdUsuario, string claveActual, string claveNueva)
@@ -29,13 +30,14 @@ namespace Negocio.Implementacion
 
         public async Task<Usuarios> Crear(Usuarios entidad, Stream Foto = null, string NombreFoto = "", string UrlPlantillaCorreo = "")
         {
+
             try
             {
                 string Clave = entidad.Clave;
                 entidad.Clave = _encriptservice.ConvertirSha256(Clave);
                 entidad.NombreFoto = NombreFoto;
 
-                Usuarios usuarioCreado = await _usuarios.Crear(entidad);
+                Usuarios usuarioCreado = await _repositorio.Crear(entidad);
 
                 if (usuarioCreado.IdUsuario == 0)
                     throw new TaskCanceledException("No se pudo crear el Usuario");
@@ -101,9 +103,10 @@ namespace Negocio.Implementacion
             throw new NotImplementedException();
         }
 
-        public Task<List<Usuarios>> Lista()
+        public async Task<List<Usuarios>> Lista()
         {
-            throw new NotImplementedException();
+            List<Usuarios> query = await _repository.Lista();
+            return query;
         }
 
         public Task<Usuarios> ObtenerPorCredenciales(string correo, string clave)
