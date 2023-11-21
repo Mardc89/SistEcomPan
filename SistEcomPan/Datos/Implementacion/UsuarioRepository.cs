@@ -99,7 +99,7 @@ namespace Datos.Implementacion
 
         }
 
-        public async Task<bool> Delete(int id)
+        public async Task<bool> Eliminar(int id)
         {
             using (var conexion = new SqlConnection(_cadenaSQL))
             {
@@ -154,12 +154,46 @@ namespace Datos.Implementacion
             throw new NotImplementedException();
         }
 
-        public Task<bool> Guardar(Usuarios modelo)
+
+
+
+
+        public async Task<IQueryable<Usuarios>> Consultar()
         {
-            throw new NotImplementedException();
+            List<Usuarios> lista = new List<Usuarios>();
+            using (var conexion = new SqlConnection(_cadenaSQL))
+            {
+                conexion.Open();
+                SqlCommand cmd = new SqlCommand("SPListaUsuarios", conexion);
+                cmd.CommandType = CommandType.StoredProcedure;
+
+                using (var dr = await cmd.ExecuteReaderAsync())
+                {
+                    while (await dr.ReadAsync())
+                    {
+                        lista.Add(new Usuarios
+                        {
+                            IdUsuario = Convert.ToInt32(dr["Idusuario"]),
+                            Dni = dr["Dni"].ToString(),
+                            Nombres = dr["Nombres"].ToString(),
+                            Apellidos = dr["Apellidos"].ToString(),
+                            Correo = dr["Correo"].ToString(),
+                            NombreUsuario = dr["NombreUsuario"].ToString(),
+                            Clave = dr["Clave"].ToString(),
+                            IdRol = Convert.ToInt32(dr["IdRol"]),
+                            FechaRegistro = Convert.ToDateTime(dr["FechaRegistro"]),
+                            Estado = Convert.ToBoolean(dr["Estado"]),
+                            UrlFoto = dr["UrlFoto"].ToString(),
+                            NombreFoto = dr["NombreFoto"].ToString()
+                        });
+                    }
+                }
+            }
+
+            return lista.AsQueryable();
         }
 
-        public Task<IQueryable<Usuarios>> Consultar(string consulta)
+        public Task<bool> Guardar(Usuarios modelo)
         {
             throw new NotImplementedException();
         }

@@ -2,6 +2,7 @@
 using Datos.Interfaces;
 using Entidades;
 using Negocio.Interfaces;
+using Negocio.Implementacion;
 
 namespace SistEcomPan.Web.Controllers
 {
@@ -20,6 +21,7 @@ namespace SistEcomPan.Web.Controllers
     }
         public IActionResult Index()
         {
+
             return View();
         }
 

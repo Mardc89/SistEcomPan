@@ -31,6 +31,14 @@ namespace Negocio.Implementacion
         public async Task<Usuarios> Crear(Usuarios entidad, Stream Foto = null, string NombreFoto = "", string UrlPlantillaCorreo = "")
         {
 
+            IQueryable<Usuarios> usuarios = await _repositorio.Consultar();
+            IQueryable <Usuarios>usuarioEvaluado=usuarios.Where(u => u.Correo == entidad.Correo);
+            Usuarios usuarioExiste=usuarioEvaluado.FirstOrDefault();
+
+
+            if (usuarioExiste != null)
+                throw new TaskCanceledException("El Correo no Existe");
+           
             try
             {
                 string Clave = entidad.Clave;
@@ -44,7 +52,7 @@ namespace Negocio.Implementacion
 
                 if (UrlPlantillaCorreo != "")
                 {
-                    UrlPlantillaCorreo = UrlPlantillaCorreo.Replace("[correo]", usuarioCreado.Correo).Replace("[clave]","");
+                    UrlPlantillaCorreo = UrlPlantillaCorreo.Replace("[correo]", usuarioCreado.Correo).Replace("[clave]","********");
 
                     string htmlCorreo = "";
 
@@ -88,14 +96,73 @@ namespace Negocio.Implementacion
             
         }
 
-        public Task<Usuarios> Editar(Usuarios entidad, Stream Foto = null, string NombreFoto = "")
+        public async Task<Usuarios> Editar(Usuarios entidad, Stream Foto = null, string NombreFoto = "")
         {
-            throw new NotImplementedException();
+
+            IQueryable<Usuarios> usuarios = await _repositorio.Consultar();
+            IQueryable<Usuarios> usuarioEvaluado = usuarios.Where(u => u.Correo == entidad.Correo && u.IdUsuario!=entidad.IdUsuario);
+            Usuarios usuarioExiste = usuarioEvaluado.FirstOrDefault();
+
+
+            if (usuarioExiste != null)
+                throw new TaskCanceledException("El Correo no Existe");
+
+            try
+            {
+                IQueryable<Usuarios> buscarUsuario = await _repositorio.Consultar();
+                IQueryable<Usuarios> usuarioEncontrado = buscarUsuario.Where(u =>u.IdUsuario != entidad.IdUsuario);
+                Usuarios usuarioEditar = usuarioEncontrado.First();
+
+                usuarioEditar.NombreUsuario = entidad.NombreUsuario;
+                usuarioEditar.Correo = entidad.Correo;
+                usuarioEditar.IdRol = entidad.IdRol;
+
+                if (usuarioEditar.NombreFoto == "")
+                    usuarioEditar.NombreFoto = NombreFoto;
+
+                if (Foto != null){
+                    usuarioEditar.UrlFoto =entidad.UrlFoto;
+                }
+
+                bool respuesta = await _repositorio.Editar(usuarioEditar);
+
+                if (!respuesta)
+                    throw new TaskCanceledException("No se pudo moficar el usuario");
+
+                return usuarioEditar;
+
+
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+
         }
 
-        public Task<bool> Eliminar(int IdUsuario)
+        public async Task<bool> Eliminar(int IdUsuario)
         {
-            throw new NotImplementedException();
+            try
+            {
+                IQueryable<Usuarios> usuarios = await _repositorio.Consultar();
+                IQueryable<Usuarios> usuarioEvaluado = usuarios.Where(u =>u.IdUsuario==IdUsuario);
+                Usuarios usuarioEncontrado = usuarioEvaluado.FirstOrDefault();
+
+                if (usuarioEncontrado == null)
+                    throw new TaskCanceledException("El Usuario no Existe");
+
+                string nombreFoto = usuarioEncontrado.NombreFoto;
+                bool respuesta = await _repositorio.Eliminar(usuarioEncontrado.IdUsuario);
+
+                return true;
+
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
         }
 
         public Task<bool> GuardarPerfil(Usuarios entidad)
@@ -105,7 +172,7 @@ namespace Negocio.Implementacion
 
         public async Task<List<Usuarios>> Lista()
         {
-            List<Usuarios> query = await _repository.Lista();
+            List<Usuarios> query = await _repositorio.Lista();
             return query;
         }
 

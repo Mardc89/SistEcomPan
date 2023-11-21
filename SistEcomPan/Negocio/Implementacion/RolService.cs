@@ -1,8 +1,10 @@
-﻿using Datos.Interfaces;
+﻿using Datos.Implementacion;
+using Datos.Interfaces;
 using Entidades;
 using Negocio.Interfaces;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -22,5 +24,13 @@ namespace Negocio.Implementacion
             List<Roles> query = await _repositorio.Lista();
             return query;
         }
+
+        public Categorias lista2()
+        {
+            Categorias query = new Categorias();
+            query=new CategoriaRepository().Lista();
+            
+        }
+
     }
 }

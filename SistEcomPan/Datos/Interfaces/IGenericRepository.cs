@@ -11,8 +11,9 @@ namespace Datos.Interfaces
     {
         Task<List<T>> Lista();
         Task<bool> Guardar(T modelo);
+        Task<T> Crear(T modelo);
         Task<bool> Editar(T modelo);
-        Task<bool> Delete(int d);
-        Task<IQueryable<T>> Consultar(string consulta);
+        Task<bool> Eliminar(int d);
+        Task<IQueryable<T>> Consultar();
     }
 }

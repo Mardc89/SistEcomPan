@@ -18,6 +18,11 @@ namespace Datos.Implementacion
     {
         private readonly string _cadenaSQL = "";
 
+        public CategoriaRepository()
+        {
+                
+        }
+
         public CategoriaRepository(IConfiguration configuration)
         {
             _cadenaSQL = configuration.GetConnectionString("cadenaSQL");
