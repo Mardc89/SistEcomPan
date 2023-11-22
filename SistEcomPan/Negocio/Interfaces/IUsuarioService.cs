@@ -17,7 +17,7 @@ namespace Negocio.Interfaces
         Task<Usuarios> ObtenerPorId(int IdUsuario);
         Task<bool> GuardarPerfil(Usuarios entidad);
         Task<bool> CambiarClave(int IdUsuario, string claveActual, string claveNueva);
-        Task<bool> RestablecerClave(string correo, string UrlPlantillaCorreo);
+        Task<bool> RestablecerClave(string claveNueva, string correo, string UrlPlantillaCorreo);
 
     }
 }

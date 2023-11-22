@@ -1,0 +1,22 @@
+﻿using Entidades;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Negocio.Interfaces
+{
+    public interface IClienteService
+    {
+        Task<List<Clientes>> Lista();
+        Task<Clientes> Crear(Clientes entidad, Stream foto = null, string Nombrefoto = "", string UrlPlantillaCorreo = "");
+        Task<Clientes> Editar(Clientes entidad, Stream foto = null, string Nombrefoto = "");
+        Task<bool> Eliminar(int IdCliente);
+        Task<Clientes> ObtenerPorCredenciales(string Correo, string Clave);
+        Task<Clientes> ObtenerPorId(int IdCliente);
+        Task<bool> GuardarPerfil(Clientes entidad);
+        Task<bool> CambiarClave(int IdCliente, string ClaveActual, string ClaveNueva);
+        Task<bool> RestablecerClave(string ClaveNueva, string Correo, string UrlPlantillaCorreo);
+    }
+}

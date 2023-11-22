@@ -23,9 +23,29 @@ namespace Negocio.Implementacion
             _repositorio = repositorio;
         }
 
-        public Task<bool> CambiarClave(int IdUsuario, string claveActual, string claveNueva)
+        public async Task<bool> CambiarClave(int IdUsuario, string claveActual, string claveNueva)
         {
-            throw new NotImplementedException();
+            try
+            {
+                IQueryable<Usuarios> usuarios = await _repositorio.Consultar();
+                IQueryable<Usuarios> usuarioEvaluado = usuarios.Where(u => u.IdUsuario == IdUsuario);
+                Usuarios usuarioEncontrado = usuarioEvaluado.FirstOrDefault();
+
+                if (usuarioEncontrado == null)
+                    throw new TaskCanceledException("El Usuario no Existe");
+                if (usuarioEncontrado.Clave != _encriptservice.ConvertirSha256(claveActual))
+                    throw new TaskCanceledException("La contraseña ingresada como actual no es correcta");
+
+                usuarioEncontrado.Clave = _encriptservice.ConvertirSha256(claveNueva);
+                bool respuesta = await _repositorio.Editar(usuarioEncontrado);
+
+                return respuesta;
+            }
+            catch (Exception ex)
+            {
+
+                throw;
+            }
         }
 
         public async Task<Usuarios> Crear(Usuarios entidad, Stream Foto = null, string NombreFoto = "", string UrlPlantillaCorreo = "")
@@ -165,9 +185,29 @@ namespace Negocio.Implementacion
             }
         }
 
-        public Task<bool> GuardarPerfil(Usuarios entidad)
+        public async Task<bool> GuardarPerfil(Usuarios entidad)
         {
-            throw new NotImplementedException();
+            try
+            {
+                IQueryable<Usuarios> usuarios = await _repositorio.Consultar();
+                IQueryable<Usuarios> usuarioEvaluado = usuarios.Where(u =>u.IdUsuario==entidad.IdUsuario);
+                Usuarios usuarioEncontrado = usuarioEvaluado.FirstOrDefault();
+
+                if (usuarioEncontrado == null)
+                    throw new TaskCanceledException("El Usuario no Existe");
+
+                usuarioEncontrado.Correo = entidad.Correo;
+                usuarioEncontrado.Nombres = entidad.Nombres;
+                
+                bool respuesta = await _repositorio.Editar(usuarioEncontrado);
+
+                return respuesta;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
         }
 
         public async Task<List<Usuarios>> Lista()
@@ -176,19 +216,85 @@ namespace Negocio.Implementacion
             return query;
         }
 
-        public Task<Usuarios> ObtenerPorCredenciales(string correo, string clave)
+        public async Task<Usuarios> ObtenerPorCredenciales(string correo, string clave)
         {
-            throw new NotImplementedException();
+            string ClaveEncriptada = _encriptservice.ConvertirSha256(clave);
+            IQueryable<Usuarios> usuarios = await _repositorio.Consultar();
+            IQueryable<Usuarios> usuarioEvaluado = usuarios.Where(u => u.Correo.Equals(correo)&&u.Clave.Equals(clave));
+            Usuarios usuarioEncontrado = usuarioEvaluado.FirstOrDefault();
+
+            return usuarioEncontrado;
+            
         }
 
-        public Task<Usuarios> ObtenerPorId(int IdUsuario)
+        public async Task<Usuarios> ObtenerPorId(int IdUsuario)
         {
-            throw new NotImplementedException();
+
+            IQueryable<Usuarios> usuarios = await _repositorio.Consultar();
+            IQueryable<Usuarios> usuarioEvaluado = usuarios.Where(u => u.IdUsuario==IdUsuario);
+            Usuarios usuarioEncontrado = usuarioEvaluado.FirstOrDefault();
+
+            return usuarioEncontrado;
         }
 
-        public Task<bool> RestablecerClave(string correo, string UrlPlantillaCorreo)
+        public async Task<bool> RestablecerClave(string ClaveNueva, string Correo, string UrlPlantillaCorreo)
         {
-            throw new NotImplementedException();
+            try
+            {
+                IQueryable<Usuarios> usuarios = await _repositorio.Consultar();
+                IQueryable<Usuarios> usuarioEvaluado = usuarios.Where(u => u.Correo == Correo);
+                Usuarios usuarioEncontrado = usuarioEvaluado.FirstOrDefault();
+
+                if (usuarioEncontrado == null)
+                    throw new TaskCanceledException("El Usuario no Existe");
+
+                usuarioEncontrado.Clave = _encriptservice.ConvertirSha256(ClaveNueva);
+                
+
+                UrlPlantillaCorreo = UrlPlantillaCorreo.Replace("[correo]", usuarioEncontrado.Correo).Replace("[clave]", "********");
+
+                string htmlCorreo = "";
+                HttpWebRequest request = (HttpWebRequest)WebRequest.Create(UrlPlantillaCorreo);
+                HttpWebResponse response = (HttpWebResponse)request.GetResponse();
+
+                if (response.StatusCode == HttpStatusCode.OK){
+
+                   using (Stream dataStream = response.GetResponseStream()){
+                          StreamReader readerStream = null;
+
+                    if (response.CharacterSet == null)
+                        readerStream = new StreamReader(dataStream);
+                    else
+                        readerStream = new StreamReader(dataStream, Encoding.GetEncoding(response.CharacterSet));
+
+                    htmlCorreo = readerStream.ReadToEnd();
+                    response.Close();
+                    readerStream.Close();
+
+                    }
+                }
+
+                bool correoEnviado = false;
+
+                if (htmlCorreo != "")
+                    correoEnviado= await _correoService.EnviarCorreo(Correo, "Contraseña Restablecida", htmlCorreo);
+
+                if (!correoEnviado)
+                    throw new TaskCanceledException("Tenemos problemas.Por Favor inténtalo de nuevo mas tarde");
+
+                bool respuesta = await _repositorio.Editar(usuarioEncontrado);
+
+                return respuesta;
+
+
+            }
+            catch (Exception ex)
+            {
+
+                throw;
+            }
         }
+
+
     }
 }
