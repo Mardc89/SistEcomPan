@@ -1,4 +1,6 @@
-﻿namespace SistEcomPan.Web.Models.ViewModels
+﻿using Entidades;
+
+namespace SistEcomPan.Web.Models.ViewModels
 {
     public class VMPedido
     {
@@ -8,6 +10,6 @@
         public string Codigo { get; set; }
         public decimal MontoTotal { get; set; }
         public string Estado { get; set; }
-        public List<DetallePedido> DetallePedido { get; set; }
+        public List<VMDetallePedido> VMDetallePedido { get; set; }
     }
 }
