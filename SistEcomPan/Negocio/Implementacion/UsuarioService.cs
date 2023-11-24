@@ -1,6 +1,7 @@
 ﻿using Datos.Implementacion;
 using Datos.Interfaces;
 using Entidades;
+using Microsoft.Extensions.Hosting;
 using Negocio.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -16,11 +17,13 @@ namespace Negocio.Implementacion
         private readonly IGenericRepository<Usuarios> _repositorio;
         private readonly IEncriptService _encriptservice;
         private readonly ICorreoService _correoService;
-        public UsuarioService(IEncriptService encriptservice, ICorreoService correoService, IGenericRepository<Usuarios> repositorio)
+        private readonly IHostEnvironment _environment;
+        public UsuarioService(IEncriptService encriptservice, ICorreoService correoService, IGenericRepository<Usuarios> repositorio,IHostEnvironment environment)
         {
             _encriptservice = encriptservice;
             _correoService = correoService;
             _repositorio = repositorio;
+            _environment = environment;
         }
 
         public async Task<bool> CambiarClave(int IdUsuario, string claveActual, string claveNueva)
@@ -64,6 +67,25 @@ namespace Negocio.Implementacion
                 string Clave = entidad.Clave;
                 entidad.Clave = _encriptservice.ConvertirSha256(Clave);
                 entidad.NombreFoto = NombreFoto;
+
+                if (Foto != null && Foto.Length > 0)
+                {
+                    var path = Path.Combine(_environment.ContentRootPath, "Imagenes");
+                    if (!Directory.Exists(path))
+                    {
+                        Directory.CreateDirectory(path);
+                    }
+
+                    string fullpath = Path.Combine(path,NombreFoto);
+
+                    string UrlFoto = fullpath;
+
+                    using (var stream = new FileStream(fullpath, FileMode.Create))
+                    {
+                        Foto.CopyTo(stream);
+
+                    }
+                }
 
                 Usuarios usuarioCreado = await _repositorio.Crear(entidad);
 
