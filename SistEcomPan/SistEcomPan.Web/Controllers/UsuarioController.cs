@@ -90,16 +90,25 @@ namespace SistEcomPan.Web.Controllers
                 string urlPlantillaCorreo = $"{this.Request.Scheme}://{this.Request.Host}/Plantilla/EnviarClave?correo=[correo]&clave=[clave]";
                 var Usuariolista = await _usuarioServicio.Lista();
 
-                List<Usuarios> vmUsuariolista = new List<Usuarios>();
-                foreach (var item in Usuariolista)
+
+                List<Usuarios> Usuariolistas = new List<Usuarios>();
+                List<VMUsuario> Usuariolist = new List<VMUsuario>();
+                if (vmUsuario != null)
                 {
-                    vmUsuariolista.Add(new Usuarios
+                    Usuariolist.Add(vmUsuario);
+                    foreach (var item in Usuariolist)
                     {
-                        IdUsuario = item.IdUsuario,
-                        NombreUsuario = item.NombreUsuario
-                    });
+                        Usuariolistas.Add(new Usuarios
+                        {
+                            IdUsuario = item.IdUsuario,
+                            NombreUsuario = item.Nombre,
+                            Estado = Convert.ToBoolean(item.EsActivo),
+
+                        });
+                    }
                 }
-                Usuarios usuarioCreado=await _usuarioServicio.Crear(vmUsuariolista.ToList(),fotoStream,NombreFoto,urlPlantillaCorreo);
+
+                Usuarios usuarioCreado=await _usuarioServicio.Crear(Usuariolistas.First(),fotoStream,NombreFoto,urlPlantillaCorreo);
                 return BadRequest();
 
             }
