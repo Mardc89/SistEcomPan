@@ -85,6 +85,7 @@ namespace Negocio.Implementacion
                         Foto.CopyTo(stream);
 
                     }
+                    entidad.UrlFoto = UrlFoto;
                 }
 
                 Usuarios usuarioCreado = await _repositorio.Crear(entidad);
@@ -155,15 +156,35 @@ namespace Negocio.Implementacion
                 IQueryable<Usuarios> usuarioEncontrado = buscarUsuario.Where(u =>u.IdUsuario != entidad.IdUsuario);
                 Usuarios usuarioEditar = usuarioEncontrado.First();
 
-                usuarioEditar.NombreUsuario = entidad.NombreUsuario;
+                usuarioEditar.Dni = entidad.Dni;
+                usuarioEditar.Nombres = entidad.Nombres;
+                usuarioEditar.Apellidos = entidad.Apellidos;
                 usuarioEditar.Correo = entidad.Correo;
+                usuarioEditar.NombreUsuario = entidad.NombreUsuario;
+                usuarioEditar.Clave = entidad.Clave;
                 usuarioEditar.IdRol = entidad.IdRol;
 
                 if (usuarioEditar.NombreFoto == "")
                     usuarioEditar.NombreFoto = NombreFoto;
 
-                if (Foto != null){
-                    usuarioEditar.UrlFoto =entidad.UrlFoto;
+                if (Foto != null && Foto.Length > 0)
+                {
+                    var path = Path.Combine(_environment.ContentRootPath, "Imagenes");
+                    if (!Directory.Exists(path))
+                    {
+                        Directory.CreateDirectory(path);
+                    }
+
+                    string fullpath = Path.Combine(path, NombreFoto);
+
+                    string UrlFoto = fullpath;
+
+                    using (var stream = new FileStream(fullpath, FileMode.Create))
+                    {
+                        Foto.CopyTo(stream);
+
+                    }
+                    usuarioEditar.UrlFoto = UrlFoto;
                 }
 
                 bool respuesta = await _repositorio.Editar(usuarioEditar);
@@ -196,6 +217,9 @@ namespace Negocio.Implementacion
 
                 string nombreFoto = usuarioEncontrado.NombreFoto;
                 bool respuesta = await _repositorio.Eliminar(usuarioEncontrado.IdUsuario);
+
+                if (respuesta)
+                    System.IO.File.Delete(usuarioEncontrado.UrlFoto);
 
                 return true;
 

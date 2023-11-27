@@ -5,6 +5,7 @@ using Negocio.Interfaces;
 using Negocio.Implementacion;
 using SistEcomPan.Web.Models.ViewModels;
 using Newtonsoft.Json;
+using SistEcomPan.Web.Tools.Response;
 
 namespace SistEcomPan.Web.Controllers
 {
@@ -49,30 +50,24 @@ namespace SistEcomPan.Web.Controllers
                 vmUsuariolista.Add(new VMUsuario
                 {
                     IdUsuario = item.IdUsuario,
-                    NombreRol = item.NombreUsuario
+                    Dni=item.Dni,
+                    Nombres=item.Nombres,
+                    Apellidos=item.Apellidos,
+                    Correo=item.Correo,
+                    NombreUsuario=item.NombreUsuario,
+                    Clave=item.Clave,
+                    IdRol=item.IdRol,
+                    NombreRol = item.Rol.NombreRol
                 });
             }
             return StatusCode(StatusCodes.Status200OK,new { data = vmUsuariolista });
         }
 
-        public async Task <List<VMUsuario>> ListaUsuarios()
-        {
-            var Usuariolista = await _usuarioServicio.Lista();
-            List<VMUsuario> vmUsuariolista = new List<VMUsuario>();
-            foreach (var item in Usuariolista)
-            {
-                vmUsuariolista.Add(new VMUsuario
-                {
-                    IdUsuario = item.IdUsuario,
-                    NombreRol = item.NombreUsuario
-                });
-            }
-            return vmUsuariolista;
-        }
-
-
+        [HttpPost]
         public async Task<IActionResult> Crear([FromForm]IFormFile foto, [FromForm] string modelo)
         {
+            GenericResponse<VMUsuario> gResponse = new GenericResponse<VMUsuario>();
+
             try
             {
                 VMUsuario vmUsuario = JsonConvert.DeserializeObject<VMUsuario>(modelo);
@@ -91,33 +86,175 @@ namespace SistEcomPan.Web.Controllers
                 var Usuariolista = await _usuarioServicio.Lista();
 
 
-                List<Usuarios> Usuariolistas = new List<Usuarios>();
-                List<VMUsuario> Usuariolist = new List<VMUsuario>();
+                List<Usuarios>  listaUsuarios = new List<Usuarios>();
+                List<VMUsuario> listaVMUsuarios = new List<VMUsuario>();
                 if (vmUsuario != null)
                 {
-                    Usuariolist.Add(vmUsuario);
-                    foreach (var item in Usuariolist)
+                    listaVMUsuarios.Add(vmUsuario);
+                    foreach (var item in listaVMUsuarios)
                     {
-                        Usuariolistas.Add(new Usuarios
+                        listaUsuarios.Add(new Usuarios
                         {
                             IdUsuario = item.IdUsuario,
-                            NombreUsuario = item.Nombre,
-                            Estado = Convert.ToBoolean(item.EsActivo),
+                            Dni=item.Dni,
+                            Nombres = item.Nombres,
+                            Apellidos=item.Apellidos,
+                            Correo=item.Correo,
+                            NombreUsuario=item.NombreUsuario,
+                            Clave=item.Clave,
+                            IdRol=item.IdRol,
+                            Estado = Convert.ToBoolean(item.EsActivo)
 
                         });
                     }
                 }
 
-                Usuarios usuarioCreado=await _usuarioServicio.Crear(Usuariolistas.First(),fotoStream,NombreFoto,urlPlantillaCorreo);
-                return BadRequest();
+                Usuarios usuarioCreado=await _usuarioServicio.Crear(listaUsuarios.First(),fotoStream,NombreFoto,urlPlantillaCorreo);
+
+
+                List<Usuarios> listUsuarios = new List<Usuarios>();
+                if (usuarioCreado != null)
+                {
+                    listUsuarios.Add(usuarioCreado);
+
+                    List<VMUsuario> vmUsuariolista = new List<VMUsuario>();
+                    foreach (var item in listUsuarios)
+                    {
+                        vmUsuariolista.Add(new VMUsuario
+                        {
+                            IdUsuario = item.IdUsuario,
+                            Dni = item.Dni,
+                            Nombres = item.Nombres,
+                            Apellidos = item.Apellidos,
+                            Correo = item.Correo,
+                            NombreUsuario = item.NombreUsuario,
+                            Clave = item.Clave,
+                            IdRol = item.IdRol,
+                            NombreRol = item.Rol.NombreRol
+                        });
+                    }
+                }
+
+                gResponse.Estado = true;
+                gResponse.objeto = vmUsuario;
 
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                return BadRequest();
+                gResponse.Estado = false;
+                gResponse.Mensaje = ex.Message;
+                
             }
-            
+
+            return StatusCode(StatusCodes.Status200OK,gResponse);
+
+        }
+
+        [HttpPut]
+        public async Task<IActionResult> Editar([FromForm] IFormFile foto, [FromForm] string modelo)
+        {
+            GenericResponse<VMUsuario> gResponse = new GenericResponse<VMUsuario>();
+
+            try
+            {
+                VMUsuario vmUsuario = JsonConvert.DeserializeObject<VMUsuario>(modelo);
+                string NombreFoto = "";
+                Stream fotoStream = null;
+
+                if (foto != null && foto.Length > 0)
+                {
+                    string nombreCodigo = Guid.NewGuid().ToString("N");
+                    string extension = Path.GetExtension(foto.FileName);
+                    NombreFoto = string.Concat(nombreCodigo, extension);
+                    fotoStream = foto.OpenReadStream();
+
+                }
+
+                var Usuariolista = await _usuarioServicio.Lista();
+
+
+                List<Usuarios> listaUsuarios = new List<Usuarios>();
+                List<VMUsuario> listaVMUsuarios = new List<VMUsuario>();
+                if (vmUsuario != null)
+                {
+                    listaVMUsuarios.Add(vmUsuario);
+                    foreach (var item in listaVMUsuarios)
+                    {
+                        listaUsuarios.Add(new Usuarios
+                        {
+                            IdUsuario = item.IdUsuario,
+                            Dni = item.Dni,
+                            Nombres = item.Nombres,
+                            Apellidos = item.Apellidos,
+                            Correo = item.Correo,
+                            NombreUsuario = item.NombreUsuario,
+                            Clave = item.Clave,
+                            IdRol = item.IdRol,
+                            Estado = Convert.ToBoolean(item.EsActivo)
+
+                        });
+                    }
+                }
+
+                Usuarios usuarioEditado = await _usuarioServicio.Editar(listaUsuarios.First(), fotoStream, NombreFoto);
+
+                List<Usuarios> listUsuarios = new List<Usuarios>();
+                if (usuarioEditado != null)
+                {
+                    listUsuarios.Add(usuarioEditado);
+
+                    List<VMUsuario> vmUsuariolista = new List<VMUsuario>();
+                    foreach (var item in listUsuarios)
+                    {
+                        vmUsuariolista.Add(new VMUsuario
+                        {
+                            IdUsuario = item.IdUsuario,
+                            Dni = item.Dni,
+                            Nombres = item.Nombres,
+                            Apellidos = item.Apellidos,
+                            Correo = item.Correo,
+                            NombreUsuario = item.NombreUsuario,
+                            Clave = item.Clave,
+                            IdRol = item.IdRol,
+                            NombreRol = item.Rol.NombreRol
+                        });
+                    }
+                }
+
+                gResponse.Estado = true;
+                gResponse.objeto = vmUsuario;
+
+            }
+            catch (Exception ex)
+            {
+                gResponse.Estado = false;
+                gResponse.Mensaje = ex.Message;
+
+            }
+
+            return StatusCode(StatusCodes.Status200OK, gResponse);
+
+        }
+
+        [HttpDelete]
+        public async Task<IActionResult> Eliminar(int IdUsuario)
+        {
+            GenericResponse<string> gResponse = new GenericResponse<string>();
+
+            try
+            {
+                gResponse.Estado = await _usuarioServicio.Eliminar(IdUsuario);
+
+            }
+            catch (Exception ex)
+            {
+                gResponse.Estado = false;
+                gResponse.Mensaje = ex.Message;
+
+            }
+
+            return StatusCode(StatusCodes.Status200OK, gResponse);
+
         }
     }
 }

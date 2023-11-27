@@ -25,12 +25,7 @@ namespace Negocio.Implementacion
             return query;
         }
 
-        public Categorias lista2()
-        {
-            Categorias query = new Categorias();
-            query=new CategoriaRepository().Lista();
-            
-        }
+
 
     }
 }

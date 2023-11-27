@@ -21,13 +21,13 @@ namespace Datos.Implementacion
 
         }
 
-        public async Task<IQueryable<Configuracion>> Consultar(string consulta)
+        public async Task<IQueryable<Configuracion>> Obtener(string consulta)
         {
             List<Configuracion> lista = new List<Configuracion>();
 
             using (var connection = new SqlConnection(_cadenaSQL))
             {
-                using (var command = new SqlCommand("BuscarCategoria", connection))
+                using (var command = new SqlCommand("Buscar", connection))
                 {
                     command.CommandType = CommandType.StoredProcedure;
 
@@ -38,7 +38,7 @@ namespace Datos.Implementacion
                         connection.Open();
                         SqlDataReader dr = command.ExecuteReader();
 
-                        while (dr.Read())
+                        while (await dr.ReadAsync())
                         {
                             lista.Add(new Configuracion
                             {
@@ -63,14 +63,22 @@ namespace Datos.Implementacion
 
         }
 
+        public Task<IQueryable<Configuracion>> Consultar()
+        {
+            throw new NotImplementedException();
+        }
 
-
-        public Task<bool> Delete(int d)
+        public Task<Configuracion> Crear(Configuracion modelo)
         {
             throw new NotImplementedException();
         }
 
         public Task<bool> Editar(Configuracion modelo)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<bool> Eliminar(int d)
         {
             throw new NotImplementedException();
         }
@@ -85,9 +93,5 @@ namespace Datos.Implementacion
             throw new NotImplementedException();
         }
 
-        public Task<Configuracion> Obtener(Configuracion modelo)
-        {
-            throw new NotImplementedException();
-        }
     }
 }

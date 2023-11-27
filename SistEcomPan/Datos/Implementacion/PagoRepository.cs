@@ -107,7 +107,7 @@ namespace Datos.Implementacion
 
         }
 
-        public async Task<bool> Delete(int id)
+        public async Task<bool> Eliminar(int id)
         {
             using (var conexion = new SqlConnection(_cadenaSQL))
             {
@@ -128,6 +128,21 @@ namespace Datos.Implementacion
         }
 
         public Task<IQueryable<Pagos>> Consultar(string consulta)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<Pagos> Crear(Pagos modelo)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<IQueryable<Pagos>> Consultar()
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<IQueryable<Pagos>> Obtener(string consulta)
         {
             throw new NotImplementedException();
         }

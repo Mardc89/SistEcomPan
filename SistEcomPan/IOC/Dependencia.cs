@@ -18,16 +18,18 @@ namespace IOC
     {
         public static void InyectarDependencias(this IServiceCollection services)
         {
-            services.AddTransient<IPedidoRepository,PedidoRepository>();
+            services.AddTransient<IPedidoRepository, PedidoRepository>();
             services.AddTransient<IGenericRepository<Categorias>, CategoriaRepository>();
 
-            services.AddScoped<ICorreoService,CorreoService>();
-            services.AddScoped<IEncriptService,EncriptService>();
+            services.AddScoped<IGenericRepository<Usuarios>, UsuarioRepository>();
+            services.AddScoped<IGenericRepository<Configuracion>, ConfiguracionRepository>();        
+            services.AddScoped<ICorreoService, CorreoService>();
+            services.AddScoped<IEncriptService, EncriptService>();
 
-            services.AddScoped<IGenericRepository<Roles>,RolRepository>();
+            services.AddScoped<IGenericRepository<Roles>, RolRepository>();
             services.AddScoped<IRolService, RolService>();
 
-            services.AddScoped<IGenericRepository<Usuarios>, UsuarioRepository>();
+           
             services.AddScoped<IUsuarioService, UsuarioService>();
 
         }

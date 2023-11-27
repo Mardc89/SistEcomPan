@@ -197,5 +197,10 @@ namespace Datos.Implementacion
         {
             throw new NotImplementedException();
         }
+
+        public Task<IQueryable<Usuarios>> Obtener(string consulta)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

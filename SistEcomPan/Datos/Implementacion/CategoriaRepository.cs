@@ -18,11 +18,6 @@ namespace Datos.Implementacion
     {
         private readonly string _cadenaSQL = "";
 
-        public CategoriaRepository()
-        {
-                
-        }
-
         public CategoriaRepository(IConfiguration configuration)
         {
             _cadenaSQL = configuration.GetConnectionString("cadenaSQL");
@@ -126,7 +121,7 @@ namespace Datos.Implementacion
             }
         }
 
-        public async Task<IQueryable<Categorias>> Consultar(string consulta)
+        public async Task<IQueryable<Categorias>> Obtener(string consulta)
         {
             List<Categorias> lista = new List<Categorias>();
 
@@ -169,6 +164,22 @@ namespace Datos.Implementacion
             return lista.AsQueryable();
 
         }
+
+        public Task<Categorias> Crear(Categorias modelo)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<bool> Eliminar(int d)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<IQueryable<Categorias>> Consultar()
+        {
+            throw new NotImplementedException();
+        }
+
 
     }
 }
