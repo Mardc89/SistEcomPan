@@ -1,0 +1,10 @@
+// SweetAlert2
+// github.com/sweetalert2/sweetalert2
+
+@import 'css/theming';
+@import 'css/animations';
+
+body {
+  @include sweetalert2-body();
+  @include sweetalert2-toasts-body();
+}

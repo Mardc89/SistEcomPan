@@ -57,7 +57,7 @@ namespace SistEcomPan.Web.Controllers
                     NombreUsuario=item.NombreUsuario,
                     Clave=item.Clave,
                     IdRol=item.IdRol,
-                    NombreRol = item.Rol.NombreRol
+                    //NombreRol = item.Rol.NombreRol
                 });
             }
             return StatusCode(StatusCodes.Status200OK,new { data = vmUsuariolista });
