@@ -29,10 +29,12 @@
                                 <thead>
                                     <tr>
                                         <th>Id</th>
+                                        <th>Dni</th>
                                         <th>Foto</th>
                                         <th>Nombres</th>
                                         <th>Apellidos</th>
                                         <th>Correo</th>
+                                        <th>Nombre Usuario</th>
                                         <th>Rol</th>
                                         <th>Estado</th>
                                         <th>Acciones</th>
@@ -61,6 +63,10 @@
                                  <div class="row">
                                      <div class="col-sm-8">
                                          <div class="form-row">
+                                            <div class="form-group col-sm-6">
+                                                <label for="txtDni">Dni</label>
+                                                <input type="text" class="form-control form-control-sm input-validar" id="txtDni" name="Dni" />
+                                            </div>
                                              <div class="form-group col-sm-6">
                                                  <label for="txtNombres">Nombres</label>
                                                  <input  type="text" class="form-control form-control-sm input-validar" id="txtNombres" name="Nombres"/>
@@ -71,10 +77,18 @@
                                             </div>
                                              <div class="form-group col-sm-6">
                                                 <label for="txtCorreo">Correo</label>
-                                                <input type="email" class="form-control form-control-sm input-validar" id="txtCorreo" name="Correo" />
+                                                <input type="text" class="form-control form-control-sm input-validar" id="txtCorreo" name="Correo" />
                                              </div>
+                                             <div class="form-group col-sm-6">
+                                                 <label for="txtNombreUsuario">Nombre Usuario</label>
+                                             <input type="email" class="form-control form-control-sm input-validar" id="txtNombreUsuario" name="NombreUsuario" />
+                                            </div>
                                          </div>
                                          <div class="form-row">
+                                         <div class="form-group col-sm-6">
+                                                <label for="txtClave">Clave</label>
+                                                <input type="password" class="form-control form-control-sm input-validar" id="txtClave" name="Clave" />
+                                          </div>
                                              <div class="form-group col-sm-6">
                                                     <label for="cboRol">Rol</label>
                                                     <select class="form-control form-control-sm" id="cboRol">                                                    

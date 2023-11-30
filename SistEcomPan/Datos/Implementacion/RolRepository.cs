@@ -24,6 +24,8 @@ namespace Datos.Implementacion
         public async Task<List<Roles>> Lista()
         {
             List<Roles> lista = new List<Roles>();
+            try
+            {
             using (var conexion = new SqlConnection(_cadenaSQL))
             {
                 conexion.Open();
@@ -44,6 +46,13 @@ namespace Datos.Implementacion
                     }
                 }
             }
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+
 
             return lista;
         }

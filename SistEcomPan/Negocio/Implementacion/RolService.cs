@@ -4,6 +4,8 @@ using Entidades;
 using Negocio.Interfaces;
 using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
+using System.Data;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text;
@@ -25,7 +27,10 @@ namespace Negocio.Implementacion
             return query;
         }
 
-
-
+        public async Task<IQueryable<Roles>> ObtenerNombre()
+        {
+            List<Roles> lista = await _repositorio.Lista();
+            return lista.AsQueryable();
+        }
     }
 }

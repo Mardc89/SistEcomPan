@@ -10,5 +10,7 @@ namespace Negocio.Interfaces
     public interface IRolService
     {
         Task<List<Roles>> lista();
+        Task<IQueryable<Roles>> ObtenerNombre();
+        
     }
 }

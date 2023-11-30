@@ -2,12 +2,16 @@
 
 const MODELO_BASE={
     idUsuario: 0,
+    dni:"",
     nombres: "",
     apellidos:"",
     correo: "",
+    nombreUsuario: "",
+    clave:"",
     idRol: 0,
     urlFoto: "",
     esActivo: 1,
+    nombreRol:"",
    
 }
 
@@ -23,7 +27,7 @@ $(document).ready(function () {
             if (responseJson.length > 0) {
                 responseJson.forEach((item) => {
                     $("#cboRol").append(
-                    $("<option>").val(item.idRol).text(item.descripcion)
+                        $("<option>").val(item.idRol).text(item.nombreRol)
                     )
                 })
             }
@@ -44,10 +48,12 @@ $(document).ready(function () {
                 }
 
             },
+            { "data": "dni" },
             { "data": "nombres" },
             { "data": "apellidos" },
             { "data": "correo" },
-            { "data": "idRol" },
+            { "data": "nombreUsuario" },
+            { "data": "nombreRol" },
             {
                 "data": "esActivo", render: function (data) {
                     if (data == 1)
@@ -90,9 +96,12 @@ $(document).ready(function () {
 
 function mostrarModal(modelo = MODELO_BASE) {
     $("#txtId").val(modelo.idUsuario)
+    $("#txtDni").val(modelo.dni)
     $("#txtNombres").val(modelo.nombres)
-    $("#txtApellidos").val(modelo.Apellidos)
+    $("#txtApellidos").val(modelo.apellidos)
+    $("#txtNombreUsuario").val(modelo.nombreUsuario)
     $("#txtCorreo").val(modelo.correo)
+    $("#txtClave").val(modelo.clave)
     $("#cboRol").val(modelo.idRol == 0 ? $("#cboRol option:first").val() : modelo.idRol)
     $("#cboEstado").val(modelo.esActivo)
     $("#txtFoto").val("")
@@ -121,9 +130,12 @@ $("#btnGuardar").click(function () {
 
     const modelo = structuredClone(MODELO_BASE);
     modelo["idUsuario"] = parseInt($("#txtId").val())
-    modelo["nombre"] = $("#txtNombre").val()
+    modelo["dni"] = $("#txtDni").val()
+    modelo["nombres"] = $("#txtNombres").val()
+    modelo["apellidos"] = $("#txtApellidos").val()
+    modelo["nombreUsuario"] = $("#txtNombreUsuario").val()
     modelo["correo"] = $("#txtCorreo").val()
-    modelo["telefono"] = $("#txtTelefono").val()
+    modelo["clave"] = $("#txtClave").val()
     modelo["idRol"] = $("#cboRol").val()
     modelo["esActivo"] = $("#cboEstado").val()
 

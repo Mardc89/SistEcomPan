@@ -45,20 +45,22 @@ namespace SistEcomPan.Web.Controllers
         {
             var Usuariolista = await _usuarioServicio.Lista();
             List<VMUsuario> vmUsuariolista = new List<VMUsuario>();
+            var nombreRol = await _rolService.ObtenerNombre();
             foreach (var item in Usuariolista)
             {
                 vmUsuariolista.Add(new VMUsuario
                 {
                     IdUsuario = item.IdUsuario,
-                    Dni=item.Dni,
-                    Nombres=item.Nombres,
-                    Apellidos=item.Apellidos,
-                    Correo=item.Correo,
-                    NombreUsuario=item.NombreUsuario,
-                    Clave=item.Clave,
-                    IdRol=item.IdRol,
-                    //NombreRol = item.Rol.NombreRol
-                });
+                    Dni = item.Dni,
+                    Nombres = item.Nombres,
+                    Apellidos = item.Apellidos,
+                    Correo = item.Correo,
+                    NombreUsuario = item.NombreUsuario,
+                    Clave = item.Clave,
+                    IdRol = item.IdRol,
+                    EsActivo = Convert.ToInt32(item.Estado),
+                    NombreRol = nombreRol.Where(x=>x.IdRol==item.IdRol).First().NombreRol,
+                }) ; 
             }
             return StatusCode(StatusCodes.Status200OK,new { data = vmUsuariolista });
         }
