@@ -98,16 +98,15 @@ namespace SistEcomPan.Web.Controllers
                         listaUsuarios.Add(new Usuarios
                         {
                             IdUsuario = item.IdUsuario,
-                            Dni=item.Dni,
+                            Dni = item.Dni,
                             Nombres = item.Nombres,
-                            Apellidos=item.Apellidos,
-                            Correo=item.Correo,
-                            NombreUsuario=item.NombreUsuario,
-                            Clave=item.Clave,
-                            IdRol=item.IdRol,
+                            Apellidos = item.Apellidos,
+                            Correo = item.Correo,
+                            NombreUsuario = item.NombreUsuario,
+                            Clave = item.Clave,
+                            IdRol = item.IdRol,
                             Estado = Convert.ToBoolean(item.EsActivo)
-
-                        });
+                        }) ;
                     }
                 }
 
@@ -115,6 +114,7 @@ namespace SistEcomPan.Web.Controllers
 
 
                 List<Usuarios> listUsuarios = new List<Usuarios>();
+                var nombreRol = await _rolService.ObtenerNombre();
                 if (usuarioCreado != null)
                 {
                     listUsuarios.Add(usuarioCreado);
@@ -132,7 +132,7 @@ namespace SistEcomPan.Web.Controllers
                             NombreUsuario = item.NombreUsuario,
                             Clave = item.Clave,
                             IdRol = item.IdRol,
-                            NombreRol = item.Rol.NombreRol
+                            NombreRol = nombreRol.Where(x => x.IdRol == item.IdRol).First().NombreRol
                         });
                     }
                 }
@@ -206,6 +206,7 @@ namespace SistEcomPan.Web.Controllers
                     listUsuarios.Add(usuarioEditado);
 
                     List<VMUsuario> vmUsuariolista = new List<VMUsuario>();
+                    var nombreRol = await _rolService.ObtenerNombre();
                     foreach (var item in listUsuarios)
                     {
                         vmUsuariolista.Add(new VMUsuario
@@ -218,7 +219,7 @@ namespace SistEcomPan.Web.Controllers
                             NombreUsuario = item.NombreUsuario,
                             Clave = item.Clave,
                             IdRol = item.IdRol,
-                            NombreRol = item.Rol.NombreRol
+                            NombreRol = nombreRol.Where(x => x.IdRol == item.IdRol).First().NombreRol
                         });
                     }
                 }

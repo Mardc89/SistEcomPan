@@ -68,54 +68,69 @@ namespace Datos.Implementacion
 
         public async Task<bool> Editar(Usuarios modelo)
         {
-            using (var conexion = new SqlConnection(_cadenaSQL))
+            try
             {
-                conexion.Open();
-                SqlCommand cmd = new SqlCommand("SPEditarUsuarios", conexion);
-                cmd.Parameters.AddWithValue("IdUsuario", modelo.IdUsuario);
-                cmd.Parameters.AddWithValue("Dni", modelo.Dni);
-                cmd.Parameters.AddWithValue("Nombres", modelo.Nombres);
-                cmd.Parameters.AddWithValue("Apellidos", modelo.Apellidos);
-                cmd.Parameters.AddWithValue("Correo", modelo.Correo);
-                cmd.Parameters.AddWithValue("NombreUsuario", modelo.NombreUsuario);
-                cmd.Parameters.AddWithValue("Clave", modelo.Clave);
-                cmd.Parameters.AddWithValue("IdRol", modelo.IdRol);
-                cmd.Parameters.AddWithValue("FechaRegistro", modelo.FechaRegistro);
-                cmd.Parameters.AddWithValue("Estado", modelo.Estado);
-                cmd.Parameters.AddWithValue("UrlFoto", modelo.UrlFoto);
-                cmd.Parameters.AddWithValue("NombreFoto", modelo.NombreFoto);
+                using (var conexion = new SqlConnection(_cadenaSQL))
+                {
+                    conexion.Open();
+                    SqlCommand cmd = new SqlCommand("SPEditarUsuario", conexion);
+                    cmd.Parameters.AddWithValue("@IdUsuario", modelo.IdUsuario);
+                    cmd.Parameters.AddWithValue("@Dni", modelo.Dni);
+                    cmd.Parameters.AddWithValue("@Nombres", modelo.Nombres);
+                    cmd.Parameters.AddWithValue("@Apellidos", modelo.Apellidos);
+                    cmd.Parameters.AddWithValue("@Correo", modelo.Correo);
+                    cmd.Parameters.AddWithValue("@NombreUsuario", modelo.NombreUsuario);
+                    cmd.Parameters.AddWithValue("@Clave", modelo.Clave);
+                    cmd.Parameters.AddWithValue("@IdRol", modelo.IdRol);
+                    cmd.Parameters.AddWithValue("@Estado", modelo.Estado);
+                    cmd.Parameters.AddWithValue("@UrlFoto", modelo.UrlFoto);
+                    cmd.Parameters.AddWithValue("@NombreFoto", modelo.NombreFoto);
 
-                cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.CommandType = CommandType.StoredProcedure;
 
-                int filaAfectada = await cmd.ExecuteNonQueryAsync();
+                    int filaAfectada = await cmd.ExecuteNonQueryAsync();
 
-                if (filaAfectada > 0)
-                    return true;
-                else
-                    return false;
+                    if (filaAfectada > 0)
+                        return true;
+                    else
+                        return false;
 
 
+                }
+            }
+            catch (Exception)
+            {
+
+                throw;
             }
 
         }
 
         public async Task<bool> Eliminar(int id)
         {
-            using (var conexion = new SqlConnection(_cadenaSQL))
+            try
             {
-                conexion.Open();
-                SqlCommand cmd = new SqlCommand("SPEliminarUsuarios", conexion);
-                cmd.Parameters.AddWithValue("IdUsuario", id);
-                cmd.CommandType = CommandType.StoredProcedure;
+                using (var conexion = new SqlConnection(_cadenaSQL))
+                {
+                    conexion.Open();
+                    SqlCommand cmd = new SqlCommand("SPEliminarUsuario", conexion);
+                    cmd.Parameters.AddWithValue("@IdUsuario", id);
+                    cmd.CommandType = CommandType.StoredProcedure;
 
-                int filaAfectada = await cmd.ExecuteNonQueryAsync();
+                    int filaAfectada = await cmd.ExecuteNonQueryAsync();
 
-                if (filaAfectada > 0)
-                    return true;
-                else
-                    return false;
+                    if (filaAfectada > 0)
+                        return true;
+                    else
+                        return false;
 
 
+                }
+            }
+            catch (Exception)
+            {
+
+                throw;
             }
         }
 
@@ -123,24 +138,36 @@ namespace Datos.Implementacion
         {
             try
             {
+
                 using (var conexion = new SqlConnection(_cadenaSQL))
                 {
-                conexion.Open();
-                SqlCommand cmd = new SqlCommand("SPGuardarUsuarios", conexion);
-                cmd.Parameters.AddWithValue("Dni", modelo.Dni);
-                cmd.Parameters.AddWithValue("Nombres", modelo.Nombres);
-                cmd.Parameters.AddWithValue("Apellidos", modelo.Apellidos);
-                cmd.Parameters.AddWithValue("Correo", modelo.Correo);
-                cmd.Parameters.AddWithValue("NombreUsuario", modelo.NombreUsuario);
-                cmd.Parameters.AddWithValue("Clave", modelo.Clave);
-                cmd.Parameters.AddWithValue("IdRol", modelo.IdRol);
-                cmd.Parameters.AddWithValue("FechaRegistro", modelo.FechaRegistro);
-                cmd.Parameters.AddWithValue("Estado", modelo.Estado);
-                cmd.Parameters.AddWithValue("UrlFoto", modelo.UrlFoto);
-                cmd.Parameters.AddWithValue("NombreFoto", modelo.NombreFoto);
-                cmd.CommandType = CommandType.StoredProcedure;
+                    conexion.Open();
+                    SqlCommand cmd = new SqlCommand("SPRegistrarUsuario", conexion);
+                    cmd.Parameters.AddWithValue("@Dni", modelo.Dni);
+                    cmd.Parameters.AddWithValue("@Nombres", modelo.Nombres);
+                    cmd.Parameters.AddWithValue("@Apellidos", modelo.Apellidos);
+                    cmd.Parameters.AddWithValue("@Correo", modelo.Correo);
+                    cmd.Parameters.AddWithValue("@NombreUsuario", modelo.NombreUsuario);
+                    cmd.Parameters.AddWithValue("@Clave", modelo.Clave);
+                    cmd.Parameters.AddWithValue("@IdRol", modelo.IdRol);
+                    cmd.Parameters.AddWithValue("@Estado", modelo.Estado);
+                    cmd.Parameters.AddWithValue("@UrlFoto", modelo.UrlFoto);
+                    cmd.Parameters.AddWithValue("@NombreFoto", modelo.NombreFoto);
+                    cmd.CommandType = CommandType.StoredProcedure;
+
+                    SqlParameter outputParameter = new SqlParameter();
+                    outputParameter.ParameterName = "@IdUsuario";
+                    outputParameter.SqlDbType = SqlDbType.Int;
+                    outputParameter.Direction = ParameterDirection.Output;
+                    cmd.Parameters.Add(outputParameter);
+                    await cmd.ExecuteNonQueryAsync();
+
+                    int UsuarioId = Convert.ToInt32(outputParameter.Value);
+                    modelo.IdUsuario = UsuarioId;
+
+                    return modelo;
+
                 }
-                return modelo;
             }
             catch (Exception)
             {

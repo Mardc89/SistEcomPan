@@ -190,7 +190,7 @@ namespace Negocio.Implementacion
                 bool respuesta = await _repositorio.Editar(usuarioEditar);
 
                 if (!respuesta)
-                    throw new TaskCanceledException("No se pudo moficar el usuario");
+                    throw new TaskCanceledException("No se pudo modificar el usuario");
 
                 return usuarioEditar;
 
