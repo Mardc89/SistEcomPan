@@ -60,6 +60,7 @@ namespace SistEcomPan.Web.Controllers
                     IdRol = item.IdRol,
                     EsActivo = Convert.ToInt32(item.Estado),
                     NombreRol = nombreRol.Where(x=>x.IdRol==item.IdRol).First().NombreRol,
+                    UrlFoto=item.UrlFoto
                 }) ; 
             }
             return StatusCode(StatusCodes.Status200OK,new { data = vmUsuariolista });
@@ -105,21 +106,23 @@ namespace SistEcomPan.Web.Controllers
                             NombreUsuario = item.NombreUsuario,
                             Clave = item.Clave,
                             IdRol = item.IdRol,
-                            Estado = Convert.ToBoolean(item.EsActivo)
+                            Estado = Convert.ToBoolean(item.EsActivo),
+                            UrlFoto=item.UrlFoto
+                            
                         }) ;
                     }
                 }
 
                 Usuarios usuarioCreado=await _usuarioServicio.Crear(listaUsuarios.First(),fotoStream,NombreFoto,urlPlantillaCorreo);
 
-
+                List<VMUsuario> vmUsuariolista = new List<VMUsuario>();
                 List<Usuarios> listUsuarios = new List<Usuarios>();
                 var nombreRol = await _rolService.ObtenerNombre();
                 if (usuarioCreado != null)
                 {
                     listUsuarios.Add(usuarioCreado);
 
-                    List<VMUsuario> vmUsuariolista = new List<VMUsuario>();
+                   
                     foreach (var item in listUsuarios)
                     {
                         vmUsuariolista.Add(new VMUsuario
@@ -132,13 +135,15 @@ namespace SistEcomPan.Web.Controllers
                             NombreUsuario = item.NombreUsuario,
                             Clave = item.Clave,
                             IdRol = item.IdRol,
-                            NombreRol = nombreRol.Where(x => x.IdRol == item.IdRol).First().NombreRol
+                            NombreRol = nombreRol.Where(x => x.IdRol == item.IdRol).First().NombreRol,
+                            UrlFoto=item.UrlFoto,
+                            EsActivo=Convert.ToInt32(item.Estado)
                         });
                     }
                 }
 
                 gResponse.Estado = true;
-                gResponse.objeto = vmUsuario;
+                gResponse.objeto = vmUsuariolista.First();
 
             }
             catch (Exception ex)
@@ -192,7 +197,9 @@ namespace SistEcomPan.Web.Controllers
                             NombreUsuario = item.NombreUsuario,
                             Clave = item.Clave,
                             IdRol = item.IdRol,
-                            Estado = Convert.ToBoolean(item.EsActivo)
+                            Estado = Convert.ToBoolean(item.EsActivo),
+                            UrlFoto=item.UrlFoto
+                           
 
                         });
                     }
@@ -200,12 +207,13 @@ namespace SistEcomPan.Web.Controllers
 
                 Usuarios usuarioEditado = await _usuarioServicio.Editar(listaUsuarios.First(), fotoStream, NombreFoto);
 
-                List<Usuarios> listUsuarios = new List<Usuarios>();
+                List<Usuarios> listUsuarios = new List<Usuarios>(); 
+                List<VMUsuario> vmUsuariolista = new List<VMUsuario>();
                 if (usuarioEditado != null)
                 {
                     listUsuarios.Add(usuarioEditado);
 
-                    List<VMUsuario> vmUsuariolista = new List<VMUsuario>();
+                   
                     var nombreRol = await _rolService.ObtenerNombre();
                     foreach (var item in listUsuarios)
                     {
@@ -219,13 +227,16 @@ namespace SistEcomPan.Web.Controllers
                             NombreUsuario = item.NombreUsuario,
                             Clave = item.Clave,
                             IdRol = item.IdRol,
-                            NombreRol = nombreRol.Where(x => x.IdRol == item.IdRol).First().NombreRol
+                            NombreRol = nombreRol.Where(x => x.IdRol == item.IdRol).First().NombreRol,
+                            UrlFoto=item.UrlFoto,
+                            EsActivo=Convert.ToInt32(item.Estado)
+                            
                         });
                     }
                 }
 
                 gResponse.Estado = true;
-                gResponse.objeto = vmUsuario;
+                gResponse.objeto = vmUsuariolista.First();
 
             }
             catch (Exception ex)

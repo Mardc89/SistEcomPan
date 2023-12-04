@@ -41,7 +41,7 @@ $(document).ready(function () {
             "datatype": "json"
         },
         "columns": [
-            { "data": "idUsuario", "visible": false, "searchable": false },
+            { "data": "idUsuario","searchable": false },
             {
                 "data": "urlFoto", render: function (data) {
                     return `<img style="height:60px" src=${data} class="rounded mx-auto d-block"/>`
@@ -95,6 +95,9 @@ $(document).ready(function () {
 
 
 function mostrarModal(modelo = MODELO_BASE) {
+    debugger;
+    let rutaCompleta = modelo.urlFoto;
+    let rutaRelativa = rutaCompleta.replace('C:\\Proyects\\SistEcomPan\\SistEcomPan\\SistEcomPan.Web', "'..\'");
     $("#txtId").val(modelo.idUsuario)
     $("#txtDni").val(modelo.dni)
     $("#txtNombres").val(modelo.nombres)
@@ -105,7 +108,7 @@ function mostrarModal(modelo = MODELO_BASE) {
     $("#cboRol").val(modelo.idRol == 0 ? $("#cboRol option:first").val() : modelo.idRol)
     $("#cboEstado").val(modelo.esActivo)
     $("#txtFoto").val("")
-    $("#imgUsuario").attr("src", modelo.urlFoto)
+    $("#imgUsuario").attr("src",rutaRelativa)
 
     $("#modalData").modal("show")
 }
@@ -170,7 +173,7 @@ $("#btnGuardar").click(function () {
             })
     }
     else {
-        debugger;
+        
         fetch("/Usuario/Editar", {
             method: "PUT",
             body: formData

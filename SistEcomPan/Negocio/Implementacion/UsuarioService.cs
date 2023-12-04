@@ -148,12 +148,12 @@ namespace Negocio.Implementacion
 
 
             if (usuarioExiste != null)
-                throw new TaskCanceledException("El Correo no Existe");
+                throw new TaskCanceledException("El Correo ya Existe");
 
             try
             {
                 IQueryable<Usuarios> buscarUsuario = await _repositorio.Consultar();
-                IQueryable<Usuarios> usuarioEncontrado = buscarUsuario.Where(u =>u.IdUsuario != entidad.IdUsuario);
+                IQueryable<Usuarios> usuarioEncontrado = buscarUsuario.Where(u =>u.IdUsuario == entidad.IdUsuario);
                 Usuarios usuarioEditar = usuarioEncontrado.First();
 
                 usuarioEditar.Dni = entidad.Dni;
@@ -163,6 +163,7 @@ namespace Negocio.Implementacion
                 usuarioEditar.NombreUsuario = entidad.NombreUsuario;
                 usuarioEditar.Clave = entidad.Clave;
                 usuarioEditar.IdRol = entidad.IdRol;
+                usuarioEditar.Estado = entidad.Estado;
 
                 if (usuarioEditar.NombreFoto == "")
                     usuarioEditar.NombreFoto = NombreFoto;
