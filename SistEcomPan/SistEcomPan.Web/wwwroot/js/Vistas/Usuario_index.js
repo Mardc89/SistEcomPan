@@ -44,7 +44,9 @@ $(document).ready(function () {
             { "data": "idUsuario","searchable": false },
             {
                 "data": "urlFoto", render: function (data) {
-                    return `<img style="height:60px" src=${data} class="rounded mx-auto d-block"/>`
+                    let ruta = data;
+                    let rutaRelativa = ruta.replace('C:\\Proyects\\SistEcomPan\\SistEcomPan\\SistEcomPan.Web\\wwwroot\\Imagenes\\', 'Imagenes/');
+                    return `<img style="height:60px" src=${rutaRelativa} class="rounded mx-auto d-block"/>`;
                 }
 
             },
@@ -97,7 +99,7 @@ $(document).ready(function () {
 function mostrarModal(modelo = MODELO_BASE) {
     debugger;
     let rutaCompleta = modelo.urlFoto;
-    let rutaRelativa = rutaCompleta.replace('C:\\Proyects\\SistEcomPan\\SistEcomPan\\SistEcomPan.Web', "'..\'");
+    let rutaRelativa = rutaCompleta.replace('C:\\Proyects\\SistEcomPan\\SistEcomPan\\SistEcomPan.Web\\wwwroot\\Imagenes\\', 'Imagenes/');
     $("#txtId").val(modelo.idUsuario)
     $("#txtDni").val(modelo.dni)
     $("#txtNombres").val(modelo.nombres)

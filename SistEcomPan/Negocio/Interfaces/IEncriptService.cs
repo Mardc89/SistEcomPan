@@ -8,9 +8,12 @@ namespace Negocio.Interfaces
 {
     public interface IEncriptService
     {
-        string GenerarClave();
-        string ConvertirSha256(string texto);
-        
+        public string GenerarClave();
+        public string ConvertirSha256(string texto);
+        public string EncriptarPassword(string password);
+        public string DesencriptarPassword(string encryptedPassword);
+
+
 
     }
 }

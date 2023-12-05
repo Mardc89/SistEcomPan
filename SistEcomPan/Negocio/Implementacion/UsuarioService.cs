@@ -65,12 +65,12 @@ namespace Negocio.Implementacion
             try
             {
                 string Clave = entidad.Clave;
-                entidad.Clave = _encriptservice.ConvertirSha256(Clave);
+                entidad.Clave = _encriptservice.EncriptarPassword(Clave);
                 entidad.NombreFoto = NombreFoto;
 
                 if (Foto != null && Foto.Length > 0)
                 {
-                    var path = Path.Combine(_environment.ContentRootPath, "Imagenes");
+                    var path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot","Imagenes");
                     if (!Directory.Exists(path))
                     {
                         Directory.CreateDirectory(path);
@@ -161,7 +161,7 @@ namespace Negocio.Implementacion
                 usuarioEditar.Apellidos = entidad.Apellidos;
                 usuarioEditar.Correo = entidad.Correo;
                 usuarioEditar.NombreUsuario = entidad.NombreUsuario;
-                usuarioEditar.Clave = entidad.Clave;
+                usuarioEditar.Clave = _encriptservice.DesencriptarPassword(entidad.Clave);
                 usuarioEditar.IdRol = entidad.IdRol;
                 usuarioEditar.Estado = entidad.Estado;
 
@@ -170,7 +170,7 @@ namespace Negocio.Implementacion
 
                 if (Foto != null && Foto.Length > 0)
                 {
-                    var path = Path.Combine(_environment.ContentRootPath, "Imagenes");
+                    var path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "Imagenes");
                     if (!Directory.Exists(path))
                     {
                         Directory.CreateDirectory(path);
