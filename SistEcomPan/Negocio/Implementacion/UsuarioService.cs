@@ -64,8 +64,7 @@ namespace Negocio.Implementacion
            
             try
             {
-                string Clave = entidad.Clave;
-                entidad.Clave = _encriptservice.EncriptarPassword(Clave);
+                entidad.Clave = _encriptservice.EncriptarPassword(entidad.Clave);
                 entidad.NombreFoto = NombreFoto;
 
                 if (Foto != null && Foto.Length > 0)
@@ -161,7 +160,7 @@ namespace Negocio.Implementacion
                 usuarioEditar.Apellidos = entidad.Apellidos;
                 usuarioEditar.Correo = entidad.Correo;
                 usuarioEditar.NombreUsuario = entidad.NombreUsuario;
-                usuarioEditar.Clave = _encriptservice.DesencriptarPassword(entidad.Clave);
+                usuarioEditar.Clave = _encriptservice.EncriptarPassword(entidad.Clave);
                 usuarioEditar.IdRol = entidad.IdRol;
                 usuarioEditar.Estado = entidad.Estado;
 
@@ -267,7 +266,7 @@ namespace Negocio.Implementacion
         {
             string ClaveEncriptada = _encriptservice.ConvertirSha256(clave);
             IQueryable<Usuarios> usuarios = await _repositorio.Consultar();
-            IQueryable<Usuarios> usuarioEvaluado = usuarios.Where(u => u.Correo.Equals(correo)&&u.Clave.Equals(clave));
+            IQueryable<Usuarios> usuarioEvaluado = usuarios.Where(u => u.Correo.Equals(correo)&&u.Clave.Equals(ClaveEncriptada));
             Usuarios usuarioEncontrado = usuarioEvaluado.FirstOrDefault();
 
             return usuarioEncontrado;

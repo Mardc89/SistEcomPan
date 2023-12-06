@@ -13,11 +13,13 @@ namespace SistEcomPan.Web.Controllers
     {
         private readonly IUsuarioService _usuarioServicio;
         private readonly IRolService _rolService;
+        private readonly IEncriptService _encriptService;
 
-        public UsuarioController(IUsuarioService usuarioServicio,IRolService rolService)
+        public UsuarioController(IUsuarioService usuarioServicio,IRolService rolService, IEncriptService encriptService)
         {
             _usuarioServicio = usuarioServicio;
             _rolService = rolService;
+            _encriptService = encriptService;
         }
         public IActionResult Index()
         {
@@ -56,7 +58,7 @@ namespace SistEcomPan.Web.Controllers
                     Apellidos = item.Apellidos,
                     Correo = item.Correo,
                     NombreUsuario = item.NombreUsuario,
-                    Clave = item.Clave,
+                    Clave = _encriptService.DesencriptarPassword(item.Clave),
                     IdRol = item.IdRol,
                     EsActivo = Convert.ToInt32(item.Estado),
                     NombreRol = nombreRol.Where(x=>x.IdRol==item.IdRol).First().NombreRol,
@@ -133,7 +135,7 @@ namespace SistEcomPan.Web.Controllers
                             Apellidos = item.Apellidos,
                             Correo = item.Correo,
                             NombreUsuario = item.NombreUsuario,
-                            Clave = item.Clave,
+                            Clave = _encriptService.DesencriptarPassword(item.Clave),
                             IdRol = item.IdRol,
                             NombreRol = nombreRol.Where(x => x.IdRol == item.IdRol).First().NombreRol,
                             UrlFoto=item.UrlFoto,
@@ -225,7 +227,7 @@ namespace SistEcomPan.Web.Controllers
                             Apellidos = item.Apellidos,
                             Correo = item.Correo,
                             NombreUsuario = item.NombreUsuario,
-                            Clave = item.Clave,
+                            Clave = _encriptService.DesencriptarPassword(item.Clave),
                             IdRol = item.IdRol,
                             NombreRol = nombreRol.Where(x => x.IdRol == item.IdRol).First().NombreRol,
                             UrlFoto=item.UrlFoto,
