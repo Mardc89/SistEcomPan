@@ -13,8 +13,10 @@ namespace SistEcomPan.Web.Models.ViewModels
         public string Direccion { get; set; }
         public string Telefono { get; set; }
         public int IdDistrito { get; set; }
+        public string NombreDistrito { get; set; }
         public string NombreUsuario { get; set; }
         public string Clave { get; set; }
         public int? Estado { get; set; }
+        public string? UrlFoto { get; set; }
     }
 }
