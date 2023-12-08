@@ -27,7 +27,7 @@ namespace SistEcomPan.Web.Controllers
         [HttpGet]
         public async Task<IActionResult> ListaCategoriass()
         {
-            var lista = await _categoriaService.lista();
+            var lista = await _categoriaService.Lista();
             List<VMCategoria> vmListaCategorias = new List<VMCategoria>();
             foreach (var item in lista)
             {
@@ -35,7 +35,7 @@ namespace SistEcomPan.Web.Controllers
                 {
                     IdCategoria = item.IdCategoria,
                     TipoDeCategoria = item.TipoDeCategoria,
-                    Estado=item.Estado,
+                    Estado=Convert.ToInt32(item.Estado)
                 });
             }
             return StatusCode(StatusCodes.Status200OK, vmListaCategorias);
@@ -57,7 +57,7 @@ namespace SistEcomPan.Web.Controllers
                     Precio=item.Precio,
                     Estado=Convert.ToInt32(item.Estado),
                     Stock=item.Stock,
-                    NombreCategoria = nombreCategoria.Where(x => x.IdProducto == item.IdProducto).First().NombreCategoria,
+                    NombreCategoria = nombreCategoria.Where(x => x.IdCategoria == item.IdCategoria).First().TipoDeCategoria,
                 });
             }
             return StatusCode(StatusCodes.Status200OK, new { data = vmProductolista });
@@ -198,7 +198,7 @@ namespace SistEcomPan.Web.Controllers
                             Descripcion = item.Descripcion,
                             IdCategoria = item.IdCategoria,
                             Precio=item.Precio,
-                            NombreCategoria = nombreCategoria.Where(x => x.IdCategoria == item.IdCategoria).First().TipoCategoria,
+                            NombreCategoria = nombreCategoria.Where(x => x.IdCategoria == item.IdCategoria).First().TipoDeCategoria,
                             Estado=Convert.ToInt32(item.Estado),
                             Stock=item.Stock
 

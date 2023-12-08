@@ -13,37 +13,32 @@ namespace Negocio.Implementacion
 {
     public class ProductoService
     {
-        private readonly IGenericRepository<Usuarios> _repositorio;
-        private readonly ICorreoService _correoService;
+        private readonly IGenericRepository<Productos> _repositorio;
         private readonly IHostEnvironment _environment;
-        public ProductoService(ICorreoService correoService, IGenericRepository<Usuarios> repositorio, IHostEnvironment environment)
+        public ProductoService(IGenericRepository<Productos> repositorio, IHostEnvironment environment)
         {
-            _correoService = correoService;
             _repositorio = repositorio;
             _environment = environment;
         }
 
-
-
-        public async Task<Usuarios> Crear(Usuarios entidad, Stream Foto = null, string NombreFoto = "", string UrlPlantillaCorreo = "")
+        public async Task<Productos> Crear(Productos entidad, Stream Foto = null, string NombreFoto = "")
         {
 
-            IQueryable<Usuarios> usuarios = await _repositorio.Consultar();
-            IQueryable<Usuarios> usuarioEvaluado = usuarios.Where(u => u.Correo == entidad.Correo);
-            Usuarios usuarioExiste = usuarioEvaluado.FirstOrDefault();
+            IQueryable<Productos> productos = await _repositorio.Consultar();
+            IQueryable<Productos> productoEvaluado = productos.Where(u => u.Descripcion == entidad.Descripcion);
+            Productos productoExiste = productoEvaluado.FirstOrDefault();
 
 
-            if (usuarioExiste != null)
-                throw new TaskCanceledException("El Correo no Existe");
+            if (productoExiste != null)
+                throw new TaskCanceledException("El Producto ya Existe");
 
             try
             {
-                entidad.Clave = _encriptservice.EncriptarPassword(entidad.Clave);
-                entidad.NombreFoto = NombreFoto;
+                entidad.NombreImagen = NombreFoto;
 
                 if (Foto != null && Foto.Length > 0)
                 {
-                    var path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "Imagenes");
+                    var path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "ImgProducto");
                     if (!Directory.Exists(path))
                     {
                         Directory.CreateDirectory(path);
@@ -58,50 +53,15 @@ namespace Negocio.Implementacion
                         Foto.CopyTo(stream);
 
                     }
-                    entidad.UrlFoto = UrlFoto;
+                    entidad.UrlImagen = UrlFoto;
                 }
 
-                Usuarios usuarioCreado = await _repositorio.Crear(entidad);
+                Productos productoCreado = await _repositorio.Crear(entidad);
 
-                if (usuarioCreado.IdUsuario == 0)
-                    throw new TaskCanceledException("No se pudo crear el Usuario");
+                if (productoCreado.IdProducto == 0)
+                    throw new TaskCanceledException("No se pudo crear el Producto");
 
-                if (UrlPlantillaCorreo != "")
-                {
-                    UrlPlantillaCorreo = UrlPlantillaCorreo.Replace("[correo]", usuarioCreado.Correo).Replace("[clave]", "********");
-
-                    string htmlCorreo = "";
-
-                    HttpWebRequest request = (HttpWebRequest)WebRequest.Create(UrlPlantillaCorreo);
-                    HttpWebResponse response = (HttpWebResponse)request.GetResponse();
-
-                    if (response.StatusCode == HttpStatusCode.OK)
-                    {
-
-                        using (Stream dataStream = response.GetResponseStream())
-                        {
-                            StreamReader readerStream = null;
-
-                            if (response.CharacterSet == null)
-                                readerStream = new StreamReader(dataStream);
-                            else
-                                readerStream = new StreamReader(dataStream, Encoding.GetEncoding(response.CharacterSet));
-
-                            htmlCorreo = readerStream.ReadToEnd();
-                            response.Close();
-                            readerStream.Close();
-
-                        }
-
-
-                    }
-
-                    if (htmlCorreo != "")
-                        await _correoService.EnviarCorreo(usuarioCreado.Correo, "Cuenta Creada", htmlCorreo);
-                }
-
-
-                return usuarioCreado;
+                return productoCreado;
             }
             catch (Exception)
             {
@@ -112,38 +72,36 @@ namespace Negocio.Implementacion
 
         }
 
-        public async Task<Usuarios> Editar(Usuarios entidad, Stream Foto = null, string NombreFoto = "")
+        public async Task<Productos> Editar(Productos entidad, Stream Foto = null, string NombreFoto = "")
         {
 
-            IQueryable<Usuarios> usuarios = await _repositorio.Consultar();
-            IQueryable<Usuarios> usuarioEvaluado = usuarios.Where(u => u.Correo == entidad.Correo && u.IdUsuario != entidad.IdUsuario);
-            Usuarios usuarioExiste = usuarioEvaluado.FirstOrDefault();
+            IQueryable<Productos> productos = await _repositorio.Consultar();
+            IQueryable<Productos> productoEvaluado = productos.Where(u => u.Descripcion == entidad.Descripcion && u.IdProducto != entidad.IdProducto);
+            Productos productoExiste = productoEvaluado.FirstOrDefault();
 
 
-            if (usuarioExiste != null)
-                throw new TaskCanceledException("El Correo ya Existe");
+            if (productoExiste != null)
+                throw new TaskCanceledException("El Producto ya Existe");
 
             try
             {
-                IQueryable<Usuarios> buscarUsuario = await _repositorio.Consultar();
-                IQueryable<Usuarios> usuarioEncontrado = buscarUsuario.Where(u => u.IdUsuario == entidad.IdUsuario);
-                Usuarios usuarioEditar = usuarioEncontrado.First();
+                IQueryable<Productos> buscarProducto = await _repositorio.Consultar();
+                IQueryable<Productos>productoEncontrado = buscarProducto.Where(u => u.IdProducto == entidad.IdProducto);
+                Productos productoEditar = productoEncontrado.First();
 
-                usuarioEditar.Dni = entidad.Dni;
-                usuarioEditar.Nombres = entidad.Nombres;
-                usuarioEditar.Apellidos = entidad.Apellidos;
-                usuarioEditar.Correo = entidad.Correo;
-                usuarioEditar.NombreUsuario = entidad.NombreUsuario;
-                usuarioEditar.Clave = _encriptservice.EncriptarPassword(entidad.Clave);
-                usuarioEditar.IdRol = entidad.IdRol;
-                usuarioEditar.Estado = entidad.Estado;
+                productoEditar.Descripcion = entidad.Descripcion;
+                productoEditar.IdCategoria = entidad.IdCategoria;
+                productoEditar.Precio= entidad.Precio;
+                productoEditar.Estado = entidad.Estado;
+                productoEditar.Stock = entidad.Stock;
+                
 
-                if (usuarioEditar.NombreFoto == "")
-                    usuarioEditar.NombreFoto = NombreFoto;
+                if (productoEditar.NombreImagen == "")
+                    productoEditar.NombreImagen = NombreFoto;
 
                 if (Foto != null && Foto.Length > 0)
                 {
-                    var path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "Imagenes");
+                    var path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "ImgProducto");
                     if (!Directory.Exists(path))
                     {
                         Directory.CreateDirectory(path);
@@ -158,15 +116,15 @@ namespace Negocio.Implementacion
                         Foto.CopyTo(stream);
 
                     }
-                    usuarioEditar.UrlFoto = UrlFoto;
+                    productoEditar.UrlImagen = UrlFoto;
                 }
 
-                bool respuesta = await _repositorio.Editar(usuarioEditar);
+                bool respuesta = await _repositorio.Editar(productoEditar);
 
                 if (!respuesta)
-                    throw new TaskCanceledException("No se pudo modificar el usuario");
+                    throw new TaskCanceledException("No se pudo modificar el producto");
 
-                return usuarioEditar;
+                return productoEditar;
 
 
             }
@@ -178,22 +136,22 @@ namespace Negocio.Implementacion
 
         }
 
-        public async Task<bool> Eliminar(int IdUsuario)
+        public async Task<bool> Eliminar(int IdProducto)
         {
             try
             {
-                IQueryable<Usuarios> usuarios = await _repositorio.Consultar();
-                IQueryable<Usuarios> usuarioEvaluado = usuarios.Where(u => u.IdUsuario == IdUsuario);
-                Usuarios usuarioEncontrado = usuarioEvaluado.FirstOrDefault();
+                IQueryable<Productos> productos = await _repositorio.Consultar();
+                IQueryable<Productos> productoEvaluado = productos.Where(u => u.IdProducto == IdProducto);
+                Productos productoEncontrado = productoEvaluado.FirstOrDefault();
 
-                if (usuarioEncontrado == null)
-                    throw new TaskCanceledException("El Usuario no Existe");
+                if (productoEncontrado == null)
+                    throw new TaskCanceledException("El Producto no Existe");
 
-                string nombreFoto = usuarioEncontrado.NombreFoto;
-                bool respuesta = await _repositorio.Eliminar(usuarioEncontrado.IdUsuario);
+                string nombreFoto = productoEncontrado.NombreImagen;
+                bool respuesta = await _repositorio.Eliminar(productoEncontrado.IdProducto);
 
                 if (respuesta)
-                    System.IO.File.Delete(usuarioEncontrado.UrlFoto);
+                    System.IO.File.Delete(productoEncontrado.UrlImagen);
 
                 return true;
 
@@ -207,9 +165,9 @@ namespace Negocio.Implementacion
 
 
 
-        public async Task<List<Usuarios>> Lista()
+        public async Task<List<Productos>> Lista()
         {
-            List<Usuarios> query = await _repositorio.Lista();
+            List<Productos> query = await _repositorio.Lista();
             return query;
         }
 
