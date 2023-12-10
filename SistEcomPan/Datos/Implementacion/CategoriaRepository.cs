@@ -101,7 +101,7 @@ namespace Datos.Implementacion
 
         }
 
-        public async Task<bool> Delete(int id)
+        public async Task<bool> Eliminar(int id)
         {
             using (var conexion = new SqlConnection(_cadenaSQL))
             {
@@ -170,14 +170,32 @@ namespace Datos.Implementacion
             throw new NotImplementedException();
         }
 
-        public Task<bool> Eliminar(int d)
-        {
-            throw new NotImplementedException();
-        }
 
-        public Task<IQueryable<Categorias>> Consultar()
+        public async Task<IQueryable<Categorias>> Consultar()
         {
-            throw new NotImplementedException();
+            List<Categorias> lista = new List<Categorias>();
+            using (var conexion = new SqlConnection(_cadenaSQL))
+            {
+                conexion.Open();
+                SqlCommand cmd = new SqlCommand("SPListaCategorias", conexion);
+                cmd.CommandType = CommandType.StoredProcedure;
+
+                using (var dr = await cmd.ExecuteReaderAsync())
+                {
+                    while (await dr.ReadAsync())
+                    {
+                        lista.Add(new Categorias
+                        {
+                            IdCategoria = Convert.ToInt32(dr["IdCategoria"]),
+                            TipoDeCategoria = dr["TipoDeCategoria"].ToString(),
+                            FechaRegistro = Convert.ToDateTime(dr["FechaRegistro"]),
+                            Estado = Convert.ToBoolean(dr["Estado"])                      
+                        });
+                    }
+                }
+            }
+
+            return lista.AsQueryable();
         }
 
 

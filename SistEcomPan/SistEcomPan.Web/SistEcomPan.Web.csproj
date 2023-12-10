@@ -14,6 +14,14 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Content Remove="wwwroot\js\Vistas\PedidoIndex.js" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <_ContentIncludedByDefault Remove="wwwroot\js\Vistas\PedidoIndex.js" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Include="Views\Categoria\Index.cshtml" />
     <None Include="Views\DashBoard\Index.cshtml" />
     <None Include="Views\Home\Index.cshtml" />
@@ -43,6 +51,7 @@
     <None Include="wwwroot\js\Vistas\chart-pie-demo.js" />
     <None Include="wwwroot\js\Vistas\DashBoard_Index.js" />
     <None Include="wwwroot\js\Vistas\Home_Perfil.js" />
+    <None Include="wwwroot\js\Vistas\PedidoIndex.js" />
     <None Include="wwwroot\js\Vistas\Usuario_index.js" />
     <None Include="wwwroot\scss\navs\_global.scss" />
     <None Include="wwwroot\scss\navs\_sidebar.scss" />

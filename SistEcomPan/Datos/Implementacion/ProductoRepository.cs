@@ -133,10 +133,7 @@ namespace Datos.Implementacion
             }
         }
 
-        public Task<IQueryable<Productos>> Consultar(string consulta)
-        {
-            throw new NotImplementedException();
-        }
+
 
         public Task<Productos> Crear(Productos modelo)
         {
@@ -144,9 +141,36 @@ namespace Datos.Implementacion
         }
 
 
-        public Task<IQueryable<Productos>> Consultar()
+        public async Task<IQueryable<Productos>> Consultar()
         {
-            throw new NotImplementedException();
+            List<Productos> lista = new List<Productos>();
+            using (var conexion = new SqlConnection(_cadenaSQL))
+            {
+                conexion.Open();
+                SqlCommand cmd = new SqlCommand("SPListaProductos", conexion);
+                cmd.CommandType = CommandType.StoredProcedure;
+
+                using (var dr = await cmd.ExecuteReaderAsync())
+                {
+                    while (await dr.ReadAsync())
+                    {
+                        lista.Add(new Productos
+                        {
+                            IdProducto = Convert.ToInt32(dr["IdProducto"]),
+                            Descripcion = dr["Descripcion"].ToString(),
+                            IdCategoria = Convert.ToInt32(dr["IdCategoria"]),
+                            Precio = Convert.ToDecimal(dr["Precio"]),
+                            UrlImagen = dr["UrlImagen"].ToString(),
+                            NombreImagen = dr["NombreImagen"].ToString(),
+                            Estado =  Convert.ToBoolean(dr["Estado"]),
+                            Stock = Convert.ToInt32(dr["Stock"]),
+                            FechaRegistro = Convert.ToDateTime(dr["FechaRegistro"])
+                        });
+                    }
+                }
+            }
+
+            return lista.AsQueryable();
         }
 
         public Task<IQueryable<Productos>> Obtener(string consulta)

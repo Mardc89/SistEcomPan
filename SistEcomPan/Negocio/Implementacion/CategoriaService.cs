@@ -18,26 +18,22 @@ namespace Negocio.Implementacion
             _repositorio = repositorio;
         }
 
-        public Task<Categorias> Crear(Categorias entidad)
+        public async Task<Categorias> Crear(Categorias entidad)
         {
             IQueryable<Categorias> categorias = await _repositorio.Consultar();
-            IQueryable<Categorias> categoriaEvaluada = categorias.Where(u => u.Descripcion == entidad.Descripcion);
-            Productos productoExiste = categoriaEvaluada.FirstOrDefault();
+            IQueryable<Categorias> categoriaEvaluada = categorias.Where(u => u.TipoDeCategoria == entidad.TipoDeCategoria);
+            Categorias categoriaExiste = categoriaEvaluada.FirstOrDefault();
 
 
-            if (productoExiste != null)
-                throw new TaskCanceledException("El Producto ya Existe");
+            if (categoriaExiste != null)
+                throw new TaskCanceledException("La Categoria ya Existe");
 
             try
             {
-                
-
-
-
                 Categorias categoriaCreada = await _repositorio.Crear(entidad);
 
                 if (categoriaCreada.IdCategoria == 0)
-                    throw new TaskCanceledException("No se pudo crear el Producto");
+                    throw new TaskCanceledException("No se pudo crear la Categoria");
 
                 return categoriaCreada;
             }
@@ -49,14 +45,63 @@ namespace Negocio.Implementacion
 
         }
 
-        public Task<Categorias> Editar(Categorias entidad)
+        public async Task<Categorias> Editar(Categorias entidad)
         {
-            throw new NotImplementedException();
+
+            IQueryable<Categorias> categorias = await _repositorio.Consultar();
+            IQueryable<Categorias> categoriaEvaluada = categorias.Where(u => u.TipoDeCategoria == entidad.TipoDeCategoria && u.IdCategoria != entidad.IdCategoria);
+            Categorias categoriaExiste = categoriaEvaluada.FirstOrDefault();
+
+
+            if (categoriaExiste != null)
+                throw new TaskCanceledException("La Categoria ya Existe");
+
+            try
+            {
+                IQueryable<Categorias> buscarCategoria = await _repositorio.Consultar();
+                IQueryable<Categorias> categoriaEncontrada = buscarCategoria.Where(u => u.IdCategoria == entidad.IdCategoria);
+                Categorias categoriaEditar = categoriaEncontrada.First();
+
+                categoriaEditar.TipoDeCategoria = entidad.TipoDeCategoria;
+                categoriaEditar.Estado = entidad.Estado;
+
+                bool respuesta = await _repositorio.Editar(categoriaEditar);
+
+                if (!respuesta)
+                    throw new TaskCanceledException("No se pudo modificar la Categoria");
+
+                return categoriaEditar;
+
+
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
         }
 
-        public Task<bool> Eliminar(int IdCategoria)
+        public async Task<bool> Eliminar(int IdCategoria)
         {
-            throw new NotImplementedException();
+            try
+            {
+                IQueryable<Categorias> categorias = await _repositorio.Consultar();
+                IQueryable<Categorias> categoriaEvaluada = categorias.Where(u => u.IdCategoria == IdCategoria);
+                Categorias categoriaEncontrada = categoriaEvaluada.FirstOrDefault();
+
+                if (categoriaEncontrada == null)
+                    throw new TaskCanceledException("La Categoria no Existe");
+
+                bool respuesta = await _repositorio.Eliminar(categoriaEncontrada.IdCategoria);
+
+                return respuesta;
+
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
         }
 
         public async Task<List<Categorias>> Lista()

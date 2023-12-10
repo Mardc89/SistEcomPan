@@ -7,9 +7,11 @@ namespace SistEcomPan.Web.Models.ViewModels
         public int IdPedido { get; set; }
         public int IdCliente { get; set; }
         public Clientes Cliente { get; set; }
+        public string NombreCliente { get; set; }      
         public string Codigo { get; set; }
         public decimal MontoTotal { get; set; }
         public string Estado { get; set; }
+        public DateTime FechaPedido { get; set; }
         public List<VMDetallePedido> VMDetallePedido { get; set; }
     }
 }

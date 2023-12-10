@@ -133,19 +133,39 @@ namespace Datos.Implementacion
             throw new NotImplementedException();
         }
 
-        public Task<IQueryable<Pedidos>> Consultar(string consulta)
-        {
-            throw new NotImplementedException();
-        }
 
         public Task<Pedidos> Crear(Pedidos modelo)
         {
             throw new NotImplementedException();
         }
 
-        public Task<IQueryable<Pedidos>> Consultar()
+        public async Task<IQueryable<Pedidos>> Consultar()
         {
-            throw new NotImplementedException();
+            List<Pedidos> lista = new List<Pedidos>();
+            using (var conexion = new SqlConnection(_cadenaSQL))
+            {
+                conexion.Open();
+                SqlCommand cmd = new SqlCommand("SPListaPedidos", conexion);
+                cmd.CommandType = CommandType.StoredProcedure;
+
+                using (var dr = await cmd.ExecuteReaderAsync())
+                {
+                    while (await dr.ReadAsync())
+                    {
+                        lista.Add(new Pedidos
+                        {
+                            IdPedido = Convert.ToInt32(dr["IdPedido"]),
+                            IdCliente = Convert.ToInt32(dr["IdCliente"]),
+                            Codigo = dr["Codigo"].ToString(),
+                            MontoTotal =Convert.ToDecimal(dr["MontoTotal"]),                  
+                            Estado = dr["Estado"].ToString(),
+                            FechaPedido = Convert.ToDateTime(dr["FechaRegistro"])
+                        });
+                    }
+                }
+            }
+
+            return lista.AsQueryable();
         }
 
         public Task<IQueryable<Pedidos>> Obtener(string consulta)
