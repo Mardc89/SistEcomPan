@@ -25,7 +25,7 @@ namespace SistEcomPan.Web.Controllers
             return View();
         }
         [HttpGet]
-        public async Task<IActionResult> ListaCategoriass()
+        public async Task<IActionResult> ListaCategorias()
         {
             var lista = await _categoriaService.Lista();
             List<VMCategoria> vmListaCategorias = new List<VMCategoria>();

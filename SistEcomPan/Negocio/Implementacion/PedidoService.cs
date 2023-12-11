@@ -56,5 +56,17 @@ namespace Negocio.Implementacion
         {
             throw new NotImplementedException();
         }
+
+        public async Task<List<Pedidos>> lista()
+        {
+            List<Pedidos> query = await _repositorioPedido.Lista();
+            return query;
+        }
+
+        public async Task<IQueryable<Pedidos>> ObtenerNombre()
+        {
+            List<Pedidos> lista = await _repositorioPedido.Lista();
+            return lista.AsQueryable();
+        }
     }
 }

@@ -27,10 +27,11 @@ namespace IOC
             services.AddScoped<IEncriptService, EncriptService>();
 
             services.AddScoped<IGenericRepository<Roles>, RolRepository>();
-            services.AddScoped<IRolService, RolService>();
-
-           
+            services.AddScoped<IGenericRepository<Clientes>, ClienteRepository>();
+            services.AddScoped<IRolService, RolService>();          
             services.AddScoped<IUsuarioService, UsuarioService>();
+            services.AddScoped<IPedidoService, PedidoService>();
+            services.AddScoped<IClienteService, ClienteService>();
 
         }
     }

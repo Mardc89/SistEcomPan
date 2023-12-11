@@ -50,7 +50,7 @@ $(document).ready(function () {
                 }
 
             },
-            { "data": "dni" },
+            { "data": "dni"},
             { "data": "nombres" },
             { "data": "apellidos" },
             { "data": "correo" },

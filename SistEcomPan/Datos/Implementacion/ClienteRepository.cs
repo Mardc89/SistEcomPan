@@ -48,7 +48,7 @@ namespace Datos.Implementacion
                             NombreUsuario = dr["NombreUsuario"].ToString(),
                             Clave = dr["Clave"].ToString(),
                             FechaRegistro = Convert.ToDateTime(dr["FechaRegistro"]),
-                            Estado = dr.GetBoolean(dr.GetOrdinal("Estado")),
+                            Estado = Convert.ToBoolean(dr["Estado"]),
                             UrlFoto= dr["UrlFoto"].ToString(),
                             NombreFoto= dr["NombreFoto"].ToString()
                         }); 
