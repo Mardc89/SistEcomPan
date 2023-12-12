@@ -11,7 +11,8 @@ namespace Negocio.Interfaces
     public interface IPedidoService
     {
         Task<List<Productos>> ObtenerProductos(string busqueda);
-        Task<bool> Registrar(Pedidos entidad,DataTable datatable);
+        Task<Pedidos> Registrar(Pedidos entidad);
+        Task<bool> Eliminar(int IdPedido);
         Task<List<Pedidos>> Historial(string numeroPedido, string fechaInicio, string fechaFin);
         Task<Pedidos> Detalle(string numeroPedido);
         Task<List<DetallePedido>> Reporte(string fechaInicio, string fechaFin);

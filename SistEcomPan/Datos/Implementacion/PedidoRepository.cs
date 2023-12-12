@@ -98,28 +98,41 @@ namespace Datos.Implementacion
             }
         }
 
-        public async Task<bool> Registrar(Pedidos modelo, DataTable DetallePedido)
+        public async Task<Pedidos> Registrar(Pedidos modelo, DataTable DetallePedido)
         {
-            using (var conexion = new SqlConnection(_cadenaSQL))
+            try
             {
-                conexion.Open();
-                SqlCommand cmd = new SqlCommand("SPRegistrarPedidos", conexion);
-                cmd.Parameters.AddWithValue("IdCliente", modelo.IdCliente);
-                cmd.Parameters.AddWithValue("codigo", modelo.Codigo);
-                cmd.Parameters.AddWithValue("MontoTotal", modelo.MontoTotal);
-                cmd.Parameters.AddWithValue("Estado", modelo.Estado);
-                cmd.Parameters.AddWithValue("FechaPedido", modelo.FechaPedido);
-                cmd.Parameters.AddWithValue("FechaDeuda", DetallePedido);
-                cmd.CommandType = CommandType.StoredProcedure;
-
-                int filaAfectada = await cmd.ExecuteNonQueryAsync();
-
-                if (filaAfectada > 0)
-                    return true;
-                else
-                    return false;
+                using (var conexion = new SqlConnection(_cadenaSQL))
+                {
+                    conexion.Open();
+                    SqlCommand cmd = new SqlCommand("SPRegistrarPedidos", conexion);
+                    cmd.Parameters.AddWithValue("@IdCliente", modelo.IdCliente);
+                    cmd.Parameters.AddWithValue("@codigo", modelo.Codigo);
+                    cmd.Parameters.AddWithValue("@MontoTotal", modelo.MontoTotal);
+                    cmd.Parameters.AddWithValue("@Estado", modelo.Estado);
+                    cmd.Parameters.AddWithValue("@FechaPedido", modelo.FechaPedido);
+                    cmd.Parameters.AddWithValue("@DetallePedido", DetallePedido);
+                    cmd.CommandType = CommandType.StoredProcedure;
 
 
+                    SqlParameter outputParameter = new SqlParameter();
+                    outputParameter.ParameterName = "@IdPedido";
+                    outputParameter.SqlDbType = SqlDbType.Int;
+                    outputParameter.Direction = ParameterDirection.Output;
+                    cmd.Parameters.Add(outputParameter);
+                    await cmd.ExecuteNonQueryAsync();
+
+                    int PedidoId = Convert.ToInt32(outputParameter.Value);
+                    modelo.IdPedido = PedidoId;
+
+                    return modelo;
+
+                }
+            }
+            catch (Exception)
+            {
+
+                throw;
             }
         }
 
@@ -172,5 +185,7 @@ namespace Datos.Implementacion
         {
             throw new NotImplementedException();
         }
+
+
     }
 }

@@ -14,6 +14,6 @@ namespace Entidades
         public int IdProducto { get; set; }
         public Productos Producto { get; set; }
         public int Cantidad { get; set; }
-        public decimal Total { get; set; }
+        public decimal? Total { get; set; }
     }
 }

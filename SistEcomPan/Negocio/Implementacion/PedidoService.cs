@@ -4,6 +4,7 @@ using Negocio.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -39,11 +40,36 @@ namespace Negocio.Implementacion
             return productosEvaluado.ToList();
         }
 
-        public async Task<bool> Registrar(Pedidos entidad, DataTable dataTable)
+        public async Task<Pedidos> Registrar(Pedidos entidad)
         {
             try
             {
-                return await _repositorioPedido.Registrar(entidad,dataTable);
+                decimal total = 0;
+                DataTable detallePedido = new DataTable();
+                detallePedido.Locale = new CultureInfo("es-Pe");
+                detallePedido.Columns.Add("IdProducto", typeof(string));
+                detallePedido.Columns.Add("Cantidad", typeof(int));
+                detallePedido.Columns.Add("Total", typeof(decimal));
+
+                foreach (DetallePedido detalle in entidad.DetallePedido){
+                    decimal subtotal = Convert.ToDecimal(detalle.Cantidad.ToString()) * detalle.Producto.Precio;
+                    total+= subtotal;
+
+                    IQueryable<DetallePedido> buscarProducto = await _repositorioPedido.Consultar();
+                    IQueryable<DetallePedido> productoEncontrado = buscarProducto.Where(u => u.IdProducto==detalle.IdProducto);
+                    DetallePedido productoEditar = productoEncontrado.First();
+                    productoEditar.Producto.Stock = productoEditar.Producto.Stock - detalle.Cantidad;
+
+                    detallePedido.Rows.Add(new object[] {
+                        detalle.Producto.IdProducto,
+                        detalle.Cantidad,
+                        subtotal
+                    });
+
+                }
+                entidad.MontoTotal = total;
+
+                return await _repositorioPedido.Registrar(entidad,detallePedido);
             }
             catch (Exception)
             {
@@ -67,6 +93,11 @@ namespace Negocio.Implementacion
         {
             List<Pedidos> lista = await _repositorioPedido.Lista();
             return lista.AsQueryable();
+        }
+
+        public Task<bool> Eliminar(int IdPedido)
+        {
+            throw new NotImplementedException();
         }
     }
 }

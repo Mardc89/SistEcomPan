@@ -75,6 +75,7 @@ namespace SistEcomPan.Web.Controllers
             {
                 List<Pedidos> listaPedidos = new List<Pedidos>();
                 List<VMPedido> listaVMPedidos = new List<VMPedido>();
+                List<DetallePedido> detallePedido = new List<DetallePedido>();
                 if (modelo != null)
                 {
                     listaVMPedidos.Add(modelo);
@@ -92,93 +93,44 @@ namespace SistEcomPan.Web.Controllers
                             {                             
                               IdProducto=detalle.IdProducto,
                               Cantidad=detalle.Cantidad,
-
-
+                              Total=Convert.ToDecimal(detalle.Total)
                             }).ToList()
 
                         }); 
                     }
-                }
+                }              
 
-                Pedidos categoriaCreada = await _pedidoService.Registrar(listaPedidos.First());
+                Pedidos pedidoCreado = await _pedidoService.Registrar(listaPedidos.First());
 
-                List<VMCategoria> vmCategorialista = new List<VMCategoria>();
-                List<Categorias> listCategorias = new List<Categorias>();
-                if (categoriaCreada != null)
+                List<VMPedido> vmPedidolista = new List<VMPedido>();
+                List<Pedidos> listPedidos = new List<Pedidos>();
+                if (pedidoCreado != null)
                 {
-                    listCategorias.Add(categoriaCreada);
+                    listPedidos.Add(pedidoCreado);
 
 
-                    foreach (var item in listCategorias)
+                    foreach (var item in listPedidos)
                     {
-                        vmCategorialista.Add(new VMCategoria
+                        vmPedidolista.Add(new VMPedido
                         {
-                            IdCategoria = item.IdCategoria,
-                            TipoDeCategoria = item.TipoDeCategoria,
-                            Estado = Convert.ToInt32(item.Estado)
+                            IdPedido = item.IdPedido,
+                            IdCliente = item.IdCliente,
+                            Codigo = item.Codigo,
+                            MontoTotal = item.MontoTotal,
+                            FechaPedido = item.FechaPedido,
+                            Estado = item.Estado,
+                            VMDetallePedido = item.DetallePedido.Select(detalle => new VMDetallePedido
+                            {
+                                IdProducto = detalle.IdProducto,
+                                Cantidad = detalle.Cantidad,
+                                Total = Convert.ToString(detalle.Total)
+                            }).ToList()
                         });
                     }
                 }
 
                 gResponse.Estado = true;
-                gResponse.objeto = vmCategorialista.First();
-
-            }
-            catch (Exception ex)
-            {
-                gResponse.Estado = false;
-                gResponse.Mensaje = ex.Message;
-
-            }
-
-            return StatusCode(StatusCodes.Status200OK, gResponse);
-
-        }
-
-        [HttpPut]
-        public async Task<IActionResult> Editar([FromBody] VMCategoria modelo)
-        {
-            GenericResponse<VMCategoria> gResponse = new GenericResponse<VMCategoria>();
-
-            try
-            {
-
-                List<Categorias> listaCategorias = new List<Categorias>();
-                List<VMCategoria> listaVMCategorias = new List<VMCategoria>();
-                if (modelo != null)
-                {
-                    listaVMCategorias.Add(modelo);
-                    foreach (var item in listaVMCategorias)
-                    {
-                        listaCategorias.Add(new Categorias
-                        {
-                            IdCategoria = item.IdCategoria,
-                            TipoDeCategoria = item.TipoDeCategoria,
-                            Estado = Convert.ToBoolean(item.Estado)
-                        });
-                    }
-                }
-
-                Categorias categoriaEditada = await _categoriaService.Editar(listaCategorias.First());
-
-                List<Categorias> listCategorias = new List<Categorias>();
-                List<VMCategoria> vmCategorialista = new List<VMCategoria>();
-                if (categoriaEditada != null)
-                {
-                    listCategorias.Add(categoriaEditada);
-                    foreach (var item in listCategorias)
-                    {
-                        vmCategorialista.Add(new VMCategoria
-                        {
-                            IdCategoria = item.IdCategoria,
-                            TipoDeCategoria = item.TipoDeCategoria,
-                            Estado = Convert.ToInt32(item.Estado)
-                        });
-                    }
-                }
-
-                gResponse.Estado = true;
-                gResponse.objeto = vmCategorialista.First();
+                gResponse.objeto = vmPedidolista.First();
 
             }
             catch (Exception ex)
@@ -193,13 +145,13 @@ namespace SistEcomPan.Web.Controllers
         }
 
         [HttpDelete]
-        public async Task<IActionResult> Eliminar(int IdCategoria)
+        public async Task<IActionResult> Eliminar(int IdPedido)
         {
             GenericResponse<string> gResponse = new GenericResponse<string>();
 
             try
             {
-                gResponse.Estado = await _categoriaService.Eliminar(IdCategoria);
+                gResponse.Estado = await _pedidoService.Eliminar(IdPedido);
 
             }
             catch (Exception ex)
