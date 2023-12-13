@@ -129,9 +129,31 @@ namespace Datos.Implementacion
         }
 
 
-        public Task<IQueryable<Descuentos>> Consultar()
+        public async Task<IQueryable<Descuentos>> Consultar()
         {
-            throw new NotImplementedException();
+            List<Descuentos> lista = new List<Descuentos>();
+            using (var conexion = new SqlConnection(_cadenaSQL))
+            {
+                conexion.Open();
+                SqlCommand cmd = new SqlCommand("SPListaDescuentos", conexion);
+                cmd.CommandType = CommandType.StoredProcedure;
+
+                using (var dr = await cmd.ExecuteReaderAsync())
+                {
+                    while (await dr.ReadAsync())
+                    {
+                        lista.Add(new Descuentos
+                        {
+                            IdDescuento = Convert.ToInt32(dr["IdDescuento"]),
+                            IdProducto = Convert.ToInt32(dr["IdProducto"]),
+                            Descuento = Convert.ToDecimal(dr["Descuento"]),
+                            Estado = Convert.ToBoolean(dr["Estado"])
+                        });
+                    }
+                }
+            }
+
+            return lista.AsQueryable();
         }
 
         public Task<IQueryable<Descuentos>> Obtener(string consulta)

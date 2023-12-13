@@ -1,5 +1,6 @@
 ﻿using Datos.Interfaces;
 using Entidades;
+using Microsoft.Extensions.Configuration;
 using Negocio.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -14,13 +15,21 @@ namespace Negocio.Implementacion
     public class PedidoService :IPedidoService
     {
         private readonly IGenericRepository<Productos> _repositorioProducto;
-        private readonly IPedidoRepository _repositorioPedido;
+        private readonly IPedidoNew _repositorioPedido;
+        private readonly IGenericRepository<Descuentos> _repositorioDescuento;
+        private readonly IGenericRepository<NumeroDocumento> _repositorioNumDocumento;
+        private readonly string _cadenaSQL = "";
 
-        public PedidoService(IGenericRepository<Productos> repositorioProducto, IPedidoRepository repositorioPedido)
+        public PedidoService(IGenericRepository<Productos> repositorioProducto, IPedidoNew repositorioPedido,
+            IGenericRepository<Descuentos> repositorioDescuento, IGenericRepository<NumeroDocumento> repositorioNumDocumento,
+            IConfiguration configuration)
         {
             _repositorioProducto = repositorioProducto;
             _repositorioPedido = repositorioPedido;
-                
+            _repositorioDescuento = repositorioDescuento;
+            _repositorioNumDocumento = repositorioNumDocumento; 
+            _cadenaSQL = configuration.GetConnectionString("cadenaSQL");
+
         }
         public Task<Pedidos> Detalle(string numeroPedido)
         {
@@ -42,9 +51,10 @@ namespace Negocio.Implementacion
 
         public async Task<Pedidos> Registrar(Pedidos entidad)
         {
+           
             try
             {
-                decimal total = 0;
+                decimal total = 0,subtotal=0;
                 DataTable detallePedido = new DataTable();
                 detallePedido.Locale = new CultureInfo("es-Pe");
                 detallePedido.Columns.Add("IdProducto", typeof(string));
@@ -52,13 +62,45 @@ namespace Negocio.Implementacion
                 detallePedido.Columns.Add("Total", typeof(decimal));
 
                 foreach (DetallePedido detalle in entidad.DetallePedido){
-                    decimal subtotal = Convert.ToDecimal(detalle.Cantidad.ToString()) * detalle.Producto.Precio;
-                    total+= subtotal;
 
-                    IQueryable<DetallePedido> buscarProducto = await _repositorioPedido.Consultar();
-                    IQueryable<DetallePedido> productoEncontrado = buscarProducto.Where(u => u.IdProducto==detalle.IdProducto);
-                    DetallePedido productoEditar = productoEncontrado.First();
-                    productoEditar.Producto.Stock = productoEditar.Producto.Stock - detalle.Cantidad;
+                    IQueryable<Descuentos> descuento = await _repositorioDescuento.Consultar();
+                    IQueryable<Descuentos> descuentoEncontrado = descuento.Where(u => u.IdProducto == detalle.IdProducto);
+                    Descuentos descuentoProducto = descuentoEncontrado.First();
+
+                    bool estado = Convert.ToBoolean(descuentoProducto.Estado);
+
+                    if (estado)
+                    {
+                        subtotal = Convert.ToDecimal(detalle.Cantidad.ToString()) * detalle.Producto.Precio - descuentoProducto.Descuento;
+                        total += subtotal;
+
+                    }
+                    else
+                    {
+                        subtotal = Convert.ToDecimal(detalle.Cantidad.ToString()) * detalle.Producto.Precio;
+                        total += subtotal;
+                    }
+                    IQueryable<Productos> buscarProducto = await _repositorioProducto.Consultar();
+                    IQueryable<Productos> productoEncontrado = buscarProducto.Where(u => u.IdProducto==detalle.IdProducto);
+                    Productos productoEditar = productoEncontrado.First();
+                    productoEditar.Stock = productoEditar.Stock - detalle.Cantidad;
+                    await _repositorioProducto.Editar(productoEditar);
+
+                    IQueryable<NumeroDocumento> buscarNumeroDocumento = await _repositorioNumDocumento.Consultar();
+                    IQueryable<NumeroDocumento> numerodocumentoEncontrado = buscarNumeroDocumento.Where(u => u.Gestion =="Pedidos");
+                    NumeroDocumento numeroDocumento = numerodocumentoEncontrado.First();
+                
+
+                    numeroDocumento.UltimoNumero = numeroDocumento.UltimoNumero + 1;
+                    numeroDocumento.FechaActualizacion = DateTime.Now;
+                    await _repositorioNumDocumento.Editar(numeroDocumento);
+
+                    string ceros = string.Concat(Enumerable.Repeat("0", numeroDocumento.CantidadDeDigitos));
+                    string numeroPedido = ceros + numeroDocumento.UltimoNumero.ToString();
+                    numeroPedido = numeroPedido.Substring(numeroPedido.Length - numeroDocumento.CantidadDeDigitos, numeroDocumento.CantidadDeDigitos);
+
+                    entidad.Codigo = numeroPedido;
+
 
                     detallePedido.Rows.Add(new object[] {
                         detalle.Producto.IdProducto,
