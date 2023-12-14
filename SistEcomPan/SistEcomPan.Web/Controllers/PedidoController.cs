@@ -20,7 +20,7 @@ namespace SistEcomPan.Web.Controllers
             _pedidoService = pedidoService;
             _clienteService = clienteService;
         }
-        public IActionResult Index()
+        public IActionResult NuevoPedido()
         {
 
             return View();

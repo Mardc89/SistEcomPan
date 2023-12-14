@@ -35,6 +35,7 @@ namespace IOC
             services.AddScoped<IUsuarioService, UsuarioService>();
             services.AddScoped<IPedidoService, PedidoService>();
             services.AddScoped<IClienteService, ClienteService>();
+            services.AddScoped<IProductoService, ProductoService>();
             services.AddScoped<ICategoriaService, CategoriaService>();
 
         }

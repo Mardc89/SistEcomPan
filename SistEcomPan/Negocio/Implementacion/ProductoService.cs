@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace Negocio.Implementacion
 {
-    public class ProductoService
+    public class ProductoService:IProductoService
     {
         private readonly IGenericRepository<Productos> _repositorio;
         private readonly IHostEnvironment _environment;

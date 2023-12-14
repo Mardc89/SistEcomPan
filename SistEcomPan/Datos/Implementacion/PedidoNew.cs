@@ -15,12 +15,25 @@ namespace Datos.Implementacion
     public class PedidoNew : PedidoRepository, IPedidoNew
     {
         private readonly string _cadenaSQL = "";
-        public PedidoNew(IConfiguration configuration) : base(configuration)
-        {
+        private readonly IGenericRepository<Productos> _repositorioProducto;
+        private readonly IPedidoNew _repositorioPedido;
+        private readonly IGenericRepository<Descuentos> _repositorioDescuento;
+        private readonly IGenericRepository<NumeroDocumento> _repositorioNumDocumento;
+
+        public PedidoNew(
+            IGenericRepository<Productos> repositorioProducto, IPedidoNew repositorioPedido,
+            IGenericRepository<Descuentos> repositorioDescuento, IGenericRepository<NumeroDocumento> repositorioNumDocumento,
+            IConfiguration configuration): base(configuration){
+
+            _repositorioProducto = repositorioProducto;
+            _repositorioPedido = repositorioPedido;
+            _repositorioDescuento = repositorioDescuento;
+            _repositorioNumDocumento = repositorioNumDocumento;
             _cadenaSQL = configuration.GetConnectionString("cadenaSQL");
+            
         }
 
-        public Task<Pedidos> Registrar(Pedidos modelo, DataTable DataTable)
+        public async Task<Pedidos> Registrar(Pedidos entidad)
         {
             using (SqlConnection conexion = new SqlConnection(_cadenaSQL))
             {

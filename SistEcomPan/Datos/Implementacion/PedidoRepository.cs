@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace Datos.Implementacion
 {
-    public class PedidoRepository : IGenericRepository<Pedidos>
+    public class PedidoRepository : IPedidoNew
     {
         private readonly string _cadenaSQL="";
 

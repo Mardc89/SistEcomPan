@@ -21,7 +21,6 @@ namespace SistEcomPan.Web.Controllers
         }
         public IActionResult Index()
         {
-
             return View();
         }
         [HttpGet]
