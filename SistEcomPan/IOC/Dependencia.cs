@@ -19,8 +19,10 @@ namespace IOC
         public static void InyectarDependencias(this IServiceCollection services)
         {
             services.AddScoped<IPedidoNew, PedidoRepository>();
+            services.AddScoped<IPedidoEnvio, PedidoNew>();
             services.AddScoped<IGenericRepository<Categorias>, CategoriaRepository>();
             services.AddScoped<IGenericRepository<Productos>, ProductoRepository>();
+            services.AddScoped<IGenericRepository<Pedidos>, PedidoRepository>();
             services.AddScoped<IGenericRepository<Descuentos>, DescuentoRepository>();
             services.AddScoped<IGenericRepository<NumeroDocumento>, NumDocumentoRepository>();
 

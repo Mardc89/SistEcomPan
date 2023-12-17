@@ -3,67 +3,40 @@
 let ValorImpuesto = 0;
 $(document).ready(function () {
 
-    fetch("/Venta/ListaTipoDocumentoVenta")
+    fetch("/Pedido/ListaClientes")
         .then(response => {
             return response.ok ? response.json() : Promise.reject(response);
         })
         .then(responseJson => {
             if (responseJson.length > 0) {
                 responseJson.forEach((item) => {
-                    $("#cboTipoDocumentoVenta").append(
-                        $("<option>").val(item.idTipoDocumentoVenta).text(item.descripcion)
+                    $("#cboNombreCliente").append(
+                        $("<option>").val(item.idCliente).text(item.nombreCompleto)
                     )
                 })
             }
         })
 
-    fetch("/Negocio/Obtener")
+})
+
+
+$(document).on("click", "txtDocumentoCliente", function () {
+    debugger;
+    var numeroDocumento = $("#txtDocumentoCliente").val();
+
+    fetch(`/Pedido/ListaNumeroDocumentoCliente?NumeroDocumento=${numeroDocumento}`)
         .then(response => {
             return response.ok ? response.json() : Promise.reject(response);
         })
         .then(responseJson => {
-            if (responseJson.estado) {
-                const d = responseJson.objeto;
-                $("#inputGroupSubtotal").text(`Sub total-${d.simboloMoneda}`)
-                $("#inputGroupIGV").text(`IGV(${d.porcentajeImpuesto}%)-${d.simboloMoneda}`)
-                $("#inputGroupTotal").text(`Total - ${d.simboloMoneda}`)
-                ValorImpuesto = parseFloat(d.porcentajeImpuesto)
+            if (responseJson.length > 0) {
+                responseJson.forEach((item) => {
+                    $("#cboNombreCliente").append(
+                        $("<option>").val(item.idCliente).text(item.nombreCompleto)
+                    )
+                })
             }
         })
-
-
-    $("#cboBuscarProducto").select2({
-        ajax: {
-            url: "/Venta/ObtenerProductos",
-            dataType: "Json",
-            contentType: "application/json;charset=utf-8",
-            delay: 250,
-            data: function (params) {
-                return {
-                    busqueda: params.term
-                };
-            },
-            processResults: function (data, params) {
-                params.page = params.page || 1;
-                return {
-                    results: data.map((item) => (
-                        {
-                            id: item.idProducto,
-                            text: item.descripcion,
-                            marca: item.marca,
-                            categoria: item.nombreCategoria,
-                            urlImagen: item.urlImagen,
-                            precio: parseFloat(item.precio)
-                        }
-                    ))
-                };
-            },
-        },
-        language: 'es',
-        placeholder: 'Buscar Producto',
-        minimumInputlength: 1,
-        templateResult: formatoResultados
-    });
 
 })
 
@@ -192,6 +165,10 @@ function mostrarProductos_Precios() {
 
 
 }
+
+
+
+
 
 
 $(document).on("click", "button.btn-eliminar", function () {

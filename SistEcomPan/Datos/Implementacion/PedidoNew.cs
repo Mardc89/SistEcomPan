@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace Datos.Implementacion
 {
-    public class PedidoNew : PedidoRepository, IPedidoNew
+    public class PedidoNew : PedidoRepository, IPedidoEnvio
     {
         private readonly string _cadenaSQL = "";
         private readonly IGenericRepository<Productos> _repositorioProducto;
@@ -33,7 +33,7 @@ namespace Datos.Implementacion
             
         }
 
-        public async Task<Pedidos> Registrar(Pedidos entidad)
+        public async Task<Pedidos> Registrando(Pedidos entidad)
         {
             using (SqlConnection conexion = new SqlConnection(_cadenaSQL))
             {
@@ -111,9 +111,5 @@ namespace Datos.Implementacion
             }
         }
 
-        public Task<List<Pedidos>> Reporte(DateTime FechaInicio, DateTime FechaFin)
-        {
-            throw new NotImplementedException();
-        }
     }
 }

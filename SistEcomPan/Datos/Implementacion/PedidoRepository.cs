@@ -37,7 +37,7 @@ namespace Datos.Implementacion
                     {
                         lista.Add(new Pedidos
                         {
-                            IdPedido = Convert.ToInt32(dr["IdPago"]),
+                            IdPedido = Convert.ToInt32(dr["IdPedido"]),
                             IdCliente = Convert.ToInt32(dr["IdCliente"]),
                             Codigo = dr["Codigo"].ToString(),
                             MontoTotal = Convert.ToDecimal(dr["MontoTotal"]),
@@ -57,7 +57,7 @@ namespace Datos.Implementacion
             {
                 conexion.Open();
                 SqlCommand cmd = new SqlCommand("SPEditarPedidos", conexion);
-                cmd.Parameters.AddWithValue("IdPago", modelo.IdPedido);
+                cmd.Parameters.AddWithValue("IdPedido", modelo.IdPedido);
                 cmd.Parameters.AddWithValue("IdCliente", modelo.IdCliente);
                 cmd.Parameters.AddWithValue("Codigo", modelo.Codigo);
                 cmd.Parameters.AddWithValue("MontoTotal", modelo.MontoTotal);

@@ -15,21 +15,15 @@ namespace Negocio.Implementacion
     public class PedidoService :IPedidoService
     {
         private readonly IGenericRepository<Productos> _repositorioProducto;
-        private readonly IPedidoNew _repositorioPedido;
-        private readonly IGenericRepository<Descuentos> _repositorioDescuento;
-        private readonly IGenericRepository<NumeroDocumento> _repositorioNumDocumento;
-        private readonly string _cadenaSQL = "";
+        private readonly IPedidoEnvio _repositorioPedidoEnvio;
+        private readonly IGenericRepository<Pedidos> _repositorioPedido;
 
-        public PedidoService(IGenericRepository<Productos> repositorioProducto, IPedidoNew repositorioPedido,
-            IGenericRepository<Descuentos> repositorioDescuento, IGenericRepository<NumeroDocumento> repositorioNumDocumento,
-            IConfiguration configuration)
+        public PedidoService(IGenericRepository<Productos> repositorioProducto,IPedidoEnvio repositorioPedidoEnvio,
+            IGenericRepository<Pedidos> repositorioPedido)
         {
             _repositorioProducto = repositorioProducto;
+            _repositorioPedidoEnvio = repositorioPedidoEnvio;
             _repositorioPedido = repositorioPedido;
-            _repositorioDescuento = repositorioDescuento;
-            _repositorioNumDocumento = repositorioNumDocumento; 
-            _cadenaSQL = configuration.GetConnectionString("cadenaSQL");
-
         }
         public Task<Pedidos> Detalle(string numeroPedido)
         {
@@ -53,8 +47,7 @@ namespace Negocio.Implementacion
         {        
             try
             {
-                DataTable detallePedido = new DataTable();
-                return await _repositorioPedido.Registrar(entidad,detallePedido);
+                return await _repositorioPedidoEnvio.Registrando(entidad);
             }
             catch (Exception)
             {
@@ -84,5 +77,6 @@ namespace Negocio.Implementacion
         {
             throw new NotImplementedException();
         }
+
     }
 }
