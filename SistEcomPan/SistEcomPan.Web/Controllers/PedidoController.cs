@@ -86,6 +86,24 @@ namespace SistEcomPan.Web.Controllers
             return StatusCode(StatusCodes.Status200OK, vmClientelista);
         }
 
+        [HttpGet]
+        public async Task<IActionResult> ListaNumeroDocumento(string nombreCompleto)
+        {
+            var Clientelista = await _clienteService.Lista();
+            List<VMCliente> vmClientelista = new List<VMCliente>();
+            var clientes = await _clienteService.ObtenerNombre();
+            var apellidos = clientes.FirstOrDefault(x => nombreCompleto.StartsWith(x.Apellidos)).Apellidos;
+            var nombres = clientes.FirstOrDefault(x => nombreCompleto.EndsWith(x.Nombres)).Nombres;
+
+             vmClientelista.Add(new VMCliente
+             {
+                 IdCliente = clientes.Where(x => x.Apellidos == apellidos && x.Nombres == nombres).First().IdCliente,
+                 Dni = clientes.Where(x => x.Apellidos==apellidos && x.Nombres==nombres).First().Dni
+             }) ;
+            
+            return StatusCode(StatusCodes.Status200OK, vmClientelista);
+        }
+
 
 
         [HttpPost]

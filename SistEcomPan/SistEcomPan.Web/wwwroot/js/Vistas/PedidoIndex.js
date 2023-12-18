@@ -20,11 +20,26 @@ $(document).ready(function () {
 })
 
 
-$(document).on("click", "txtDocumentoCliente", function () {
-    debugger;
-    var numeroDocumento = $("#txtDocumentoCliente").val();
 
-    fetch(`/Pedido/ListaNumeroDocumentoCliente?NumeroDocumento=${numeroDocumento}`)
+$("#cboNombreCliente").change(function () {
+    var nombreCliente = $("#cboNombreCliente").val();
+    fetch(`/Pedido/ListaNumeroDocumento?nombreCompleto=${nombreCliente}`)
+        .then(response => {
+            return response.ok ? response.json() : Promise.reject(response);
+        })
+        .then(responseJson => {
+            if (responseJson.length > 0) {
+                responseJson.forEach((item) => {
+                    $("#txtDocumentoCliente").val(item.dni)
+                })
+            }
+        })
+
+})
+
+$("#txtDocumentoCliente").click(function () {
+    var numeroDocumento = $("#txtDocumentoCliente").val();
+    fetch(`/Pedido/ListaNumeroDocumentoCliente?numeroDocumento=${numeroDocumento}`)
         .then(response => {
             return response.ok ? response.json() : Promise.reject(response);
         })
@@ -39,6 +54,7 @@ $(document).on("click", "txtDocumentoCliente", function () {
         })
 
 })
+
 
 
 function formatoResultados(data) {
