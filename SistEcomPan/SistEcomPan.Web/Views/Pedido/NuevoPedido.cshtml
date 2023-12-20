@@ -31,11 +31,10 @@
                         </div>
                         <div class="card-body">
                             <div class="form-row">
-                                <div class="form-group col-sm-6">
+                                <div class="form-group col-sm-4">
                                     <input type="text" class="form-control form-control-sm" id="txtDocumentoCliente" placeholder="numero documento">
                                 </div>
-                                <div class="form-group col-sm-6">
-                                    <label for="cboNombreCliente">Cliente</label>
+                                <div class="form-group col-sm-8">
                                     <select class="form-control form-control-sm" id="cboNombreCliente">
                                     </select>
                                 </div>
@@ -48,14 +47,11 @@
                                 <div class="form-group col-sm-2">
                                     <input type="text" class="form-control form-control-sm" id="txtNombreCliente" placeholder="nombre completo">
                                 </div>
-                                <div class="form-group mb-0">
-                                    <button class="btn btn-success btn-sm btn-block" id="btnTerminarVenta">Agregar Productos</button>
-                                    <button class="btn btn-success btn-sm btn-block" id="btnTerminarVenta">Agregar Productos</button>
-                                </div>
-                                <div class="modal-footer">
-                                    <button class="btn btn-primary btn-sm" type="button" id="btnGuardar">Guardar</button>
-                                    <button class="btn btn-danger  btn-sm" type="button" data-dismiss="modal">Cancelar</button>
-                                </div>
+
+                            </div>                                
+                            <div class="modal-footer">
+                                <button class="btn btn-primary btn-sm" type="button" id="btnGuardar">Guardar</button>
+                                <button class="btn btn-danger  btn-sm" type="button" data-dismiss="modal">Cancelar</button>
                             </div>
                         </div>
                     </div>
@@ -68,10 +64,126 @@
 </div>
 
 
+
+<!-- Ventana modal para buscar productos -->
+<div class="modal" id="buscarProductosModal" tabindex="-1" role="dialog" aria-labelledby="modalTitle" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Buscar Productos</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <!-- Campo de búsqueda -->
+                <input type="text" id="inputBuscar" class="form-control mb-3" placeholder="Buscar productos">
+
+                <!-- Tabla de productos -->
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Nombre</th>
+                            <th>Precio</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tablaProductos">
+                        <!-- Aquí se cargarán los productos dinámicamente -->
+                    </tbody>
+                </table>
+
+                <!-- Paginación -->
+
+            </div>
+            <div class="modal-footer">
+                <nav aria-label="Page navigation">
+                    <ul class="pagination justify-content-center" id="pagination">
+                        <!-- Aquí van los elementos de paginación -->
+                        <li class="page-item"><a class="page-link" href="#">Anterior</a></li>
+                        <li class="page-item"><a class="page-link" href="#">1</a></li>
+                        <li class="page-item"><a class="page-link" href="#">2</a></li>
+                        <li class="page-item"><a class="page-link" href="#">3</a></li>
+                        <li class="page-item"><a class="page-link" href="#">Siguiente</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- Ventana modal -->
+<div class="modal fade" id="modalData" tabindex="-1" role="dialog" aria-labelledby="searchModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="searchModalLabel">Buscar Productos</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <!-- Aquí va el contenido del formulario de búsqueda -->
+                <div class="row">
+                    <div class="col-6">
+                        <!-- Input para la búsqueda -->
+                        <input type="text" id="searchInput" class="form-control" placeholder="Buscar...">
+                    </div>
+                    <div class="col-2">
+                        <!-- Botón para iniciar la búsqueda -->
+                        <button type="button" class="btn btn-primary btn-block">Buscar</button>
+                    </div>
+                </div>
+                <br>
+                <!-- Aquí se muestra la tabla de productos -->
+                <table class="table table-sm" id="tbdata">
+                    <!-- Aquí van las filas de la tabla -->
+                    <thead>
+                    <tr>
+                        <th>Codigo</th>
+                        <th>Producto</th>
+                        <th>Categoria</th>
+                        <th>Stock</th>
+                        <th>Precio</th>
+                     </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+                <!-- Aquí se muestra la paginación -->      
+            </div>
+            <div class="modal-footer">
+                <nav aria-label="Page navigation example">
+                    <ul class="pagination justify-content-center" id="pagination">
+                        <!-- Aquí van los elementos de paginación -->
+                        <li class="page-item"><a class="page-link" href="#">Anterior</a></li>
+                        <li class="page-item"><a class="page-link" href="#">1</a></li>
+                        <li class="page-item"><a class="page-link" href="#">2</a></li>
+                        <li class="page-item"><a class="page-link" href="#">3</a></li>
+                        <li class="page-item"><a class="page-link" href="#">Siguiente</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
     @section Scripts{
 
-    <script src="~/vendor/select2/select2.min.js"></script>
-    <script src="~/vendor/select2/es.min.js"></script>
+
+    <script src="~/vendor/datatables/jquery.dataTables.min.js"></script>
+    <script src="~/vendor/datatables/dataTables.bootstrap4.min.js"></script>
+    <script src="~/vendor/datatables/extensiones/js/dataTables.responsive.min.js"></script>
+    <script src="~/vendor/datatables/extensiones/js/dataTables.buttons.min.js"></script>
+    <script src="~/vendor/datatables/extensiones/js/jszip.min.js"></script>
+    <script src="~/vendor/datatables/extensiones/js/buttons.html5.min.js"></script>
+    <script src="~/vendor/datatables/extensiones/js/buttons.print.min.js"></script>
+
 
     <script src="~/js/Vistas/PedidoIndex.js"></script>
 

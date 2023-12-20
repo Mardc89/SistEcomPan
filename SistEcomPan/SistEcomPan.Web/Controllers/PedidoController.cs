@@ -68,7 +68,7 @@ namespace SistEcomPan.Web.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> ListaNumeroDocumentoCliente(string numeroDocumento)
+        public async Task<IActionResult> ListaClientes(string numeroDocumento)
         {
             var Clientelista = await _clienteService.Lista();
             List<VMCliente> vmClientelista = new List<VMCliente>();

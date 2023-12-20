@@ -39,7 +39,7 @@ $("#cboNombreCliente").change(function () {
 
 $("#txtDocumentoCliente").click(function () {
     var numeroDocumento = $("#txtDocumentoCliente").val();
-    fetch(`/Pedido/ListaNumeroDocumentoCliente?numeroDocumento=${numeroDocumento}`)
+    fetch(`/Pedido/ListaClientes?numeroDocumento=${numeroDocumento}`)
         .then(response => {
             return response.ok ? response.json() : Promise.reject(response);
         })
@@ -55,6 +55,17 @@ $("#txtDocumentoCliente").click(function () {
 
 })
 
+
+
+function mostrarModal() {
+
+
+    $("#modalData").modal("show")
+}
+
+$("#btnGuardar").click(function () {
+    mostrarModal()
+})
 
 
 function formatoResultados(data) {
