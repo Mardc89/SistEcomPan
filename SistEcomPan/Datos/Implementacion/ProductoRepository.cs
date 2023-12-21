@@ -41,7 +41,7 @@ namespace Datos.Implementacion
                             IdCategoria = Convert.ToInt32(dr["IdCategoria"]),
                             Precio = Convert.ToDecimal(dr["Precio"]),
                             UrlImagen = dr["UrlImagen"].ToString(), 
-                            NombreImagen= dr["NombreFoto"].ToString(), 
+                            NombreImagen= dr["NombreImagen"].ToString(), 
                             Estado = Convert.ToBoolean(dr["Estado"]),
                             Stock = Convert.ToInt32(dr["Stock"]),
                             FechaRegistro = Convert.ToDateTime(dr["FechaRegistro"])

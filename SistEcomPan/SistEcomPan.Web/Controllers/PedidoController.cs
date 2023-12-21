@@ -14,11 +14,13 @@ namespace SistEcomPan.Web.Controllers
     {
         private readonly IPedidoService _pedidoService;
         private readonly IClienteService _clienteService;
+        private readonly IProductoService _productoService;
 
-        public PedidoController(IPedidoService pedidoService,IClienteService clienteService)
+        public PedidoController(IPedidoService pedidoService,IClienteService clienteService, IProductoService productoService)
         {
             _pedidoService = pedidoService;
             _clienteService = clienteService;
+            _productoService = productoService;
         }
         public IActionResult NuevoPedido()
         {
@@ -65,6 +67,21 @@ namespace SistEcomPan.Web.Controllers
                 });
             }
             return StatusCode(StatusCodes.Status200OK, vmClientelista);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> ObtenerProductos(string searchTerm = "", int page = 1, int itemsPerPage = 5)
+       {
+            var Productolista = await _productoService.Lista();
+            // Filtro de búsqueda por término de búsqueda (searchTerm)
+            var productosFiltrados = Productolista.Where(p =>
+                string.IsNullOrWhiteSpace(searchTerm) || p.Descripcion.ToLower().Contains(searchTerm.ToLower())
+            );
+
+            // Paginación
+            var productosPaginados = productosFiltrados.Skip((page - 1) * itemsPerPage).Take(itemsPerPage).ToList();
+
+            return Ok(new { Productos = productosPaginados, TotalItems = productosFiltrados.Count() });
         }
 
         [HttpGet]

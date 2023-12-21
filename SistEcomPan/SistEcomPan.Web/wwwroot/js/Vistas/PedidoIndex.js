@@ -1,71 +1,153 @@
 ﻿
 
-let ValorImpuesto = 0;
-$(document).ready(function () {
+//let ValorImpuesto = 0;
+//$(document).ready(function () {
 
-    fetch("/Pedido/ListaClientes")
-        .then(response => {
-            return response.ok ? response.json() : Promise.reject(response);
-        })
-        .then(responseJson => {
-            if (responseJson.length > 0) {
-                responseJson.forEach((item) => {
-                    $("#cboNombreCliente").append(
-                        $("<option>").val(item.idCliente).text(item.nombreCompleto)
-                    )
-                })
-            }
-        })
+//    fetch("/Pedido/ListaClientes")
+//        .then(response => {
+//            return response.ok ? response.json() : Promise.reject(response);
+//        })
+//        .then(responseJson => {
+//            if (responseJson.length > 0) {
+//                responseJson.forEach((item) => {
+//                    $("#cboNombreCliente").append(
+//                        $("<option>").val(item.idCliente).text(item.nombreCompleto)
+//                    )
+//                })
+//            }
+//        })
 
-})
+//})
 
 
 
-$("#cboNombreCliente").change(function () {
-    var nombreCliente = $("#cboNombreCliente").val();
-    fetch(`/Pedido/ListaNumeroDocumento?nombreCompleto=${nombreCliente}`)
-        .then(response => {
-            return response.ok ? response.json() : Promise.reject(response);
-        })
-        .then(responseJson => {
-            if (responseJson.length > 0) {
-                responseJson.forEach((item) => {
-                    $("#txtDocumentoCliente").val(item.dni)
-                })
-            }
-        })
+//$("#cboNombreCliente").change(function () {
+//    var nombreCliente = $("#cboNombreCliente").val();
+//    fetch(`/Pedido/ListaNumeroDocumento?nombreCompleto=${nombreCliente}`)
+//        .then(response => {
+//            return response.ok ? response.json() : Promise.reject(response);
+//        })
+//        .then(responseJson => {
+//            if (responseJson.length > 0) {
+//                responseJson.forEach((item) => {
+//                    $("#txtDocumentoCliente").val(item.dni)
+//                })
+//            }
+//        })
 
-})
+//})
 
-$("#txtDocumentoCliente").click(function () {
-    var numeroDocumento = $("#txtDocumentoCliente").val();
-    fetch(`/Pedido/ListaClientes?numeroDocumento=${numeroDocumento}`)
-        .then(response => {
-            return response.ok ? response.json() : Promise.reject(response);
-        })
-        .then(responseJson => {
-            if (responseJson.length > 0) {
-                responseJson.forEach((item) => {
-                    $("#cboNombreCliente").append(
-                        $("<option>").val(item.idCliente).text(item.nombreCompleto)
-                    )
-                })
-            }
-        })
+//$("#txtDocumentoCliente").click(function () {
+//    var numeroDocumento = $("#txtDocumentoCliente").val();
+//    fetch(`/Pedido/ListaClientes?numeroDocumento=${numeroDocumento}`)
+//        .then(response => {
+//            return response.ok ? response.json() : Promise.reject(response);
+//        })
+//        .then(responseJson => {
+//            if (responseJson.length > 0) {
+//                responseJson.forEach((item) => {
+//                    $("#cboNombreCliente").append(
+//                        $("<option>").val(item.idCliente).text(item.nombreCompleto)
+//                    )
+//                })
+//            }
+//        })
 
-})
+//})
 
 
 
 function mostrarModal() {
-
-
-    $("#modalData").modal("show")
+    buscarProductos();
+    $("#modalData").modal("show");
 }
 
 $("#btnGuardar").click(function () {
     mostrarModal()
 })
+
+const itemsPerPage = 5; // Cantidad de productos por página
+let currentPage = 1; // Página actual al cargar
+
+function buscarProductos(searchTerm = '', page = 1) {
+    fetch(`/Pedido/ObtenerProductos?searchTerm=${searchTerm}&page=${page}&itemsPerPage=${itemsPerPage}`)
+        .then(response => response.json())
+        .then(data => {
+            const productos = data.Productos; // Array de productos obtenidos
+            const totalItems = data.TotalItems; // Total de productos encontrados
+
+            // Actualizar la tabla modal con los productos obtenidos
+            const tableBody = document.createElement('tbody');
+            productos.forEach(producto => {
+                const row = tableBody.insertRow();
+                row.innerHTML = `
+            <td>${producto.idProducto}</td>
+            <td>${producto.descripcion}</td>
+            <td>${producto.precio}</td>
+          `;
+            });
+
+            const productTable = document.getElementById('DataProducto');
+            productTable.innerHTML = '';
+            productTable.appendChild(tableBody);
+
+            // Generar la paginación
+            const totalPages = Math.ceil(totalItems / itemsPerPage);
+            const pagination = document.getElementById('pagination');
+            pagination.innerHTML = '';
+
+            for (let i = 1; i <= totalPages; i++) {
+                const li = document.createElement('li');
+                li.classList.add('page-item');
+                const link = document.createElement('a');
+                link.classList.add('page-link');
+                link.href = '#';
+                link.textContent = i;
+                li.appendChild(link);
+
+                if (i === currentPage) {
+                    li.classList.add('active');
+                }
+
+                link.addEventListener('click', () => {
+                    currentPage = i;
+                    buscarProductos(searchTerm, currentPage);
+                    resaltarPaginaActual();
+                });
+
+                pagination.appendChild(li);
+            }
+
+            resaltarPaginaActual();
+        })
+        .catch(error => {
+            console.error('Error al buscar productos:', error);
+        });
+}
+
+// Función para resaltar la página actual
+function resaltarPaginaActual() {
+    const paginationItems = document.querySelectorAll('#pagination .page-item');
+    paginationItems.forEach(item => {
+        item.classList.remove('active');
+        const link = item.querySelector('.page-link');
+        if (link.textContent === currentPage.toString()) {
+            item.classList.add('active');
+        }
+    });
+}
+
+// Evento cuando el usuario escribe en la barra de búsqueda
+document.getElementById('searchInput').addEventListener('input', function (event) {
+    const searchTerm = event.target.value;
+    currentPage = 1; // Reiniciar a la primera página al realizar una nueva búsqueda
+    buscarProductos(searchTerm, currentPage);
+});
+
+// Llamada inicial para cargar productos al abrir la tabla modal
+//$('#modalData').on('show.bs.modal', function () {
+//    buscarProductos();
+//});
 
 
 function formatoResultados(data) {
