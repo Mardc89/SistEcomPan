@@ -73,9 +73,9 @@ function buscarProductos(searchTerm = '', page = 1) {
     fetch(`/Pedido/ObtenerProductos?searchTerm=${searchTerm}&page=${page}&itemsPerPage=${itemsPerPage}`)
         .then(response => response.json())
         .then(data => {
-            const productos = data.Productos; // Array de productos obtenidos
-            const totalItems = data.TotalItems; // Total de productos encontrados
-
+            const productos = data.productos; // Array de productos obtenidos
+            const totalItems = data.totalItems; // Total de productos encontrados
+            const categoria = data.categoria;
             // Actualizar la tabla modal con los productos obtenidos
             const tableBody = document.createElement('tbody');
             productos.forEach(producto => {
@@ -83,11 +83,13 @@ function buscarProductos(searchTerm = '', page = 1) {
                 row.innerHTML = `
             <td>${producto.idProducto}</td>
             <td>${producto.descripcion}</td>
+            <td>${categoria}</td>
+            <td>${producto.stock}</td>
             <td>${producto.precio}</td>
           `;
             });
 
-            const productTable = document.getElementById('DataProducto');
+            const productTable = document.getElementById('ProductoBuscado');
             productTable.innerHTML = '';
             productTable.appendChild(tableBody);
 
@@ -144,39 +146,15 @@ document.getElementById('searchInput').addEventListener('input', function (event
     buscarProductos(searchTerm, currentPage);
 });
 
-// Llamada inicial para cargar productos al abrir la tabla modal
-//$('#modalData').on('show.bs.modal', function () {
-//    buscarProductos();
-//});
+ //Llamada inicial para cargar productos al abrir la tabla modal
+$('#modalData').on('show.bs.modal', function () {
+    buscarProductos();
+});
 
 
-function formatoResultados(data) {
 
-    if (data.loading)
-        return data.text;
 
-    var contenedor = $(
-        `<table width="100%">
-            <tr>
-                <td style="width:60%">
-                    <img style="height:60px;width:60px;margin-right:10px" src="${data.urlImagen}"/>
-                </td>
-                <td>
-                    <p style="font-weight":bolder;margin:2px">${data.marca}</p>
-                    <p style="margin:2px">${data.text}</p>
-                </td>
-            </tr>
-        </table>`
-    );
 
-    return contenedor;
-
-}
-
-$(document).on("select2:open", function () {
-    document.querySelector(".select2-search__field").focus();
-
-})
 
 
 

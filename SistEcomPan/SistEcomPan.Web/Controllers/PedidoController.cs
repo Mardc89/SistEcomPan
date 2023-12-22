@@ -15,12 +15,14 @@ namespace SistEcomPan.Web.Controllers
         private readonly IPedidoService _pedidoService;
         private readonly IClienteService _clienteService;
         private readonly IProductoService _productoService;
+        private readonly ICategoriaService _categoriaService;
 
-        public PedidoController(IPedidoService pedidoService,IClienteService clienteService, IProductoService productoService)
+        public PedidoController(IPedidoService pedidoService,IClienteService clienteService, IProductoService productoService,ICategoriaService categoriaService)
         {
             _pedidoService = pedidoService;
             _clienteService = clienteService;
             _productoService = productoService;
+            _categoriaService = categoriaService;
         }
         public IActionResult NuevoPedido()
         {
@@ -73,15 +75,19 @@ namespace SistEcomPan.Web.Controllers
         public async Task<IActionResult> ObtenerProductos(string searchTerm = "", int page = 1, int itemsPerPage = 5)
        {
             var Productolista = await _productoService.Lista();
+           
             // Filtro de búsqueda por término de búsqueda (searchTerm)
             var productosFiltrados = Productolista.Where(p =>
-                string.IsNullOrWhiteSpace(searchTerm) || p.Descripcion.ToLower().Contains(searchTerm.ToLower())
+                string.IsNullOrWhiteSpace(searchTerm) || p.Descripcion.ToLower().IndexOf(searchTerm.ToLower())!=1
             );
 
+            var categoriaProducto = productosFiltrados.First().IdCategoria;
+            var categorias = await _categoriaService.ObtenerNombre();
+            var categoriaEncontrada = categorias.Where(x => x.IdCategoria == categoriaProducto).First().TipoDeCategoria;
             // Paginación
             var productosPaginados = productosFiltrados.Skip((page - 1) * itemsPerPage).Take(itemsPerPage).ToList();
 
-            return Ok(new { Productos = productosPaginados, TotalItems = productosFiltrados.Count() });
+            return StatusCode(StatusCodes.Status200OK,new { productos = productosPaginados, totalItems = productosFiltrados.Count() ,categoria=categoriaEncontrada});
         }
 
         [HttpGet]
