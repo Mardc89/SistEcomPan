@@ -75,11 +75,11 @@ namespace SistEcomPan.Web.Controllers
         public async Task<IActionResult> ObtenerProductos(string searchTerm = "", int page = 1, int itemsPerPage = 5)
        {
             var Productolista = await _productoService.Lista();
-           
+
             // Filtro de búsqueda por término de búsqueda (searchTerm)
             var productosFiltrados = Productolista.Where(p =>
-                string.IsNullOrWhiteSpace(searchTerm) || p.Descripcion.ToLower().IndexOf(searchTerm.ToLower())!=1
-            );
+                string.IsNullOrWhiteSpace(searchTerm) || p.Descripcion.ToLower().Contains(searchTerm.ToLower())
+            ) ;
 
             var categoriaProducto = productosFiltrados.First().IdCategoria;
             var categorias = await _categoriaService.ObtenerNombre();

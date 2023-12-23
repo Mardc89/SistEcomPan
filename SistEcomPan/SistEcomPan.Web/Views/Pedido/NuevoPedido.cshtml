@@ -56,25 +56,27 @@
                             </div>
                         </div>                
                         <div class="col-sm-12">
-                            <table class="table table-striped">
+                            <table class="table table-sm" id="tbProductosSeleccionados">
                                 <thead>
                                     <tr>
                                         <th>N° Pedido</th>
                                         <th>Descripcion</th>
+                                        <th>Categoria</th>
                                         <th>Cantidad</th>
                                         <th>Precio Unitario</th>
                                         <th>Precio Total</th>
                                     </tr>
                                 </thead>
                                 <tbody id="tablaProductos">
+
+                                </tbody>
+                                <tfoot>
                                     <tr>
-                                        <th></th>
-                                        <th></th>
-                                        <th></th>
-                                        <th>Monto Total</th>
-                                        <th></th>
+                                        <td colspan="4">Monto Total:</td>
+                                        <td id="montoTotal">0</td>
+                                        <td></td>
                                     </tr>
-                                </tbody>                                    
+                                </tfoot>
 
                             </table>
                         </div>
@@ -178,6 +180,8 @@
                         <th>Categoria</th>
                         <th>Stock</th>
                         <th>Precio</th>
+                        <th>Cantidad</th>
+                        <th>Acciones</th>
                      </tr>
                     </thead>
                     <tbody id="ProductoBuscado">

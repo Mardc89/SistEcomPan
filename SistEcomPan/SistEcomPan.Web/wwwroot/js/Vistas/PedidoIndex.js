@@ -57,14 +57,14 @@
 
 
 
-function mostrarModal() {
-    buscarProductos();
-    $("#modalData").modal("show");
-}
+//function mostrarModal() {
+//    buscarProductos();
+//    $("#modalData").modal("show");
+//}
 
-$("#btnGuardar").click(function () {
-    mostrarModal()
-})
+//$("#btnGuardar").click(function () {
+//    mostrarModal()
+//})
 
 const itemsPerPage = 5; // Cantidad de productos por página
 let currentPage = 1; // Página actual al cargar
@@ -76,23 +76,27 @@ function buscarProductos(searchTerm = '', page = 1) {
             const productos = data.productos; // Array de productos obtenidos
             const totalItems = data.totalItems; // Total de productos encontrados
             const categoria = data.categoria;
-            // Actualizar la tabla modal con los productos obtenidos
-            const tableBody = document.createElement('tbody');
+            // Actualizar la tabla modal con los productos obtenidos 
+            const productTable = document.getElementById('ProductoBuscado');
+            productTable.innerHTML = '';
+      
             productos.forEach(producto => {
-                const row = tableBody.insertRow();
+                const row =  document.createElement('tr');
                 row.innerHTML = `
             <td>${producto.idProducto}</td>
             <td>${producto.descripcion}</td>
             <td>${categoria}</td>
             <td>${producto.stock}</td>
             <td>${producto.precio}</td>
+            <td><input type="text" class="form-control form-control-sm" id="txtCantidad" placeholder="Ingrese Cantidad"></td>
+            <td>
+            <button onclick="agregarProducto(this)" class="btn btn-danger btn-sm">Add</button>
+            <button onclick="eliminarProducto(this)"class="btn btn-primary btn-sm">De</button>
+            </td>
           `;
-            });
-
-            const productTable = document.getElementById('ProductoBuscado');
-            productTable.innerHTML = '';
-            productTable.appendChild(tableBody);
-
+            productTable.appendChild(row);
+         });
+         
             // Generar la paginación
             const totalPages = Math.ceil(totalItems / itemsPerPage);
             const pagination = document.getElementById('pagination');
@@ -126,6 +130,81 @@ function buscarProductos(searchTerm = '', page = 1) {
             console.error('Error al buscar productos:', error);
         });
 }
+
+
+function agregarProducto(button) {
+    const row = button.parentNode.parentNode;
+    const IdProducto = row.cells[0].textContent;
+    const descripcion = row.cells[1].textContent;
+    const categoria = row.cells[2].textContent;
+    const stock = parseFloat(row.cells[3].textContent);
+    const precio = parseFloat(row.cells[4].textContent);
+    let cantidad = parseFloat(row.cells[5].querySelector('input').value);
+
+   
+    let total = 0;
+    let cantidadTotal = 0, nuevaCantidad=0;
+    const tablaProductos = document.getElementById('tbProductosSeleccionados');
+    const filas = tablaProductos.getElementsByTagName('tr');
+
+    for (let i = 1; i < filas.length; i++) {
+        const fila = filas[i];
+        if (fila.cells[0].textContent === IdProducto) {
+            // El producto ya está en laP tabla, incrementar la cantidad
+            const cantidadExistente = parseFloat(fila.cells[3].textContent);
+            nuevaCantidad = cantidadExistente + cantidad;
+            fila.cells[3].textContent = nuevaCantidad;
+            return;
+        }
+        cantidadTotal = nuevaCantidad;
+        cantidad = cantidadTotal;
+       
+    }
+    total = precio * cantidad;
+    const nuevaFila = `
+      <tr>
+        <td>${IdProducto}</td>
+        <td>${descripcion}</td>
+        <td>${categoria}</td>
+        <td>${cantidad}</td>
+        <td>${precio}</td>
+        <td>${total}</td>
+        <td><button onclick="eliminarProducto(this)">Eliminar</button></td>
+      </tr>
+    `;
+
+    document.getElementsByTagName('tbody')[0].insertAdjacentHTML('beforeend', nuevaFila);
+
+    calcularTotal();
+}
+
+
+function eliminarProducto(button) {
+    const row = button.parentNode.parentNode;
+    row.parentNode.removeChild(row);
+
+    calcularTotal();
+}
+
+// Función para calcular el monto total
+function calcularTotal() {
+    let total = 0;
+    const tabla = document.getElementById('tbProductosSeleccionados').getElementsByTagName('tbody')[0];
+    const filas = tabla.getElementsByTagName('tr');
+
+    for (let i = 0; i < filas.length; i++) {
+        const fila = filas[i];
+        const totalFila = parseFloat(fila.cells[5].textContent);
+        total += totalFila;
+    }
+
+    document.getElementById('montoTotal').textContent = total;
+}
+
+
+
+
+
 
 // Función para resaltar la página actual
 function resaltarPaginaActual() {
