@@ -56,33 +56,42 @@ namespace Datos.Implementacion
                         IQueryable<Descuentos> descuento = await _repositorioDescuento.Consultar();
                         IQueryable<Descuentos> descuentoEncontrado = descuento.Where(u => u.IdProducto == detalle.IdProducto);
                         Descuentos descuentoProducto = descuentoEncontrado.First();
+                        IQueryable<Productos> producto = await _repositorioProducto.Consultar();
+                        IQueryable<Productos> productoEncontrado = producto.Where(u => u.IdProducto == detalle.IdProducto);
+                        var PrecioProducto = productoEncontrado.First().Precio;
 
                         bool estado = Convert.ToBoolean(descuentoProducto.Estado);
 
                         if (estado)
                         {
-                            subtotal = Convert.ToDecimal(detalle.Cantidad.ToString()) * detalle.Producto.Precio - descuentoProducto.Descuento;
+                            subtotal = Convert.ToDecimal(detalle.Cantidad.ToString()) *PrecioProducto-descuentoProducto.Descuento;
                             total += subtotal;
 
                         }
                         else
                         {
-                            subtotal = Convert.ToDecimal(detalle.Cantidad.ToString()) * detalle.Producto.Precio;
+                            subtotal = Convert.ToDecimal(detalle.Cantidad.ToString()) * PrecioProducto;
                             total += subtotal;
                         }
                         IQueryable<Productos> buscarProducto = await _repositorioProducto.Consultar();
-                        IQueryable<Productos> productoEncontrado = buscarProducto.Where(u => u.IdProducto == detalle.IdProducto);
-                        Productos productoEditar = productoEncontrado.First();
+                        IQueryable<Productos> productoStock = buscarProducto.Where(u => u.IdProducto == detalle.IdProducto);
+                        Productos productoEditar = productoStock.First();
                         productoEditar.Stock = productoEditar.Stock - detalle.Cantidad;
                         await _repositorioProducto.Editar(productoEditar);
 
+                        detallePedido.Rows.Add(new object[] {
+                        detalle.IdProducto,
+                        detalle.Cantidad,
+                        subtotal
+                        });
+                    }
+
                         IQueryable<NumeroDocumento> buscarNumeroDocumento = await _repositorioNumDocumento.Consultar();
-                        IQueryable<NumeroDocumento> numerodocumentoEncontrado = buscarNumeroDocumento.Where(u => u.Gestion == "Pedidos");
+                        IQueryable<NumeroDocumento> numerodocumentoEncontrado = buscarNumeroDocumento.Where(u => u.Gestion == "pedidos");
                         NumeroDocumento numeroDocumento = numerodocumentoEncontrado.First();
 
 
                         numeroDocumento.UltimoNumero = numeroDocumento.UltimoNumero + 1;
-                        numeroDocumento.FechaActualizacion = DateTime.Now;
                         await _repositorioNumDocumento.Editar(numeroDocumento);
 
                         string ceros = string.Concat(Enumerable.Repeat("0", numeroDocumento.CantidadDeDigitos));
@@ -90,18 +99,10 @@ namespace Datos.Implementacion
                         numeroPedido = numeroPedido.Substring(numeroPedido.Length - numeroDocumento.CantidadDeDigitos, numeroDocumento.CantidadDeDigitos);
 
                         entidad.Codigo = numeroPedido;
-
-
-                        detallePedido.Rows.Add(new object[] {
-                        detalle.Producto.IdProducto,
-                        detalle.Cantidad,
-                        subtotal
-                    });
-
-                    }
-                    entidad.MontoTotal = total;
-                    transaccion.Commit();
-                    return await _repositorioPedido.Registrar(entidad, detallePedido);
+                        
+                        entidad.MontoTotal = total;
+                        transaccion.Commit();
+                        return await _repositorioPedido.Registrar(entidad, detallePedido);
                 }
                 catch (Exception)
                 {

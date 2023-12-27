@@ -30,6 +30,7 @@
                             <h6 class="m-0 font-weight-bold text-white">Pedidos</h6>
                         </div>
                         <div class="card-body">
+                            <form>
                             <div class="form-row">
                                 <div class="form-group col-sm-4">
                                     <input type="text" class="form-control form-control-sm" id="txtDocumentoCliente" placeholder="numero documento">
@@ -52,9 +53,10 @@
                             </div>                                
                             <div class="modal-footer">
                                 <button class="btn btn-danger btn-sm" type="button" id="btnGuardar">Agregar Productos</button>
-                                <button class="btn btn-primary  btn-sm" type="button" data-dismiss="modal">Imprimir</button>
-                            </div>
-                        </div>                
+                                <button class="btn btn-primary  btn-sm" type="button" id="btnEnviarPedido">Realizar Pedido</button>
+                                </div>
+                            </form>
+                        </div>                       
                         <div class="col-sm-12">
                             <table class="table table-sm" id="tbProductosSeleccionados">
                                 <thead>
@@ -72,7 +74,7 @@
                                 </tbody>
                                 <tfoot>
                                     <tr>
-                                        <td colspan="4">Monto Total:</td>
+                                        <td colspan="5">Monto Total S/:</td>
                                         <td id="montoTotal">0</td>
                                         <td></td>
                                     </tr>
@@ -91,83 +93,27 @@
 
 </div>
 
-
-
-<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modalData">
-    Ver Productos
-</button>
-
-
-
-<!-- Ventana modal para buscar productos -->
-<div class="modal" id="buscarProductosModal" tabindex="-1" role="dialog" aria-labelledby="modalTitle" aria-hidden="true">
-    <div class="modal-dialog modal-lg" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Buscar Productos</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <!-- Campo de búsqueda -->
-                <input type="text" id="inputBuscar" class="form-control mb-3" placeholder="Buscar productos">
-
-                <!-- Tabla de productos -->
-                <table class="table table-striped">
-                    <thead>
-                        <tr>
-                            <th>#</th>
-                            <th>Nombre</th>
-                            <th>Precio</th>
-                        </tr>
-                    </thead>
-                    <tbody id="tablaProductos">
-                        <!-- Aquí se cargarán los productos dinámicamente -->
-                    </tbody>
-                </table>
-
-                <!-- Paginación -->
-
-            </div>
-            <div class="modal-footer">
-                <nav aria-label="Page navigation">
-                    <ul class="pagination justify-content-center" id="pagination">
-                        <!-- Aquí van los elementos de paginación -->
-                        <li class="page-item"><a class="page-link" href="#">Anterior</a></li>
-                        <li class="page-item"><a class="page-link" href="#">1</a></li>
-                        <li class="page-item"><a class="page-link" href="#">2</a></li>
-                        <li class="page-item"><a class="page-link" href="#">3</a></li>
-                        <li class="page-item"><a class="page-link" href="#">Siguiente</a></li>
-                    </ul>
-                </nav>
-            </div>
-        </div>
-    </div>
-</div>
-
-
 <!-- Ventana modal -->
 <div class="modal fade" id="modalData" tabindex="-1" role="dialog" aria-labelledby="searchModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="searchModalLabel">Buscar Productos</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+@*                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
-                </button>
+                </button>*@
             </div>
             <div class="modal-body">
                 <!-- Aquí va el contenido del formulario de búsqueda -->
                 <div class="row">
-                    <div class="col-6">
+                    <div class="col-12">
                         <!-- Input para la búsqueda -->
                         <input type="text" id="searchInput" class="form-control" placeholder="Buscar...">
                     </div>
-                    <div class="col-2">
+@*                    <div class="col-2">
                         <!-- Botón para iniciar la búsqueda -->
                         <button type="button" class="btn btn-primary btn-block">Buscar</button>
-                    </div>
+                    </div>*@
                 </div>
                 <br>
                 <!-- Aquí se muestra la tabla de productos -->

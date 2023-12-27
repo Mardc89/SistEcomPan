@@ -42,7 +42,7 @@ namespace SistEcomPan.Web.Controllers
                     IdPedido = item.IdPedido,
                     IdCliente = item.IdCliente,
                     Codigo = item.Codigo,
-                    MontoTotal = item.MontoTotal,
+                    MontoTotal = Convert.ToString(item.MontoTotal),
                     Estado = item.Estado,
                     NombresCompletos= clientes.Where(x => x.IdCliente == item.IdCliente).First().Nombres +
                     clientes.Where(x => x.IdCliente == item.IdCliente).First().Apellidos
@@ -139,6 +139,7 @@ namespace SistEcomPan.Web.Controllers
                 List<Pedidos> listaPedidos = new List<Pedidos>();
                 List<VMPedido> listaVMPedidos = new List<VMPedido>();
                 List<DetallePedido> detallePedido = new List<DetallePedido>();
+                var clientes = await _clienteService.ObtenerNombre();
                 if (modelo != null)
                 {
                     listaVMPedidos.Add(modelo);
@@ -146,14 +147,13 @@ namespace SistEcomPan.Web.Controllers
                     {
                         listaPedidos.Add(new Pedidos
                         {
-                            IdPedido = item.IdPedido,
-                            IdCliente = item.IdCliente,
-                            Codigo = item.Codigo,
-                            MontoTotal = item.MontoTotal,
-                            FechaPedido = item.FechaPedido,
+                            //IdPedido = item.IdPedido,
+                            IdCliente = clientes.Where(x=>x.Dni==item.Dni).First().IdCliente,
+                            //Codigo = item.Codigo,
+                            //MontoTotal = Convert.ToDecimal(item.MontoTotal),
                             Estado = item.Estado,
-                            DetallePedido = item.VMDetallePedido.Select(detalle => new DetallePedido
-                            {                             
+                            DetallePedido = item.DetallePedido.Select(detalle => new DetallePedido
+                            { 
                               IdProducto=detalle.IdProducto,
                               Cantidad=detalle.Cantidad,
                               Total=Convert.ToDecimal(detalle.Total)
@@ -179,10 +179,10 @@ namespace SistEcomPan.Web.Controllers
                             IdPedido = item.IdPedido,
                             IdCliente = item.IdCliente,
                             Codigo = item.Codigo,
-                            MontoTotal = item.MontoTotal,
+                            MontoTotal = Convert.ToString(item.MontoTotal),
                             FechaPedido = item.FechaPedido,
                             Estado = item.Estado,
-                            VMDetallePedido = item.DetallePedido.Select(detalle => new VMDetallePedido
+                            DetallePedido = item.DetallePedido.Select(detalle => new VMDetallePedido
                             {
                                 IdProducto = detalle.IdProducto,
                                 Cantidad = detalle.Cantidad,

@@ -63,7 +63,6 @@ namespace Datos.Implementacion
                 SqlCommand cmd = new SqlCommand("SPEditarNumeroDocumento", conexion);
                 cmd.Parameters.AddWithValue("IdNumeroDocumento", modelo.IdNumeroDocumento);
                 cmd.Parameters.AddWithValue("UltimoNumero", modelo.UltimoNumero);
-                cmd.Parameters.AddWithValue("FechaActualizacion", modelo.FechaActualizacion);
                 cmd.CommandType = CommandType.StoredProcedure;
 
                 int filaAfectada = await cmd.ExecuteNonQueryAsync();

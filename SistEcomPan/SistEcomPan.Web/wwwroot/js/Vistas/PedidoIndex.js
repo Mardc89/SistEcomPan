@@ -57,14 +57,14 @@
 
 
 
-//function mostrarModal() {
-//    buscarProductos();
-//    $("#modalData").modal("show");
-//}
+function mostrarModal() {
+    buscarProductos();
+    $("#modalData").modal("show");
+}
 
-//$("#btnGuardar").click(function () {
-//    mostrarModal()
-//})
+$("#btnGuardar").click(function () {
+    mostrarModal()
+})
 
 const itemsPerPage = 5; // Cantidad de productos por página
 let currentPage = 1; // Página actual al cargar
@@ -87,7 +87,7 @@ function buscarProductos(searchTerm = '', page = 1) {
             <td>${producto.descripcion}</td>
             <td>${categoria}</td>
             <td>${producto.stock}</td>
-            <td>${producto.precio}</td>
+            <td>${producto.precio.toFixed(2)}</td>
             <td><input type="text" class="form-control form-control-sm" id="txtCantidad" placeholder="Ingrese Cantidad"></td>
             <td>
             <button onclick="agregarProducto(this)" class="btn btn-danger btn-sm">Add</button>
@@ -138,7 +138,7 @@ function agregarProducto(button) {
     const descripcion = row.cells[1].textContent;
     const categoria = row.cells[2].textContent;
     const stock = parseFloat(row.cells[3].textContent);
-    const precio = parseFloat(row.cells[4].textContent);
+    const precio = parseFloat(row.cells[4].textContent).toFixed(2);
     let cantidad = parseFloat(row.cells[5].querySelector('input').value);
 
    
@@ -151,13 +151,17 @@ function agregarProducto(button) {
         const fila = filas[i];
         if (fila.cells[0].textContent === IdProducto) {
             // El producto ya está en laP tabla, incrementar la cantidad
-            const cantidadExistente = parseFloat(fila.cells[3].textContent);
+            let cantidadExistente = parseFloat(fila.cells[3].textContent);
             nuevaCantidad = cantidadExistente + cantidad;
             fila.cells[3].textContent = nuevaCantidad;
+            cantidadTotal = nuevaCantidad;
+            cantidad = cantidadTotal;
+            total = precio * cantidad;
+            fila.cells[5].textContent = total.toFixed(2);
+            calcularTotal();
             return;
         }
-        cantidadTotal = nuevaCantidad;
-        cantidad = cantidadTotal;
+        
        
     }
     total = precio * cantidad;
@@ -168,7 +172,7 @@ function agregarProducto(button) {
         <td>${categoria}</td>
         <td>${cantidad}</td>
         <td>${precio}</td>
-        <td>${total}</td>
+        <td>${total.toFixed(2)}</td>
         <td><button onclick="eliminarProducto(this)">Eliminar</button></td>
       </tr>
     `;
@@ -191,14 +195,17 @@ function calcularTotal() {
     let total = 0;
     const tabla = document.getElementById('tbProductosSeleccionados').getElementsByTagName('tbody')[0];
     const filas = tabla.getElementsByTagName('tr');
+  
 
     for (let i = 0; i < filas.length; i++) {
         const fila = filas[i];
         const totalFila = parseFloat(fila.cells[5].textContent);
         total += totalFila;
+
+
     }
 
-    document.getElementById('montoTotal').textContent = total;
+    document.getElementById('montoTotal').textContent = 'S/.' +total.toFixed(2);
 }
 
 
@@ -226,11 +233,72 @@ document.getElementById('searchInput').addEventListener('input', function (event
 });
 
  //Llamada inicial para cargar productos al abrir la tabla modal
-$('#modalData').on('show.bs.modal', function () {
-    buscarProductos();
-});
+//$('#modalData').on('show.bs.modal', function () {
+//    buscarProductos();
+//});
+
+$("#btnEnviarPedido").click(function () {
+    
+    const tablaProductos = document.getElementById('tbProductosSeleccionados');
+    const filas = tablaProductos.getElementsByTagName('tr');
+
+    const productosPedidos = [];
+
+    for (let i = 1; i < filas.length-1; i++) {
+        const fila = filas[i];
+        const idProducto = fila.cells[0].textContent;
+        const cantidad = fila.cells[3].textContent;
+        const total = fila.cells[5].textContent;
+
+        const producto = {
+            idProducto: idProducto,
+            cantidad:cantidad,
+            total:total
+        };
+        productosPedidos.push(producto);
+    }
 
 
+    if (productosPedidos.length < 1) {
+        toastr.warning("", "Debes Ingresar Productos")
+        return;
+    }
+
+    const vmDetallePedido = productosPedidos;
+
+    const pedido = {
+        dni: $("#txtDocumentoCliente").val(),
+        montoTotal: $("#montoTotal").val(),
+        estado:$("#txtEstado").val(),
+        DetallePedido: vmDetallePedido
+
+    }
+
+   
+
+    $("#btnEnviarPedido").LoadingOverlay("show");
+    debugger;
+    fetch("/Pedido/Crear", {
+        method: "POST",
+        headers: { "Content-Type": "application/json;charset=utf-8" },
+        body: JSON.stringify(pedido)
+    })
+        .then(response => {
+            $("#btnEnviarPedido").LoadingOverlay("hide");
+            return response.ok ? response.json() : Promise.reject(response);
+        })
+        .then(responseJson => {
+            if (responseJson.estado) {
+                productosPedidos = [];
+                $("#txtDocumentoCliente").val("")
+                swal("Registrado", `Numero Venta:${responseJson.objeto.codigo}`, "success")
+            }
+            else {
+                swal("Lo sentimos", "No se pudo Registrar la venta", "error")
+
+            }
+        })
+})
 
 
 

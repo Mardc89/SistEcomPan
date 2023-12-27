@@ -89,15 +89,14 @@ namespace Datos.Implementacion
             {
                 conexion.Open();
                 SqlCommand cmd = new SqlCommand("SPEditarProductos", conexion);
-                cmd.Parameters.AddWithValue("IdProducto", modelo.IdProducto);
-                cmd.Parameters.AddWithValue("Descripcion", modelo.Descripcion);
-                cmd.Parameters.AddWithValue("IdCategoria", modelo.IdCategoria);
-                cmd.Parameters.AddWithValue("Precio", modelo.Precio);
-                cmd.Parameters.AddWithValue("UrlImagen", modelo.UrlImagen);
-                cmd.Parameters.AddWithValue("NombreImagen", modelo.NombreImagen);
-                cmd.Parameters.AddWithValue("Estado", modelo.Estado);
-                cmd.Parameters.AddWithValue("Stock", modelo.Stock);
-                cmd.Parameters.AddWithValue("FechaRegistro", modelo.FechaRegistro);
+                cmd.Parameters.AddWithValue("@IdProducto", modelo.IdProducto);
+                cmd.Parameters.AddWithValue("@Descripcion", modelo.Descripcion);
+                cmd.Parameters.AddWithValue("@IdCategoria", modelo.IdCategoria);
+                cmd.Parameters.AddWithValue("@Precio", modelo.Precio);
+                cmd.Parameters.AddWithValue("@UrlImagen", modelo.UrlImagen);
+                cmd.Parameters.AddWithValue("@NombreImagen", modelo.NombreImagen);
+                cmd.Parameters.AddWithValue("@Estado", modelo.Estado);
+                cmd.Parameters.AddWithValue("@Stock", modelo.Stock);
 
                 cmd.CommandType = CommandType.StoredProcedure;
 

@@ -100,6 +100,8 @@ namespace Datos.Implementacion
 
         public async Task<Pedidos> Registrar(Pedidos modelo, DataTable DetallePedido)
         {
+            bool resultado = false;
+            string Mensaje = "";
             try
             {
                 using (var conexion = new SqlConnection(_cadenaSQL))
@@ -107,7 +109,7 @@ namespace Datos.Implementacion
                     conexion.Open();
                     SqlCommand cmd = new SqlCommand("SPRegistrarPedidos", conexion);
                     cmd.Parameters.AddWithValue("@IdCliente", modelo.IdCliente);
-                    cmd.Parameters.AddWithValue("@codigo", modelo.Codigo);
+                    cmd.Parameters.AddWithValue("@Codigo", modelo.Codigo);
                     cmd.Parameters.AddWithValue("@MontoTotal", modelo.MontoTotal);
                     cmd.Parameters.AddWithValue("@Estado", modelo.Estado);
                     cmd.Parameters.AddWithValue("@FechaPedido", modelo.FechaPedido);
@@ -120,20 +122,27 @@ namespace Datos.Implementacion
                     outputParameter.SqlDbType = SqlDbType.Int;
                     outputParameter.Direction = ParameterDirection.Output;
                     cmd.Parameters.Add(outputParameter);
+
+                    SqlParameter outputParameter2 = new SqlParameter();
+                    outputParameter2.ParameterName = "@Resultado";
+                    outputParameter2.SqlDbType = SqlDbType.Bit;
+                    outputParameter2.Direction = ParameterDirection.Output;
+                    cmd.Parameters.Add(outputParameter2);
+
                     await cmd.ExecuteNonQueryAsync();
 
+                    resultado = Convert.ToBoolean(cmd.Parameters["@Resultado"].Value);
                     int PedidoId = Convert.ToInt32(outputParameter.Value);
                     modelo.IdPedido = PedidoId;
 
-                    return modelo;
-
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                throw;
-            }
+                resultado = false;
+                Mensaje = ex.Message;
+            } 
+            return modelo;
         }
 
         public Task<List<Pedidos>> Reporte(DateTime FechaInicio, DateTime FechaFin)
