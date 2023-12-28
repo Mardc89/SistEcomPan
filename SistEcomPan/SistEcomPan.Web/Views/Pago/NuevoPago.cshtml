@@ -1,17 +1,18 @@
 ﻿
 @{
-    ViewData["Title"] = "NuevoPedido";
+    ViewData["Title"] = "NuevoPago";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
+
+<h1>NuevoPago</h1>
 
 @section Estilos{
 
     <link href="~/vendor/select2/select2.min.css" rel="stylesheet">
 
     <style>
-        .select2{
-
-            width:100% !important;
+        .select2 {
+            width: 100% !important;
         }
 
     </style>
@@ -49,39 +50,16 @@
                                 <div class="form-group col-sm-4">
                                     <input type="text" class="form-control form-control-sm" id="txtEstado" placeholder="Estado">
                                 </div>
-                            </div>                                
+                            </div>
                             <div class="modal-footer">
                                 <button class="btn btn-danger btn-sm" type="button" id="btnGuardar">Agregar Productos</button>
                                 <button class="btn btn-primary  btn-sm" type="button" id="btnEnviarPedido">Realizar Pedido</button>
-                                </div>
-                        </div>                       
+                            </div>
+                        </div>
                         <div class="col-sm-12">
-                            <table class="table table-sm" id="tbProductosSeleccionados">
-                                <thead>
-                                    <tr>
-                                        <th>N° Pedido</th>
-                                        <th>Descripcion</th>
-                                        <th>Categoria</th>
-                                        <th>Cantidad</th>
-                                        <th>Precio Unitario</th>
-                                        <th>Precio Total</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="tablaProductos">
-
-                                </tbody>
-                                <tfoot>
-                                    <tr>
-                                        <td colspan="5">Monto Total S/:</td>
-                                        <td id="montoTotal">0</td>
-                                        <td></td>
-                                    </tr>
-                                </tfoot>
-
-                            </table>
                         </div>
                     </div>
-                </div>             
+                </div>
 
             </div>
 
@@ -97,8 +75,8 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="searchModalLabel">Buscar Productos</h5>
-@*                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
+                @*                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
                 </button>*@
             </div>
             <div class="modal-body">
@@ -108,9 +86,9 @@
                         <!-- Input para la búsqueda -->
                         <input type="text" id="searchInput" class="form-control" placeholder="Buscar...">
                     </div>
-@*                    <div class="col-2">
-                        <!-- Botón para iniciar la búsqueda -->
-                        <button type="button" class="btn btn-primary btn-block">Buscar</button>
+                    @*                    <div class="col-2">
+                    <!-- Botón para iniciar la búsqueda -->
+                    <button type="button" class="btn btn-primary btn-block">Buscar</button>
                     </div>*@
                 </div>
                 <br>
@@ -118,21 +96,20 @@
                 <table class="table table-striped" id="DataProducto">
                     <!-- Aquí van las filas de la tabla -->
                     <thead>
-                    <tr>
-                        <th>Codigo</th>
-                        <th>Descripcion</th>
-                        <th>Categoria</th>
-                        <th>Stock</th>
-                        <th>Precio</th>
-                        <th>Cantidad</th>
-                        <th>Acciones</th>
-                     </tr>
+                        <tr>
+                            <th>Codigo</th>
+                            <th>Descripcion</th>
+                            <th>Categoria</th>
+                            <th>Stock</th>
+                            <th>Precio</th>
+                            <th>Cantidad</th>
+                            <th>Acciones</th>
+                        </tr>
                     </thead>
                     <tbody id="ProductoBuscado">
-
                     </tbody>
                 </table>
-                <!-- Aquí se muestra la paginación -->      
+                <!-- Aquí se muestra la paginación -->
             </div>
             <div class="modal-footer">
                 <nav aria-label="Page navigation example">
@@ -147,7 +124,7 @@
 
 
 
-    @section Scripts{
+@section Scripts{
 
 
     <script src="~/vendor/datatables/jquery.dataTables.min.js"></script>
@@ -162,4 +139,3 @@
     <script src="~/js/Vistas/PedidoIndex.js"></script>
 
 }
-

@@ -29,6 +29,13 @@ namespace SistEcomPan.Web.Controllers
 
             return View();
         }
+
+        public IActionResult HistorialPedido()
+        {
+
+            return View();
+        }
+
         [HttpGet]
         public async Task<IActionResult> Lista()
         {
@@ -142,17 +149,15 @@ namespace SistEcomPan.Web.Controllers
                 var clientes = await _clienteService.ObtenerNombre();
                 if (modelo != null)
                 {
-                    listaVMPedidos.Add(modelo);
-                    foreach (var item in listaVMPedidos)
-                    {
+                    //listaVMPedidos.Add(modelo);
+                    //foreach (var item in listaVMPedidos)
+                    //{
                         listaPedidos.Add(new Pedidos
                         {
-                            //IdPedido = item.IdPedido,
-                            IdCliente = clientes.Where(x=>x.Dni==item.Dni).First().IdCliente,
-                            //Codigo = item.Codigo,
+                            IdCliente = clientes.Where(x=>x.Dni==modelo.Dni).First().IdCliente,
                             //MontoTotal = Convert.ToDecimal(item.MontoTotal),
-                            Estado = item.Estado,
-                            DetallePedido = item.DetallePedido.Select(detalle => new DetallePedido
+                            Estado = modelo.Estado,
+                            DetallePedido = modelo.DetallePedido.Select(detalle => new DetallePedido
                             { 
                               IdProducto=detalle.IdProducto,
                               Cantidad=detalle.Cantidad,
@@ -160,7 +165,7 @@ namespace SistEcomPan.Web.Controllers
                             }).ToList()
 
                         }); 
-                    }
+                    //}
                 }              
 
                 Pedidos pedidoCreado = await _pedidoService.Registrar(listaPedidos.First());
@@ -169,27 +174,25 @@ namespace SistEcomPan.Web.Controllers
                 List<Pedidos> listPedidos = new List<Pedidos>();
                 if (pedidoCreado != null)
                 {
-                    listPedidos.Add(pedidoCreado);
-
-
-                    foreach (var item in listPedidos)
-                    {
+                    //listPedidos.Add(pedidoCreado);
+                    //foreach (var item in listPedidos)
+                    //{
                         vmPedidolista.Add(new VMPedido
                         {
-                            IdPedido = item.IdPedido,
-                            IdCliente = item.IdCliente,
-                            Codigo = item.Codigo,
-                            MontoTotal = Convert.ToString(item.MontoTotal),
-                            FechaPedido = item.FechaPedido,
-                            Estado = item.Estado,
-                            DetallePedido = item.DetallePedido.Select(detalle => new VMDetallePedido
+                            IdPedido = pedidoCreado.IdPedido,
+                            IdCliente = pedidoCreado.IdCliente,
+                            Codigo = pedidoCreado.Codigo,
+                            MontoTotal = Convert.ToString(pedidoCreado.MontoTotal),
+                            FechaPedido = pedidoCreado.FechaPedido,
+                            Estado = pedidoCreado.Estado,
+                            DetallePedido = pedidoCreado.DetallePedido.Select(detalle => new VMDetallePedido
                             {
                                 IdProducto = detalle.IdProducto,
                                 Cantidad = detalle.Cantidad,
                                 Total = Convert.ToString(detalle.Total)
                             }).ToList()
                         });
-                    }
+                    //}
                 }
 
                 gResponse.Estado = true;

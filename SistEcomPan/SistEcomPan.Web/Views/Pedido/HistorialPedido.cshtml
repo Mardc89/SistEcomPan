@@ -1,6 +1,6 @@
 ﻿
 @{
-    ViewData["Title"] = "HistorialVenta";
+    ViewData["Title"] = "HistorialPedido";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
@@ -13,8 +13,8 @@
     <div class="container-fluid">
 
         <div class="card shadow mb-4">
-            <div class="card-header py-3 bg-second-primary">
-                <h6 class="m-0 font-weight-bold text-white">Historial de Venta</h6>
+            <div class="card-header py-3 bg-primary">
+                <h6 class="m-0 font-weight-bold text-white">Historial de Pedidos</h6>
             </div>
             <div class="card-body">
                 <div class="form-row align-items-end">
@@ -22,7 +22,7 @@
                         <label for="cboBuscarPor">Buscar por</label>
                         <select class="form-control form-control-sm" id="cboBuscarPor">
                             <option value="fecha">Fechas</option>
-                            <option value="numero">Numero Venta</option>
+                            <option value="numero">Codigo</option>
                         </select>
                     </div>
                     <div class="form-group col-sm-3 busqueda-fecha">
@@ -34,8 +34,8 @@
                         <input type="text" class="form-control form-control-sm" id="txtFechaFin">
                     </div>
                     <div class="form-group col-sm-3 busqueda-venta">
-                        <label for="txtNumeroVenta">Numero Venta</label>
-                        <input type="text" class="form-control form-control-sm" id="txtNumVenta">
+                        <label for="txtCodigo">Codigo</label>
+                        <input type="text" class="form-control form-control-sm" id="txtNumCodigo">
                     </div>
                     <div class="form-group col-sm-3">
                         <button class="btn btn-success btn-block btn-sm" type="button" id="btnBuscar"><i class="fas fa-search"></i> Buscar</button>
@@ -47,13 +47,13 @@
                     <div class="col-sm-12">
                         <table class="table table-sm table-striped" id="tbventa">
                             <thead>
-                                <tr>
-                                    <th>Fecha Registro</th>
-                                    <th>Numero Venta</th>
+                                <tr>                                   
+                                    <th>Codigo</th>
                                     <th>Tipo Documento</th>
                                     <th>Documento Cliente</th>
                                     <th>Nombre Cliente</th>
                                     <th>Total</th>
+                                    <th>Fecha Registro</th>
                                     <th></th>
                                 </tr>
                             </thead>
@@ -87,7 +87,7 @@
                                         </div>
                                         <div class="form-group col-sm-4">
                                             <label for="txtNumVenta">Numero Venta</label>
-                                            <input type="text" class="form-control form-control-sm" id="txtNumeroVenta" disabled>
+                                            <input type="text" class="form-control form-control-sm" id="txtCodigo" disabled>
                                         </div>
                                         <div class="form-group col-sm-4">
                                             <label for="txtUsuarioRegistro">Usuario Registro</label>
@@ -109,14 +109,6 @@
                                         </div>
                                     </div>
                                     <div class="form-row">
-                                        <div class="form-group col-sm-4">
-                                            <label for="txtSubTotal">Sub Total</label>
-                                            <input type="text" class="form-control form-control-sm" id="txtSubTotal" disabled>
-                                        </div>
-                                        <div class="form-group col-sm-4">
-                                            <label for="txtIGV">IGV</label>
-                                            <input type="text" class="form-control form-control-sm" id="txtIGV" disabled>
-                                        </div>
                                         <div class="form-group col-sm-4">
                                             <label for="txtTotal">Total</label>
                                             <input type="text" class="form-control form-control-sm" id="txtTotal" disabled>
@@ -159,7 +151,7 @@
     <script src="~/vendor/jquery-ui/jquery-ui.js"></script>
     <script src="~/vendor/jquery-ui/idioma/datepicker-es.js"></script>
 
-    <script src="~/js/Vistas/Historial_Venta.js"></script>
+    <script src="~/js/Vistas/HistorialPedido.js"></script>
 
 }
 

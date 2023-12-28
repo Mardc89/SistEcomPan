@@ -112,7 +112,6 @@ namespace Datos.Implementacion
                     cmd.Parameters.AddWithValue("@Codigo", modelo.Codigo);
                     cmd.Parameters.AddWithValue("@MontoTotal", modelo.MontoTotal);
                     cmd.Parameters.AddWithValue("@Estado", modelo.Estado);
-                    cmd.Parameters.AddWithValue("@FechaPedido", modelo.FechaPedido);
                     cmd.Parameters.AddWithValue("@DetallePedido", DetallePedido);
                     cmd.CommandType = CommandType.StoredProcedure;
 

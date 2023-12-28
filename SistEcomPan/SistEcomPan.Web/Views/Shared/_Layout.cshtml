@@ -58,7 +58,8 @@
                 <div id="collapseAdministracion" class="collapse" data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
                         <a class="collapse-item" href="@Url.Action("Index","Usuario")">Usuarios</a>
-                        <a class="collapse-item" href="@Url.Action("Index","Negocio")">Negocio</a>
+                        <a class="collapse-item" href="@Url.Action("Index","Roles")">Roles</a>
+                        <a class="collapse-item" href="@Url.Action("Index","Clientes")">Clientes</a>
                     </div>
                 </div>
             </li>
@@ -73,20 +74,48 @@
                     <div class="bg-white py-2 collapse-inner rounded">
                         <a class="collapse-item" href="@Url.Action("Index","Categoria")">Categorias</a>
                         <a class="collapse-item" href="@Url.Action("Index","Producto")">Productos</a>
+                        <a class="collapse-item" href="@Url.Action("Index","Distritos")">Distritos</a>
+                        <a class="collapse-item" href="@Url.Action("Index","Descuentos")">Descuentos</a>
+                    </div>
+                </div>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePago">
+                    <i class="fas fa-fw fa-tags"></i>
+                    <span>Pagos</span>
+                </a>
+                <div id="collapsePago" class="collapse" data-parent="#accordionSidebar">
+                    <div class="bg-white py-2 collapse-inner rounded">
+                        <a class="collapse-item" href="@Url.Action("NuevoPago","Pagos")">Nuevo Pago</a>
+                        <a class="collapse-item" href="@Url.Action("HistorialPago","Pagos")">Historial Pago</a>
                     </div>
                 </div>
             </li>
 
             <!-- Nav Item - Venta Collapse Menu -->
           <li class="nav-item">
-                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseVenta">
+                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePedido">
                     <i class="fas fa-fw fa-tags"></i>
                     <span>Pedidos</span>
                 </a>
-                <div id="collapseVenta" class="collapse" data-parent="#accordionSidebar">
+                <div id="collapsePedido" class="collapse" data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
                         <a class="collapse-item" href="@Url.Action("NuevoPedido","Pedido")">Nuevo Pedido</a>
-                        <a class="collapse-item" href="@Url.Action("HistorialVenta","Venta")">Historial Venta</a>
+                        <a class="collapse-item" href="@Url.Action("HistorialPedido","Pedido")">Historial Pedido</a>
+                    </div>
+                </div>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseMensaje">
+                    <i class="fas fa-fw fa-tags"></i>
+                    <span>Mensajes</span>
+                </a>
+                <div id="collapseMensaje" class="collapse" data-parent="#accordionSidebar">
+                    <div class="bg-white py-2 collapse-inner rounded">
+                        <a class="collapse-item" href="@Url.Action("NuevoMensaje","Mensajes")">Nuevo Mensaje</a>
+                        <a class="collapse-item" href="@Url.Action("HistorialMensaje","Mensajes")">Historial Mensaje</a>
                     </div>
                 </div>
             </li>
@@ -99,7 +128,7 @@
                 </a>
                 <div id="collapseReportes" class="collapse" data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
-                        <a class="collapse-item" href="@Url.Action("Index","Reporte")">Reporte de Ventas</a>
+                        <a class="collapse-item" href="@Url.Action("Index","Reporte")">Reporte de Pedidos</a>
                     </div>
                 </div>
             </li>

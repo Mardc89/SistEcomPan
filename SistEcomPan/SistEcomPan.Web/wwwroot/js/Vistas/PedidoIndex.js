@@ -1,23 +1,20 @@
 ﻿
+$(document).ready(function () {
+    fetch("/Pedido/ListaClientes")
+        .then(response => {
+            return response.ok ? response.json() : Promise.reject(response);
+        })
+        .then(responseJson => {
+            if (responseJson.length > 0) {
+                responseJson.forEach((item) => {
+                    $("#cboNombreCliente").append(
+                        $("<option>").val(item.idCliente).text(item.nombreCompleto)
+                    )
+                })
+            }
+        })
 
-//let ValorImpuesto = 0;
-//$(document).ready(function () {
-
-//    fetch("/Pedido/ListaClientes")
-//        .then(response => {
-//            return response.ok ? response.json() : Promise.reject(response);
-//        })
-//        .then(responseJson => {
-//            if (responseJson.length > 0) {
-//                responseJson.forEach((item) => {
-//                    $("#cboNombreCliente").append(
-//                        $("<option>").val(item.idCliente).text(item.nombreCompleto)
-//                    )
-//                })
-//            }
-//        })
-
-//})
+})
 
 
 
@@ -205,7 +202,7 @@ function calcularTotal() {
 
     }
 
-    document.getElementById('montoTotal').textContent = 'S/.' +total.toFixed(2);
+    document.getElementById('montoTotal').textContent = total.toFixed(2);
 }
 
 
@@ -238,11 +235,11 @@ document.getElementById('searchInput').addEventListener('input', function (event
 //});
 
 $("#btnEnviarPedido").click(function () {
-    
+    debugger;
     const tablaProductos = document.getElementById('tbProductosSeleccionados');
     const filas = tablaProductos.getElementsByTagName('tr');
 
-    const productosPedidos = [];
+    let productosPedidos = [];
 
     for (let i = 1; i < filas.length-1; i++) {
         const fila = filas[i];
@@ -268,7 +265,7 @@ $("#btnEnviarPedido").click(function () {
 
     const pedido = {
         dni: $("#txtDocumentoCliente").val(),
-        montoTotal: $("#montoTotal").val(),
+        montoTotal: $("#montoTotal").text(),
         estado:$("#txtEstado").val(),
         DetallePedido: vmDetallePedido
 
@@ -291,7 +288,7 @@ $("#btnEnviarPedido").click(function () {
             if (responseJson.estado) {
                 productosPedidos = [];
                 $("#txtDocumentoCliente").val("")
-                swal("Registrado", `Numero Venta:${responseJson.objeto.codigo}`, "success")
+                swal("Registrado", `Codigo de Producto:${responseJson.objeto.codigo}`, "success")
             }
             else {
                 swal("Lo sentimos", "No se pudo Registrar la venta", "error")
