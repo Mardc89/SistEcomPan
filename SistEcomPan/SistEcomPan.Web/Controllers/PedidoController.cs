@@ -52,7 +52,8 @@ namespace SistEcomPan.Web.Controllers
                     MontoTotal = Convert.ToString(item.MontoTotal),
                     Estado = item.Estado,
                     NombresCompletos= clientes.Where(x => x.IdCliente == item.IdCliente).First().Nombres +
-                    clientes.Where(x => x.IdCliente == item.IdCliente).First().Apellidos
+                    clientes.Where(x => x.IdCliente == item.IdCliente).First().Apellidos,
+                    FechaPedido=item.FechaPedido
                  
                 }) ;
             }
@@ -60,7 +61,7 @@ namespace SistEcomPan.Web.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> ListaClientes()
+        public async Task<IActionResult> ListaNombres()
         {
             var Clientelista = await _clienteService.Lista();
             List<VMCliente> vmClientelista = new List<VMCliente>();
@@ -103,16 +104,16 @@ namespace SistEcomPan.Web.Controllers
             var Clientelista = await _clienteService.Lista();
             List<VMCliente> vmClientelista = new List<VMCliente>();
             var clientes = await _clienteService.ObtenerNombre();
-            foreach (var item in Clientelista)
-            {
-                vmClientelista.Add(new VMCliente
-                {
-                    IdCliente = item.IdCliente,
-                    NombreCompleto = clientes.Where(x => x.Dni ==numeroDocumento).First().Nombres + " " +
-                    clientes.Where(x => x.Dni ==numeroDocumento).First().Apellidos
+            var nombreCompletos = clientes.Where(x => x.Dni == numeroDocumento).First().Nombres + " " +
+            clientes.Where(x => x.Dni == numeroDocumento).First().Apellidos;
+            var idcliente = clientes.Where(x => x.Dni == numeroDocumento).First().IdCliente;
 
-                });
-            }
+            vmClientelista.Add(new VMCliente
+            {
+               IdCliente =idcliente,
+               NombreCompleto=nombreCompletos
+            });
+            
             return StatusCode(StatusCodes.Status200OK, vmClientelista);
         }
 
@@ -121,10 +122,9 @@ namespace SistEcomPan.Web.Controllers
         {
             var Clientelista = await _clienteService.Lista();
             List<VMCliente> vmClientelista = new List<VMCliente>();
-            var clientes = await _clienteService.ObtenerNombre();
-            var apellidos = clientes.FirstOrDefault(x => nombreCompleto.StartsWith(x.Apellidos)).Apellidos;
-            var nombres = clientes.FirstOrDefault(x => nombreCompleto.EndsWith(x.Nombres)).Nombres;
-
+            var clientes = await _clienteService.ObtenerNombre();           
+            var nombres = clientes.FirstOrDefault(x => nombreCompleto.StartsWith(x.Nombres)).Nombres;
+            var apellidos = clientes.FirstOrDefault(x => nombreCompleto.EndsWith(x.Apellidos)).Apellidos;
              vmClientelista.Add(new VMCliente
              {
                  IdCliente = clientes.Where(x => x.Apellidos == apellidos && x.Nombres == nombres).First().IdCliente,

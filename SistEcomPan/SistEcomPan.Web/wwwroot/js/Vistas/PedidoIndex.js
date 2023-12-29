@@ -1,6 +1,7 @@
 ﻿
 $(document).ready(function () {
-    fetch("/Pedido/ListaClientes")
+    obtenerFecha();
+    fetch("/Pedido/ListaNombres")
         .then(response => {
             return response.ok ? response.json() : Promise.reject(response);
         })
@@ -17,40 +18,58 @@ $(document).ready(function () {
 })
 
 
+function obtenerFecha() {
+    var fechaActual = new Date();
+    var fechaTexto = document.getElementById("txtFecha");
+    var dia = fechaActual.getDate();
+    var mes = fechaActual.getMonth() + 1;
+    var anio = fechaActual.getFullYear();
 
-//$("#cboNombreCliente").change(function () {
-//    var nombreCliente = $("#cboNombreCliente").val();
-//    fetch(`/Pedido/ListaNumeroDocumento?nombreCompleto=${nombreCliente}`)
-//        .then(response => {
-//            return response.ok ? response.json() : Promise.reject(response);
-//        })
-//        .then(responseJson => {
-//            if (responseJson.length > 0) {
-//                responseJson.forEach((item) => {
-//                    $("#txtDocumentoCliente").val(item.dni)
-//                })
-//            }
-//        })
+    if (dia < 10) {
+        dia = '0' + dia;
+    }
+    if (mes<10) {
+        mes = '0' + mes;
+    }
+    var fechaformateada = dia + '/' + mes + '/' + anio;
+    fechaTexto.value = fechaformateada;
+}
 
-//})
 
-//$("#txtDocumentoCliente").click(function () {
-//    var numeroDocumento = $("#txtDocumentoCliente").val();
-//    fetch(`/Pedido/ListaClientes?numeroDocumento=${numeroDocumento}`)
-//        .then(response => {
-//            return response.ok ? response.json() : Promise.reject(response);
-//        })
-//        .then(responseJson => {
-//            if (responseJson.length > 0) {
-//                responseJson.forEach((item) => {
-//                    $("#cboNombreCliente").append(
-//                        $("<option>").val(item.idCliente).text(item.nombreCompleto)
-//                    )
-//                })
-//            }
-//        })
 
-//})
+$("#cboNombreCliente").change(function () {
+    var nombreCliente = $("#cboNombreCliente option:selected").text();
+    fetch(`/Pedido/ListaNumeroDocumento?nombreCompleto=${nombreCliente}`)
+        .then(response => {
+            return response.ok ? response.json() : Promise.reject(response);
+        })
+        .then(responseJson => {
+            if (responseJson.length > 0) {
+                responseJson.forEach((item) => {
+                    $("#txtDocumentoCliente").val(item.dni)
+                })
+            }
+        })
+
+})
+
+$("#txtDocumentoCliente").click(function () {
+    if ($("#txtDocumentoCliente").val().length == 8) {
+        var numeroDocumento = $("#txtDocumentoCliente").val();
+        fetch(`/Pedido/ListaClientes?numeroDocumento=${numeroDocumento}`)
+            .then(response => {
+                return response.ok ? response.json() : Promise.reject(response);
+            })
+            .then(responseJson => {
+                if (responseJson.length > 0) {
+                    responseJson.forEach((item) => {
+                        $("#cboNombreCliente").val(item.idCliente).text(item.nombreCompleto);                       
+                    })
+                }
+            })
+    }
+
+})
 
 
 

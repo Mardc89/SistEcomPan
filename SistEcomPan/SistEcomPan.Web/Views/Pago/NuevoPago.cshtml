@@ -4,31 +4,30 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>NuevoPago</h1>
+
 
 @section Estilos{
+    <link href="~/vendor/datatables/dataTables.bootstrap4.min.css" rel="stylesheet">
+    <link href="~/vendor/datatables/extensiones/css/responsive.dataTables.min.css" rel="stylesheet">
+    <link href="~/vendor/datatables/extensiones/css/buttons.dataTables.min.css" rel="stylesheet">
 
-    <link href="~/vendor/select2/select2.min.css" rel="stylesheet">
+@*    <link href="~/vendor/select2/select2.min.css" rel="stylesheet">
 
     <style>
         .select2 {
             width: 100% !important;
         }
 
-    </style>
+    </style>*@
 }
 
 
 
-<div class="container-fluid">
+                <div class="container-fluid">
 
-    <div class="row">
-        <div class="col-sm-12">
-            <div class="row">
-                <div class="col-sm-12">
-                    <div class="card shadow mb-12">
+                    <div class="card shadow mb-4">
                         <div class="card-header py-3 bg-primary">
-                            <h6 class="m-0 font-weight-bold text-white">Pedidos</h6>
+                            <h6 class="m-0 font-weight-bold text-white">Pagos</h6>
                         </div>
                         <div class="card-body">
                             <div class="form-row">
@@ -56,21 +55,31 @@
                                 <button class="btn btn-primary  btn-sm" type="button" id="btnEnviarPedido">Realizar Pedido</button>
                             </div>
                         </div>
-                        <div class="col-sm-12">
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <table class="table table-bordered" id="tbdataPedido" width="100%" cellspacing="0" style="width:100%">
+                                    <thead>
+                                        <tr>
+                                            <th>Id</th>
+                                            <th>Codigo</th>
+                                            <th>Dni</th>
+                                            <th>Cliente</th>                                         
+                                            <th>Monto Total</th>
+                                            <th>Estado</th>
+                                            <th>Fecha</th>
+                                            <th>Acciones</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
                     </div>
                 </div>
 
-            </div>
-
-
-        </div>
-    </div>
-
-</div>
-
 <!-- Ventana modal -->
-<div class="modal fade" id="modalData" tabindex="-1" role="dialog" aria-labelledby="searchModalLabel" aria-hidden="true">
+<div class="modal fade" id="modalDataPago" tabindex="-1" role="dialog" aria-labelledby="searchModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -136,6 +145,6 @@
     <script src="~/vendor/datatables/extensiones/js/buttons.print.min.js"></script>
 
 
-    <script src="~/js/Vistas/PedidoIndex.js"></script>
+    <script src="~/js/Vistas/PedidoParaPagar.js"></script>
 
 }
