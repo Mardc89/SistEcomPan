@@ -38,12 +38,13 @@ namespace Datos.Implementacion
                         {
                             IdPago = Convert.ToInt32(dr["IdPago"]),
                             IdPedido = Convert.ToInt32(dr["IdPedido"]),
-                            MontoTotalPedido =Convert.ToDecimal(dr["MontoTotalPedido"]),
-                            PagoDelCliente = Convert.ToDecimal(dr["PagoDelCliente"]),
-                            VueltoDelCliente = Convert.ToDecimal(dr["VueltoDelCliente"]),
+                            MontoDePedido = Convert.ToDecimal(dr["MontoDePedido"]),
+                            Descuento = Convert.ToDecimal(dr["Descuento"]),
+                            MontoTotalDePago = Convert.ToDecimal(dr["MontoTotalDePago"]),
                             MontoDeuda = Convert.ToDecimal(dr["MontoDeuda"]),
-                            FechaDeuda = Convert.ToDateTime(dr["FechaDeuda"])
-                        });
+                            FechaDePago= Convert.ToDateTime(dr["FechaDePago"]),
+                            Estado = dr["Estado"].ToString()
+                        }); 
                     }
                 }
             }
@@ -58,11 +59,12 @@ namespace Datos.Implementacion
                 conexion.Open();
                 SqlCommand cmd = new SqlCommand("SPGuardarPagos", conexion);
                 cmd.Parameters.AddWithValue("IdPedido", modelo.IdPedido);
-                cmd.Parameters.AddWithValue("MontoTotalPedido", modelo.MontoTotalPedido);
-                cmd.Parameters.AddWithValue("PagoDelCliente", modelo.PagoDelCliente);
-                cmd.Parameters.AddWithValue("VueltoDelCliente", modelo.VueltoDelCliente);
+                cmd.Parameters.AddWithValue("MontoDePedido", modelo.MontoDePedido);
+                cmd.Parameters.AddWithValue("Descuento", modelo.Descuento);
+                cmd.Parameters.AddWithValue("MontoTotalDePago", modelo.MontoTotalDePago);
                 cmd.Parameters.AddWithValue("MontoDeuda", modelo.MontoDeuda);
-                cmd.Parameters.AddWithValue("FechaDeuda", modelo.FechaDeuda);
+                cmd.Parameters.AddWithValue("FechaPago", modelo.FechaDePago);
+                cmd.Parameters.AddWithValue("Estado", modelo.Estado);
                 cmd.CommandType = CommandType.StoredProcedure;
 
                 int filaAfectada = await cmd.ExecuteNonQueryAsync();
@@ -87,11 +89,12 @@ namespace Datos.Implementacion
                 SqlCommand cmd = new SqlCommand("SPEditarPagos", conexion);
                 cmd.Parameters.AddWithValue("IdPago", modelo.IdPago);
                 cmd.Parameters.AddWithValue("IdPedido", modelo.IdPedido);
-                cmd.Parameters.AddWithValue("MontoTotalPedido", modelo.MontoTotalPedido);
-                cmd.Parameters.AddWithValue("PagoDelCliente", modelo.PagoDelCliente);
-                cmd.Parameters.AddWithValue("VueltoDelCliente", modelo.VueltoDelCliente);
+                cmd.Parameters.AddWithValue("MontoDePedido", modelo.MontoDePedido);
+                cmd.Parameters.AddWithValue("Descuento", modelo.Descuento);
+                cmd.Parameters.AddWithValue("MontoTotalDePago", modelo.MontoTotalDePago);
                 cmd.Parameters.AddWithValue("MontoDeuda", modelo.MontoDeuda);
-                cmd.Parameters.AddWithValue("FechaDeuda", modelo.FechaDeuda);
+                cmd.Parameters.AddWithValue("FechaPago", modelo.FechaDePago);
+                cmd.Parameters.AddWithValue("Estado", modelo.Estado);
 
                 cmd.CommandType = CommandType.StoredProcedure;
 

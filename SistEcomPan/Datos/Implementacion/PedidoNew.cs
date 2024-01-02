@@ -17,17 +17,15 @@ namespace Datos.Implementacion
         private readonly string _cadenaSQL = "";
         private readonly IGenericRepository<Productos> _repositorioProducto;
         private readonly IPedidoNew _repositorioPedido;
-        private readonly IGenericRepository<Descuentos> _repositorioDescuento;
         private readonly IGenericRepository<NumeroDocumento> _repositorioNumDocumento;
 
         public PedidoNew(
             IGenericRepository<Productos> repositorioProducto, IPedidoNew repositorioPedido,
-            IGenericRepository<Descuentos> repositorioDescuento, IGenericRepository<NumeroDocumento> repositorioNumDocumento,
+            IGenericRepository<NumeroDocumento> repositorioNumDocumento,
             IConfiguration configuration): base(configuration){
 
             _repositorioProducto = repositorioProducto;
             _repositorioPedido = repositorioPedido;
-            _repositorioDescuento = repositorioDescuento;
             _repositorioNumDocumento = repositorioNumDocumento;
             _cadenaSQL = configuration.GetConnectionString("cadenaSQL");
             
@@ -53,26 +51,14 @@ namespace Datos.Implementacion
                     foreach (DetallePedido detalle in entidad.DetallePedido)
                     {
 
-                        IQueryable<Descuentos> descuento = await _repositorioDescuento.Consultar();
-                        IQueryable<Descuentos> descuentoEncontrado = descuento.Where(u => u.IdProducto == detalle.IdProducto);
-                        Descuentos descuentoProducto = descuentoEncontrado.First();
+
                         IQueryable<Productos> producto = await _repositorioProducto.Consultar();
                         IQueryable<Productos> productoEncontrado = producto.Where(u => u.IdProducto == detalle.IdProducto);
                         var PrecioProducto = productoEncontrado.First().Precio;
 
-                        bool estado = Convert.ToBoolean(descuentoProducto.Estado);
+                        subtotal = Convert.ToDecimal(detalle.Cantidad.ToString()) *PrecioProducto;
+                        total += subtotal;
 
-                        if (estado)
-                        {
-                            subtotal = Convert.ToDecimal(detalle.Cantidad.ToString()) *PrecioProducto-descuentoProducto.Descuento;
-                            total += subtotal;
-
-                        }
-                        else
-                        {
-                            subtotal = Convert.ToDecimal(detalle.Cantidad.ToString()) * PrecioProducto;
-                            total += subtotal;
-                        }
                         IQueryable<Productos> buscarProducto = await _repositorioProducto.Consultar();
                         IQueryable<Productos> productoStock = buscarProducto.Where(u => u.IdProducto == detalle.IdProducto);
                         Productos productoEditar = productoStock.First();

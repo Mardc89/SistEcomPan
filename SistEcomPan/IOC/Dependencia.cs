@@ -23,7 +23,6 @@ namespace IOC
             services.AddScoped<IGenericRepository<Categorias>, CategoriaRepository>();
             services.AddScoped<IGenericRepository<Productos>, ProductoRepository>();
             services.AddScoped<IGenericRepository<Pedidos>, PedidoRepository>();
-            services.AddScoped<IGenericRepository<Descuentos>, DescuentoRepository>();
             services.AddScoped<IGenericRepository<NumeroDocumento>, NumDocumentoRepository>();
 
             services.AddScoped<IGenericRepository<Usuarios>, UsuarioRepository>();
