@@ -21,113 +21,139 @@
     </style>*@
 }
 
-
-
-                <div class="container-fluid">
-
-                    <div class="card shadow mb-4">
-                        <div class="card-header py-3 bg-primary">
-                            <h6 class="m-0 font-weight-bold text-white">Pagos</h6>
-                        </div>
-                        <div class="card-body">
-                            <div class="form-row">
-                                <div class="form-group col-sm-4">
-                                    <input type="text" class="form-control form-control-sm" id="txtDocumentoCliente" placeholder="numero documento">
-                                </div>
-                                <div class="form-group col-sm-8">
-                                    <select class="form-control form-control-sm" id="cboNombreCliente">
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="form-row">
-                                <div class="form-group col-sm-4">
-                                    <input type="text" class="form-control form-control-sm" id="txtFecha" placeholder="Fecha">
-                                </div>
-                                <div class="form-group col-sm-4">
-                                    <input type="text" class="form-control form-control-sm" id="txtOrdenPedido" placeholder="Orden de Pedido">
-                                </div>
-                                <div class="form-group col-sm-4">
-                                    <input type="text" class="form-control form-control-sm" id="txtEstado" placeholder="Estado">
-                                </div>
-                            </div>
-                            <div class="modal-footer">
-                                <button class="btn btn-danger btn-sm" type="button" id="btnGuardar">Agregar Productos</button>
-                                <button class="btn btn-primary  btn-sm" type="button" id="btnEnviarPedido">Realizar Pedido</button>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-sm-12">
-                                <table class="table table-bordered" id="tbdataPedido" width="100%" cellspacing="0" style="width:100%">
-                                    <thead>
-                                        <tr>
-                                            <th>Id</th>
-                                            <th>Codigo</th>
-                                            <th>Dni</th>
-                                            <th>Cliente</th>                                         
-                                            <th>Monto Total</th>
-                                            <th>Estado</th>
-                                            <th>Fecha</th>
-                                            <th>Acciones</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-<!-- Ventana modal -->
-<div class="modal fade" id="modalDataPago" tabindex="-1" role="dialog" aria-labelledby="searchModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="searchModalLabel">Buscar Productos</h5>
-                @*                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-                </button>*@
+<div class="card shadow mb-4">
+    <div class="card-header py-3 bg-primary">
+        <h6 class="m-0 font-weight-bold text-white">Lista de Usuarios</h6>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-sm-3">
+                <button class="btn-success" id="btnNuevo"><i class="fas fa-user-plus"></i>Nuevo Pago</button>
             </div>
-            <div class="modal-body">
-                <!-- Aquí va el contenido del formulario de búsqueda -->
-                <div class="row">
-                    <div class="col-12">
-                        <!-- Input para la búsqueda -->
-                        <input type="text" id="searchInput" class="form-control" placeholder="Buscar...">
-                    </div>
-                    @*                    <div class="col-2">
-                    <!-- Botón para iniciar la búsqueda -->
-                    <button type="button" class="btn btn-primary btn-block">Buscar</button>
-                    </div>*@
-                </div>
-                <br>
-                <!-- Aquí se muestra la tabla de productos -->
-                <table class="table table-striped" id="DataProducto">
-                    <!-- Aquí van las filas de la tabla -->
+        </div>
+        <hr />
+        <div class="row">
+            <div class="col-sm-12">
+                <table class="table table-bordered" id="tbdata" width="100%" cellspacing="0" style="width:100%">
                     <thead>
                         <tr>
-                            <th>Codigo</th>
-                            <th>Descripcion</th>
-                            <th>Categoria</th>
-                            <th>Stock</th>
-                            <th>Precio</th>
-                            <th>Cantidad</th>
+                            <th>IdPago</th>
+                            <th>IdPedido</th>
+                            <th>Monto De Pedido</th>
+                            <th>Descuento</th>
+                            <th>Monto De Pago</th>
+                            <th>Deuda</th>
+                            <th>Fecha De Pago</th>
+                            <th>Estado</th>
                             <th>Acciones</th>
                         </tr>
                     </thead>
-                    <tbody id="ProductoBuscado">
+                    <tbody>
                     </tbody>
                 </table>
-                <!-- Aquí se muestra la paginación -->
-            </div>
-            <div class="modal-footer">
-                <nav aria-label="Page navigation example">
-
-                </nav>
             </div>
         </div>
     </div>
 </div>
+
+<div class="modal fade" id="modalDataPago" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h6>Detalle Usuario</h6>
+                <button class="close" type="button" data-dismiss="modal" aria-label="close">
+                    <span aria-hidden="true"></span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <input value="0" id="txtId" />
+                    <div class="row">
+                        <div class="col-sm-8">
+                            <div class="form-row">
+                                <div class="form-group col-sm-6">
+                                    <label for="txtCodigo">Nombre Del Cliente</label>
+                                    <input type="text" class="form-control form-control-sm input-validar" id="txtDni" name="Dni" />
+                                </div>
+                                <div class="form-group col-sm-6">
+                                    <label for="txtNombres">Codigo de Pedido</label>
+                                    <input type="text" class="form-control form-control-sm input-validar" id="txtNombres" name="Nombres" />
+                                </div>
+                                <div class="form-group col-sm-6">
+                                    <label for="txtApellidos">Monto De Pedido</label>
+                                    <input type="text" class="form-control form-control-sm input-validar" id="txtApellidos" name="Apellidos" />
+                                </div>
+                                <div class="form-group col-sm-6">
+                                    <label for="txtApellidos">Descuento</label>
+                                    <input type="text" class="form-control form-control-sm input-validar" id="txtApellidos" name="Apellidos" />
+                                </div>
+                                <div class="form-group col-sm-6">
+                                    <label for="txtApellidos">Monto Total de Pago</label>
+                                    <input type="text" class="form-control form-control-sm input-validar" id="txtApellidos" name="Apellidos" />
+                                </div>
+                                <div class="form-group col-sm-6">
+                                    <label for="txtCorreo">Deuda</label>
+                                    <input type="text" class="form-control form-control-sm input-validar" id="txtCorreo" name="Correo" />
+                                </div>
+                                <div class="form-group col-sm-6">
+                                    <label for="txtApellidos">Pago Del Cliente</label>
+                                    <input type="text" class="form-control form-control-sm input-validar" id="txtApellidos" name="Apellidos" />
+                                </div>
+                                <div class="form-group col-sm-6">
+                                    <label for="txtApellidos">Cambio Del Cliente</label>
+                                    <input type="text" class="form-control form-control-sm input-validar" id="txtApellidos" name="Apellidos" />
+                                </div>
+                                <div class="form-group col-sm-6">
+                                    <label for="txtApellidos">Estado</label>
+                                    <input type="text" class="form-control form-control-sm input-validar" id="txtApellidos" name="Apellidos" />
+                                </div>
+                                <div class="form-group col-sm-6">
+                                    <label for="txtNombreUsuario">Nombre Usuario</label>
+                                    <input type="email" class="form-control form-control-sm input-validar" id="txtNombreUsuario" name="NombreUsuario" />
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group col-sm-6">
+                                    <label for="txtClave">Clave</label>
+                                    <input type="password" class="form-control form-control-sm input-validar" id="txtClave" name="Clave" />
+                                </div>
+                                <div class="form-group col-sm-6">
+                                    <label for="cboRol">Rol</label>
+                                    <select class="form-control form-control-sm" id="cboRol">
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group col-sm-6">
+                                    <label for="cboEstado">Estado</label>
+                                    <select class="form-control form-control-sm input-validar" id="cboEstado">
+                                        <option value="1">Activo</option>
+                                        <option value="0">No Activo</option>
+
+                                    </select>
+                                </div>
+                                <div class="form-group col-sm-6">
+                                    <label for="txtFoto">Foto</label>
+                                    <input class="form-control-file" type="file" id="txtFoto" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-4">
+                            <img id="imgUsuario" style="max-width:200px;" src="" class="rounded mx-auto d-block" alt=" Foto usuario" />
+
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary btn-sm" type="button" id="btnGuardar">Guardar</button>
+                <button class="btn btn-danger  btn-sm" type="button" data-dismiss="modal">Cancelar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
 
 
 
@@ -145,6 +171,6 @@
     <script src="~/vendor/datatables/extensiones/js/buttons.print.min.js"></script>
 
 
-    <script src="~/js/Vistas/PedidoParaPagar.js"></script>
+  @*  <script src="~/js/Vistas/PedidoParaPagar.js"></script>*@
 
 }
