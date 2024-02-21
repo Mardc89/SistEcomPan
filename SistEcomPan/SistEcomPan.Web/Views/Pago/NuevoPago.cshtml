@@ -69,13 +69,29 @@
                 <form>                   
                     <div class="container">
                         <input value="0" id="txtId" />
+                        <div class="form-row">
+                            <div class="form-group col-sm-6">
+                                <label for="txtCodigo">Nombre Del Cliente</label>
+                                <input type="text" class="form-control form-control-sm input-validar" id="txtDni" name="Dni" />
+                            </div>
+                            <div class="form-group col-sm-6">
+                                <label for="txtDescuento">Devoluciones</label><br />
+                                <div class="form-check form-check-inline">
+                                    <label class="form-check-label mr-2" for="opcion1">Si</label>
+                                    <input class="form-check-input" type="radio" name="opcion" id="opcion1" value="opcion1" />                                    
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <label class="form-check-label mr-2" for="opcion2">No</label>
+                                    <input class="form-check-input" type="radio" name="opcion" id="opcion2" value="opcion2" />                                
+                                </div>
+                            </div>
+                        </div>
+                        
                                 <div class="form-row">                                   
-                                    <div class="form-group col-sm-6">
-                                        <label for="txtCodigo">Nombre Del Cliente</label>
-                                        <input type="text" class="form-control form-control-sm input-validar" id="txtDni" name="Dni" />
-                                    </div>
+
                                     <div class="form-group col-sm-6">
                                         <label for="txtCodigo">Codigo de Pedido</label>
+
                                     <div class="input-group">
                                         <input type="text" class="form-control form-control-sm input-validar" placeholder="Ingrese codigo de Producto" id="txtNombres" name="Nombres" aria-describedby="btn-codPedido" />
                                         <div class="input-group-append">
@@ -83,22 +99,16 @@
                                          </div>                                     
                                     </div>                                   
                                     </div>
+                            <div class="form-group col-sm-6">
+                                <label for="txtApellidos">Monto De Pedido</label>
+                                <input type="text" class="form-control form-control-sm input-validar" id="txtApellidos" name="Apellidos" />
+                            </div>
+
+
+
                                 </div>
                                 <div class="form-row">
-                                    <div class="form-group col-sm-6">
-                                    <label for="txtApellidos">Monto De Pedido</label>
-                                    <input type="text" class="form-control form-control-sm input-validar" id="txtApellidos" name="Apellidos" />
-                                </div>
 
-                                <div class="form-group col-sm-6">
-                                    <label for="txtDescuento">Descuento</label>
-                                <div class="input-group">
-                                    <input type="text" class="form-control form-control-sm input-validar" placeholder="Desea hacer descuentos"id="txtDescuento" name="Descuentos" aria-describedby="btnDescuento" />
-                                    <div class="input-group-append">
-                                        <button class="btn btn-primary btn-sm" type="button" id="btnDescuento"><i class="fas fa-search"></i></button>
-                                    </div>
-                                </div>
-                                </div>
                                 </div>
                                 <div class="form-row">
                                     <div class="form-group col-sm-6">
@@ -132,11 +142,11 @@
     </div>
 </div>
 
-<div class="modal fade" id="modalDataDescuento" tabindex="-1" role="dialog" aria-labelledby="searchModalLabel" aria-hidden="true">
+<div class="modal fade" id="modalDataDescuento" tabindex="-1" role="dialog" aria-labelledby="searchModalLabel2" aria-hidden="true">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="searchModalLabel">Buscar Productos</h5>
+                <h5 class="modal-title" id="searchModalLabel2">Buscar Productos</h5>
                 @*                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
                 </button>*@
@@ -155,7 +165,7 @@
                 </div>
                 <br>
                 <!-- Aquí se muestra la tabla de productos -->
-                <table class="table table-striped" id="DataProducto">
+                <table class="table table-striped" id="">
                     <!-- Aquí van las filas de la tabla -->
                     <thead>
                         <tr>
@@ -181,7 +191,7 @@
         </div>
     </div>
 </div>
-
+ 
 
 @section Scripts{
 
