@@ -69,12 +69,22 @@
                 <form>                   
                     <div class="container">
                         <input value="0" id="txtId" />
+
                         <div class="form-row">
-                            <div class="form-group col-sm-6">
-                                <label for="txtCodigo">Nombre Del Cliente</label>
-                                <input type="text" class="form-control form-control-sm input-validar" id="txtDni" name="Dni" />
+                            <div class="form-group col-sm-4">
+                                <label for="txtCodigo">Codigo de Pedido</label>
+                                <div class="input-group">
+                                    <input type="text" class="form-control form-control-sm input-validar" placeholder="Ingrese codigo de Producto" id="txtCodigos" name="Codigos" aria-describedby="btnCodPedido" />
+                                    <div class="input-group-append">
+                                        <button class="btn btn-primary btn-sm" type="button" id="btnCodPedido"><i class="fas fa-search"></i></button>
+                                    </div>
+                                </div>
                             </div>
-                            <div class="form-group col-sm-6">
+                            <div class="form-group col-sm-4">
+                                <label for="txtApellidos">Monto De Pedido</label>
+                                <input type="text" class="form-control form-control-sm input-validar" id="txtApellidos" name="Apellidos" />
+                            </div>
+                            <div class="form-group col-sm-4">
                                 <label for="txtDescuento">Devoluciones</label><br />
                                 <div class="form-check form-check-inline">
                                     <label class="form-check-label mr-2" for="opcion1">Si</label>
@@ -86,48 +96,45 @@
                                 </div>
                             </div>
                         </div>
-                        
-                                <div class="form-row">                                   
-
-                                    <div class="form-group col-sm-6">
-                                        <label for="txtCodigo">Codigo de Pedido</label>
-
-                                    <div class="input-group">
-                                        <input type="text" class="form-control form-control-sm input-validar" placeholder="Ingrese codigo de Producto" id="txtNombres" name="Nombres" aria-describedby="btn-codPedido" />
-                                        <div class="input-group-append">
-                                            <button class="btn btn-primary btn-sm" type="button" id="btn-codPedido"><i class="fas fa-search"></i></button> 
-                                         </div>                                     
-                                    </div>                                   
-                                    </div>
-                            <div class="form-group col-sm-6">
-                                <label for="txtApellidos">Monto De Pedido</label>
-                                <input type="text" class="form-control form-control-sm input-validar" id="txtApellidos" name="Apellidos" />
+                        <div class="form-row">
+                            <div class="form-group col-sm-4">
+                                <label for="txtCodigo">Nombre Del Cliente</label>
+                                <input type="text" class="form-control form-control-sm input-validar" id="txtDni" name="Dni" />
                             </div>
-
-
-
+                            <div class="form-group col-sm-4">
+                                <label for="txtCodigo">Fecha Del Pedido</label>
+                                <input type="text" class="form-control form-control-sm input-validar" id="txtDni" name="Dni" />
+                            </div>
+                            <div class="form-group col-sm-4">
+                                <label for="txtCodigo">Fecha De Pago</label>
+                                <input type="text" class="form-control form-control-sm input-validar" id="txtDni" name="Dni" />
+                            </div>
+                        </div>
+                            <div class="form-row">
+                                <div class="form-group col-sm-4">
+                                    <label for="txtApellidos">Descuento</label>
+                                    <input type="text" class="form-control form-control-sm input-validar" id="txtApellidos" name="Apellidos" />
+                                </div>
+                                <div class="form-group col-sm-4">
+                                    <label for="txtApellidos">Monto Total de Pago</label>
+                                    <input type="text" class="form-control form-control-sm input-validar" id="txtApellidos" name="Apellidos" />
+                                 </div>
+                                <div class="form-group col-sm-4">
+                                    <label for="txtApellidos">Pago Del Cliente</label>
+                                    <input type="text" class="form-control form-control-sm input-validar" id="txtApellidos" name="Apellidos" />
+                                </div>
                                 </div>
                                 <div class="form-row">
-
-                                </div>
-                                <div class="form-row">
-                                    <div class="form-group col-sm-6">
-                                        <label for="txtApellidos">Monto Total de Pago</label>
+                                    <div class="form-group col-sm-4">
+                                        <label for="txtApellidos">Deuda</label>
                                         <input type="text" class="form-control form-control-sm input-validar" id="txtApellidos" name="Apellidos" />
                                     </div>
-                            <div class="form-group col-sm-6">
-                                <label for="txtApellidos">Pago Del Cliente</label>
-                                <input type="text" class="form-control form-control-sm input-validar" id="txtApellidos" name="Apellidos" />
-                            </div>
-
-                                </div>
-                                <div class="form-row">
-                                    <div class="form-group col-sm-6">
-                                    <label for="txtApellidos">Deuda</label>
-                                    <input type="text" class="form-control form-control-sm input-validar" id="txtApellidos" name="Apellidos" />
-                                    </div>
-                                    <div class="form-group col-sm-6">
+                                    <div class="form-group col-sm-4">
                                         <label for="txtApellidos">Cambio Del Cliente</label>
+                                        <input type="text" class="form-control form-control-sm input-validar" id="txtApellidos" name="Apellidos" />
+                                    </div>
+                                    <div class="form-group col-sm-4">
+                                        <label for="txtApellidos">Estado</label>
                                         <input type="text" class="form-control form-control-sm input-validar" id="txtApellidos" name="Apellidos" />
                                     </div>
                                 </div>
@@ -191,6 +198,56 @@
         </div>
     </div>
 </div>
+
+<div class="modal fade" id="modalDataPedidos" tabindex="-1" role="dialog" aria-labelledby="searchModalLabel3" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="searchModalLabel3">Buscar Productos</h5>
+                @*                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+                </button>*@
+            </div>
+            <div class="modal-body">
+                <!-- Aquí va el contenido del formulario de búsqueda -->
+                <div class="row">
+                    <div class="col-12">
+                        <!-- Input para la búsqueda -->
+                        <input type="text" id="searchInput" class="form-control" placeholder="Buscar...">
+                    </div>
+                    @*                    <div class="col-2">
+                    <!-- Botón para iniciar la búsqueda -->
+                    <button type="button" class="btn btn-primary btn-block">Buscar</button>
+                    </div>*@
+                </div>
+                <br>
+                <!-- Aquí se muestra la tabla de productos -->
+                <table class="table table-striped" id="">
+                    <!-- Aquí van las filas de la tabla -->
+                    <thead>
+                        <tr>
+                            <th>IdPedido</th>
+                            <th>Codigo</th>
+                            <th>Nombre</th>
+                            <th>Monto Total</th>
+                            <th>Estado</th>
+                            <th>Fecha De Pedido</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="PedidoBuscado">
+                    </tbody>
+                </table>
+                <!-- Aquí se muestra la paginación -->
+            </div>
+            <div class="modal-footer">
+                <nav aria-label="Page navigation example">
+
+                </nav>
+            </div>
+        </div>
+    </div>
+</div>
  
 
 @section Scripts{
@@ -207,5 +264,6 @@
 
     <script src="~/js/Vistas/PagoPedido.js"></script>
     <script src="~/js/Vistas/DescuentoDePago.js"></script>
+    <script src="~/js/Vistas/ListaPedidos.js"></script>
 
 }

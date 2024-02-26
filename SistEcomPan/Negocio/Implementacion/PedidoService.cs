@@ -61,7 +61,7 @@ namespace Negocio.Implementacion
             throw new NotImplementedException();
         }
 
-        public async Task<List<Pedidos>> lista()
+        public async Task<List<Pedidos>> Lista()
         {
             List<Pedidos> query = await _repositorioPedido.Lista();
             return query;

@@ -3,7 +3,7 @@ function mostrarModal2() {
     $("#modalDataDescuento").modal("show");
 }
 
-$("#btnDescuento").click(function () {
+$("#opcion1").click(function () {
     mostrarModal2()
 })
 
@@ -403,3 +403,5 @@ $("#btnTerminarVenta").click(function () {
             }
         })
 })
+
+

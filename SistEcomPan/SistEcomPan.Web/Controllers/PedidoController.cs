@@ -39,7 +39,7 @@ namespace SistEcomPan.Web.Controllers
         [HttpGet]
         public async Task<IActionResult> Lista()
         {
-            var lista = await _pedidoService.lista();
+            var lista = await _pedidoService.Lista();
             List<VMPedido> vmListaPedidos = new List<VMPedido>();
             var clientes = await _clienteService.ObtenerNombre();
             foreach (var item in lista)
@@ -96,6 +96,26 @@ namespace SistEcomPan.Web.Controllers
             var productosPaginados = productosFiltrados.Skip((page - 1) * itemsPerPage).Take(itemsPerPage).ToList();
 
             return StatusCode(StatusCodes.Status200OK,new { productos = productosPaginados, totalItems = productosFiltrados.Count() ,categoria=categoriaEncontrada});
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> ObtenerPedidos(string searchTerm = "", int page = 1, int itemsPerPage = 5)
+        {
+            var Pedidolista = await _pedidoService.Lista();
+
+            // Filtro de búsqueda por término de búsqueda (searchTerm)
+            var pedidosFiltrados = Pedidolista.Where(p =>
+                string.IsNullOrWhiteSpace(searchTerm) || p.Codigo.ToLower().Contains(searchTerm.ToLower())
+            );
+
+            var clientePedido = pedidosFiltrados.First().IdCliente;
+            var clientes = await _clienteService.ObtenerNombre();
+            var clienteEncontrado = clientes.Where(x => x.IdCliente ==clientePedido).First().Nombres + 
+                                    clientes.Where(x => x.IdCliente == clientePedido).First().Apellidos;
+            // Paginación
+            var pedidosPaginados = pedidosFiltrados.Skip((page - 1) * itemsPerPage).Take(itemsPerPage).ToList();
+
+            return StatusCode(StatusCodes.Status200OK, new { pedidos = pedidosPaginados, totalItems = pedidosFiltrados.Count(), nombreCliente = clienteEncontrado });
         }
 
         [HttpGet]

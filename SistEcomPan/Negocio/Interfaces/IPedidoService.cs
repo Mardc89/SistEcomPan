@@ -16,7 +16,7 @@ namespace Negocio.Interfaces
         Task<List<Pedidos>> Historial(string numeroPedido, string fechaInicio, string fechaFin);
         Task<Pedidos> Detalle(string numeroPedido);
         Task<List<DetallePedido>> Reporte(string fechaInicio, string fechaFin);
-        Task<List<Pedidos>> lista();
+        Task<List<Pedidos>> Lista();
         Task<IQueryable<Pedidos>> ObtenerNombre();
 
     }
