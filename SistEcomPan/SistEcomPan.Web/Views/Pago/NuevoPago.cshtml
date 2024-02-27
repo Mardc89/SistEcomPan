@@ -74,18 +74,18 @@
                             <div class="form-group col-sm-4">
                                 <label for="txtCodigo">Codigo de Pedido</label>
                                 <div class="input-group">
-                                    <input type="text" class="form-control form-control-sm input-validar" placeholder="Ingrese codigo de Producto" id="txtCodigos" name="Codigos" aria-describedby="btnCodPedido" />
+                                    <input type="text" class="form-control form-control-sm input-validar" placeholder="Ingrese codigo de Producto" id="txtCodigo" name="Codigo" aria-describedby="btnCodPedido" />
                                     <div class="input-group-append">
                                         <button class="btn btn-primary btn-sm" type="button" id="btnCodPedido"><i class="fas fa-search"></i></button>
                                     </div>
                                 </div>
                             </div>
                             <div class="form-group col-sm-4">
-                                <label for="txtApellidos">Monto De Pedido</label>
-                                <input type="text" class="form-control form-control-sm input-validar" id="txtApellidos" name="Apellidos" />
+                                <label for="txtMontoPedido">Monto De Pedido</label>
+                                <input type="text" class="form-control form-control-sm input-validar" id="txtMontoPedido" name="MontoPedido" />
                             </div>
                             <div class="form-group col-sm-4">
-                                <label for="txtDescuento">Devoluciones</label><br />
+                                <label for="txtDevolucion">Devoluciones</label><br />
                                 <div class="form-check form-check-inline">
                                     <label class="form-check-label mr-2" for="opcion1">Si</label>
                                     <input class="form-check-input" type="radio" name="opcion" id="opcion1" value="opcion1" />                                    
@@ -98,44 +98,44 @@
                         </div>
                         <div class="form-row">
                             <div class="form-group col-sm-4">
-                                <label for="txtCodigo">Nombre Del Cliente</label>
-                                <input type="text" class="form-control form-control-sm input-validar" id="txtDni" name="Dni" />
+                                <label for="txtNombre">Nombre Del Cliente</label>
+                                <input type="text" class="form-control form-control-sm input-validar" id="txtNombres" name="Nombres" />
                             </div>
                             <div class="form-group col-sm-4">
-                                <label for="txtCodigo">Fecha Del Pedido</label>
-                                <input type="text" class="form-control form-control-sm input-validar" id="txtDni" name="Dni" />
+                                <label for="txtFechaPedido">Fecha Del Pedido</label>
+                                <input type="text" class="form-control form-control-sm input-validar" id="txtFechaPedido" name="FechaPedido" />
                             </div>
                             <div class="form-group col-sm-4">
-                                <label for="txtCodigo">Fecha De Pago</label>
-                                <input type="text" class="form-control form-control-sm input-validar" id="txtDni" name="Dni" />
+                                <label for="txtFechaPago">Fecha De Pago</label>
+                                <input type="text" class="form-control form-control-sm input-validar" id="txtFechaPago" name="FechaPago" />
                             </div>
                         </div>
                             <div class="form-row">
                                 <div class="form-group col-sm-4">
-                                    <label for="txtApellidos">Descuento</label>
-                                    <input type="text" class="form-control form-control-sm input-validar" id="txtApellidos" name="Apellidos" />
+                                    <label for="txtDescuento">Descuento</label>
+                                    <input type="text" class="form-control form-control-sm input-validar" id="txtDescuento" name="Descuento" />
                                 </div>
                                 <div class="form-group col-sm-4">
-                                    <label for="txtApellidos">Monto Total de Pago</label>
-                                    <input type="text" class="form-control form-control-sm input-validar" id="txtApellidos" name="Apellidos" />
+                                    <label for="txtMontoPago">Monto Total de Pago</label>
+                                    <input type="text" class="form-control form-control-sm input-validar" id="txtMontoPago" name="MontoPago" />
                                  </div>
                                 <div class="form-group col-sm-4">
-                                    <label for="txtApellidos">Pago Del Cliente</label>
-                                    <input type="text" class="form-control form-control-sm input-validar" id="txtApellidos" name="Apellidos" />
+                                    <label for="txtPagoCliente">Pago Del Cliente</label>
+                                    <input type="text" class="form-control form-control-sm input-validar" id="txtPagoCliente" name="PagoCliente" />
                                 </div>
                                 </div>
                                 <div class="form-row">
                                     <div class="form-group col-sm-4">
-                                        <label for="txtApellidos">Deuda</label>
-                                        <input type="text" class="form-control form-control-sm input-validar" id="txtApellidos" name="Apellidos" />
+                                        <label for="txtDeuda">Deuda</label>
+                                        <input type="text" class="form-control form-control-sm input-validar" id="txtDeuda" name="Deuda" />
                                     </div>
                                     <div class="form-group col-sm-4">
-                                        <label for="txtApellidos">Cambio Del Cliente</label>
-                                        <input type="text" class="form-control form-control-sm input-validar" id="txtApellidos" name="Apellidos" />
+                                        <label for="txtCambio">Cambio Del Cliente</label>
+                                        <input type="text" class="form-control form-control-sm input-validar" id="txtCambio" name="Cambio" />
                                     </div>
                                     <div class="form-group col-sm-4">
-                                        <label for="txtApellidos">Estado</label>
-                                        <input type="text" class="form-control form-control-sm input-validar" id="txtApellidos" name="Apellidos" />
+                                        <label for="txtEstado">Estado</label>
+                                        <input type="text" class="form-control form-control-sm input-validar" id="txtEstado" name="Estado" />
                                     </div>
                                 </div>
                         </div>
@@ -213,7 +213,7 @@
                 <div class="row">
                     <div class="col-12">
                         <!-- Input para la búsqueda -->
-                        <input type="text" id="searchInput" class="form-control" placeholder="Buscar...">
+                        <input type="text" id="searchInputs" class="form-control" placeholder="Buscar...">
                     </div>
                     @*                    <div class="col-2">
                     <!-- Botón para iniciar la búsqueda -->
@@ -241,7 +241,7 @@
                 <!-- Aquí se muestra la paginación -->
             </div>
             <div class="modal-footer">
-                <nav aria-label="Page navigation example">
+                <nav id="pagination" class="pagination justify-content-center" aria-label="Page navigation example">
 
                 </nav>
             </div>

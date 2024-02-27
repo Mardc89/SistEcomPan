@@ -4,6 +4,16 @@ function mostrarModal3() {
     $("#modalDataPedidos").modal("show");
 }
 
+$(document).ready(function () {
+
+    $.datepicker.setDefaults($.datepicker.regional["es"])
+
+    $("#txtFechaPedido").datepicker({ dateFormat: "dd/mm/yy" })
+    $("#txtFechaPago").datepicker({ dateFormat: "dd/mm/yy" })
+
+
+})
+
 $("#btnCodPedido").click(function () {                                                                                                                        
     mostrarModal3();
 })
@@ -11,8 +21,8 @@ $("#btnCodPedido").click(function () {
 const itemsPerPag = 4; // Cantidad de productos por página
 let currentPag = 1; // Página actual al cargar
 
-function buscarPedidos(searchTerm = '', page = 1) {
-    fetch(`/Pedido/ObtenerPedidos?searchTerm=${searchTerm}&page=${page}&itemsPerPage=${itemsPerPag}`)
+function buscarPedidos(searchTer = '', page = 1) {
+    fetch(`/Pedido/ObtenerPedidos?searchTerm=${searchTer}&page=${page}&itemsPerPage=${itemsPerPag}`)
         .then(response => response.json())
         .then(data => {
             const pedidos = data.pedidos; // Array de productos obtenidos
@@ -59,7 +69,7 @@ function buscarPedidos(searchTerm = '', page = 1) {
 
                 link.addEventListener('click', () => {
                     currentPag = i;
-                    buscarPedidos(searchTerm, currentPag);
+                    buscarPedidos(searchTer, currentPag);
                     resaltarPaginaActual();
                 });
 
@@ -72,6 +82,40 @@ function buscarPedidos(searchTerm = '', page = 1) {
             console.error('Error al buscar productos:', error);
         });
 }
+
+
+
+document.addEventListener('DOMContentLoaded', function () { 
+    const tablaPedidos = document.getElementById('PedidoBuscado');
+
+    tablaPedidos.addEventListener('click', function (event) {
+    const fila = event.target.closest('tr');
+
+    if (fila && fila.parentNode.nodeName == 'TBODY') {
+
+        const codigo = fila.cells[1].textContent;
+        const nombres = fila.cells[2].textContent;
+        const montoTotal = fila.cells[3].textContent;
+        const estado = fila.cells[4].textContent;
+        const fecha = fila.cells[5].textContent;
+
+        document.getElementById('txtCodigo').value = codigo;
+        document.getElementById('txtNombres').value = nombres;
+        document.getElementById('txtMontoPedido').value = montoTotal;
+        document.getElementById('txtEstado').value = estado;
+        document.getElementById('txtFechaPedido').value = fecha;
+
+
+        //const modalPedidos = document.getElementById('modalDataPedidos');
+        //modalPedidos.style.display = 'none';
+
+
+    }
+
+});
+    
+
+});
 
 
 
@@ -93,17 +137,17 @@ function resaltarPaginaActual() {
     paginationItems.forEach(item => {
         item.classList.remove('active');
         const link = item.querySelector('.page-link');
-        if (link.textContent === currentPage.toString()) {
+        if (link.textContent === currentPag.toString()) {
             item.classList.add('active');
         }
     });
 }
 
 // Evento cuando el usuario escribe en la barra de búsqueda
-document.getElementById('searchInput').addEventListener('input', function (event) {
-    const searchTerm = event.target.value;
-    currentPage = 1; // Reiniciar a la primera página al realizar una nueva búsqueda
-    buscarPedidos(searchTerm, currentPage);
+document.getElementById('searchInputs').addEventListener('input', function (event) {
+    const searchTer = event.target.value;
+    currentPag = 1; // Reiniciar a la primera página al realizar una nueva búsqueda
+    buscarPedidos(searchTer, currentPag);
 });
 
 //Llamada inicial para cargar productos al abrir la tabla modal

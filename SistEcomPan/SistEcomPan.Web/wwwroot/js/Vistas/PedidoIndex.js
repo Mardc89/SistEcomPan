@@ -253,6 +253,10 @@ document.getElementById('searchInput').addEventListener('input', function (event
 //    buscarProductos();
 //});
 
+
+
+
+
 $("#btnEnviarPedido").click(function () {
     debugger;
     const tablaProductos = document.getElementById('tbProductosSeleccionados');
