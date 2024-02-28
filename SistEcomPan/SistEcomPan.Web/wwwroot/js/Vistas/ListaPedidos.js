@@ -4,15 +4,18 @@ function mostrarModal3() {
     $("#modalDataPedidos").modal("show");
 }
 
-$(document).ready(function () {
+function cambiarFecha(fecha) {
 
-    $.datepicker.setDefaults($.datepicker.regional["es"])
+    const fechaOriginal = new Date(fecha);
+    const dia = fechaOriginal.getDate();
+    const mes = fechaOriginal.getMonth() + 1;
+    const año = fechaOriginal.getFullYear();
 
-    $("#txtFechaPedido").datepicker({ dateFormat: "dd/mm/yy" })
-    $("#txtFechaPago").datepicker({ dateFormat: "dd/mm/yy" })
+    const fechaFormateada = `${dia}/${mes}/${año}`;
 
+    return fechaFormateada;
 
-})
+}
 
 $("#btnCodPedido").click(function () {                                                                                                                        
     mostrarModal3();
@@ -40,11 +43,7 @@ function buscarPedidos(searchTer = '', page = 1) {
             <td>${nombre}</td>
             <td>${pedido.montoTotal}</td>
             <td>${pedido.estado}</td>
-            <td>${pedido.fechaPedido}</td>
-            <td>
-            <button onclick="agregarProducto(this)" class="btn btn-danger btn-sm">Add</button>
-            <button onclick="eliminarProducto(this)"class="btn btn-primary btn-sm">De</button>
-            </td>
+            <td>${cambiarFecha(pedido.fechaPedido)}</td>
           `;
                 productTable.appendChild(row);
             });
