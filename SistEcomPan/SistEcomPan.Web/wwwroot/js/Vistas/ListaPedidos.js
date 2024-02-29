@@ -1,9 +1,4 @@
 ﻿
-function mostrarModal3() {
-    buscarPedidos();
-    $("#modalDataPedidos").modal("show");
-}
-
 function cambiarFecha(fecha) {
 
     const fechaOriginal = new Date(fecha);
@@ -17,9 +12,32 @@ function cambiarFecha(fecha) {
 
 }
 
+function obtenerFecha() {
+    var fechaActual = new Date();
+    var fechaTexto = document.getElementById("txtFechaPago");
+    var dia = fechaActual.getDate();
+    var mes = fechaActual.getMonth() + 1;
+    var anio = fechaActual.getFullYear();
+
+    if (dia < 10) {
+        dia = '0' + dia;
+    }
+    if (mes < 10) {
+        mes = '0' + mes;
+    }
+    var fechaformateada = dia + '/' + mes + '/' + anio;
+    fechaTexto.value = fechaformateada;
+}
+
 $("#btnCodPedido").click(function () {                                                                                                                        
     mostrarModal3();
 })
+
+function mostrarModal3() { 
+    obtenerFecha();
+    buscarPedidos();
+    $("#modalDataPedidos").modal("show");
+}
 
 const itemsPerPag = 4; // Cantidad de productos por página
 let currentPag = 1; // Página actual al cargar
@@ -103,6 +121,11 @@ document.addEventListener('DOMContentLoaded', function () {
         document.getElementById('txtMontoPedido').value = montoTotal;
         document.getElementById('txtEstado').value = estado;
         document.getElementById('txtFechaPedido').value = fecha;
+        document.getElementById('txtDescuento').value = 0.00;
+        document.getElementById('txtMontoPago').value = montoTotal;
+
+
+
 
 
         //const modalPedidos = document.getElementById('modalDataPedidos');
@@ -116,6 +139,68 @@ document.addEventListener('DOMContentLoaded', function () {
 
 });
 
+
+document.getElementById("txtPagoCliente").addEventListener("input", function () {
+
+   
+ 
+    let pago = document.getElementById("txtPagoCliente").value;
+    let descuento = document.getElementById("txtDescuento").value;
+    let monto = document.getElementById("txtMontoPedido").value;
+
+    if (!isNaN(pago) && !isNaN(descuento) && !isNaN(monto)) {
+        if (pago == "") pago = 0;
+        Evaluar(pago, descuento, monto);
+    }
+
+    else {
+
+        alert("Ingrese numeros validos");
+    }
+
+
+
+});
+
+
+function Evaluar(pago, descuento, monto) {
+   
+    let deuda = 0.00,cambio=0.00;
+    let estado = "";
+
+    let montofinal = parseFloat(monto) - parseFloat(descuento);
+
+    if (pago > montofinal) {
+        cambio = parseFloat(pago) - parseFloat(montofinal);
+        deuda = 0.00;
+        estado = "Pagado";
+    }
+
+    else if (pago < montofinal) {
+        cambio = 0.00;
+        deuda = parseFloat(montofinal) - parseFloat(pago);
+        estado = "Pendiente";
+
+    }
+    else {
+        cambio = 0.00;
+        deuda = 0.00;
+        estado = "Pagado";
+
+    }
+
+
+    document.getElementById("txtCambio").value = cambio;
+    document.getElementById("txtDeuda").value = deuda;
+    document.getElementById("txtEstado").value = estado;
+
+
+
+
+   
+
+
+}
 
 
 
