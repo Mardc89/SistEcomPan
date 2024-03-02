@@ -16,13 +16,15 @@ namespace SistEcomPan.Web.Controllers
         private readonly IClienteService _clienteService;
         private readonly IProductoService _productoService;
         private readonly ICategoriaService _categoriaService;
-
-        public PedidoController(IPedidoService pedidoService,IClienteService clienteService, IProductoService productoService,ICategoriaService categoriaService)
+        private readonly IDetallePedidoService _detallePedidoService;
+        
+        public PedidoController(IPedidoService pedidoService,IClienteService clienteService, IProductoService productoService,ICategoriaService categoriaService,IDetallePedidoService detallePedidoService )
         {
             _pedidoService = pedidoService;
             _clienteService = clienteService;
             _productoService = productoService;
             _categoriaService = categoriaService;
+            _detallePedidoService = detallePedidoService;
         }
         public IActionResult NuevoPedido()
         {
@@ -110,12 +112,49 @@ namespace SistEcomPan.Web.Controllers
 
             var clientePedido = pedidosFiltrados.First().IdCliente;
             var clientes = await _clienteService.ObtenerNombre();
-            var clienteEncontrado = clientes.Where(x => x.IdCliente ==clientePedido).First().Nombres + 
+            var clienteEncontrado = clientes.Where(x => x.IdCliente ==clientePedido).First().Nombres +""+  
                                     clientes.Where(x => x.IdCliente == clientePedido).First().Apellidos;
             // Paginación
             var pedidosPaginados = pedidosFiltrados.Skip((page - 1) * itemsPerPage).Take(itemsPerPage).ToList();
 
             return StatusCode(StatusCodes.Status200OK, new { pedidos = pedidosPaginados, totalItems = pedidosFiltrados.Count(), nombreCliente = clienteEncontrado });
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> ObtenerDetallePedido(string searchTerm = "", int page = 1, int itemsPerPage = 5)
+        {
+            var Pedidolista = await _pedidoService.Lista();
+            var DetallePedidoLista = await _detallePedidoService.Lista();
+            var Productos = await _productoService.Lista();
+          
+            // Filtro de búsqueda por término de búsqueda (searchTerm)
+            var pedidosFiltrados = Pedidolista.Where(p =>
+                string.IsNullOrWhiteSpace(searchTerm) || p.Codigo.ToLower().Contains(searchTerm.ToLower()
+                )
+            );
+
+            var codigos = pedidosFiltrados.First().IdPedido;
+
+            var detallePedidosFiltrados = DetallePedidoLista.Where(p => p.IdPedido == codigos).ToList();
+           
+
+            var clientePedido = pedidosFiltrados.First().IdCliente;
+            var clientes = await _clienteService.ObtenerNombre();
+            var clienteEncontrado = clientes.Where(x => x.IdCliente == clientePedido).First().Nombres + "" +
+                                    clientes.Where(x => x.IdCliente == clientePedido).First().Apellidos;
+
+            var productoPedido = detallePedidosFiltrados.Where(x=>x.IdPedido==codigos).Select(x=>x.IdProducto).ToList();
+            var productos = await _productoService.ObtenerNombre();
+            
+
+            foreach (var item in productoPedido)
+            {
+                var productoEncontrado = productos.Where(x => x.IdProducto == item).Select(x => x.Descripcion);
+            }                      
+            // Paginación
+            var pedidosPaginados = detallePedidosFiltrados.Skip((page - 1) * itemsPerPage).Take(itemsPerPage).ToList();
+
+            return StatusCode(StatusCodes.Status200OK, new { pedidos = pedidosPaginados, totalItems = detallePedidosFiltrados.Count(),codigo=codigos, nombreCliente = clienteEncontrado});
         }
 
         [HttpGet]

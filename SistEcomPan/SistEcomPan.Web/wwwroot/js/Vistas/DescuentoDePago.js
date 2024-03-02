@@ -1,5 +1,6 @@
 ﻿
 function mostrarModal2() {
+    buscarProductos();
     $("#modalDataDescuento").modal("show");
 }
 
@@ -7,28 +8,30 @@ $("#opcion1").click(function () {
     mostrarModal2()
 })
 
-const itemsPerPage = 5; // Cantidad de productos por página
-let currentPage = 1; // Página actual al cargar
+const itemPagina = 5; // Cantidad de productos por página
+let  paginaActual= 1; // Página actual al cargar
 
-function buscarProductos(searchTerm = '', page = 1) {
-    fetch(`/Pedido/ObtenerProductos?searchTerm=${searchTerm}&page=${page}&itemsPerPage=${itemsPerPage}`)
+function buscarProductos(busquedaDetallePedido= '', pagina = 1) {
+    fetch(`/Pedido/ObtenerDetallePedido?searchTerm=${busquedaDetallePedido}&page=${pagina}&itemsPerPage=${itemPagina}`)
         .then(response => response.json())
         .then(data => {
-            const productos = data.productos; // Array de productos obtenidos
+            const detallePedidos = data.pedidos;
+            const codigo = data.codigos;
+            const nombreProducto = data.NombreProducto; // Array de productos obtenidos
             const totalItems = data.totalItems; // Total de productos encontrados
-            const categoria = data.categoria;
+            const nombreCliente = data.nombreCliente;
             // Actualizar la tabla modal con los productos obtenidos 
-            const productTable = document.getElementById('ProductoBuscado');
+            const productTable = document.getElementById('ProductoDevuelto');
             productTable.innerHTML = '';
 
-            productos.forEach(producto => {
+            detallePedidos.forEach( detallePedido=> {
                 const row = document.createElement('tr');
                 row.innerHTML = `
-            <td>${producto.idProducto}</td>
-            <td>${producto.descripcion}</td>
-            <td>${categoria}</td>
-            <td>${producto.stock}</td>
-            <td>${producto.precio.toFixed(2)}</td>
+            <td>${codigo}</td>
+            <td>${nombreCliente}</td>
+            <td>${detallePedido.cantidad}</td>
+            <td>${detallePedido.precio}</td>
+            <td>${detallePedido.total}</td>
             <td><input type="text" class="form-control form-control-sm" id="txtCantidad" placeholder="Ingrese Cantidad"></td>
             <td>
             <button onclick="agregarProducto(this)" class="btn btn-danger btn-sm">Add</button>
@@ -39,7 +42,7 @@ function buscarProductos(searchTerm = '', page = 1) {
             });
 
             // Generar la paginación
-            const totalPages = Math.ceil(totalItems / itemsPerPage);
+            const totalPages = Math.ceil(totalItems / itemPagina);
             const pagination = document.getElementById('pagination');
             pagination.innerHTML = '';
 
@@ -52,13 +55,13 @@ function buscarProductos(searchTerm = '', page = 1) {
                 link.textContent = i;
                 li.appendChild(link);
 
-                if (i === currentPage) {
+                if (i === paginaActual) {
                     li.classList.add('active');
                 }
 
                 link.addEventListener('click', () => {
-                    currentPage = i;
-                    buscarProductos(searchTerm, currentPage);
+                    paginaActual = i;
+                    buscarProductos(busquedaDetallePedido, paginaActual);
                     resaltarPaginaActual();
                 });
 
@@ -160,7 +163,7 @@ function resaltarPaginaActual() {
     paginationItems.forEach(item => {
         item.classList.remove('active');
         const link = item.querySelector('.page-link');
-        if (link.textContent === currentPage.toString()) {
+        if (link.textContent === paginaActual.toString()) {
             item.classList.add('active');
         }
     });
@@ -168,9 +171,9 @@ function resaltarPaginaActual() {
 
 // Evento cuando el usuario escribe en la barra de búsqueda
 document.getElementById('searchInput').addEventListener('input', function (event) {
-    const searchTerm = event.target.value;
-    currentPage = 1; // Reiniciar a la primera página al realizar una nueva búsqueda
-    buscarProductos(searchTerm, currentPage);
+    const busquedaDetallePedido = event.target.value;
+    paginaActual = 1; // Reiniciar a la primera página al realizar una nueva búsqueda
+    buscarProductos(busquedaDetallePedido, paginaActual);
 });
 
 //Llamada inicial para cargar productos al abrir la tabla modal

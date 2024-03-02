@@ -171,6 +171,12 @@ namespace Negocio.Implementacion
             return query;
         }
 
+        public async Task<IQueryable<Productos>> ObtenerNombre()
+        {
+            List<Productos> lista = await _repositorio.Lista();
+            return lista.AsQueryable();
+        }
+
 
 
 

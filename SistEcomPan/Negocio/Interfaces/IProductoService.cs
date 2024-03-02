@@ -13,5 +13,6 @@ namespace Negocio.Interfaces
         Task<Productos> Crear(Productos entidad, Stream  Imagen= null, string NombreImagen = "");
         Task<Productos> Editar(Productos entidad, Stream Imagen= null, string NombreImagen = "");
         Task<bool> Eliminar(int IdProducto);
+        Task<IQueryable<Productos>> ObtenerNombre();
     }
 }
