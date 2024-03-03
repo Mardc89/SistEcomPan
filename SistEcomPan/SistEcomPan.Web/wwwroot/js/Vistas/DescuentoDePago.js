@@ -17,7 +17,7 @@ function buscarProductos(busquedaDetallePedido= '', pagina = 1) {
         .then(data => {
             const detallePedidos = data.pedidos;
             const codigo = data.codigos;
-            const nombreProducto = data.NombreProducto; // Array de productos obtenidos
+            const nombreProducto = data.nombresProducto[0]; // Array de productos obtenidos
             const totalItems = data.totalItems; // Total de productos encontrados
             const nombreCliente = data.nombreCliente;
             // Actualizar la tabla modal con los productos obtenidos 
@@ -27,8 +27,7 @@ function buscarProductos(busquedaDetallePedido= '', pagina = 1) {
             detallePedidos.forEach( detallePedido=> {
                 const row = document.createElement('tr');
                 row.innerHTML = `
-            <td>${codigo}</td>
-            <td>${nombreCliente}</td>
+            <td>${nombreProducto}<td>
             <td>${detallePedido.cantidad}</td>
             <td>${detallePedido.precio}</td>
             <td>${detallePedido.total}</td>

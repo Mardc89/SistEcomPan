@@ -143,18 +143,23 @@ namespace SistEcomPan.Web.Controllers
             var clienteEncontrado = clientes.Where(x => x.IdCliente == clientePedido).First().Nombres + "" +
                                     clientes.Where(x => x.IdCliente == clientePedido).First().Apellidos;
 
-            var productoPedido = detallePedidosFiltrados.Where(x=>x.IdPedido==codigos).Select(x=>x.IdProducto).ToList();
+            var productoPedido = detallePedidosFiltrados.Where(x=>x.IdPedido==codigos).Select(x=>x.IdProducto).ToArray();
             var productos = await _productoService.ObtenerNombre();
+
+            List<string> nombresProductos = new List<string>();
             
 
             foreach (var item in productoPedido)
             {
-                var productoEncontrado = productos.Where(x => x.IdProducto == item).Select(x => x.Descripcion);
+                var productoEncontrado = productos.Where(x => x.IdProducto == item).Select(x => x.Descripcion).FirstOrDefault();
+                if (productoEncontrado!=null) {
+                    nombresProductos.Add(productoEncontrado); 
+                }
             }                      
             // Paginación
             var pedidosPaginados = detallePedidosFiltrados.Skip((page - 1) * itemsPerPage).Take(itemsPerPage).ToList();
 
-            return StatusCode(StatusCodes.Status200OK, new { pedidos = pedidosPaginados, totalItems = detallePedidosFiltrados.Count(),codigo=codigos, nombreCliente = clienteEncontrado});
+            return StatusCode(StatusCodes.Status200OK, new { pedidos = pedidosPaginados, totalItems = detallePedidosFiltrados.Count(),codigo=codigos, nombreCliente = clienteEncontrado,nombresProducto=nombresProductos});
         }
 
         [HttpGet]
