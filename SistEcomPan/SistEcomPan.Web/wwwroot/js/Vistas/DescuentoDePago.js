@@ -17,9 +17,10 @@ function buscarProductos(busquedaDetallePedido= '', pagina = 1) {
         .then(data => {
             const detallePedidos = data.pedidos;
             const codigo = data.codigos;
-            const nombreProducto = data.nombresProducto[0]; // Array de productos obtenidos
+            const nombreProducto = data.nombresProducto; // Array de productos obtenidos
             const totalItems = data.totalItems; // Total de productos encontrados
-            const nombreCliente = data.nombreCliente;
+            const precioProducto = data.precios;
+            let i = 0;
             // Actualizar la tabla modal con los productos obtenidos 
             const productTable = document.getElementById('ProductoDevuelto');
             productTable.innerHTML = '';
@@ -27,17 +28,13 @@ function buscarProductos(busquedaDetallePedido= '', pagina = 1) {
             detallePedidos.forEach( detallePedido=> {
                 const row = document.createElement('tr');
                 row.innerHTML = `
-            <td>${nombreProducto}<td>
+            <td>${nombreProducto[i]}<td>
             <td>${detallePedido.cantidad}</td>
-            <td>${detallePedido.precio}</td>
+            <td>${precioProducto[i]}</td>
             <td>${detallePedido.total}</td>
-            <td><input type="text" class="form-control form-control-sm" id="txtCantidad" placeholder="Ingrese Cantidad"></td>
-            <td>
-            <button onclick="agregarProducto(this)" class="btn btn-danger btn-sm">Add</button>
-            <button onclick="eliminarProducto(this)"class="btn btn-primary btn-sm">De</button>
-            </td>
           `;
                 productTable.appendChild(row);
+                i++;
             });
 
             // Generar la paginación

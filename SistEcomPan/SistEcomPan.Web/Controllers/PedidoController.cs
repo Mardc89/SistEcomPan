@@ -126,40 +126,78 @@ namespace SistEcomPan.Web.Controllers
             var Pedidolista = await _pedidoService.Lista();
             var DetallePedidoLista = await _detallePedidoService.Lista();
             var Productos = await _productoService.Lista();
-          
-            // Filtro de búsqueda por término de búsqueda (searchTerm)
-            var pedidosFiltrados = Pedidolista.Where(p =>
-                string.IsNullOrWhiteSpace(searchTerm) || p.Codigo.ToLower().Contains(searchTerm.ToLower()
-                )
-            );
-
-            var codigos = pedidosFiltrados.First().IdPedido;
-
-            var detallePedidosFiltrados = DetallePedidoLista.Where(p => p.IdPedido == codigos).ToList();
-           
-
-            var clientePedido = pedidosFiltrados.First().IdCliente;
-            var clientes = await _clienteService.ObtenerNombre();
-            var clienteEncontrado = clientes.Where(x => x.IdCliente == clientePedido).First().Nombres + "" +
-                                    clientes.Where(x => x.IdCliente == clientePedido).First().Apellidos;
-
-            var productoPedido = detallePedidosFiltrados.Where(x=>x.IdPedido==codigos).Select(x=>x.IdProducto).ToArray();
-            var productos = await _productoService.ObtenerNombre();
-
+            var detallePedidosFiltrados = new List<DetallePedido>();
+            int idPedido = 0 ;
+            string codigo = "";
             List<string> nombresProductos = new List<string>();
-            
+            List<string> preciosProductos = new List<string>();
 
-            foreach (var item in productoPedido)
+            // Filtro de búsqueda por término de búsqueda (searchTerm)
+            if (searchTerm != null && searchTerm!="")
             {
-                var productoEncontrado = productos.Where(x => x.IdProducto == item).Select(x => x.Descripcion).FirstOrDefault();
-                if (productoEncontrado!=null) {
-                    nombresProductos.Add(productoEncontrado); 
+                var pedidosFiltrados = Pedidolista.Where(p =>
+                    string.IsNullOrWhiteSpace(searchTerm) || p.Codigo.ToLower().Contains(searchTerm.ToLower()
+                    )
+                );
+
+                idPedido = pedidosFiltrados.First().IdPedido;
+                codigo = pedidosFiltrados.First().Codigo;
+
+                detallePedidosFiltrados = DetallePedidoLista.Where(p => p.IdPedido == idPedido).ToList();
+
+
+                var clientePedido = pedidosFiltrados.First().IdCliente;
+                var clientes = await _clienteService.ObtenerNombre();
+                var clienteEncontrado = clientes.Where(x => x.IdCliente == clientePedido).First().Nombres + "" +
+                                        clientes.Where(x => x.IdCliente == clientePedido).First().Apellidos;
+
+                var productoPedido = detallePedidosFiltrados.Where(x => x.IdPedido == idPedido).Select(x => x.IdProducto).ToArray();
+                var productos = await _productoService.ObtenerNombre();
+
+
+                foreach (var item in productoPedido)
+                {
+                    var productoEncontrado = productos.Where(x => x.IdProducto == item).Select(x => x.Descripcion).FirstOrDefault();
+                    if (productoEncontrado != null)
+                    {
+                        nombresProductos.Add(productoEncontrado);
+                    }
                 }
-            }                      
+
+                foreach (var item in productoPedido)
+                {
+                    var productoEncontrado = productos.Where(x => x.IdProducto == item).Select(x => x.Precio).FirstOrDefault();
+                    preciosProductos.Add(productoEncontrado.ToString());
+
+                }
+            }
+            else
+            {
+                detallePedidosFiltrados = DetallePedidoLista;
+                var productoPedido = detallePedidosFiltrados.Select(x => x.IdProducto).ToArray();
+                var productos = await _productoService.ObtenerNombre();
+
+                foreach (var item in productoPedido)
+                {
+                    var productoEncontrado = productos.Where(x => x.IdProducto == item).Select(x => x.Descripcion).FirstOrDefault();
+                    if (productoEncontrado != null)
+                    {
+                        nombresProductos.Add(productoEncontrado);
+                    }
+                }
+
+                foreach (var item in productoPedido)
+                {
+                    var productoEncontrado = productos.Where(x => x.IdProducto == item).Select(x => x.Precio).FirstOrDefault();
+                    preciosProductos.Add(productoEncontrado.ToString());
+
+                }
+            }
+
             // Paginación
             var pedidosPaginados = detallePedidosFiltrados.Skip((page - 1) * itemsPerPage).Take(itemsPerPage).ToList();
 
-            return StatusCode(StatusCodes.Status200OK, new { pedidos = pedidosPaginados, totalItems = detallePedidosFiltrados.Count(),codigo=codigos, nombreCliente = clienteEncontrado,nombresProducto=nombresProductos});
+            return StatusCode(StatusCodes.Status200OK, new { pedidos = pedidosPaginados, totalItems = detallePedidosFiltrados.Count(),codigos=codigo,precios=preciosProductos,nombresProducto=nombresProductos});
         }
 
         [HttpGet]
