@@ -12,7 +12,7 @@ const itemPagina = 5; // Cantidad de productos por página
 let  paginaActual= 1; // Página actual al cargar
 
 function buscarProductos(busquedaDetallePedido= '', pagina = 1) {
-    fetch(`/Pedido/ObtenerDetallePedido?searchTerm=${busquedaDetallePedido}&page=${pagina}&itemsPerPage=${itemPagina}`)
+    fetch(`/Pedido/ObtenerDetalleFinal?searchTerm=${busquedaDetallePedido}&page=${pagina}&itemsPerPage=${itemPagina}`)
         .then(response => response.json())
         .then(data => {
             const detallePedidos = data.pedidos;
@@ -28,9 +28,9 @@ function buscarProductos(busquedaDetallePedido= '', pagina = 1) {
             detallePedidos.forEach( detallePedido=> {
                 const row = document.createElement('tr');
                 row.innerHTML = `
-            <td>${nombreProducto[i]}<td>
+ 
             <td>${detallePedido.cantidad}</td>
-            <td>${precioProducto[i]}</td>
+            <td>${detallePedido.descripcionProducto}</td>
             <td>${detallePedido.total}</td>
           `;
                 productTable.appendChild(row);

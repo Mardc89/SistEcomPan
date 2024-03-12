@@ -73,20 +73,20 @@ $("#txtDocumentoCliente").click(function () {
 
 
 
-function mostrarModal() {
-    buscarProductos();
+function ModalPedidos() {
+    MostrarProductos();
     $("#modalData").modal("show");
 }
 
 $("#btnGuardar").click(function () {
-    mostrarModal()
+    ModalPedidos();
 })
 
-const itemsPerPage = 5; // Cantidad de productos por página
-let currentPage = 1; // Página actual al cargar
+const itemsDePagina = 5; // Cantidad de productos por página
+let actualDePagina = 1; // Página actual al cargar
 
-function buscarProductos(searchTerm = '', page = 1) {
-    fetch(`/Pedido/ObtenerProductos?searchTerm=${searchTerm}&page=${page}&itemsPerPage=${itemsPerPage}`)
+function MostrarProductos(TerminoBusqueda = '', pagina = 1) {
+    fetch(`/Pedido/ObtenerProductos?searchTerm=${TerminoBusqueda}&page=${pagina}&itemsPerPage=${itemsDePagina}`)
         .then(response => response.json())
         .then(data => {
             const productos = data.productos; // Array de productos obtenidos
@@ -114,7 +114,7 @@ function buscarProductos(searchTerm = '', page = 1) {
          });
          
             // Generar la paginación
-            const totalPages = Math.ceil(totalItems / itemsPerPage);
+            const totalPages = Math.ceil(totalItems / itemsDePagina);
             const pagination = document.getElementById('pagination');
             pagination.innerHTML = '';
 
@@ -127,13 +127,13 @@ function buscarProductos(searchTerm = '', page = 1) {
                 link.textContent = i;
                 li.appendChild(link);
 
-                if (i === currentPage) {
+                if (i === actualDePagina) {
                     li.classList.add('active');
                 }
 
                 link.addEventListener('click', () => {
-                    currentPage = i;
-                    buscarProductos(searchTerm, currentPage);
+                    actualDePagina = i;
+                    MostrarProductos(TerminoBusqueda, actualDePagina);
                     resaltarPaginaActual();
                 });
 
@@ -235,17 +235,17 @@ function resaltarPaginaActual() {
     paginationItems.forEach(item => {
         item.classList.remove('active');
         const link = item.querySelector('.page-link');
-        if (link.textContent === currentPage.toString()) {
+        if (link.textContent === actualDePagina.toString()) {
             item.classList.add('active');
         }
     });
 }
 
 // Evento cuando el usuario escribe en la barra de búsqueda
-document.getElementById('searchInput').addEventListener('input', function (event) {
-    const searchTerm = event.target.value;
-    currentPage = 1; // Reiniciar a la primera página al realizar una nueva búsqueda
-    buscarProductos(searchTerm, currentPage);
+document.getElementById('BusquedaPedidos').addEventListener('input', function (event) {
+    const TerminoBusqueda = event.target.value;
+    actualDePagina = 1; // Reiniciar a la primera página al realizar una nueva búsqueda
+    MostrarProductos(TerminoBusqueda, actualDePagina);
 });
 
  //Llamada inicial para cargar productos al abrir la tabla modal
