@@ -39,11 +39,11 @@ function mostrarModal3() {
     $("#modalDataPedidos").modal("show");
 }
 
-const itemsPerPag = 4; // Cantidad de productos por página
-let currentPag = 1; // Página actual al cargar
+const ProductosPorPagina = 4; // Cantidad de productos por página
+let PaginaInicial = 1; // Página actual al cargar
 
 function buscarPedidos(searchTer = '', page = 1) {
-    fetch(`/Pedido/ObtenerPedidos?searchTerm=${searchTer}&page=${page}&itemsPerPage=${itemsPerPag}`)
+    fetch(`/Pedido/ObtenerPedidos?searchTerm=${searchTer}&page=${page}&itemsPerPage=${ProductosPorPagina}`)
         .then(response => response.json())
         .then(data => {
             const pedidos = data.pedidos; // Array de productos obtenidos
@@ -67,8 +67,8 @@ function buscarPedidos(searchTer = '', page = 1) {
             });
 
             // Generar la paginación
-            const totalPages = Math.ceil(totalItems / itemsPerPag);
-            const pagination = document.getElementById('pagination');
+            const totalPages = Math.ceil(totalItems / ProductosPorPagina);
+            const pagination = document.getElementById('paginacion');
             pagination.innerHTML = '';
 
             for (let i = 1; i <= totalPages; i++) {
@@ -80,13 +80,13 @@ function buscarPedidos(searchTer = '', page = 1) {
                 link.textContent = i;
                 li.appendChild(link);
 
-                if (i === currentPag) {
+                if (i === PaginaInicial) {
                     li.classList.add('active');
                 }
 
                 link.addEventListener('click', () => {
-                    currentPag = i;
-                    buscarPedidos(searchTer, currentPag);
+                    PaginaInicial = i;
+                    buscarPedidos(searchTer, PaginaInicial);
                     resaltarPaginaActual();
                 });
 
@@ -217,11 +217,11 @@ function Evaluar(pago, descuento, monto) {
 
 // Función para resaltar la página actual
 function resaltarPaginaActual() {
-    const paginationItems = document.querySelectorAll('#pagination .page-item');
+    const paginationItems = document.querySelectorAll('#paginacion .page-item');
     paginationItems.forEach(item => {
         item.classList.remove('active');
         const link = item.querySelector('.page-link');
-        if (link.textContent === currentPag.toString()) {
+        if (link.textContent === PaginaInicial.toString()) {
             item.classList.add('active');
         }
     });
@@ -230,8 +230,8 @@ function resaltarPaginaActual() {
 // Evento cuando el usuario escribe en la barra de búsqueda
 document.getElementById('searchInputs').addEventListener('input', function (event) {
     const searchTer = event.target.value;
-    currentPag = 1; // Reiniciar a la primera página al realizar una nueva búsqueda
-    buscarPedidos(searchTer, currentPag);
+    PaginaInicial = 1; // Reiniciar a la primera página al realizar una nueva búsqueda
+    buscarPedidos(searchTer, PaginaInicial);
 });
 
 //Llamada inicial para cargar productos al abrir la tabla modal

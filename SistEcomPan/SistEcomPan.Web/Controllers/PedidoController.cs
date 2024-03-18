@@ -84,24 +84,32 @@ namespace SistEcomPan.Web.Controllers
         [HttpGet]
         public async Task<IActionResult> ObtenerProductos(string searchTerm = "", int page = 1, int itemsPerPage = 5)
        {
+
             var Productolista = await _productoService.Lista();
+
+            List<string> categoriaEncontrada = new List<string>();
+
 
             // Filtro de búsqueda por término de búsqueda (searchTerm)
             var productosFiltrados = Productolista.Where(p =>
                 string.IsNullOrWhiteSpace(searchTerm) || p.Descripcion.ToLower().Contains(searchTerm.ToLower())
             ) ;
 
-            var categoriaProducto = productosFiltrados.First().IdCategoria;
+            var categoriaProducto = productosFiltrados.Select(x => x.IdCategoria).ToArray();
             var categorias = await _categoriaService.ObtenerNombre();
-            var categoriaEncontrada = categorias.Where(x => x.IdCategoria == categoriaProducto).First().TipoDeCategoria;
+            
+            for (int i=0;i<categoriaProducto.Count();i++) {
+                var categoriasDeProductos=categorias.Where(x => x.IdCategoria == categoriaProducto[i]).First().TipoDeCategoria;
+                categoriaEncontrada.Add(categoriasDeProductos);
+            }
             // Paginación
             var productosPaginados = productosFiltrados.Skip((page - 1) * itemsPerPage).Take(itemsPerPage).ToList();
 
-            return StatusCode(StatusCodes.Status200OK,new { productos = productosPaginados, totalItems = productosFiltrados.Count() ,categoria=categoriaEncontrada});
+            return StatusCode(StatusCodes.Status200OK,new { productos = productosPaginados, totalItems = productosFiltrados.Count(), categoria = categoriaEncontrada});
         }
 
         [HttpGet]
-        public async Task<IActionResult> ObtenerPedidos(string searchTerm = "", int page = 1, int itemsPerPage = 5)
+        public async Task<IActionResult> ObtenerPedidos(string searchTerm = "", int page = 1, int itemsPerPage = 4)
         {
             var Pedidolista = await _pedidoService.Lista();
 
@@ -201,7 +209,7 @@ namespace SistEcomPan.Web.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> ObtenerDetalleFinal(string searchTerm = "", int page = 1, int itemsPerPage = 5)
+        public async Task<IActionResult> ObtenerDetalleFinal(string searchTerm, int page = 1, int itemsPerPage = 5)
         {
             var Pedidolista = await _pedidoService.Lista();
             var DetallePedidoLista = await _detallePedidoService.Lista();
@@ -231,6 +239,7 @@ namespace SistEcomPan.Web.Controllers
               
                 var productoID = DetallePedidoLista.Where(x => x.IdPedido == idPedido).Select(x=>x.IdProducto).ToArray();
                 List<int> categoriasID = new List<int>();
+                List<int> ProductosIdAgredados = new List<int>();
                 List<decimal> precios = new List<decimal>();
                 int[] categoriasProduct;
                 decimal[] preciosProduct;
@@ -242,7 +251,7 @@ namespace SistEcomPan.Web.Controllers
                     categoriasID.Add(categoriasFinales);
                    
                 }
-                categoriasProduct = categoriasID.Distinct().ToArray();
+                categoriasProduct = categoriasID.ToArray();
 
                 for (int i = 0; i < productoID.Length; i++)
                 {
@@ -251,43 +260,59 @@ namespace SistEcomPan.Web.Controllers
 
                 }
 
-                preciosProduct = precios.Distinct().ToArray();
+                preciosProduct = precios.ToArray();
 
-
-                for (int j = 0; j < categoriasProduct.Length; j++)
+                var categoriaInicial = 0;
+                for (int j = 0; j < preciosProduct.Length; j++)
                 {
+
                     for (int i = 0; i < productoID.Length; i++)
                     {
-                        var categoriaInicial = categoriasProduct[j];
-                        var categoriasProductos = productos.Where(x => x.IdProducto == productoID[i]).Select(x => x.IdCategoria).FirstOrDefault();
-                        var precioInicial = preciosProduct[j];
-                        var preciosProductos = productos.Where(x => x.IdProducto == productoID[i]).Select(x => x.Precio).FirstOrDefault();
 
-                        var total = productoPedido.Where(x => x.IdProducto == productoID[i]).Select(x => x.Total).FirstOrDefault();
-                        var cantidad = productoPedido.Where(x => x.IdProducto == productoID[i]).Select(x => x.Cantidad).FirstOrDefault();
-
-                        if (categoriaInicial == categoriasProductos)
+                        bool ProductoAgregado = ProductosIdAgredados.Any(x => x == productoID[i]);
+                        if (ProductoAgregado==false)
                         {
-                            precioTotal = precioTotal + Convert.ToDecimal(total);
-                            cantidadTotal = cantidadTotal + Convert.ToInt32(cantidad);
+                            categoriaInicial = categoriasProduct[j];
+                            var categoriasProductos = productos.Where(x => x.IdProducto == productoID[i] && x.Precio == preciosProduct[j]).Select(x => x.IdCategoria).FirstOrDefault();
+                            var precioInicial = preciosProduct[j];
+                            var preciosProductos = productos.Where(x => x.IdProducto == productoID[i] && x.IdCategoria == categoriasProductos).Select(x => x.Precio).FirstOrDefault();
+
+                            var total = productoPedido.Where(x => x.IdProducto == productoID[i]).Select(x => x.Total).FirstOrDefault();
+                            var cantidad = productoPedido.Where(x => x.IdProducto == productoID[i]).Select(x => x.Cantidad).FirstOrDefault();
+
+                            if (precioInicial == preciosProductos && categoriaInicial == categoriasProductos)
+                            {
+                                precioTotal = precioTotal + Convert.ToDecimal(total);
+                                cantidadTotal = cantidadTotal + Convert.ToInt32(cantidad);
+                                ProductosIdAgredados.Add(productoID[i]);
+                                
+                                                           
+                            }
+
                         }
 
-                        if (i == productoID.Length - 1)
+                        if (i == productoID.Length - 1 && precioTotal>0 && cantidadTotal>0)
                         {
-
                             vmDetallePedido.Add(new VMDetallePedido
                             {
-                                DescripcionProducto = categorias.Where(x => x.IdCategoria == categoriaInicial).Select(x => x.TipoDeCategoria).FirstOrDefault(),
+                                DescripcionProducto = productos.Where(x => x.IdProducto == productoID[j]).Select(x => x.Descripcion).FirstOrDefault(),
+                                CategoriaProducto = categorias.Where(x => x.IdCategoria == categoriaInicial).Select(x => x.TipoDeCategoria).FirstOrDefault(),
+                                Precio =Convert.ToString(productos.Where(x => x.IdProducto == productoID[j]).Select(x => x.Precio).FirstOrDefault()),
                                 Total = Convert.ToString(precioTotal),
                                 Cantidad = cantidadTotal,
                             });
                             precioTotal = 0;
                             cantidadTotal = 0;
+                            ProductosIdAgredados.Add(productoID[j]);
 
                         }
+
+                    }
+                    
+                    
                     }
 
-                }
+                
             }
 
             // Paginación

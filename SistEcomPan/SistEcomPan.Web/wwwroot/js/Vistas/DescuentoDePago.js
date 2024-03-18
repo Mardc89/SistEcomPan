@@ -5,14 +5,20 @@ function mostrarModal2() {
 }
 
 $("#opcion1").click(function () {
-    mostrarModal2()
+    
+    let busquedaCodPedido = $("#txtCodigo").val();
+    $("#searchInput").val(busquedaCodPedido);
+    mostrarModal2();
+   
 })
 
 const itemPagina = 5; // Cantidad de productos por página
 let  paginaActual= 1; // Página actual al cargar
 
-function buscarProductos(busquedaDetallePedido= '', pagina = 1) {
-    fetch(`/Pedido/ObtenerDetalleFinal?searchTerm=${busquedaDetallePedido}&page=${pagina}&itemsPerPage=${itemPagina}`)
+
+function buscarProductos(busquedaDetallePedido = '', pagina = 1) {
+    const busquedaDetalle = document.getElementById("searchInput").value;
+    fetch(`/Pedido/ObtenerDetalleFinal?searchTerm=${busquedaDetalle}&page=${pagina}&itemsPerPage=${itemPagina}`)
         .then(response => response.json())
         .then(data => {
             const detallePedidos = data.pedidos;
@@ -29,9 +35,16 @@ function buscarProductos(busquedaDetallePedido= '', pagina = 1) {
                 const row = document.createElement('tr');
                 row.innerHTML = `
  
-            <td>${detallePedido.cantidad}</td>
+            
+            <td>${detallePedido.categoriaProducto}</td>
             <td>${detallePedido.descripcionProducto}</td>
+            <td>${detallePedido.precio}</td>
+            <td>${detallePedido.cantidad}</td>
             <td>${detallePedido.total}</td>
+            <td><input type="text" class="form-control form-control-sm" id="txtCantidad" placeholder="Ingrese Unidades a Descontar"></td>
+            <td>
+            <button onclick="agregarProducto(this)" class="btn btn-danger btn-sm">Descontar</button>
+            </td>
           `;
                 productTable.appendChild(row);
                 i++;
@@ -177,68 +190,11 @@ document.getElementById('searchInput').addEventListener('input', function (event
 //    buscarProductos();
 //});
 
-$("#btnEnviarPedido").click(function () {
-    debugger;
-    const tablaProductos = document.getElementById('tbProductosSeleccionados');
-    const filas = tablaProductos.getElementsByTagName('tr');
-
-    let productosPedidos = [];
-
-    for (let i = 1; i < filas.length - 1; i++) {
-        const fila = filas[i];
-        const idProducto = fila.cells[0].textContent;
-        const cantidad = fila.cells[3].textContent;
-        const total = fila.cells[5].textContent;
-
-        const producto = {
-            idProducto: idProducto,
-            cantidad: cantidad,
-            total: total
-        };
-        productosPedidos.push(producto);
-    }
-
-
-    if (productosPedidos.length < 1) {
-        toastr.warning("", "Debes Ingresar Productos")
-        return;
-    }
-
-    const vmDetallePedido = productosPedidos;
-
-    const pedido = {
-        dni: $("#txtDocumentoCliente").val(),
-        montoTotal: $("#montoTotal").text(),
-        estado: $("#txtEstado").val(),
-        DetallePedido: vmDetallePedido
-
-    }
 
 
 
-    $("#btnEnviarPedido").LoadingOverlay("show");
-    debugger;
-    fetch("/Pedido/Crear", {
-        method: "POST",
-        headers: { "Content-Type": "application/json;charset=utf-8" },
-        body: JSON.stringify(pedido)
-    })
-        .then(response => {
-            $("#btnEnviarPedido").LoadingOverlay("hide");
-            return response.ok ? response.json() : Promise.reject(response);
-        })
-        .then(responseJson => {
-            if (responseJson.estado) {
-                productosPedidos = [];
-                $("#txtDocumentoCliente").val("")
-                swal("Registrado", `Codigo de Producto:${responseJson.objeto.codigo}`, "success")
-            }
-            else {
-                swal("Lo sentimos", "No se pudo Registrar la venta", "error")
 
-            }
-        })
-})
+
 
 
 
