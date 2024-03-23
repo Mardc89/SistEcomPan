@@ -8,9 +8,40 @@ $("#opcion1").click(function () {
     
     let busquedaCodPedido = $("#txtCodigo").val();
     $("#searchInput").val(busquedaCodPedido);
+    let monto = $("#txtMontoPedido").val();
+    $("#txtImportePedido").val(monto);
     mostrarModal2();
    
 })
+
+
+
+
+document.getElementById("txtPagoCliente").addEventListener("click", function () {
+
+
+
+    let pago = document.getElementById("txtPagoCliente").value;
+    let descuento = document.getElementById("txtDescuento").value;
+    let monto = document.getElementById("txtMontoPedido").value;
+
+    if (!isNaN(pago) && !isNaN(descuento) && !isNaN(monto)) {
+        if (pago == "") pago = 0, descuento = 0;
+        Evaluar(pago, descuento, monto);
+    }
+
+    else {
+
+        alert("Ingrese numeros validos");
+    }
+
+
+
+});
+
+
+
+
 
 const itemPagina = 5; // Cantidad de productos por página
 let  paginaActual= 1; // Página actual al cargar
@@ -22,34 +53,48 @@ function buscarProductos(busquedaDetallePedido = '', pagina = 1) {
         .then(response => response.json())
         .then(data => {
             const detallePedidos = data.pedidos;
-            const codigo = data.codigos;
-            const nombreProducto = data.nombresProducto; // Array de productos obtenidos
             const totalItems = data.totalItems; // Total de productos encontrados
-            const precioProducto = data.precios;
-            let i = 0;
+            let i = 1, unidades = 27;
             // Actualizar la tabla modal con los productos obtenidos 
             const productTable = document.getElementById('ProductoDevuelto');
             productTable.innerHTML = '';
 
-            detallePedidos.forEach( detallePedido=> {
+            detallePedidos.forEach(detallePedido => {
+
+                let descripcionfinal = detallePedido.descripcionProducto;
+
+                let descripcionProduct = detallePedido.descripcionProducto.toLowerCase();
+                if (/lata de pan|latas de panes|latas de pan/i.test(descripcionProduct)) {
+                    const numeroUnidades = descripcionfinal.match(/\d+/);
+                    if (numeroUnidades) {
+                        unidades = parseInt(numeroUnidades[0]);
+                        descripcionfinal = `Latas de Panes de ${unidades} unidades`;
+                    }
+                    else {
+                        descripcionfinal = "Latas de Panes";
+                    }
+
+                }
+                else if (/pasteles|pastel/i.test(descripcionProduct)) {
+                    descripcionfinal = "Unidades de Pasteles";
+                }
+
                 const row = document.createElement('tr');
                 row.innerHTML = `
- 
+                
             
-            <td>${detallePedido.categoriaProducto}</td>
-            <td>${detallePedido.descripcionProducto}</td>
-            <td>${detallePedido.precio}</td>
-            <td>${detallePedido.cantidad}</td>
+            <td id="categoriaProducto${i}">${detallePedido.categoriaProducto}</td>
+            <td id="descripcionProducto${i}">${descripcionfinal}</td>
+            <td id="precioProducto${i}">${detallePedido.precio}</td>
+            <td id="cantidadProducto${i}">${detallePedido.cantidad}</td>
             <td>${detallePedido.total}</td>
-            <td><input type="text" class="form-control form-control-sm" id="txtCantidad" placeholder="Ingrese Unidades a Descontar"></td>
-            <td>
-            <button onclick="agregarProducto(this)" class="btn btn-danger btn-sm">Descontar</button>
-            </td>
+            <td><input type="text" class="form-control form-control-sm" id="cantidadDescuento${i}" placeholder="Ingrese Unidades a Descontar"></td>
           `;
                 productTable.appendChild(row);
                 i++;
             });
 
+            Devoluciones();   
             // Generar la paginación
             const totalPages = Math.ceil(totalItems / itemPagina);
             const pagination = document.getElementById('pagination');
@@ -82,6 +127,56 @@ function buscarProductos(busquedaDetallePedido = '', pagina = 1) {
         .catch(error => {
             console.error('Error al buscar productos:', error);
         });
+}
+
+
+function Devoluciones() {
+
+
+    const Montofinal = document.getElementById("txtImporteFinal");
+    const MontoInicial = document.getElementById("txtImportePedido");
+    const Descuentos = document.getElementById("txtDescuentoPedido");
+    for (let i = 1; i <= totalItems; i++) {
+        const CantidadDescuento = document.getElementById(`cantidadDescuento${i}`);
+        CantidadDescuento.addEventListener("input", function () {
+            let descuentoTotal = 0, subtotal = 0, unidadDePan = 27;
+            for (let j = 1; j <= totalItems; j++) {
+                let categorias = document.getElementById(`categoriaProducto${j}`).textContent;
+                let precio = document.getElementById(`precioProducto${j}`).textContent;
+                let cantidad = document.getElementById(`cantidadProducto${j}`).textContent;
+                let unidadDescuento = document.getElementById(`cantidadDescuento${j}`);
+                const descuento = parseFloat(unidadDescuento.value) || 0;
+                if (categorias == "Panes" && descuento > 0 && descuento <= unidadDePan * cantidad) {
+                    let descripcionNueva = document.getElementById(`descripcionProducto${j}`).textContent;
+                    let precioUnitario;
+                    const UnidadesPan = descripcionNueva.match(/\d+/);
+                    if (UnidadesPan) {
+                        unidadDePan = parseInt(UnidadesPan[0]);
+                        precioUnitario = precio / unidadDePan;
+                    }
+                    else {
+                        precioUnitario = precio / unidadDePan;
+                    }
+                    subtotal = descuento * precioUnitario.toFixed(4);
+                    descuentoTotal += subtotal;
+                }
+                else if (categorias != "Panes" && descuento > 0 && descuento <= cantidad) {
+                    subtotal = descuento * precio;
+                    descuentoTotal += subtotal;
+                }
+                else if (descuento == 0 || descuento > cantidad || descuento > unidadDePan * cantidad) {
+                    alert("La Cantidad debe ser menor");
+                }
+            }
+            Descuentos.value = descuentoTotal;
+            Montofinal.value = MontoInicial.value - descuentoTotal;
+        });
+    }
+
+
+
+
+
 }
 
 

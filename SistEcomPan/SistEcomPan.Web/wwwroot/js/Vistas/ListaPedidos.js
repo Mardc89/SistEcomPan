@@ -39,8 +39,36 @@ function mostrarModal3() {
     $("#modalDataPedidos").modal("show");
 }
 
+document.addEventListener("DOMContentLoaded", function () {
+    document.getElementById('PedidoBuscado').addEventListener('click', function (event) {
+
+
+        if (event.target.tagName == 'TD') {
+
+            const fila = event.target.parentNode;
+            const codigo = fila.cells[1].textContent;
+            const nombres = fila.cells[2].textContent;
+            const montoTotal = fila.cells[3].textContent;
+            const estado = fila.cells[4].textContent;
+            const fecha = fila.cells[5].textContent;
+
+            document.getElementById('txtCodigo').value = codigo;
+            document.getElementById('txtNombres').value = nombres;
+            document.getElementById('txtMontoPedido').value = montoTotal;
+            document.getElementById('txtEstado').value = estado;
+            document.getElementById('txtFechaPedido').value = fecha;
+            document.getElementById('txtMontoPago').value = montoTotal;
+
+            $("#modalDataPedidos").modal("hide");
+        }
+
+    });
+});
+
+
 const ProductosPorPagina = 4; // Cantidad de productos por página
 let PaginaInicial = 1; // Página actual al cargar
+
 
 function buscarPedidos(searchTer = '', page = 1) {
     fetch(`/Pedido/ObtenerPedidos?searchTerm=${searchTer}&page=${page}&itemsPerPage=${ProductosPorPagina}`)
@@ -102,42 +130,8 @@ function buscarPedidos(searchTer = '', page = 1) {
 
 
 
-document.addEventListener('DOMContentLoaded', function () { 
-    const tablaPedidos = document.getElementById('PedidoBuscado');
 
-    tablaPedidos.addEventListener('click', function (event) {
-    const fila = event.target.closest('tr');
-
-    if (fila && fila.parentNode.nodeName == 'TBODY') {
-
-        const codigo = fila.cells[1].textContent;
-        const nombres = fila.cells[2].textContent;
-        const montoTotal = fila.cells[3].textContent;
-        const estado = fila.cells[4].textContent;
-        const fecha = fila.cells[5].textContent;
-
-        document.getElementById('txtCodigo').value = codigo;
-        document.getElementById('txtNombres').value = nombres;
-        document.getElementById('txtMontoPedido').value = montoTotal;
-        document.getElementById('txtEstado').value = estado;
-        document.getElementById('txtFechaPedido').value = fecha;
-        document.getElementById('txtDescuento').value = 0.00;
-        document.getElementById('txtMontoPago').value = montoTotal;
-
-
-
-
-
-        //const modalPedidos = document.getElementById('modalDataPedidos');
-        //modalPedidos.style.display = 'none';
-
-
-    }
-
-});
     
-
-});
 
 
 document.getElementById("txtPagoCliente").addEventListener("input", function () {
@@ -149,7 +143,29 @@ document.getElementById("txtPagoCliente").addEventListener("input", function () 
     let monto = document.getElementById("txtMontoPedido").value;
 
     if (!isNaN(pago) && !isNaN(descuento) && !isNaN(monto)) {
-        if (pago == "") pago = 0;
+        if (pago == "") pago = 0 ,descuento=0;
+        Evaluar(pago, descuento, monto);
+    }
+
+    else {
+
+        alert("Ingrese numeros validos");
+    }
+
+
+
+});
+
+document.getElementById("txtDescuento").addEventListener("input", function () {
+
+
+
+    let pago = document.getElementById("txtPagoCliente").value;
+    let descuento = document.getElementById("txtDescuento").value;
+    let monto = document.getElementById("txtMontoPedido").value;
+
+    if (!isNaN(pago) && !isNaN(descuento) && !isNaN(monto)) {
+        if (pago == "") pago = 0, descuento = 0;
         Evaluar(pago, descuento, monto);
     }
 
@@ -193,6 +209,7 @@ function Evaluar(pago, descuento, monto) {
     document.getElementById("txtCambio").value = cambio;
     document.getElementById("txtDeuda").value = deuda;
     document.getElementById("txtEstado").value = estado;
+    document.getElementById("txtDescuento").value = descuento;
 
 
 
