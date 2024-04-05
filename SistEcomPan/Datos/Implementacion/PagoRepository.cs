@@ -11,7 +11,7 @@ using Datos.Interfaces;
 
 namespace Datos.Implementacion
 {
-    public class PagoRepository:IGenericRepository<Pagos>
+    public class PagoRepository:IPagoNew
     {
         private readonly string _cadenaSQL = "";
 
@@ -50,6 +50,54 @@ namespace Datos.Implementacion
             }
 
             return lista;
+        }
+
+        public async Task<Pagos> Registrar(Pagos modelo, DataTable DetallePago)
+        {
+            bool resultado = false;
+            string Mensaje = "";
+            try
+            {
+                using (var conexion = new SqlConnection(_cadenaSQL))
+                {
+                    conexion.Open();
+                    SqlCommand cmd = new SqlCommand("SPRegistrarPagos", conexion);
+                    cmd.Parameters.AddWithValue("@IdPedido", modelo.IdPedido);
+                    cmd.Parameters.AddWithValue("@MontoDePedido", modelo.MontoDePedido);
+                    cmd.Parameters.AddWithValue("@Descuento", modelo.Descuento);
+                    cmd.Parameters.AddWithValue("@MontoTotalDePago", modelo.MontoTotalDePago);
+                    cmd.Parameters.AddWithValue("@MontoDeuda", modelo.MontoDeuda);
+                    cmd.Parameters.AddWithValue("@Estado", modelo.Estado);
+                    cmd.Parameters.AddWithValue("@DetallePago", DetallePago);
+                    cmd.CommandType = CommandType.StoredProcedure;
+
+
+                    SqlParameter outputParameter = new SqlParameter();
+                    outputParameter.ParameterName = "@IdPago";
+                    outputParameter.SqlDbType = SqlDbType.Int;
+                    outputParameter.Direction = ParameterDirection.Output;
+                    cmd.Parameters.Add(outputParameter);
+
+                    SqlParameter outputParameter2 = new SqlParameter();
+                    outputParameter2.ParameterName = "@Resultado";
+                    outputParameter2.SqlDbType = SqlDbType.Bit;
+                    outputParameter2.Direction = ParameterDirection.Output;
+                    cmd.Parameters.Add(outputParameter2);
+
+                    await cmd.ExecuteNonQueryAsync();
+
+                    resultado = Convert.ToBoolean(cmd.Parameters["@Resultado"].Value);
+                    int PagoId = Convert.ToInt32(outputParameter.Value);
+                    modelo.IdPago = PagoId;
+
+                }
+            }
+            catch (Exception ex)
+            {
+                resultado = false;
+                Mensaje = ex.Message;
+            }
+            return modelo;
         }
 
         public async Task<bool> Guardar(Pagos modelo)
@@ -146,6 +194,11 @@ namespace Datos.Implementacion
         }
 
         public Task<IQueryable<Pagos>> Obtener(string consulta)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<List<Pagos>> Reporte(DateTime FechaInicio, DateTime FechaFin)
         {
             throw new NotImplementedException();
         }

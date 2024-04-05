@@ -20,9 +20,12 @@ namespace IOC
         {
             services.AddScoped<IPedidoNew, PedidoRepository>();
             services.AddScoped<IPedidoEnvio, PedidoNew>();
+            services.AddScoped<IPagoNew, PagoRepository>();
+            services.AddScoped<IPagoContado, PagoNew>();
             services.AddScoped<IGenericRepository<Categorias>, CategoriaRepository>();
             services.AddScoped<IGenericRepository<Productos>, ProductoRepository>();
             services.AddScoped<IGenericRepository<Pedidos>, PedidoRepository>();
+            services.AddScoped<IGenericRepository<Pagos>, PagoRepository>();
             services.AddScoped<IGenericRepository<DetallePedido>, DetallePedidoRepository>();
             services.AddScoped<IGenericRepository<NumeroDocumento>, NumDocumentoRepository>();
 
@@ -36,6 +39,7 @@ namespace IOC
             services.AddScoped<IRolService, RolService>();          
             services.AddScoped<IUsuarioService, UsuarioService>();
             services.AddScoped<IPedidoService, PedidoService>();
+            services.AddScoped<IPagoService, PagoService>();
             services.AddScoped<IClienteService, ClienteService>();
             services.AddScoped<IProductoService, ProductoService>();
             services.AddScoped<ICategoriaService, CategoriaService>();

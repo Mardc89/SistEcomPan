@@ -257,6 +257,73 @@ document.getElementById('BusquedaPedidos').addEventListener('input', function (e
 
 
 
+$("#btnEnviarPedido").click(function () {
+    debugger;
+    const tablaProductos = document.getElementById('tbProductosSeleccionados');
+    const filas = tablaProductos.getElementsByTagName('tr');
+
+    let productosPedidos = [];
+
+    for (let i = 1; i < filas.length - 1; i++) {
+        const fila = filas[i];
+        const idProducto = fila.cells[0].textContent;
+        const cantidad = fila.cells[3].textContent;
+        const total = fila.cells[5].textContent;
+
+        const producto = {
+            idProducto: idProducto,
+            cantidad: cantidad,
+            total: total
+        };
+        productosPedidos.push(producto);
+    }
+
+
+    if (productosPedidos.length < 1) {
+        toastr.warning("", "Debes Ingresar Productos")
+        return;
+    }
+
+    const vmDetallePedido = productosPedidos;
+
+    const pedido = {
+        dni: $("#txtDocumentoCliente").val(),
+        montoTotal: $("#montoTotal").text(),
+        estado: $("#txtEstado").val(),
+        DetallePedido: vmDetallePedido
+
+    }
+
+
+
+    $("#btnEnviarPedido").LoadingOverlay("show");
+    debugger;
+    fetch("/Pedido/Crear", {
+        method: "POST",
+        headers: { "Content-Type": "application/json;charset=utf-8" },
+        body: JSON.stringify(pedido)
+    })
+        .then(response => {
+            $("#btnEnviarPedido").LoadingOverlay("hide");
+            return response.ok ? response.json() : Promise.reject(response);
+        })
+        .then(responseJson => {
+            if (responseJson.estado) {
+                productosPedidos = [];
+                $("#txtDocumentoCliente").val("")
+                swal("Registrado", `Codigo de Producto:${responseJson.objeto.codigo}`, "success")
+            }
+            else {
+                swal("Lo sentimos", "No se pudo Registrar la venta", "error")
+
+            }
+        })
+})
+
+
+
+
+
 
 
 

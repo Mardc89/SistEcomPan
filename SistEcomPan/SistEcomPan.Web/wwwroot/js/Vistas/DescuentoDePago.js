@@ -1,6 +1,8 @@
 ﻿
 function mostrarModal2() {
     buscarProductos();
+    DiccionarioDescuento = {};
+    DiccionarioDevolucion = {};
     $("#modalDataDescuento").modal("show");
 }
 
@@ -43,12 +45,12 @@ document.getElementById("txtPagoCliente").addEventListener("click", function () 
 
 
 
-const itemPagina = 5; // Cantidad de productos por página
+const itemPagina = 3; // Cantidad de productos por página
 let  paginaActual= 1; // Página actual al cargar
 
 
-function buscarProductos(busquedaDetallePedido = '', pagina = 1) {
-    const busquedaDetalle = document.getElementById("searchInput").value;
+function buscarProductos(busquedaDetalle = '',pagina = 1) {
+    busquedaDetalle = document.getElementById("searchInput").value;
     fetch(`/Pedido/ObtenerDetalleFinal?searchTerm=${busquedaDetalle}&page=${pagina}&itemsPerPage=${itemPagina}`)
         .then(response => response.json())
         .then(data => {
@@ -94,12 +96,14 @@ function buscarProductos(busquedaDetallePedido = '', pagina = 1) {
                 i++;
             });
 
-            Devoluciones();   
+           
             // Generar la paginación
             const totalPages = Math.ceil(totalItems / itemPagina);
-            const pagination = document.getElementById('pagination');
-            pagination.innerHTML = '';
-
+            const paginationDes = document.getElementById('paginacionDes');
+            paginationDes.innerHTML = '';
+            let Inicial = 1;
+            let Final = 3;
+            let Fin = 0;
             for (let i = 1; i <= totalPages; i++) {
                 const li = document.createElement('li');
                 li.classList.add('page-item');
@@ -112,71 +116,141 @@ function buscarProductos(busquedaDetallePedido = '', pagina = 1) {
                 if (i === paginaActual) {
                     li.classList.add('active');
                 }
+                if (paginaActual === totalPages && li.classList.contains("active")) {
+                    let PaginaFinal = totalItems - itemPagina * (i - 1);
+                    Fin = PaginaFinal;
+                    Final = Fin;
+                    
+                }
 
                 link.addEventListener('click', () => {
                     paginaActual = i;
-                    buscarProductos(busquedaDetallePedido, paginaActual);
-                    resaltarPaginaActual();
+                    buscarProductos(busquedaDetalle, paginaActual);
+                    resaltarPaginaActuales();
+
                 });
 
-                pagination.appendChild(li);
+                paginationDes.appendChild(li);
             }
+            resaltarPaginaActuales();
+            Devoluciones(Inicial,Final,paginaActual,totalPages);
+             
 
-            resaltarPaginaActual();
+            
         })
         .catch(error => {
             console.error('Error al buscar productos:', error);
         });
+      
+        
 }
 
+let DiccionarioDescuento = {};
+let DiccionarioDevolucion = {};
 
-function Devoluciones() {
-
-
+function Devoluciones(inicial, final, paginaActual,totalPaginas) {
+    alert("devolucion final:" + final + paginaActual);
+  
     const Montofinal = document.getElementById("txtImporteFinal");
     const MontoInicial = document.getElementById("txtImportePedido");
     const Descuentos = document.getElementById("txtDescuentoPedido");
-    for (let i = 1; i <= totalItems; i++) {
+    let DescuentoGeneral = 0;
+    for (let i = inicial; i <= final; i++) {
+        alert("finales:" + final);
         const CantidadDescuento = document.getElementById(`cantidadDescuento${i}`);
-        CantidadDescuento.addEventListener("input", function () {
-            let descuentoTotal = 0, subtotal = 0, unidadDePan = 27;
-            for (let j = 1; j <= totalItems; j++) {
-                let categorias = document.getElementById(`categoriaProducto${j}`).textContent;
-                let precio = document.getElementById(`precioProducto${j}`).textContent;
-                let cantidad = document.getElementById(`cantidadProducto${j}`).textContent;
-                let unidadDescuento = document.getElementById(`cantidadDescuento${j}`);
-                const descuento = parseFloat(unidadDescuento.value) || 0;
-                if (categorias == "Panes" && descuento > 0 && descuento <= unidadDePan * cantidad) {
-                    let descripcionNueva = document.getElementById(`descripcionProducto${j}`).textContent;
-                    let precioUnitario;
-                    const UnidadesPan = descripcionNueva.match(/\d+/);
-                    if (UnidadesPan) {
-                        unidadDePan = parseInt(UnidadesPan[0]);
-                        precioUnitario = precio / unidadDePan;
+        const valorDescuento = CantidadDescuento.textContent.trim();
+        DevolucionProducto(inicial, final, paginaActual);
+            CantidadDescuento.addEventListener("input", function () {
+                let descuentoTotal = 0, subtotal = 0, unidadDePan = 27;
+                for (let j = inicial; j <= final; j++) {
+                        alert("finalmente:" + final);    
+                  
+                        let categorias = document.getElementById(`categoriaProducto${j}`).textContent;
+                        let precio = document.getElementById(`precioProducto${j}`).textContent;
+                        let cantidad = document.getElementById(`cantidadProducto${j}`).textContent;
+                        let unidadDescuento = document.getElementById(`cantidadDescuento${j}`);
+                        let descuento = parseFloat(unidadDescuento.value) || 0;
+                        let descripcionNueva = document.getElementById(`descripcionProducto${j}`).textContent;
+                        let precioUnitario;
+                        alert(descuento);
+                   
+                        const UnidadesPan = descripcionNueva.match(/\d+/);
+                        if (UnidadesPan) {
+                            unidadDePan = parseInt(UnidadesPan[0]);
+                            precioUnitario = precio / unidadDePan;
+                        }
+                        else {
+                            precioUnitario = precio / unidadDePan;
+                        }
+
+                        alert("unidades:" + unidadDePan + "cantidad:" + cantidad + "precioUni:" + precioUnitario);
+                        if (categorias == "Panes" && descuento > 0 && descuento <= unidadDePan * cantidad) {
+                            subtotal = descuento * precioUnitario;
+                            DiccionarioDescuento[`descuentos${paginaActual}${j}`] = subtotal;
+                            DiccionarioDevolucion[`devoluciones${paginaActual}${j}`] = descuento;
+                      
+                            descuentoTotal += subtotal;
+                            alert("descuentosubtotal:" + descuentoTotal + "subtotal:" + subtotal);
+                        }
+                        else if (categorias != "Panes" && descuento > 0 && descuento <= cantidad) {
+                            subtotal = descuento * precio;
+                            DiccionarioDescuento[`descuentos${paginaActual}${j}`] = subtotal;
+                            DiccionarioDevolucion[`devoluciones${paginaActual}${j}`] = descuento;
+                    
+                            descuentoTotal += subtotal;
+                            alert("descuentosubtotal:" + descuentoTotal + "subtotal:" + subtotal);
+                        }
+                        else if (valorDescuento !== "" || descuento < 0 || descuento > cantidad || descuento > unidadDePan * cantidad) {                        
+                            unidadDescuento.value = 0;
+                            DiccionarioDescuento[`descuentos${paginaActual}${j}`] = 0;
+                            DiccionarioDevolucion[`devoluciones${paginaActual}${j}`] = 0;
+                            alert("La Cantidad debe ser menor");
                     }
-                    else {
-                        precioUnitario = precio / unidadDePan;
-                    }
-                    subtotal = descuento * precioUnitario.toFixed(4);
-                    descuentoTotal += subtotal;
+               
+                    
                 }
-                else if (categorias != "Panes" && descuento > 0 && descuento <= cantidad) {
-                    subtotal = descuento * precio;
-                    descuentoTotal += subtotal;
-                }
-                else if (descuento == 0 || descuento > cantidad || descuento > unidadDePan * cantidad) {
-                    alert("La Cantidad debe ser menor");
-                }
-            }
-            Descuentos.value = descuentoTotal;
-            Montofinal.value = MontoInicial.value - descuentoTotal;
-        });
+                DescuentoGeneral += descuentoTotal;
+                alert("Descuentos finales");
+                Object.keys(DiccionarioDescuento).forEach(clave => {
+                    alert(`Clave:${clave},Valor:${DiccionarioDescuento[clave]}`)
+                });
+
+                Object.keys(DiccionarioDevolucion).forEach(clave => {
+                    alert(`Clave:${clave},Valor:${DiccionarioDevolucion[clave]}`)
+                });
+
+                let sumaDiccionario = SumarDescuento();
+                alert("suma final:" + sumaDiccionario);
+                Descuentos.value = sumaDiccionario.toFixed(2);
+                Montofinal.value = (MontoInicial.value - sumaDiccionario).toFixed(2);
+            });
+
+        
     }
 
+}
 
+function DevolucionProducto(inicial, final, paginaActual) {
 
+    for (let j = inicial; j <= final; j++) {     
+        if (DiccionarioDevolucion[`devoluciones${paginaActual}${j}`] !== undefined) {
+            let unidadDescuento = document.getElementById(`cantidadDescuento${j}`);
+            unidadDescuento.value = DiccionarioDevolucion[`devoluciones${paginaActual}${j}`];
+        }
+    }
 
+}
 
+function SumarDescuento() {
+
+    let suma = 0;
+
+    for(let clave in DiccionarioDescuento) {
+
+        suma += DiccionarioDescuento[clave];
+    }
+    return suma;
+    
 }
 
 
@@ -262,9 +336,9 @@ function calcularTotal() {
 
 
 // Función para resaltar la página actual
-function resaltarPaginaActual() {
-    const paginationItems = document.querySelectorAll('#pagination .page-item');
-    paginationItems.forEach(item => {
+function resaltarPaginaActuales() {
+    const paginationItem = document.querySelectorAll('#paginacionDes .page-item');
+    paginationItem.forEach(item => {
         item.classList.remove('active');
         const link = item.querySelector('.page-link');
         if (link.textContent === paginaActual.toString()) {
@@ -274,11 +348,11 @@ function resaltarPaginaActual() {
 }
 
 // Evento cuando el usuario escribe en la barra de búsqueda
-document.getElementById('searchInput').addEventListener('input', function (event) {
-    const busquedaDetallePedido = event.target.value;
-    paginaActual = 1; // Reiniciar a la primera página al realizar una nueva búsqueda
-    buscarProductos(busquedaDetallePedido, paginaActual);
-});
+//document.getElementById('searchInput').addEventListener('input', function (event) {
+//    const busquedaDetallePedido = event.target.value;
+//    paginaActual = 1; // Reiniciar a la primera página al realizar una nueva búsqueda
+//    buscarProductos(busquedaDetallePedido, paginaActual);
+//});
 
 //Llamada inicial para cargar productos al abrir la tabla modal
 //$('#modalData').on('show.bs.modal', function () {

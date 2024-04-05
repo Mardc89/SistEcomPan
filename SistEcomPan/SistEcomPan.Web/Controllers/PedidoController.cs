@@ -209,7 +209,7 @@ namespace SistEcomPan.Web.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> ObtenerDetalleFinal(string searchTerm, int page = 1, int itemsPerPage = 5)
+        public async Task<IActionResult> ObtenerDetalleFinal(string searchTerm, int page = 1, int itemsPerPage = 3)
         {
             var Pedidolista = await _pedidoService.Lista();
             var DetallePedidoLista = await _detallePedidoService.Lista();

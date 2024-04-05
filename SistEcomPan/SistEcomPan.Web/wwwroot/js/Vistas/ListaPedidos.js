@@ -46,12 +46,14 @@ document.addEventListener("DOMContentLoaded", function () {
         if (event.target.tagName == 'TD') {
 
             const fila = event.target.parentNode;
+            const idPedido = fila.cells[0].textContent;
             const codigo = fila.cells[1].textContent;
             const nombres = fila.cells[2].textContent;
             const montoTotal = fila.cells[3].textContent;
             const estado = fila.cells[4].textContent;
             const fecha = fila.cells[5].textContent;
 
+            document.getElementById('txtIdPedido').value = idPedido;
             document.getElementById('txtCodigo').value = codigo;
             document.getElementById('txtNombres').value = nombres;
             document.getElementById('txtMontoPedido').value = montoTotal;
@@ -165,7 +167,13 @@ document.getElementById("txtDescuento").addEventListener("input", function () {
     let monto = document.getElementById("txtMontoPedido").value;
 
     if (!isNaN(pago) && !isNaN(descuento) && !isNaN(monto)) {
-        if (pago == "") pago = 0, descuento = 0;
+        if (pago.trim() == "") {
+            pago = 0;
+        }
+        if (descuento > monto)
+        {
+            descuento = 0;
+        }
         Evaluar(pago, descuento, monto);
     }
 
@@ -181,11 +189,14 @@ document.getElementById("txtDescuento").addEventListener("input", function () {
 
 function Evaluar(pago, descuento, monto) {
    
-    let deuda = 0.00,cambio=0.00;
+    let deuda = 0.00,cambio=0.00,montofinal=0.00;
     let estado = "";
-
-    let montofinal = parseFloat(monto) - parseFloat(descuento);
-
+    if (descuento < monto) {
+        montofinal = parseFloat(monto) - parseFloat(descuento);
+    }
+    else {
+        descuento=0;
+    }
     if (pago > montofinal) {
         cambio = parseFloat(pago) - parseFloat(montofinal);
         deuda = 0.00;
