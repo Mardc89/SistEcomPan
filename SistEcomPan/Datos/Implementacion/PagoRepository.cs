@@ -61,7 +61,7 @@ namespace Datos.Implementacion
                 using (var conexion = new SqlConnection(_cadenaSQL))
                 {
                     conexion.Open();
-                    SqlCommand cmd = new SqlCommand("SPRegistrarPagos", conexion);
+                    SqlCommand cmd = new SqlCommand("SPRegistrarPago", conexion);
                     cmd.Parameters.AddWithValue("@IdPedido", modelo.IdPedido);
                     cmd.Parameters.AddWithValue("@MontoDePedido", modelo.MontoDePedido);
                     cmd.Parameters.AddWithValue("@Descuento", modelo.Descuento);

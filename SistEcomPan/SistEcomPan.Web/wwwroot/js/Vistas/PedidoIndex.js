@@ -314,7 +314,7 @@ $("#btnEnviarPedido").click(function () {
                 swal("Registrado", `Codigo de Producto:${responseJson.objeto.codigo}`, "success")
             }
             else {
-                swal("Lo sentimos", "No se pudo Registrar la venta", "error")
+                swal("Lo sentimos", "No se pudo Registrar el Pedido", "error")
 
             }
         })

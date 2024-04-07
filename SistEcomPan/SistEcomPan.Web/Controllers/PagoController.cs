@@ -1,5 +1,6 @@
 ﻿using Entidades;
 using Microsoft.AspNetCore.Mvc;
+using Negocio.Implementacion;
 using Negocio.Interfaces;
 using SistEcomPan.Web.Models.ViewModels;
 using SistEcomPan.Web.Tools.Response;
@@ -10,15 +11,15 @@ namespace SistEcomPan.Web.Controllers
     {
         private readonly IPagoService _pagoService;
         private readonly IClienteService _clienteService;
-        private readonly IProductoService _productoService;
+        private readonly IPedidoService _pedidoService;
         private readonly ICategoriaService _categoriaService;
         private readonly IDetallePedidoService _detallePedidoService;
 
-        public PagoController(IPagoService pagoService, IClienteService clienteService, IProductoService productoService, ICategoriaService categoriaService, IDetallePedidoService detallePedidoService)
+        public PagoController(IPagoService pagoService, IClienteService clienteService, IPedidoService pedidoService, ICategoriaService categoriaService, IDetallePedidoService detallePedidoService)
         {
             _pagoService = pagoService;
             _clienteService = clienteService;
-            _productoService = productoService;
+            _pedidoService = pedidoService;
             _categoriaService = categoriaService;
             _detallePedidoService = detallePedidoService;
         }
@@ -31,6 +32,37 @@ namespace SistEcomPan.Web.Controllers
         {
             return View();
         }
+
+        [HttpGet]
+        public async Task<IActionResult> Lista()
+        {
+            var Pagolista = await _pagoService.Lista();
+            List<VMPago> vmPagolista = new List<VMPago>();
+            var pedidoCliente = await _pedidoService.ObtenerNombre();
+            var clientes = await _clienteService.ObtenerNombre();
+            foreach (var item in Pagolista)
+            {
+                var clientePedido = pedidoCliente.Where(x => x.IdPedido == item.IdPedido).First().IdCliente;          
+                var clienteEncontrado = clientes.Where(x => x.IdCliente == clientePedido).First().Nombres + "" +
+                                        clientes.Where(x => x.IdCliente == clientePedido).First().Apellidos;
+
+                vmPagolista.Add(new VMPago
+                {
+                    IdPago = item.IdPago,
+                    IdPedido= item.IdPedido,
+                    MontoDePedido = Convert.ToString(item.MontoDePedido),
+                    Descuento = Convert.ToString(item.Descuento),
+                    MontoTotalDePago =Convert.ToString(item.MontoTotalDePago),
+                    MontoDeuda = Convert.ToString(item.MontoDeuda),
+                    FechaPago = Convert.ToDateTime(item.FechaDePago),
+                    Estado = item.Estado,
+                    NombreCliente=clienteEncontrado
+                });
+            }
+            return StatusCode(StatusCodes.Status200OK, new { data = vmPagolista });
+        }
+
+
 
         [HttpPost]
         public async Task<IActionResult> Guardar([FromBody] VMPago modelo)
