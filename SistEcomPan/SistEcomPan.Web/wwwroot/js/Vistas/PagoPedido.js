@@ -8,6 +8,7 @@ const MODELO_BASE = {
     montoDeuda: "",
     nombreCliente: "",
     fechaPago: "",
+    fechaPedido:"",
     estado: ""
 
 }
@@ -84,20 +85,39 @@ $(document).ready(function () {
     });
 })
 
+function formatoFecha(fechaOriginal) {
+
+    let fechaFormateada = "";
+    if (fechaOriginal != "") {
+        let fecha = new Date(fechaOriginal);
+        let dia = fecha.getDate().toString().padStart(2, "0");
+        let mes = (fecha.getMonth() + 1).toString().padStart(2, "0");
+        let anio = fecha.getFullYear();
+
+        fechaFormateada = dia + "/" + mes + "/" + anio;
+        return fechaFormateada;
+    }
+    return fechaFormateada;
+
+}
+
 
 function mostrarModal(modelo = MODELO_BASE) {
     debugger;
-   
+
+    $("#txtIdPago").val(modelo.idPago)
     $("#txtIdPedido").val(modelo.idPedido)
     $("#txtMontoPedido").val(modelo.montoDePedido)
     $("#txtNombres").val(modelo.nombreCliente)
-    $("#txtFechaPedido").val(modelo.fechaPago)
+    $("#txtFechaPedido").val(formatoFecha(modelo.fechaPedido))
+    $("#txtFechaPago").val(formatoFecha(modelo.fechaPago))
     $("#txtDescuento").val(modelo.descuento)
     $("#txtDeuda").val(modelo.montoDeuda)
     $("#txtMontoPago").val(modelo.montoTotalDePago)
     $("#txtPagoDelCliente").val("")
     $("#txtCambio").val("")
     $("#txtEstado").val(modelo.estado)
+    $("#txtCodigoPedido").val(modelo.codigoPedido)
 
 
     $("#modalDataPago").modal("show")
@@ -113,16 +133,7 @@ function mostrarModal(modelo = MODELO_BASE) {
 
 $("#btnGuardarPago").click(function () {
 
-        const modelo = structuredClone(MODELO_BASE);
-        modelo["idPedido"] = parseInt($("#txtIdPedido").val())
-        modelo["montoDePedido"] = $("#txtMontoPedido").val()
-        modelo["descuento"] = $("#txtDescuento").val()
-        modelo["montoTotalDePago"] = $("#txtMontoPago").val()
-        modelo["montoDeuda"] = $("#txtDeuda").val()
-        modelo["nombreCliente"] = $("#txtNombres").val()
-        //modelo["clave"] = $("#txtClave").val()
-        //modelo["idRol"] = $("#cboRol").val()
-        modelo["estado"] = $("#txtEstado").val()
+
         let detallePagos = [];
 
         const montoAPagar = document.getElementById("txtMontoPago").value;
@@ -151,31 +162,47 @@ $("#btnGuardarPago").click(function () {
         idPedido: $("#txtIdPedido").val(),
         montoDePedido: $("#txtMontoPedido").val(),
         descuento: $("#txtDescuento").val(),
-        montoTotalDePago: $("#txtMontoPago").val(),
-        montoDeuda: $("#txtMontoDeuda").val(),
+        montoTotalDePago: $("#txtDeuda").val(),
+        montoDeuda: $("#txtDeuda").val(),
         estado: $("#txtEstado").val(),
         DetallePago: vmDetallePago
 
     }
 
+    const modelo = structuredClone(MODELO_BASE);
+    modelo["idPago"] = parseInt($("#txtIdPago").val())
+    modelo["idPedido"] = parseInt($("#txIdPedido").val())
+    modelo["montoDePedido"] = $("#txtMontoPedido").val()
+    modelo["nombreCliente"] = $("#txtApellidos").val()
+    modelo["fechaPago"] = $("#txtFechaPago").val()
+    modelo["fechaPedido"] = $("#txtFechaPedido").val()
+    modelo["descuento"] = $("#txtDescuento").val()
+    modelo["montoDeuda"] = $("#txtDeuda").val()
+    modelo["estado"] = $("#txtEstado").val()
+    
 
+    
 
-    $("#btnGuardarPago").LoadingOverlay("show");
-    debugger;
+  /*  $("#btnGuardarPago").LoadingOverlay("show");*/
+    $("#modalDataPago").find("div.modal-content").LoadingOverlay("show");
+    
     if (modelo.idPago == 0) {
+       
         fetch("/Pago/Guardar", {
             method: "POST",
             headers: { "Content-Type": "application/json;charset=utf-8" },
             body: JSON.stringify(pago)
         })
             .then(response => {
-                $("#btnGuardarPago").LoadingOverlay("hide");
+                $("#modalDataPago").find("div.modal-content").LoadingOverlay("hide");
                 return response.ok ? response.json() : Promise.reject(response);
             })
             .then(responseJson => {
                 if (responseJson.estado) {
                     detallePagos = [];
                     /*$("#txtDocumentoCliente").val("")*/
+                    tablaDataPago.row.add(responseJson.objeto).draw(false)
+                    $("#modalDataPago").modal("hide");
                     swal("Pago Registrado", `Codigo de Pago:${responseJson.objeto.idPedido}`, "success")
                 }
                 else {
@@ -188,19 +215,20 @@ $("#btnGuardarPago").click(function () {
 
         fetch("/Pago/Editar", {
             method: "PUT",
+            headers: { "Content-Type": "application/json;charset=utf-8" },
             body: JSON.stringify(pago)
         })
             .then(response => {
-                $("#modalDataPagos").find("div.modal-content").LoadingOverlay("hide");
+                $("#modalDataPago").find("div.modal-content").LoadingOverlay("hide");
                 return response.ok ? response.json() : Promise.reject(response);
             })
             .then(responseJson => {
 
                 if (responseJson.estado) {
 
-                    tablaData.row(filaSeleccionada).data(responseJson.objeto).draw(false);
+                    tablaDataPago.row(filaSeleccionada).data(responseJson.objeto).draw(false);
                     filaSeleccionada = null;
-                    $("#modalDataPagos").modal("hide")
+                    $("#modalDataPago").modal("hide")
                     swal("Listo", "el pago fue modificado", "success")
                 } else {
                     swal("Lo sentimos", responseJson.mensaje, "error")

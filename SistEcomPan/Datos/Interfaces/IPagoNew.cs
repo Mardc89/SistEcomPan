@@ -11,6 +11,7 @@ namespace Datos.Interfaces
     public interface IPagoNew: IGenericRepository<Pagos>
     {
         Task<Pagos> Registrar(Pagos modelo, DataTable DataTable);
+        Task<Pagos> Editar(Pagos modelo, DataTable DataTable);
         Task<List<Pagos>> Reporte(DateTime FechaInicio, DateTime FechaFin);
     }
 }

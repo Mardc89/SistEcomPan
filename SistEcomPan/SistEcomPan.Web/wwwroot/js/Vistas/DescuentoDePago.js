@@ -8,7 +8,7 @@ function mostrarModal2() {
 
 $("#opcion1").click(function () {
     
-    let busquedaCodPedido = $("#txtCodigo").val();
+    let busquedaCodPedido = $("#txtCodigoPedido").val();
     $("#searchInput").val(busquedaCodPedido);
     let monto = $("#txtMontoPedido").val();
     $("#txtImportePedido").val(monto);

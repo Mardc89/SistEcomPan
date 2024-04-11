@@ -10,5 +10,6 @@ namespace Datos.Interfaces
     public interface IPagoContado
     {
         Task<Pagos> Pagando(Pagos modelo);
+        Task<Pagos> Editando(Pagos modelo);
     }
 }

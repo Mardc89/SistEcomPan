@@ -54,7 +54,7 @@ document.addEventListener("DOMContentLoaded", function () {
             const fecha = fila.cells[5].textContent;
 
             document.getElementById('txtIdPedido').value = idPedido;
-            document.getElementById('txtCodigo').value = codigo;
+            document.getElementById('txtCodigoPedido').value = codigo;
             document.getElementById('txtNombres').value = nombres;
             document.getElementById('txtMontoPedido').value = montoTotal;
             document.getElementById('txtEstado').value = estado;
@@ -138,14 +138,21 @@ function buscarPedidos(searchTer = '', page = 1) {
 
 document.getElementById("txtPagoCliente").addEventListener("input", function () {
 
+    let idPago = document.getElementById("txtIdPago").value;
+    let monto = document.getElementById("txtDeuda").value;
    
+
+    if (idPago==0) {
+        monto = document.getElementById("txtMontoPedido").value;
+        
+    }
  
     let pago = document.getElementById("txtPagoCliente").value;
     let descuento = document.getElementById("txtDescuento").value;
-    let monto = document.getElementById("txtMontoPedido").value;
+ 
 
     if (!isNaN(pago) && !isNaN(descuento) && !isNaN(monto)) {
-        if (pago == "") pago = 0 ,descuento=0;
+       
         Evaluar(pago, descuento, monto);
     }
 

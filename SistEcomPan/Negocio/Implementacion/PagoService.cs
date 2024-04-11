@@ -51,6 +51,19 @@ namespace Negocio.Implementacion
             }
         }
 
+        public async Task<Pagos> Editar(Pagos entidad)
+        {
+            try
+            {
+                return await _repositorioPagoContado.Editando(entidad);
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
 
         public async Task<List<Pagos>> Lista()
         {
