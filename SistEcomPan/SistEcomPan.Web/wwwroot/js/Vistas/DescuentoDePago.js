@@ -16,30 +16,44 @@ $("#opcion1").click(function () {
    
 })
 
+$("#btnGuardarDescuento").click(function () {
 
+    let idPago = document.getElementById("txtIdPago").value;
 
-
-document.getElementById("txtPagoCliente").addEventListener("click", function () {
-
-
-
-    let pago = document.getElementById("txtPagoCliente").value;
-    let descuento = document.getElementById("txtDescuento").value;
-    let monto = document.getElementById("txtMontoPedido").value;
-
-    if (!isNaN(pago) && !isNaN(descuento) && !isNaN(monto)) {
-        if (pago == "") pago = 0, descuento = 0;
-        Evaluar(pago, descuento, monto);
+    if (idPago==0) {
+        let descuentoPedido = $("#txtDescuentoPedido").val();
+        $("#txtDescuento").val(descuentoPedido);
+        let monto = $("#txtImporteFinal").val();
+        $("#txtMontoPago").val(monto);
     }
+    $("#modalDataDescuento").modal("hide");
 
-    else {
-
-        alert("Ingrese numeros validos");
-    }
+})
 
 
 
-});
+
+//document.getElementById("txtPagoCliente").addEventListener("click", function () {
+
+
+
+//    let pago = document.getElementById("txtPagoCliente").value;
+//    let descuento = document.getElementById("txtDescuento").value;
+//    let monto = document.getElementById("txtMontoPedido").value;
+
+//    if (!isNaN(pago) && !isNaN(descuento) && !isNaN(monto)) {
+//        if (pago == "") pago = 0, descuento = 0;
+//        Evaluar(pago, descuento, monto);
+//    }
+
+//    else {
+
+//        alert("Ingrese numeros validos");
+//    }
+
+
+
+//});
 
 
 

@@ -138,50 +138,64 @@ function buscarPedidos(searchTer = '', page = 1) {
 
 document.getElementById("txtPagoCliente").addEventListener("input", function () {
 
-    let idPago = document.getElementById("txtIdPago").value;
-    let monto = document.getElementById("txtDeuda").value;
+   
+        let idPago = document.getElementById("txtIdPago");
+        let idPagos = parseFloat(idPago.value) || 0
+        let monto = document.getElementById("txtMontoPedido");
+        let descuento = document.getElementById("txtDescuento");
+        let descuentofinal = parseFloat(descuento.value) || 0
+        if (idPagos > 0) {
+            monto = document.getElementById("txtMontoPago");
+            descuentofinal = 0.00;
+        }
+        let montofinal = parseFloat(monto.value) || 0
+        alert(montofinal);
+
+        let pago = document.getElementById("txtPagoCliente");
    
 
-    if (idPago==0) {
-        monto = document.getElementById("txtMontoPedido").value;
-        
-    }
- 
-    let pago = document.getElementById("txtPagoCliente").value;
-    let descuento = document.getElementById("txtDescuento").value;
- 
+      
+        let pagofinal = parseFloat(pago.value) || 0
+        if (!isNaN(pagofinal) && !isNaN(descuentofinal) && !isNaN(montofinal)) {
 
-    if (!isNaN(pago) && !isNaN(descuento) && !isNaN(monto)) {
-       
-        Evaluar(pago, descuento, monto);
-    }
+            alert("soy desecuento:"+descuentofinal);
+            Evaluar(pagofinal, descuentofinal, montofinal);
+        }
 
-    else {
+        else {
 
-        alert("Ingrese numeros validos");
-    }
+            alert("Ingrese numeros validos");
+        }
 
-
+    
 
 });
 
 document.getElementById("txtDescuento").addEventListener("input", function () {
 
+    let idPago = document.getElementById("txtIdPago").value;
+    let monto = document.getElementById("txtMontoPedido");
+    let deuda = document.getElementById("txtDeuda");
 
+    if (idPago > 0) {
+        monto = document.getElementById("txtMontoPago");
+    }
 
-    let pago = document.getElementById("txtPagoCliente").value;
-    let descuento = document.getElementById("txtDescuento").value;
-    let monto = document.getElementById("txtMontoPedido").value;
+    let pago = document.getElementById("txtPagoCliente");
+    let pagofinal = parseFloat(pago.value) || 0
+    let descuento = document.getElementById("txtDescuento");
+    let descuentofinal = descuento.value
+    let deudafinal = parseFloat(deuda.value) || 0
+    let montofinal = parseFloat(monto.value) || 0
 
-    if (!isNaN(pago) && !isNaN(descuento) && !isNaN(monto)) {
-        if (pago.trim() == "") {
-            pago = 0;
-        }
-        if (descuento > monto)
+    if (!isNaN(pagofinal) && !isNaN(descuentofinal) && !isNaN(montofinal)) {
+        if (descuentofinal > montofinal || descuentofinal > deudafinal && pagofinal > 0 || idPago>0)
         {
-            descuento = 0;
+            alert("holas deuda 2025" + deudafinal + ">" + montofinal);
+            descuentofinal =0;
+            
         }
-        Evaluar(pago, descuento, monto);
+        Evaluar(pagofinal, descuentofinal, montofinal);
     }
 
     else {
@@ -195,24 +209,29 @@ document.getElementById("txtDescuento").addEventListener("input", function () {
 
 
 function Evaluar(pago, descuento, monto) {
+
+    let pagos = parseFloat(pago);
+    let montos = parseFloat(monto);
+    let descuentos = descuento;
    
     let deuda = 0.00,cambio=0.00,montofinal=0.00;
     let estado = "";
-    if (descuento < monto) {
-        montofinal = parseFloat(monto) - parseFloat(descuento);
+    if (descuentos < montos) {
+        montofinal = montos - descuentos;
+        alert("monto final:"+montofinal)
     }
     else {
-        descuento=0;
+        descuentos="";
     }
-    if (pago > montofinal) {
-        cambio = parseFloat(pago) - parseFloat(montofinal);
+    if (pagos > montofinal) {
+        cambio = pagos- montofinal;
         deuda = 0.00;
         estado = "Pagado";
     }
 
-    else if (pago < montofinal) {
+    else if (pagos < montofinal) {
         cambio = 0.00;
-        deuda = parseFloat(montofinal) - parseFloat(pago);
+        deuda = montofinal - pagos;
         estado = "Pendiente";
 
     }
@@ -224,10 +243,10 @@ function Evaluar(pago, descuento, monto) {
     }
 
 
-    document.getElementById("txtCambio").value = cambio;
-    document.getElementById("txtDeuda").value = deuda;
+    document.getElementById("txtCambio").value = cambio.toFixed(2);
+    document.getElementById("txtDeuda").value = deuda.toFixed(2);
     document.getElementById("txtEstado").value = estado;
-    document.getElementById("txtDescuento").value = descuento;
+    document.getElementById("txtDescuento").value = descuentos.toFixed(2);
 
 
 

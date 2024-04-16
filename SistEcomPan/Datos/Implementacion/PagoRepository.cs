@@ -109,10 +109,10 @@ namespace Datos.Implementacion
                 using (var conexion = new SqlConnection(_cadenaSQL))
                 {
                     conexion.Open();
-                    SqlCommand cmd = new SqlCommand("SPEditarPagos", conexion);
+                    SqlCommand cmd = new SqlCommand("SPEditarPago", conexion);
+                    cmd.Parameters.AddWithValue("@IdPago", modelo.IdPago);
                     cmd.Parameters.AddWithValue("@IdPedido", modelo.IdPedido);
                     cmd.Parameters.AddWithValue("@MontoDePedido", modelo.MontoDePedido);
-                    cmd.Parameters.AddWithValue("@Descuento", modelo.Descuento);
                     cmd.Parameters.AddWithValue("@MontoTotalDePago", modelo.MontoTotalDePago);
                     cmd.Parameters.AddWithValue("@MontoDeuda", modelo.MontoDeuda);
                     cmd.Parameters.AddWithValue("@Estado", modelo.Estado);

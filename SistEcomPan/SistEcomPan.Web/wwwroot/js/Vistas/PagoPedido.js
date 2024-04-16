@@ -113,7 +113,7 @@ function mostrarModal(modelo = MODELO_BASE) {
     $("#txtFechaPago").val(formatoFecha(modelo.fechaPago))
     $("#txtDescuento").val(modelo.descuento)
     $("#txtDeuda").val(modelo.montoDeuda)
-    $("#txtMontoPago").val(modelo.montoTotalDePago)
+    $("#txtMontoPago").val(modelo.montoDeuda)
     $("#txtPagoDelCliente").val("")
     $("#txtCambio").val("")
     $("#txtEstado").val(modelo.estado)
@@ -159,10 +159,12 @@ $("#btnGuardarPago").click(function () {
     const vmDetallePago = detallePagos;
 
     const pago = {
+        idPago: $("#txtIdPago").val(),
         idPedido: $("#txtIdPedido").val(),
         montoDePedido: $("#txtMontoPedido").val(),
+        nombreCliente: $("#txtNombres").val(),
         descuento: $("#txtDescuento").val(),
-        montoTotalDePago: $("#txtDeuda").val(),
+        montoTotalDePago: $("#txtMontoPago").val(),
         montoDeuda: $("#txtDeuda").val(),
         estado: $("#txtEstado").val(),
         DetallePago: vmDetallePago
@@ -173,7 +175,8 @@ $("#btnGuardarPago").click(function () {
     modelo["idPago"] = parseInt($("#txtIdPago").val())
     modelo["idPedido"] = parseInt($("#txIdPedido").val())
     modelo["montoDePedido"] = $("#txtMontoPedido").val()
-    modelo["nombreCliente"] = $("#txtApellidos").val()
+    modelo["montoTotalDePago"] = $("#txtMontoPago").val()
+    modelo["nombreCliente"] = $("#txtNombres").val()
     modelo["fechaPago"] = $("#txtFechaPago").val()
     modelo["fechaPedido"] = $("#txtFechaPedido").val()
     modelo["descuento"] = $("#txtDescuento").val()
