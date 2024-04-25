@@ -102,6 +102,7 @@
                 <div id="collapsePedido" class="collapse" data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
                         <a class="collapse-item" href="@Url.Action("NuevoPedido","Pedido")">Nuevo Pedido</a>
+                        <a class="collapse-item" href="@Url.Action("MisPedidos","Pedido")">Mis Pedidos</a>
                         <a class="collapse-item" href="@Url.Action("HistorialPedido","Pedido")">Historial Pedido</a>
                     </div>
                 </div>
@@ -161,7 +162,7 @@
                         <div class="topbar-divider d-none d-sm-block"></div>
 
                         <!-- Nav Item - User Information -->
-                       <li class="nav-item dropdown no-arrow">
+@*                        <li class="nav-item dropdown no-arrow">
                             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <span class="mr-2 d-none d-lg-inline text-gray-600 small">Douglas McGee</span>
@@ -181,7 +182,8 @@
                                     Salir
                                 </a>
                             </div>
-                        </li>
+                        </li> *@
+                        @await Component.InvokeAsync("MenuUsuario")
                        
                     </ul>
 

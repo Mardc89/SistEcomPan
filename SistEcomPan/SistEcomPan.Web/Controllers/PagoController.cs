@@ -156,8 +156,6 @@ namespace SistEcomPan.Web.Controllers
                     {
                         IdPago=modelo.IdPago,
                         IdPedido = modelo.IdPedido,
-                        MontoDePedido = Convert.ToDecimal(modelo.MontoDePedido),
-                        MontoTotalDePago = Convert.ToDecimal(modelo.MontoTotalDePago),
                         MontoDeuda = Convert.ToDecimal(modelo.MontoDeuda),
                         Estado = modelo.Estado,
                         DetallePago = modelo.DetallePago.Select(detalle => new DetallePago
@@ -183,8 +181,6 @@ namespace SistEcomPan.Web.Controllers
                     {
                         IdPago = pagoCreado.IdPago,
                         IdPedido = pagoCreado.IdPedido,
-                        MontoDePedido = Convert.ToString(pagoCreado.MontoDePedido),
-                        MontoTotalDePago = Convert.ToString(pagoCreado.MontoTotalDePago),
                         MontoDeuda = Convert.ToString(pagoCreado.MontoDeuda),
                         Estado = pagoCreado.Estado,
                         DetallePago = pagoCreado.DetallePago.Select(detalle => new VMDetallePago

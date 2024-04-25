@@ -19,11 +19,11 @@ $(document).ready(function () {
 
 
 function obtenerFecha() {
-    var fechaActual = new Date();
-    var fechaTexto = document.getElementById("txtFecha");
-    var dia = fechaActual.getDate();
-    var mes = fechaActual.getMonth() + 1;
-    var anio = fechaActual.getFullYear();
+    let fechaActual = new Date();
+    let fechaTexto = document.getElementById("txtFecha");
+    let dia = fechaActual.getDate();
+    let mes = fechaActual.getMonth() + 1;
+    let anio = fechaActual.getFullYear();
 
     if (dia < 10) {
         dia = '0' + dia;
@@ -31,7 +31,7 @@ function obtenerFecha() {
     if (mes<10) {
         mes = '0' + mes;
     }
-    var fechaformateada = dia + '/' + mes + '/' + anio;
+    let fechaformateada = dia + '/' + mes + '/' + anio;
     fechaTexto.value = fechaformateada;
 }
 
@@ -74,7 +74,7 @@ $("#txtDocumentoCliente").click(function () {
 
 
 function ModalPedidos() {
-    MostrarProductos();
+    MostrarProduct();
     $("#modalData").modal("show");
 }
 
@@ -82,10 +82,10 @@ $("#btnGuardar").click(function () {
     ModalPedidos();
 })
 
-const ElementosDePagina = 5; // Cantidad de productos por página
+const ElementosDePagina = 4; // Cantidad de productos por página
 let actualDePagina = 1; // Página actual al cargar
 
-function MostrarProductos(TerminoBusqueda = '', pagina = 1) {
+function MostrarProduct(TerminoBusqueda = '', pagina = 1) {
     fetch(`/Pedido/ObtenerProductos?searchTerm=${TerminoBusqueda}&page=${pagina}&itemsPerPage=${ElementosDePagina}`)
         .then(response => response.json())
         .then(data => {
@@ -116,33 +116,33 @@ function MostrarProductos(TerminoBusqueda = '', pagina = 1) {
          });
          
             // Generar la paginación
-            const totalPages = Math.ceil(totalItems / ElementosDePagina);
-            const pagination = document.getElementById('pagination');
-            pagination.innerHTML = '';
+            const totalPag = Math.ceil(totalItems / ElementosDePagina);
+            const PaginaPag = document.getElementById('Paginations');
+            PaginaPag.innerHTML = '';
 
-            for (let i = 1; i <= totalPages; i++) {
-                const li = document.createElement('li');
-                li.classList.add('page-item');
-                const link = document.createElement('a');
-                link.classList.add('page-link');
-                link.href = '#';
-                link.textContent = i;
-                li.appendChild(link);
+            for (let i = 1; i <= totalPag; i++) {
+                const liA = document.createElement('li');
+                liA.classList.add('page-item');
+                const linkA = document.createElement('a');
+                linkA.classList.add('page-link');
+                linkA.href = '#';
+                linkA.textContent = i;
+                liA.appendChild(linkA);
 
                 if (i === actualDePagina) {
-                    li.classList.add('active');
+                    liA.classList.add('active');
                 }
 
-                link.addEventListener('click', () => {
+                linkA.addEventListener('click', () => {
                     actualDePagina = i;
-                    MostrarProductos(TerminoBusqueda, actualDePagina);
-                    resaltarPaginaActual();
+                    MostrarProduct(TerminoBusqueda, actualDePagina);
+                    resaltarPagActual();
                 });
 
-                pagination.appendChild(li);
+                PaginaPag.appendChild(liA);
             }
 
-            resaltarPaginaActual();
+            resaltarPagActual();
         })
         .catch(error => {
             console.error('Error al buscar productos:', error);
@@ -158,6 +158,10 @@ function agregarProducto(button) {
     const stock = parseFloat(row.cells[3].textContent);
     const precio = parseFloat(row.cells[4].textContent).toFixed(2);
     let cantidad = parseFloat(row.cells[5].querySelector('input').value);
+
+    if (cantidad > stock) {
+        alert("Ingrese una cantidad menor al stock");
+    }
 
    
     let total = 0;
@@ -232,8 +236,8 @@ function calcularTotal() {
 
 
 // Función para resaltar la página actual
-function resaltarPaginaActual() {
-    const paginationItems = document.querySelectorAll('#pagination .page-item');
+function resaltarPagActual() {
+    const paginationItems = document.querySelectorAll('#PrincipalPag .page-item');
     paginationItems.forEach(item => {
         item.classList.remove('active');
         const link = item.querySelector('.page-link');
@@ -247,7 +251,7 @@ function resaltarPaginaActual() {
 document.getElementById('BusquedaPedidos').addEventListener('input', function (event) {
     const TerminoBusqueda = event.target.value;
     actualDePagina = 1; // Reiniciar a la primera página al realizar una nueva búsqueda
-    MostrarProductos(TerminoBusqueda, actualDePagina);
+    MostrarProduct(TerminoBusqueda, actualDePagina);
 });
 
  //Llamada inicial para cargar productos al abrir la tabla modal

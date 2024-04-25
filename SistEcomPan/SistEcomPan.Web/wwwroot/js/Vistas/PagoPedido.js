@@ -101,6 +101,18 @@ function formatoFecha(fechaOriginal) {
 
 }
 
+function VerificarEstado() {
+    let idPago = document.getElementById("txtIdPago").value;
+    let estado = document.getElementById("txtEstado").value;
+    let btnEstado = document.getElementById("btnGuardarPago");
+
+    if (estado == "Pagado" && idPago > 0) {
+        btnEstado.disabled = true;
+    }
+    else {
+        btnEstado.disabled = false;
+    }
+}
 
 function mostrarModal(modelo = MODELO_BASE) {
     debugger;
@@ -121,6 +133,7 @@ function mostrarModal(modelo = MODELO_BASE) {
 
 
     $("#modalDataPago").modal("show")
+    VerificarEstado();
 }
 
 

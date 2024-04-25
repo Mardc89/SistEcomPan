@@ -7,6 +7,7 @@ using Negocio.Implementacion;
 using SistEcomPan.Web.Models.ViewModels;
 using Newtonsoft.Json;
 using SistEcomPan.Web.Tools.Response;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace SistEcomPan.Web.Controllers
 {
@@ -27,6 +28,12 @@ namespace SistEcomPan.Web.Controllers
             _detallePedidoService = detallePedidoService;
         }
         public IActionResult NuevoPedido()
+        {
+
+            return View();
+        }
+
+        public IActionResult MisPedidos()
         {
 
             return View();
@@ -82,7 +89,7 @@ namespace SistEcomPan.Web.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> ObtenerProductos(string searchTerm = "", int page = 1, int itemsPerPage = 5)
+        public async Task<IActionResult> ObtenerProductos(string searchTerm = "", int page = 1, int itemsPerPage = 4)
        {
 
             var Productolista = await _productoService.Lista();
@@ -126,6 +133,84 @@ namespace SistEcomPan.Web.Controllers
             var pedidosPaginados = pedidosFiltrados.Skip((page - 1) * itemsPerPage).Take(itemsPerPage).ToList();
 
             return StatusCode(StatusCodes.Status200OK, new { pedidos = pedidosPaginados, totalItems = pedidosFiltrados.Count(), nombreCliente = clienteEncontrado });
+        }
+
+
+        [HttpGet]
+        public async Task<IActionResult> ObtenerMisPedidos(string searchTerm,string busqueda="")
+        {
+            var Pedidolista = await _pedidoService.Lista();
+            var clientelista = await _clienteService.Lista();
+
+            var idCliente = clientelista.Where(x => x.Dni == searchTerm).Select(x => x.IdCliente).FirstOrDefault();
+            var estadoCliente =Pedidolista.Where(x => x.IdCliente ==idCliente).Select(x => x.Estado).FirstOrDefault();
+
+            // Filtro de búsqueda por término de búsqueda (searchTerm)
+            var pedidosFiltrados = Pedidolista.Where(p =>p.IdCliente.Equals(idCliente) 
+            );
+
+            var MisPedidos = pedidosFiltrados.Where(p =>
+            string.IsNullOrWhiteSpace(busqueda) || p.Estado.ToLower().Contains(busqueda.ToLower()) ||
+            p.FechaPedido.Date==(DateTime.TryParse(busqueda,out DateTime fechaBusqueda)?fechaBusqueda.Date:p.FechaPedido.Date)
+            );
+
+            List<VMPedido> vmPedidos = new List<VMPedido>();
+
+            foreach (var item in MisPedidos)
+            {
+                vmPedidos.Add(new VMPedido
+                {
+                    IdPedido = item.IdPedido,
+                    IdCliente = item.IdCliente,
+                    Codigo = item.Codigo,
+                    MontoTotal = Convert.ToString(item.MontoTotal),
+                    Estado = item.Estado,
+                    FechaPedido = item.FechaPedido
+
+                });
+            }
+
+            var clientePedido = pedidosFiltrados.First().IdCliente;
+
+            var clientes = await _clienteService.ObtenerNombre();
+            var clienteEncontrado = clientes.Where(x => x.IdCliente == clientePedido).First().Nombres + "" +
+                                    clientes.Where(x => x.IdCliente == clientePedido).First().Apellidos;
+            // Paginación
+            var pedidosPaginados = vmPedidos.ToList();
+
+            return StatusCode(StatusCodes.Status200OK, new { data = pedidosPaginados, totalItems = vmPedidos.Count(), nombreCliente = clienteEncontrado });
+        }
+
+
+        [HttpGet]
+        public async Task<IActionResult> ObtenerMiDetallePedido(int idPedido, int page = 1, int itemsPerPage = 4)
+        {
+            var DetallePedidolista = await _detallePedidoService.Lista();
+            var Pedidolista = await _pedidoService.Lista();
+
+            var MisPedidos = DetallePedidolista.Where(p => p.IdPedido.Equals(idPedido)
+            );
+
+            var Productos = await _productoService.ObtenerNombre();
+            List<VMDetallePedido> vmDetallePedidos = new List<VMDetallePedido>();
+
+            foreach (var item in MisPedidos)
+            {
+                vmDetallePedidos.Add(new VMDetallePedido
+                {
+                    IdDetallePedido = item.IdDetallePedido,
+                    IdPedido = item.IdPedido,
+                    DescripcionProducto = Productos.Where(x=>x.IdProducto==item.IdProducto).First().Descripcion,
+                    Cantidad = item.Cantidad,
+                    Total = Convert.ToString(item.Total)
+                });
+            }
+
+
+            // Paginación
+            var pedidosPaginados = vmDetallePedidos.Skip((page - 1)*itemsPerPage).Take(itemsPerPage).ToList();
+
+            return StatusCode(StatusCodes.Status200OK, new { detallePedido = pedidosPaginados, totalItems = vmDetallePedidos.Count()});
         }
 
         [HttpGet]

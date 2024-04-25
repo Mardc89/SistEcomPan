@@ -157,9 +157,39 @@ namespace Datos.Implementacion
         }
 
 
-        public Task<IQueryable<Clientes>> Consultar()
+        public async Task<IQueryable<Clientes>> Consultar()
         {
-            throw new NotImplementedException();
+            List<Clientes> lista = new List<Clientes>();
+            using (var conexion = new SqlConnection(_cadenaSQL))
+            {
+                conexion.Open();
+                SqlCommand cmd = new SqlCommand("SPListaClientes", conexion);
+                cmd.CommandType = CommandType.StoredProcedure;
+
+                using (var dr = await cmd.ExecuteReaderAsync())
+                {
+                    while (await dr.ReadAsync())
+                    {
+                        lista.Add(new Clientes
+                        {
+                            IdCliente = Convert.ToInt32(dr["IdCliente"]),
+                            Dni = dr["Dni"].ToString(),
+                            Nombres = dr["Nombres"].ToString(),
+                            Apellidos = dr["Apellidos"].ToString(),
+                            Correo = dr["Correo"].ToString(),
+                            NombreUsuario = dr["NombreUsuario"].ToString(),
+                            Clave = dr["Clave"].ToString(),
+                            IdDistrito = Convert.ToInt32(dr["IdDistrito"]),
+                            FechaRegistro = Convert.ToDateTime(dr["FechaRegistro"]),
+                            Estado = Convert.ToBoolean(dr["Estado"]),
+                            UrlFoto = dr["UrlFoto"].ToString(),
+                            NombreFoto = dr["NombreFoto"].ToString()
+                        });
+                    }
+                }
+            }
+
+            return lista.AsQueryable();
         }
 
         public Task<IQueryable<Clientes>> Obtener(string consulta)

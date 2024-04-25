@@ -57,6 +57,8 @@ namespace SistEcomPan.Web.Controllers
                     Estado=Convert.ToInt32(item.Estado),
                     Stock=item.Stock,
                     NombreCategoria = nombreCategoria.Where(x => x.IdCategoria == item.IdCategoria).First().TipoDeCategoria,
+                    UrlImagen=item.UrlImagen,
+
                 });
             }
             return StatusCode(StatusCodes.Status200OK, new { data = vmProductolista });
@@ -96,7 +98,8 @@ namespace SistEcomPan.Web.Controllers
                             IdCategoria = item.IdCategoria,
                             Precio=item.Precio,
                             Estado =Convert.ToBoolean(item.Estado),
-                            Stock=item.Stock
+                            Stock=item.Stock,
+                            UrlImagen=item.UrlImagen
                             
                         });
                     }
@@ -121,7 +124,8 @@ namespace SistEcomPan.Web.Controllers
                             IdCategoria = item.IdCategoria,
                             Precio=item.Precio,
                             Estado = Convert.ToInt32(item.Estado),
-                            Stock=item.Stock
+                            Stock=item.Stock,
+                            UrlImagen=item.UrlImagen
                         });
                     }
                 }
@@ -175,7 +179,8 @@ namespace SistEcomPan.Web.Controllers
                             IdCategoria = item.IdCategoria,
                             Precio=item.Precio,
                             Estado = Convert.ToBoolean(item.Estado),
-                            Stock=item.Stock
+                            Stock=item.Stock,
+                            UrlImagen=item.UrlImagen
                             
                         });
                     }
@@ -199,7 +204,8 @@ namespace SistEcomPan.Web.Controllers
                             Precio=item.Precio,
                             NombreCategoria = nombreCategoria.Where(x => x.IdCategoria == item.IdCategoria).First().TipoDeCategoria,
                             Estado=Convert.ToInt32(item.Estado),
-                            Stock=item.Stock
+                            Stock=item.Stock,
+                            UrlImagen=item.UrlImagen
 
                         });
                     }

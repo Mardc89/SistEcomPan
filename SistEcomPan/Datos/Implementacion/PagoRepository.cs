@@ -61,7 +61,7 @@ namespace Datos.Implementacion
                 using (var conexion = new SqlConnection(_cadenaSQL))
                 {
                     conexion.Open();
-                    SqlCommand cmd = new SqlCommand("SPRegistrarPago", conexion);
+                    SqlCommand cmd = new SqlCommand("SPRegistrarPagos", conexion);
                     cmd.Parameters.AddWithValue("@IdPedido", modelo.IdPedido);
                     cmd.Parameters.AddWithValue("@MontoDePedido", modelo.MontoDePedido);
                     cmd.Parameters.AddWithValue("@Descuento", modelo.Descuento);
@@ -109,11 +109,9 @@ namespace Datos.Implementacion
                 using (var conexion = new SqlConnection(_cadenaSQL))
                 {
                     conexion.Open();
-                    SqlCommand cmd = new SqlCommand("SPEditarPago", conexion);
+                    SqlCommand cmd = new SqlCommand("SPEditarPagos", conexion);
                     cmd.Parameters.AddWithValue("@IdPago", modelo.IdPago);
                     cmd.Parameters.AddWithValue("@IdPedido", modelo.IdPedido);
-                    cmd.Parameters.AddWithValue("@MontoDePedido", modelo.MontoDePedido);
-                    cmd.Parameters.AddWithValue("@MontoTotalDePago", modelo.MontoTotalDePago);
                     cmd.Parameters.AddWithValue("@MontoDeuda", modelo.MontoDeuda);
                     cmd.Parameters.AddWithValue("@Estado", modelo.Estado);
                     cmd.Parameters.AddWithValue("@DetallePago", DetallePago);

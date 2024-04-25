@@ -264,7 +264,7 @@ namespace Negocio.Implementacion
 
         public async Task<Usuarios> ObtenerPorCredenciales(string correo, string clave)
         {
-            string ClaveEncriptada = _encriptservice.ConvertirSha256(clave);
+            string ClaveEncriptada = _encriptservice.EncriptarPassword(clave);
             IQueryable<Usuarios> usuarios = await _repositorio.Consultar();
             IQueryable<Usuarios> usuarioEvaluado = usuarios.Where(u => u.Correo.Equals(correo)&&u.Clave.Equals(ClaveEncriptada));
             Usuarios usuarioEncontrado = usuarioEvaluado.FirstOrDefault();
