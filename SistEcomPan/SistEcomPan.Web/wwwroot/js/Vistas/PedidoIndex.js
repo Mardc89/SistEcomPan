@@ -76,13 +76,14 @@ $("#txtDocumentoCliente").click(function () {
 function ModalPedidos() {
     MostrarProduct();
     $("#modalData").modal("show");
+    SeleccionProductos();
 }
 
 $("#btnGuardar").click(function () {
     ModalPedidos();
 })
 
-const ElementosDePagina = 4; // Cantidad de productos por página
+const ElementosDePagina = 3; // Cantidad de productos por página
 let actualDePagina = 1; // Página actual al cargar
 
 function MostrarProduct(TerminoBusqueda = '', pagina = 1) {
@@ -107,8 +108,8 @@ function MostrarProduct(TerminoBusqueda = '', pagina = 1) {
             <td>${producto.precio.toFixed(2)}</td>
             <td><input type="text" class="form-control form-control-sm" id="txtCantidad" placeholder="Ingrese Cantidad"></td>
             <td>
-            <button onclick="agregarProducto(this)" class="btn btn-danger btn-sm">Add</button>
-            <button onclick="eliminarProducto(this)"class="btn btn-primary btn-sm">De</button>
+            <button onclick="agregarProducto(this)" class="btn btn-danger btn-sm" style="display:inline-block;">Add</button>
+            <button onclick="eliminarProducto(this)"class="btn btn-primary btn-sm" style="display:inline-block;">De</button>
             </td>
           `;
                 i++;
@@ -149,6 +150,26 @@ function MostrarProduct(TerminoBusqueda = '', pagina = 1) {
         });
 }
 
+document.addEventListener("DOMContentLoaded", function () {
+    const filas = document.querySelectorAll("#ProductoBuscado tbody tr");
+    filas.forEach(fila => {
+        fila.addEventListener("click", function () {
+            alert("filas filas");
+
+            const stock = parseFloat(fila.cells[3].textContent);
+            const cantidadIngresada = parseFloat(fila.cells[5].querySelector('input').value);
+
+            if (isNaN(cantidadIngresada) || cantidadIngresada <= 0) {
+                alert("Ingrese una cantidad valida");
+            }
+            else if (cantidadIngresada > stock) {
+                alert("La cantidad supera al stock");
+            }
+
+        });
+    });
+});
+
 
 function agregarProducto(button) {
     const row = button.parentNode.parentNode;
@@ -157,13 +178,10 @@ function agregarProducto(button) {
     const categoria = row.cells[2].textContent;
     const stock = parseFloat(row.cells[3].textContent);
     const precio = parseFloat(row.cells[4].textContent).toFixed(2);
-    let cantidad = parseFloat(row.cells[5].querySelector('input').value);
+    const cantidadIngresada = row.cells[5].querySelector('input');
 
-    if (cantidad > stock) {
-        alert("Ingrese una cantidad menor al stock");
-    }
-
-   
+    let cantidad = parseFloat(cantidadIngresada.value);
+ 
     let total = 0;
     let cantidadTotal = 0, nuevaCantidad=0;
     const tablaProductos = document.getElementById('tbProductosSeleccionados');
@@ -195,7 +213,7 @@ function agregarProducto(button) {
         <td>${cantidad}</td>
         <td>${precio}</td>
         <td>${total.toFixed(2)}</td>
-        <td><button onclick="eliminarProducto(this)">Eliminar</button></td>
+        <td><button class="btn btn-primary btn-sm" onclick="eliminarProducto(this)">Eliminar</button></td>
       </tr>
     `;
 
@@ -237,7 +255,7 @@ function calcularTotal() {
 
 // Función para resaltar la página actual
 function resaltarPagActual() {
-    const paginationItems = document.querySelectorAll('#PrincipalPag .page-item');
+    const paginationItems = document.querySelectorAll('#Paginations .page-item');
     paginationItems.forEach(item => {
         item.classList.remove('active');
         const link = item.querySelector('.page-link');

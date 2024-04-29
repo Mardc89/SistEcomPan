@@ -48,8 +48,28 @@ namespace Negocio.Implementacion
             try
             {
                 string Clave = entidad.Clave;
-                entidad.Clave = _encriptservice.ConvertirSha256(Clave);
+                entidad.Clave = _encriptservice.EncriptarPassword(Clave);
                 entidad.NombreFoto = NombreFoto;
+
+                if (Foto != null && Foto.Length > 0)
+                {
+                    var path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "Imagenes");
+                    if (!Directory.Exists(path))
+                    {
+                        Directory.CreateDirectory(path);
+                    }
+
+                    string fullpath = Path.Combine(path, NombreFoto);
+
+                    string UrlFoto = fullpath;
+
+                    using (var stream = new FileStream(fullpath, FileMode.Create))
+                    {
+                        Foto.CopyTo(stream);
+
+                    }
+                    entidad.UrlFoto = UrlFoto;
+                }
 
                 Clientes usuarioCreado = await _repositorio.Crear(entidad);
 

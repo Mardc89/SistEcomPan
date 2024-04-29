@@ -7,6 +7,9 @@ using Entidades;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication;
+using Negocio.Implementacion;
+using Newtonsoft.Json;
+using SistEcomPan.Web.Tools.Response;
 
 namespace SistEcomPan.Web.Controllers
 {
@@ -30,6 +33,66 @@ namespace SistEcomPan.Web.Controllers
             }
 
             return View();
+        }
+
+        public IActionResult Registrarse()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> LoginCliente(VMCliente modelo)
+        {
+            GenericResponse<VMUsuario> gResponse = new GenericResponse<VMUsuario>();
+
+            try
+            {
+
+                string NombreFoto = "";
+                Stream fotoStream = null;
+                string urlPlantillaCorreo = $"{this.Request.Scheme}://{this.Request.Host}/Plantilla/EnviarClave?correo=[correo]&clave=[clave]";
+                var Usuariolista = await _usuarioServicio.Lista();
+
+
+                List<Clientes> listaClientes = new List<Clientes>();
+                List<VMCliente> listaVMClientes = new List<VMCliente>();
+                if (modelo != null)
+                {
+                    listaVMClientes.Add(modelo);
+                    foreach (var item in listaVMClientes)
+                    {
+                        listaClientes.Add(new Clientes
+                        {
+                            IdCliente = item.IdCliente,
+                            TipoCliente=item.TipoCliente,
+                            Dni = item.Dni,
+                            Nombres = item.Nombres,
+                            Apellidos = item.Apellidos,
+                            Correo = item.Correo,
+                            Direccion=item.Direccion,
+                            Telefono=item.Telefono,
+                            IdDistrito = item.IdDistrito,
+                            NombreUsuario = item.NombreUsuario,
+                            Clave = item.Clave,
+                            Estado =true,
+                            UrlFoto=""
+                        });
+                    }
+                }
+
+                Clientes clienteCreado = await _clienteServicio.Crear(listaClientes.First(),fotoStream,NombreFoto, urlPlantillaCorreo);
+
+
+
+            }
+            catch (Exception ex)
+            {
+                gResponse.Estado = false;
+                gResponse.Mensaje = ex.Message;
+
+            }
+
+            return RedirectToAction("Login", "Acceso");
         }
 
         [HttpPost]

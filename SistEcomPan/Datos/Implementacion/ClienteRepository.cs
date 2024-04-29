@@ -59,12 +59,12 @@ namespace Datos.Implementacion
             return lista;
         }
 
-        public async Task<bool> Guardar(Clientes modelo)
+        public async Task<Clientes> Crear(Clientes modelo)
         {
             using (var conexion = new SqlConnection(_cadenaSQL))
             {
                 conexion.Open();
-                SqlCommand cmd = new SqlCommand("SPGuardarClientes", conexion);
+                SqlCommand cmd = new SqlCommand("SPRegistrarCliente", conexion);
                 cmd.Parameters.AddWithValue("TipoCliente", modelo.TipoCliente);
                 cmd.Parameters.AddWithValue("Dni", modelo.Dni);
                 cmd.Parameters.AddWithValue("Nombres", modelo.Nombres);
@@ -75,18 +75,22 @@ namespace Datos.Implementacion
                 cmd.Parameters.AddWithValue("IdDistrito", modelo.IdDistrito);
                 cmd.Parameters.AddWithValue("NombreUsuario", modelo.NombreUsuario);
                 cmd.Parameters.AddWithValue("Clave", modelo.Clave);
-                cmd.Parameters.AddWithValue("FechaRegistro", modelo.FechaRegistro);
                 cmd.Parameters.AddWithValue("Estado", modelo.Estado);
                 cmd.Parameters.AddWithValue("UrlFoto", modelo.UrlFoto);
                 cmd.Parameters.AddWithValue("NombreFoto", modelo.NombreFoto);
                 cmd.CommandType = CommandType.StoredProcedure;
 
-                int filaAfectada = await cmd.ExecuteNonQueryAsync();
+                SqlParameter outputParameter = new SqlParameter();
+                outputParameter.ParameterName = "@IdCliente";
+                outputParameter.SqlDbType = SqlDbType.Int;
+                outputParameter.Direction = ParameterDirection.Output;
+                cmd.Parameters.Add(outputParameter);
+                await cmd.ExecuteNonQueryAsync();
 
-                if (filaAfectada > 0)
-                    return true;
-                else
-                    return false;
+                int ClienteId = Convert.ToInt32(outputParameter.Value);
+                modelo.IdCliente = ClienteId;
+
+                return modelo;
 
 
             }
@@ -151,7 +155,7 @@ namespace Datos.Implementacion
             }
         }
 
-        public Task<Clientes> Crear(Clientes modelo)
+        public Task<bool> Guardar(Clientes modelo)
         {
             throw new NotImplementedException();
         }
@@ -173,13 +177,16 @@ namespace Datos.Implementacion
                         lista.Add(new Clientes
                         {
                             IdCliente = Convert.ToInt32(dr["IdCliente"]),
+                            TipoCliente = dr["TipoCliente"].ToString(),
                             Dni = dr["Dni"].ToString(),
                             Nombres = dr["Nombres"].ToString(),
                             Apellidos = dr["Apellidos"].ToString(),
                             Correo = dr["Correo"].ToString(),
+                            Direccion = dr["Direccion"].ToString(),
+                            Telefono = dr["Telefono"].ToString(),
+                            IdDistrito = Convert.ToInt32(dr["IdDistrito"]),
                             NombreUsuario = dr["NombreUsuario"].ToString(),
                             Clave = dr["Clave"].ToString(),
-                            IdDistrito = Convert.ToInt32(dr["IdDistrito"]),
                             FechaRegistro = Convert.ToDateTime(dr["FechaRegistro"]),
                             Estado = Convert.ToBoolean(dr["Estado"]),
                             UrlFoto = dr["UrlFoto"].ToString(),

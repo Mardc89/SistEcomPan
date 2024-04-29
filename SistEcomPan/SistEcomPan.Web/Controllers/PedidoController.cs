@@ -89,7 +89,7 @@ namespace SistEcomPan.Web.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> ObtenerProductos(string searchTerm = "", int page = 1, int itemsPerPage = 4)
+        public async Task<IActionResult> ObtenerProductos(string searchTerm = "", int page = 1, int itemsPerPage = 3)
        {
 
             var Productolista = await _productoService.Lista();
