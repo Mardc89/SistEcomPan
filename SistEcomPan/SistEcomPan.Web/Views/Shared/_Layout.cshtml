@@ -1,4 +1,6 @@
-﻿<!DOCTYPE html>
+﻿@using Microsoft.AspNetCore.Identity
+
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -48,25 +50,26 @@
                     <span>Dashboard</span>
                 </a>
             </li>
-
-            <!-- Nav Item - Administración Collapse Menu -->
-          <li class="nav-item">
-                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseAdministracion">
-                    <i class="fas fa-fw fa-cog"></i>
-                    <span>Administración</span>
-                </a>
-                <div id="collapseAdministracion" class="collapse" data-parent="#accordionSidebar">
-                    <div class="bg-white py-2 collapse-inner rounded">
-                        <a class="collapse-item" href="@Url.Action("Index","Usuario")">Usuarios</a>
-                        <a class="collapse-item" href="@Url.Action("Index","Roles")">Roles</a>
-                        <a class="collapse-item" href="@Url.Action("Index","Clientes")">Clientes</a>
+            @if (User.IsInRole("Administrador"))
+            {
+                <!-- Nav Item - Administración Collapse Menu -->
+                <li class="nav-item">
+                    <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseAdministracion">
+                        <i class="fas fa-fw fa-cog"></i>
+                        <span>Administración</span>
+                    </a>
+                    <div id="collapseAdministracion" class="collapse" data-parent="#accordionSidebar">
+                        <div class="bg-white py-2 collapse-inner rounded">
+                            <a class="collapse-item" href="@Url.Action("Index","Usuario")">Usuarios</a>
+                            <a class="collapse-item" href="@Url.Action("Index","Roles")">Roles</a>
+                            <a class="collapse-item" href="@Url.Action("Index","Clientes")">Clientes</a>
+                        </div>
                     </div>
-                </div>
-            </li>
+                </li>
 
-            <!-- Nav Item - Inventario Collapse Menu -->
-          <li class="nav-item">
-                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseInventario">
+                <!-- Nav Item - Inventario Collapse Menu -->
+                <li class="nav-item">
+                    <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseInventario">
                     <i class="fas fa-fw fa-clipboard-list"></i>
                     <span>Inventario</span>
                 </a>
@@ -74,12 +77,11 @@
                     <div class="bg-white py-2 collapse-inner rounded">
                         <a class="collapse-item" href="@Url.Action("Index","Categoria")">Categorias</a>
                         <a class="collapse-item" href="@Url.Action("Index","Producto")">Productos</a>
-                        <a class="collapse-item" href="@Url.Action("Index","Distritos")">Distritos</a>
-                        <a class="collapse-item" href="@Url.Action("Index","Descuentos")">Descuentos</a>
+                        <a class="collapse-item" href="@Url.Action("Index","Distritos")">Distritos</a>                   
                     </div>
                 </div>
             </li>
-
+            }
             <li class="nav-item">
                 <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePago">
                     <i class="fas fa-fw fa-tags"></i>
@@ -101,8 +103,12 @@
                 </a>
                 <div id="collapsePedido" class="collapse" data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
-                        <a class="collapse-item" href="@Url.Action("NuevoPedido","Pedido")">Nuevo Pedido</a>
-                        <a class="collapse-item" href="@Url.Action("MisPedidos","Pedido")">Mis Pedidos</a>
+                        @if (User.IsInRole("Administrador")) {
+                            <a class="collapse-item" href="@Url.Action("NuevoPedido","Pedido")">Nuevo Pedido</a>
+                        }
+                        @if (User.IsInRole("Cliente")) {
+                            <a class="collapse-item" href="@Url.Action("MisPedidos","Pedido")">Mis Pedidos</a>
+                        }
                         <a class="collapse-item" href="@Url.Action("HistorialPedido","Pedido")">Historial Pedido</a>
                     </div>
                 </div>

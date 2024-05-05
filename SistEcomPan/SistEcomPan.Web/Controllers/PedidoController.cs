@@ -8,9 +8,11 @@ using SistEcomPan.Web.Models.ViewModels;
 using Newtonsoft.Json;
 using SistEcomPan.Web.Tools.Response;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.Authorization;
 
 namespace SistEcomPan.Web.Controllers
 {
+  
     public class PedidoController : Controller
     {
         private readonly IPedidoService _pedidoService;
@@ -27,12 +29,15 @@ namespace SistEcomPan.Web.Controllers
             _categoriaService = categoriaService;
             _detallePedidoService = detallePedidoService;
         }
+
+        [Authorize(Roles = "Administrador")]
         public IActionResult NuevoPedido()
         {
 
             return View();
         }
 
+        [Authorize(Roles = "Cliente")]
         public IActionResult MisPedidos()
         {
 
@@ -135,7 +140,7 @@ namespace SistEcomPan.Web.Controllers
             return StatusCode(StatusCodes.Status200OK, new { pedidos = pedidosPaginados, totalItems = pedidosFiltrados.Count(), nombreCliente = clienteEncontrado });
         }
 
-
+     
         [HttpGet]
         public async Task<IActionResult> ObtenerMisPedidos(string searchTerm,string busqueda="")
         {
@@ -170,11 +175,11 @@ namespace SistEcomPan.Web.Controllers
                 });
             }
 
-            var clientePedido = pedidosFiltrados.First().IdCliente;
+            var clientePedido = pedidosFiltrados.FirstOrDefault().IdCliente;
 
             var clientes = await _clienteService.ObtenerNombre();
-            var clienteEncontrado = clientes.Where(x => x.IdCliente == clientePedido).First().Nombres + "" +
-                                    clientes.Where(x => x.IdCliente == clientePedido).First().Apellidos;
+            var clienteEncontrado = clientes.Where(x => x.IdCliente == clientePedido).FirstOrDefault().Nombres + "" +
+                                    clientes.Where(x => x.IdCliente == clientePedido).FirstOrDefault().Apellidos;
             // Paginación
             var pedidosPaginados = vmPedidos.ToList();
 

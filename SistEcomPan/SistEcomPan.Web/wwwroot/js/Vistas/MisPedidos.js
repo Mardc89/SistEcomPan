@@ -14,12 +14,13 @@ const MODELO_BASE = {
 let tablaDataMisPedidos;
 
 const itemPagina = 4; // Cantidad de productos por página
-let busqueda = "";
 
-let busquedaDetalle = "60606060";
+
+
 
 $(document).ready(function () {
-
+    let busqueda = "";
+    let busquedaDetalle = document.getElementById("DniPersonal").textContent;
     tablaDataMisPedidos = $('#tbDataMisPedidos').DataTable({
         responsive: true,
         "ajax": {

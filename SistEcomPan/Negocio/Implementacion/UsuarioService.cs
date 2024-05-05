@@ -294,7 +294,7 @@ namespace Negocio.Implementacion
                 if (usuarioEncontrado == null)
                     throw new TaskCanceledException("El Usuario no Existe");
 
-                usuarioEncontrado.Clave = _encriptservice.ConvertirSha256(ClaveNueva);
+                usuarioEncontrado.Clave = _encriptservice.EncriptarPassword(ClaveNueva);
                 
 
                 UrlPlantillaCorreo = UrlPlantillaCorreo.Replace("[correo]", usuarioEncontrado.Correo).Replace("[clave]", "********");

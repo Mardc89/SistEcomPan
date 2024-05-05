@@ -17,11 +17,13 @@ namespace SistEcomPan.Web.Controllers
     {
         private readonly IUsuarioService _usuarioServicio;
         private readonly IClienteService _clienteServicio;
+        private readonly IRolService _rolServicio;
 
-        public AccesoController(IUsuarioService usuarioServicio,IClienteService clienteServicio)
+        public AccesoController(IUsuarioService usuarioServicio,IClienteService clienteServicio,IRolService rolServicio)
         {
             _usuarioServicio= usuarioServicio;
             _clienteServicio= clienteServicio;
+            _rolServicio = rolServicio;
                 
         }
         public IActionResult Login()
@@ -32,6 +34,11 @@ namespace SistEcomPan.Web.Controllers
                 return RedirectToAction("Index", "Home");
             }
 
+            return View();
+        }
+
+        public IActionResult RestablecerClave()
+        {
             return View();
         }
 
@@ -114,10 +121,13 @@ namespace SistEcomPan.Web.Controllers
                 List<Claim> claims = new List<Claim>(){
                 new Claim(ClaimTypes.Name,usuarioEncontrado.NombreUsuario),
                 new Claim(ClaimTypes.NameIdentifier,usuarioEncontrado.IdUsuario.ToString()),
-                new Claim(ClaimTypes.Role,usuarioEncontrado.IdRol.ToString()),
                 new Claim("UrlFoto",usuarioEncontrado.UrlFoto),
                 new Claim("Dni",usuarioEncontrado.Dni)
                 };
+
+                var UsuarioRoles = await _rolServicio.ObtenerNombre();
+                var nombreRoles = UsuarioRoles.Where(x => x.IdRol == usuarioEncontrado.IdRol).Select(x => x.NombreRol).First();
+                claims.Add(new Claim(ClaimTypes.Role, nombreRoles));
 
                 ClaimsIdentity claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
 
@@ -139,7 +149,8 @@ namespace SistEcomPan.Web.Controllers
                 new Claim(ClaimTypes.Name,clienteEncontrado.NombreUsuario),
                 new Claim(ClaimTypes.NameIdentifier,clienteEncontrado.IdCliente.ToString()),
                 new Claim("UrlFoto",clienteEncontrado.UrlFoto),
-                new Claim("Dni",clienteEncontrado.Dni)
+                new Claim("Dni",clienteEncontrado.Dni),
+                new Claim(ClaimTypes.Role,"Cliente")
                 };
 
                 ClaimsIdentity claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
@@ -158,6 +169,38 @@ namespace SistEcomPan.Web.Controllers
             }
 
             return RedirectToAction("Index","Home");
+        }
+
+
+        [HttpPost]
+        public async Task<IActionResult> RestablecerClave(VMUsuarioLogin modelo)
+        {
+            try
+            {
+
+                string UrlPlantillaCorreo = $"{this.Request.Scheme}://{this.Request.Host}/Plantilla/RestablecerClave?clave=[clave]";
+
+                bool resultado = await _usuarioServicio.RestablecerClave(modelo.Clave,modelo.Correo,UrlPlantillaCorreo);
+
+                if (resultado)
+                {
+                    ViewData["Mensaje"] = "Listo,su contraseña fue restablecida.Revise su correo";
+                    ViewData["MensajeError"] = null;
+                }
+                else
+                {
+                    ViewData["MensajeError"] = "Intentelo de nuevo mas tarde.";
+                    ViewData["MensajeError"] = null;
+                }
+
+            }
+            catch (Exception ex)
+            {
+                ViewData["MensajeError"] = ex.Message;
+                ViewData["MensajeError"] = null;
+
+            }
+            return View();
         }
     }
 }

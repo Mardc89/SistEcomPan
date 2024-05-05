@@ -27,6 +27,13 @@
     <link href="~/css/sb-admin-2.css" rel="stylesheet">
 
 </head>
+@section Estilos {
+
+    <link href="~/vendor/datatables/dataTables.bootstrap4.min.css" rel="stylesheet">
+    <link href="~/vendor/datatables/extensiones/css/responsive.dataTables.min.css" rel="stylesheet">
+    <link href="~/vendor/datatables/extensiones/css/buttons.dataTables.min.css" rel="stylesheet">
+
+}
 
 <body class="bg-gradient-info">
 
@@ -51,7 +58,7 @@
                                 <div class="p-4">
                                 <div>
                                     <div class="form-group">
-                                        <input type="text" class="form-control form-control-user" placeholder="Dni" asp-for="Dni">
+                                        <input type="text" class="form-control form-control-user" placeholder="Numero de Documento de Identidad" asp-for="Dni">
                                     </div>
                                     <div class="form-group">
                                         <input type="text" class="form-control form-control-user" placeholder="Nombres" asp-for="Nombres">
@@ -62,9 +69,13 @@
                                      <div class="form-group">
                                             <input type="text" class="form-control form-control-user" placeholder="Telefono" asp-for="Telefono">
                                      </div>
-                                      <div class="form-group">
-                                            <input type="text" class="form-control form-control-user" placeholder="Tipo de cliente" asp-for="TipoCliente">
-                                      </div>
+                                     <div class="form-group">
+                                            <select class="form-control form-control-sm"  asp-for="TipoCliente">
+                                                <option value=""disabled selected hidden>Seleccione Tipo de Cliente</option>
+                                                    <option value="Individual">Individual</option>
+                                                    <option value="Tienda">Tienda</option>
+                                            </select>
+                                     </div>
                                  </div>
                                 </div>
                             </div>
@@ -74,13 +85,15 @@
                                        <input type="text" class="form-control form-control-user" placeholder="Direccion" asp-for="Direccion">
                                   </div>
                                   <div class="form-group">
-                                         <input type="text" class="form-control form-control-user" placeholder="Distrito" asp-for="IdDistrito">
-                                   </div>
+                                      <select class="form-control form-control-sm"  id="cboDistrito" asp-for="IdDistrito">
+                                                <option value="" disabled selected hidden>Seleccione Su distrito</option>
+                                      </select>
+                                  </div>
                                     <div class="form-group">
                                         <input type="email" class="form-control form-control-user" placeholder="Correo" asp-for="Correo">
                                     </div>
                                     <div class="form-group">
-                                        <input type="text" class="form-control form-control-user" placeholder="Usuario" asp-for="NombreUsuario">
+                                        <input type="text" class="form-control form-control-user" placeholder="Nombre de Usuario" asp-for="NombreUsuario">
                                     </div>
                                     <div class="form-group">
                                         <input type="password" class="form-control form-control-user" placeholder="Contraseña" asp-for="Clave">
@@ -119,10 +132,30 @@
 
     </div>
 
+    <script src="~/vendor/jquery/jquery.min.js"></script>
+    <script src="~/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Core plugin JavaScript-->
+    <script src="~/vendor/jquery-easing/jquery.easing.min.js"></script>
+
+    <!-- Custom scripts for all pages-->
+    <script src="~/js/sb-admin-2.js"></script>
+    <script src="~/vendor/toastr/toastr.min.js"></script>
+    <script src="~/vendor/sweetalert/sweetalert.js"></script>
+    <script src="~/vendor/loadingoverlay/loadingoverlay.min.js"></script>
+    <script src="~/js/Vistas/Registro.js"></script>
+
+    
 
 </body>
 
 </html>
+
+
+
+
+
+
 
 
 

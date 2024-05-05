@@ -6,9 +6,12 @@ using Negocio.Implementacion;
 using SistEcomPan.Web.Models.ViewModels;
 using Newtonsoft.Json;
 using SistEcomPan.Web.Tools.Response;
+using Microsoft.AspNetCore.Authorization;
+
 
 namespace SistEcomPan.Web.Controllers
 {
+    [Authorize(Roles = "Administrador")]
     public class CategoriaController : Controller
     {
         private readonly ICategoriaService _categoriaService;

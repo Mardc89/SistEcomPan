@@ -16,7 +16,7 @@ namespace Entidades
         public string? NombreUsuario { get; set; }        
         public string? Clave { get; set; }
         public int? IdRol { get; set; }  
-        public Roles Rol { get; set; }
+        public Roles? Rol { get; set; }
         public DateTime FechaRegistro { get; set; }
         public bool Estado { get; set; }
         public string? UrlFoto { get; set; }
