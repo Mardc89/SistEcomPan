@@ -15,6 +15,7 @@ namespace Negocio.Implementacion
     public class UsuarioService : IUsuarioService
     {
         private readonly IGenericRepository<Usuarios> _repositorio;
+        private readonly IGenericRepository<Clientes> _repositorioCliente;
         private readonly IEncriptService _encriptservice;
         private readonly ICorreoService _correoService;
         private readonly IHostEnvironment _environment;
@@ -291,14 +292,22 @@ namespace Negocio.Implementacion
                 IQueryable<Usuarios> usuarioEvaluado = usuarios.Where(u => u.Correo == Correo);
                 Usuarios usuarioEncontrado = usuarioEvaluado.FirstOrDefault();
 
-                if (usuarioEncontrado == null)
+                IQueryable<Clientes> clientes = await _repositorioCliente.Consultar();
+                IQueryable<Clientes> clienteEvaluado = clientes.Where(u => u.Correo == Correo);
+                Clientes clienteEncontrado = clienteEvaluado.FirstOrDefault();
+
+                if (usuarioEncontrado == null && clienteEncontrado==null)
                     throw new TaskCanceledException("El Usuario no Existe");
 
-                usuarioEncontrado.Clave = _encriptservice.EncriptarPassword(ClaveNueva);
-                
-
-                UrlPlantillaCorreo = UrlPlantillaCorreo.Replace("[correo]", usuarioEncontrado.Correo).Replace("[clave]", "********");
-
+                if (usuarioEncontrado !=null) {
+                    usuarioEncontrado.Clave = _encriptservice.EncriptarPassword(ClaveNueva);
+                    UrlPlantillaCorreo = UrlPlantillaCorreo.Replace("[correo]", usuarioEncontrado.Correo).Replace("[clave]", "********");
+                }
+                else
+                {
+                    clienteEncontrado.Clave = _encriptservice.EncriptarPassword(ClaveNueva);
+                    UrlPlantillaCorreo = UrlPlantillaCorreo.Replace("[correo]", clienteEncontrado.Correo).Replace("[clave]", "********");
+                }
                 string htmlCorreo = "";
                 HttpWebRequest request = (HttpWebRequest)WebRequest.Create(UrlPlantillaCorreo);
                 HttpWebResponse response = (HttpWebResponse)request.GetResponse();
@@ -321,16 +330,25 @@ namespace Negocio.Implementacion
                 }
 
                 bool correoEnviado = false;
+                bool respuesta = false;
 
                 if (htmlCorreo != "")
                     correoEnviado= await _correoService.EnviarCorreo(Correo, "Contraseña Restablecida", htmlCorreo);
 
                 if (!correoEnviado)
                     throw new TaskCanceledException("Tenemos problemas.Por Favor inténtalo de nuevo mas tarde");
-
-                bool respuesta = await _repositorio.Editar(usuarioEncontrado);
+                if (usuarioEncontrado != null) {
+                    respuesta = await _repositorio.Editar(usuarioEncontrado);
+                    
+                }
+                else if(clienteEncontrado != null)
+                {
+                    respuesta = await _repositorioCliente.Editar(clienteEncontrado);
+                    
+                }
 
                 return respuesta;
+                
 
 
             }

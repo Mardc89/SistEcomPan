@@ -25,7 +25,7 @@
     <None Include="Views\Categoria\Index.cshtml" />
     <None Include="Views\DashBoard\Index.cshtml" />
     <None Include="Views\Home\Index.cshtml" />
-    <None Include="Views\Home\Perfil.cshtml" />
+    <None Include="Views\Home\PerfilUsuario.cshtml" />
     <None Include="Views\Home\Privacy.cshtml" />
     <None Include="Views\Producto\Index.cshtml" />
     <None Include="Views\Reporte\Index.cshtml" />
@@ -50,7 +50,7 @@
     <None Include="wwwroot\js\Vistas\chart-bar-demo.js" />
     <None Include="wwwroot\js\Vistas\chart-pie-demo.js" />
     <None Include="wwwroot\js\Vistas\DashBoard_Index.js" />
-    <None Include="wwwroot\js\Vistas\Home_Perfil.js" />
+    <None Include="wwwroot\js\Vistas\PerfilUsuario.js" />
     <None Include="wwwroot\js\Vistas\PedidoIndex.js" />
     <None Include="wwwroot\js\Vistas\Usuario_index.js" />
     <None Include="wwwroot\scss\navs\_global.scss" />
