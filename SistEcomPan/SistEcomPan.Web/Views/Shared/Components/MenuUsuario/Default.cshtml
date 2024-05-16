@@ -5,8 +5,17 @@
        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
         <span class="mr-2 d-none d-lg-inline text-gray-600 small">@ViewData["nombreUsuario"]</span>
         <span id="DniPersonal" class="mr-2 d-none d-lg-inline text-gray-600 small">@ViewData["dniUsuario"]</span>
-        <img class="img-profile rounded-circle"
-             src="@ViewData["urlFotoUsuario"]">
+        @if (User.IsInRole("Administrador")){
+            <img class="img-profile rounded-circle"
+        
+             src="/Imagenes/@ViewData["nombreFotoUsuario"]">
+        }
+        @if (User.IsInRole("Cliente"))
+        {
+            <img class="img-profile rounded-circle"
+            src="/ImagenesPerfil/@ViewData["nombreFotoUsuario"]">
+        }
+
     </a>
     <!-- Dropdown - User Information -->
     <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"

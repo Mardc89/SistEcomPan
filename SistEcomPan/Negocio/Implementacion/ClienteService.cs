@@ -215,7 +215,7 @@ namespace Negocio.Implementacion
             return usuarioEncontrado;
         }
 
-        public async Task<bool> GuardarPerfil(Clientes entidad)
+        public async Task<bool> GuardarPerfil(Clientes entidad, Stream Foto = null, string NombreFoto = "")
         {
             try
             {
@@ -225,9 +225,42 @@ namespace Negocio.Implementacion
 
                 if (usuarioEncontrado == null)
                     throw new TaskCanceledException("El Usuario no Existe");
-
-                usuarioEncontrado.Correo = entidad.Correo;
+            
+                usuarioEncontrado.TipoCliente = entidad.TipoCliente;   
+                usuarioEncontrado.Dni = entidad.Dni;
                 usuarioEncontrado.Nombres = entidad.Nombres;
+                usuarioEncontrado.Apellidos = entidad.Apellidos;
+                usuarioEncontrado.Correo = entidad.Correo;     
+                usuarioEncontrado.Direccion = entidad.Direccion;
+                usuarioEncontrado.Telefono = entidad.Telefono;
+                usuarioEncontrado.IdDistrito = entidad.IdDistrito;   
+                usuarioEncontrado.NombreUsuario = entidad.NombreUsuario;
+                usuarioEncontrado.Clave = _encriptservice.EncriptarPassword(entidad.Clave);
+                usuarioEncontrado.Estado = true;
+
+                if (usuarioEncontrado.NombreFoto == "")
+                    usuarioEncontrado.NombreFoto = NombreFoto;
+
+                if (Foto != null && Foto.Length > 0)
+                {
+                    var path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "ImagenesPerfil");
+                    if (!Directory.Exists(path))
+                    {
+                        Directory.CreateDirectory(path);
+                    }
+
+                    string fullpath = Path.Combine(path, NombreFoto);
+
+                    string UrlFoto = fullpath;
+
+                    using (var stream = new FileStream(fullpath, FileMode.Create))
+                    {
+                        Foto.CopyTo(stream);
+
+                    }
+                    usuarioEncontrado.UrlFoto = UrlFoto;
+                }
+
 
                 bool respuesta = await _repositorio.Editar(usuarioEncontrado);
 

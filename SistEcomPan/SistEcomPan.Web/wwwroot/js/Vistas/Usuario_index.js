@@ -11,7 +11,8 @@ const MODELO_BASE={
     idRol: 0,
     urlFoto: "",
     esActivo: 1,
-    nombreRol:"",
+    nombreRol: "",
+    nombreFoto:"",
    
 }
 
@@ -43,9 +44,10 @@ $(document).ready(function () {
         "columns": [
             { "data": "idUsuario","searchable": false },
             {
-                "data": "urlFoto", render: function (data) {
+                "data": "nombreFoto", render: function (data) {
                     let ruta = data;
-                    let rutaRelativa = ruta.replace('C:\\Proyects\\SistEcomPan\\SistEcomPan\\SistEcomPan.Web\\wwwroot\\Imagenes\\', 'Imagenes/');
+                    let nombreCarpeta = /Imagenes/;
+                    let rutaRelativa = `${nombreCarpeta}${ruta}`;
                     return `<img style="height:60px" src=${rutaRelativa} class="rounded mx-auto d-block"/>`;
                 }
 
@@ -97,9 +99,10 @@ $(document).ready(function () {
 
 
 function mostrarModal(modelo = MODELO_BASE) {
-    debugger;
-    let rutaCompleta = modelo.urlFoto;
-    let rutaRelativa = rutaCompleta.replace('C:\\Proyects\\SistEcomPan\\SistEcomPan\\SistEcomPan.Web\\wwwroot\\Imagenes\\', 'Imagenes/');
+    const rutaBase = '/Imagenes/';
+    //let rutaCompleta = modelo.urlFoto;
+    //let rutaRelativa = rutaCompleta.replace('C:\\Proyects\\SistEcomPan\\SistEcomPan\\SistEcomPan.Web\\wwwroot\\Imagenes\\', '/Imagenes/');
+    let rutaRelativa = rutaBase + modelo.nombreFoto;
     $("#txtId").val(modelo.idUsuario)
     $("#txtDni").val(modelo.dni)
     $("#txtNombres").val(modelo.nombres)

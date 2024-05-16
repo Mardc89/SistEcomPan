@@ -9,7 +9,7 @@ namespace SistEcomPan.Web.Tools.ViewComponents
         {
             ClaimsPrincipal claimUser = HttpContext.User;
             string nombreUsuario = "";
-            string urlFotoUsuario = "";
+            string nombreFotoUsuario = "";
             string dniUsuario = "";
 
             if (claimUser.Identity.IsAuthenticated){
@@ -17,12 +17,12 @@ namespace SistEcomPan.Web.Tools.ViewComponents
                     .Where(c => c.Type == ClaimTypes.Name)
                     .Select(c => c.Value).SingleOrDefault();
 
-                urlFotoUsuario = ((ClaimsIdentity)claimUser.Identity).FindFirst("UrlFoto").Value;
+                nombreFotoUsuario = ((ClaimsIdentity)claimUser.Identity).FindFirst("NombreFoto").Value;
                 dniUsuario = ((ClaimsIdentity)claimUser.Identity).FindFirst("Dni").Value;
             }
 
             ViewData["nombreUsuario"] = nombreUsuario;
-            ViewData["urlFotoUsuario"] = urlFotoUsuario;
+            ViewData["nombreFotoUsuario"] = nombreFotoUsuario;
             ViewData["dniUsuario"] = dniUsuario;
 
             return View();

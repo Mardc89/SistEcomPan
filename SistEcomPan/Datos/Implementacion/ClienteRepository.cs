@@ -105,21 +105,20 @@ namespace Datos.Implementacion
             {
                 conexion.Open();
                 SqlCommand cmd = new SqlCommand("SPEditarClientes", conexion);
-                cmd.Parameters.AddWithValue("IdCliente", modelo.IdCliente);
-                cmd.Parameters.AddWithValue("TipoCliente", modelo.TipoCliente);
-                cmd.Parameters.AddWithValue("Dni", modelo.Dni);
-                cmd.Parameters.AddWithValue("Nombres", modelo.Nombres);
-                cmd.Parameters.AddWithValue("Apellidos", modelo.Apellidos);
-                cmd.Parameters.AddWithValue("Correo", modelo.Correo);
-                cmd.Parameters.AddWithValue("Direccion", modelo.Direccion);
-                cmd.Parameters.AddWithValue("Telefono", modelo.Telefono);
-                cmd.Parameters.AddWithValue("IdDistrito", modelo.IdDistrito);
-                cmd.Parameters.AddWithValue("NombreUsuario", modelo.NombreUsuario);
-                cmd.Parameters.AddWithValue("Clave", modelo.Clave);
-                cmd.Parameters.AddWithValue("FechaRegistro", modelo.FechaRegistro);
-                cmd.Parameters.AddWithValue("Estado", modelo.Estado);
-                cmd.Parameters.AddWithValue("UrlFoto", modelo.UrlFoto);
-                cmd.Parameters.AddWithValue("NombreFoto", modelo.NombreFoto);
+                cmd.Parameters.AddWithValue("@IdCliente", modelo.IdCliente);
+                cmd.Parameters.AddWithValue("@TipoCliente", modelo.TipoCliente);
+                cmd.Parameters.AddWithValue("@Dni", modelo.Dni);
+                cmd.Parameters.AddWithValue("@Nombres", modelo.Nombres);
+                cmd.Parameters.AddWithValue("@Apellidos", modelo.Apellidos);
+                cmd.Parameters.AddWithValue("@Correo", modelo.Correo);
+                cmd.Parameters.AddWithValue("@Direccion", modelo.Direccion);
+                cmd.Parameters.AddWithValue("@Telefono", modelo.Telefono);
+                cmd.Parameters.AddWithValue("@IdDistrito", modelo.IdDistrito);
+                cmd.Parameters.AddWithValue("@NombreUsuario", modelo.NombreUsuario);
+                cmd.Parameters.AddWithValue("@Clave", modelo.Clave);
+                cmd.Parameters.AddWithValue("@Estado", modelo.Estado);
+                cmd.Parameters.AddWithValue("@UrlFoto", modelo.UrlFoto);
+                cmd.Parameters.AddWithValue("@NombreFoto", modelo.NombreFoto);
 
                 cmd.CommandType = CommandType.StoredProcedure;
 

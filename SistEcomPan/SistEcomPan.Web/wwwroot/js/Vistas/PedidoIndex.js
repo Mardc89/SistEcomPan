@@ -75,8 +75,9 @@ $("#txtDocumentoCliente").click(function () {
 
 function ModalPedidos() {
     MostrarProduct();
+  
     $("#modalData").modal("show");
-    SeleccionProductos();
+   
 }
 
 $("#btnGuardar").click(function () {
@@ -113,9 +114,11 @@ function MostrarProduct(TerminoBusqueda = '', pagina = 1) {
             </td>
           `;
                 i++;
-            productTable.appendChild(row);
+                productTable.appendChild(row);
+                
+
          });
-         
+            SeleccionProductos();
             // Generar la paginación
             const totalPag = Math.ceil(totalItems / ElementosDePagina);
             const PaginaPag = document.getElementById('Paginations');
@@ -138,19 +141,21 @@ function MostrarProduct(TerminoBusqueda = '', pagina = 1) {
                     actualDePagina = i;
                     MostrarProduct(TerminoBusqueda, actualDePagina);
                     resaltarPagActual();
+                 
                 });
 
                 PaginaPag.appendChild(liA);
             }
 
             resaltarPagActual();
+
         })
         .catch(error => {
             console.error('Error al buscar productos:', error);
         });
 }
 
-document.addEventListener("DOMContentLoaded", function () {
+function SeleccionProductos() {
     const filas = document.querySelectorAll("#ProductoBuscado tbody tr");
     filas.forEach(fila => {
         fila.addEventListener("click", function () {
@@ -168,7 +173,12 @@ document.addEventListener("DOMContentLoaded", function () {
 
         });
     });
-});
+}
+
+//document.addEventListener("DOMContentLoaded", function () {
+
+//    ModalPedidos();
+//});
 
 
 function agregarProducto(button) {
@@ -181,31 +191,39 @@ function agregarProducto(button) {
     const cantidadIngresada = row.cells[5].querySelector('input');
 
     let cantidad = parseFloat(cantidadIngresada.value);
- 
-    let total = 0;
-    let cantidadTotal = 0, nuevaCantidad=0;
-    const tablaProductos = document.getElementById('tbProductosSeleccionados');
-    const filas = tablaProductos.getElementsByTagName('tr');
 
-    for (let i = 1; i < filas.length; i++) {
-        const fila = filas[i];
-        if (fila.cells[0].textContent === IdProducto) {
-            // El producto ya está en laP tabla, incrementar la cantidad
-            let cantidadExistente = parseFloat(fila.cells[3].textContent);
-            nuevaCantidad = cantidadExistente + cantidad;
-            fila.cells[3].textContent = nuevaCantidad;
-            cantidadTotal = nuevaCantidad;
-            cantidad = cantidadTotal;
-            total = precio * cantidad;
-            fila.cells[5].textContent = total.toFixed(2);
-            calcularTotal();
-            return;
-        }
-        
-       
+    if (isNaN(cantidad) || cantidad <= 0) {
+        alert("Ingrese una cantidad valida");
     }
-    total = precio * cantidad;
-    const nuevaFila = `
+    else if (cantidad > stock) {
+        alert("La cantidad supera al stock");
+    }
+    else if (cantidad < stock) {
+
+        let total = 0;
+        let cantidadTotal = 0, nuevaCantidad = 0;
+        const tablaProductos = document.getElementById('tbProductosSeleccionados');
+        const filas = tablaProductos.getElementsByTagName('tr');
+
+        for (let i = 1; i < filas.length; i++) {
+            const fila = filas[i];
+            if (fila.cells[0].textContent === IdProducto) {
+                // El producto ya está en laP tabla, incrementar la cantidad
+                let cantidadExistente = parseFloat(fila.cells[3].textContent);
+                nuevaCantidad = cantidadExistente + cantidad;
+                fila.cells[3].textContent = nuevaCantidad;
+                cantidadTotal = nuevaCantidad;
+                cantidad = cantidadTotal;
+                total = precio * cantidad;
+                fila.cells[5].textContent = total.toFixed(2);
+                calcularTotal();
+                return;
+            }
+
+
+        }
+        total = precio * cantidad;
+        const nuevaFila = `
       <tr>
         <td>${IdProducto}</td>
         <td>${descripcion}</td>
@@ -217,9 +235,10 @@ function agregarProducto(button) {
       </tr>
     `;
 
-    document.getElementsByTagName('tbody')[0].insertAdjacentHTML('beforeend', nuevaFila);
+        document.getElementsByTagName('tbody')[0].insertAdjacentHTML('beforeend', nuevaFila);
 
-    calcularTotal();
+        calcularTotal();
+    }
 }
 
 

@@ -19,5 +19,6 @@ namespace SistEcomPan.Web.Models.ViewModels
         public string Clave { get; set; }
         public int? Estado { get; set; }
         public string? UrlFoto { get; set; }
+        public string? NombreFoto { get; set; }
     }
 }

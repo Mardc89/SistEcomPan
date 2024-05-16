@@ -10,6 +10,7 @@ using SistEcomPan.Web.Models.ViewModels;
 using SistEcomPan.Web.Tools.Response;
 using Negocio.Interfaces;
 using Entidades;
+using Newtonsoft.Json;
 
 namespace SistEcomPan.Web.Controllers
 {
@@ -19,12 +20,16 @@ namespace SistEcomPan.Web.Controllers
         private readonly IUsuarioService _usuarioServicio;
         private readonly IRolService _rolServicio;
         private readonly IClienteService _clienteServicio;
+        private readonly IDistritoService _distritoServicio;
+        private readonly IEncriptService _EncriptarServicio;
 
-        public HomeController(IUsuarioService usuarioServicio, IRolService rolServicio, IClienteService clienteServicio)
+        public HomeController(IUsuarioService usuarioServicio, IRolService rolServicio, IClienteService clienteServicio, IDistritoService distritoServicio, IEncriptService encriptarServicio)
         {
             _usuarioServicio = usuarioServicio;
             _rolServicio = rolServicio;
             _clienteServicio = clienteServicio;
+            _distritoServicio = distritoServicio;
+            _EncriptarServicio = encriptarServicio;
         }
 
         public IActionResult Index()
@@ -60,16 +65,21 @@ namespace SistEcomPan.Web.Controllers
 
                 List<VMUsuario> vmUsuario = new List<VMUsuario>();
                 var RolesUsuarios= await _rolServicio.ObtenerNombre();
+              
 
                 vmUsuario.Add(new VMUsuario
                 {
                     IdUsuario = usuarioEncontrado.IdUsuario,
+                    Dni=usuarioEncontrado.Dni,
                     Nombres = usuarioEncontrado.Nombres,
                     Apellidos = usuarioEncontrado.Apellidos,
                     Correo = usuarioEncontrado.Correo,
+                    Clave = _EncriptarServicio.DesencriptarPassword(usuarioEncontrado.Clave),
                     NombreUsuario = usuarioEncontrado.NombreUsuario,
-                    UrlFoto = usuarioEncontrado.UrlFoto,
-                    NombreRol = RolesUsuarios.Where(x => x.IdRol == usuarioEncontrado.IdRol).Select(x => x.NombreRol).First()
+                    NombreFoto = usuarioEncontrado.NombreFoto,
+                    NombreRol = RolesUsuarios.Where(x => x.IdRol == usuarioEncontrado.IdRol).Select(x => x.NombreRol).First(),
+                    IdRol=usuarioEncontrado.IdRol
+
                 }); 
 
                 response.Estado = true;
@@ -86,12 +96,24 @@ namespace SistEcomPan.Web.Controllers
             return StatusCode(StatusCodes.Status200OK, response);
         }
 
-        [HttpGet]
-        public async Task<IActionResult> GuardarPerfil([FromBody] VMUsuario modelo)
+        [HttpPost]
+        public async Task<IActionResult> GuardarPerfil([FromForm] IFormFile foto, [FromForm] string modelo)
         {
             GenericResponse<VMUsuario> response = new GenericResponse<VMUsuario>();
             try
             {
+                VMUsuario vmUsuario = JsonConvert.DeserializeObject<VMUsuario>(modelo);
+                string NombreFoto = "";
+                Stream fotoStream = null;
+
+                if (foto != null && foto.Length > 0)
+                {
+                    string nombreCodigo = Guid.NewGuid().ToString("N");
+                    string extension = Path.GetExtension(foto.FileName);
+                    NombreFoto = string.Concat(nombreCodigo, extension);
+                    fotoStream = foto.OpenReadStream();
+
+                }
                 ClaimsPrincipal claiumUser = HttpContext.User;
 
                 string idUsuario = claiumUser.Claims
@@ -100,18 +122,22 @@ namespace SistEcomPan.Web.Controllers
 
                 List<Usuarios> entidadUsuario = new List<Usuarios>();
 
-                entidadUsuario.Add(new Usuarios
+                if (vmUsuario != null)
                 {
-                    IdUsuario = modelo.IdUsuario,
-                    Dni = modelo.Dni,
-                    Nombres = modelo.Nombres,
-                    Apellidos = modelo.Apellidos,
-                    Correo = modelo.Correo,
-                    NombreUsuario = modelo.NombreUsuario,
-                    Clave = modelo.Clave,
-                    UrlFoto = modelo.UrlFoto
-                });
-
+                    entidadUsuario.Add(new Usuarios
+                    {
+                        IdUsuario = vmUsuario.IdUsuario,
+                        Dni = vmUsuario.Dni,
+                        Nombres = vmUsuario.Nombres,
+                        Apellidos = vmUsuario.Apellidos,
+                        Correo = vmUsuario.Correo,
+                        NombreUsuario = vmUsuario.NombreUsuario,
+                        Clave = vmUsuario.Clave,
+                        UrlFoto = vmUsuario.UrlFoto,
+                        NombreFoto = vmUsuario.NombreFoto,
+                        IdRol = vmUsuario.IdRol
+                    });
+                }
                 entidadUsuario.ElementAt(0).IdUsuario = int.Parse(idUsuario);
                 bool resultado = await _usuarioServicio.GuardarPerfil(entidadUsuario.First());
                 response.Estado = resultado;
@@ -172,16 +198,26 @@ namespace SistEcomPan.Web.Controllers
 
                 List<VMCliente> vmCliente = new List<VMCliente>();
                 var RolesUsuarios = await _rolServicio.ObtenerNombre();
+                var NombresDistritos = await _distritoServicio.ObtenerNombre();
 
                 vmCliente.Add(new VMCliente
                 {
                     IdCliente = usuarioEncontrado.IdCliente,
+                    IdDistrito=usuarioEncontrado.IdDistrito,
+                    TipoCliente = usuarioEncontrado.TipoCliente,
+                    Dni = usuarioEncontrado.Dni,
                     Nombres = usuarioEncontrado.Nombres,
                     Apellidos = usuarioEncontrado.Apellidos,
+                    Direccion=usuarioEncontrado.Direccion,
                     Correo = usuarioEncontrado.Correo,
                     NombreUsuario = usuarioEncontrado.NombreUsuario,
-                    UrlFoto = usuarioEncontrado.UrlFoto
-                });
+                    Clave = _EncriptarServicio.DesencriptarPassword(usuarioEncontrado.Clave),
+                    Telefono = usuarioEncontrado.Telefono,
+                    NombreDistrito = NombresDistritos.Where(x => x.IdDistrito == usuarioEncontrado.IdDistrito).Select(x => x.NombreDistrito).First(),
+                    UrlFoto = usuarioEncontrado.UrlFoto,
+                    NombreFoto=usuarioEncontrado.NombreFoto
+                    
+                }); 
 
                 response.Estado = true;
                 response.objeto = vmCliente.First();
@@ -197,34 +233,51 @@ namespace SistEcomPan.Web.Controllers
             return StatusCode(StatusCodes.Status200OK, response);
         }
 
-        [HttpGet]
-        public async Task<IActionResult> GuardarPerfilCliente([FromBody] VMUsuario modelo)
+        [HttpPost]
+        public async Task<IActionResult> GuardarPerfilCliente([FromForm] IFormFile foto,[FromForm] string modelo)
         {
-            GenericResponse<VMUsuario> response = new GenericResponse<VMUsuario>();
+            GenericResponse<VMCliente> response = new GenericResponse<VMCliente>();
             try
             {
+                VMCliente vmCliente = JsonConvert.DeserializeObject<VMCliente>(modelo);
+                string NombreFoto = "";
+                Stream fotoStream = null;
+
+                if (foto != null && foto.Length > 0)
+                {
+                    string nombreCodigo = Guid.NewGuid().ToString("N");
+                    string extension = Path.GetExtension(foto.FileName);
+                    NombreFoto = string.Concat(nombreCodigo, extension);
+                    fotoStream = foto.OpenReadStream();
+
+                }
+
                 ClaimsPrincipal claiumUser = HttpContext.User;
 
-                string idUsuario = claiumUser.Claims
+                string idCliente = claiumUser.Claims
                     .Where(c => c.Type == ClaimTypes.NameIdentifier)
                     .Select(c => c.Value).SingleOrDefault();
 
-                List<Usuarios> entidadUsuario = new List<Usuarios>();
+                List<Clientes> entidadCliente = new List<Clientes>();
 
-                entidadUsuario.Add(new Usuarios
+                entidadCliente.Add(new Clientes
                 {
-                    IdUsuario = modelo.IdUsuario,
-                    Dni = modelo.Dni,
-                    Nombres = modelo.Nombres,
-                    Apellidos = modelo.Apellidos,
-                    Correo = modelo.Correo,
-                    NombreUsuario = modelo.NombreUsuario,
-                    Clave = modelo.Clave,
-                    UrlFoto = modelo.UrlFoto
+                    IdCliente = vmCliente.IdCliente,
+                    Dni =vmCliente.Dni,
+                    TipoCliente=vmCliente.TipoCliente,
+                    Nombres = vmCliente.Nombres,
+                    Apellidos = vmCliente.Apellidos,
+                    Direccion=vmCliente.Direccion,
+                    Telefono=vmCliente.Telefono,
+                    IdDistrito=vmCliente.IdDistrito,
+                    Correo = vmCliente.Correo,
+                    NombreUsuario = vmCliente.NombreUsuario,
+                    Clave = vmCliente.Clave,
+                    UrlFoto = vmCliente.UrlFoto
                 });
 
-                entidadUsuario.ElementAt(0).IdUsuario = int.Parse(idUsuario);
-                bool resultado = await _usuarioServicio.GuardarPerfil(entidadUsuario.First());
+                entidadCliente.ElementAt(0).IdCliente = int.Parse(idCliente);
+                bool resultado = await _clienteServicio.GuardarPerfil(entidadCliente.First(), fotoStream, NombreFoto);
                 response.Estado = resultado;
 
             }

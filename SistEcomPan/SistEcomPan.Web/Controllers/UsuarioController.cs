@@ -64,7 +64,9 @@ namespace SistEcomPan.Web.Controllers
                     IdRol = item.IdRol,
                     EsActivo = Convert.ToInt32(item.Estado),
                     NombreRol = nombreRol.Where(x=>x.IdRol==item.IdRol).First().NombreRol,
-                    UrlFoto=item.UrlFoto
+                    UrlFoto=item.UrlFoto,
+                    NombreFoto=item.NombreFoto
+                    
                 }) ; 
             }
             return StatusCode(StatusCodes.Status200OK,new { data = vmUsuariolista });

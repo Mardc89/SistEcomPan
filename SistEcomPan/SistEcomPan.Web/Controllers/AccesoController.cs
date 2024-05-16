@@ -18,6 +18,7 @@ namespace SistEcomPan.Web.Controllers
         private readonly IUsuarioService _usuarioServicio;
         private readonly IClienteService _clienteServicio;
         private readonly IRolService _rolServicio;
+        private readonly IEncriptService _encriptServicio;
 
         public AccesoController(IUsuarioService usuarioServicio,IClienteService clienteServicio,IRolService rolServicio)
         {
@@ -80,7 +81,7 @@ namespace SistEcomPan.Web.Controllers
                             Telefono=item.Telefono,
                             IdDistrito = item.IdDistrito,
                             NombreUsuario = item.NombreUsuario,
-                            Clave = item.Clave,
+                            Clave = _encriptServicio.DesencriptarPassword(item.Clave),
                             Estado =true,
                             UrlFoto=""
                         });
@@ -121,7 +122,7 @@ namespace SistEcomPan.Web.Controllers
                 List<Claim> claims = new List<Claim>(){
                 new Claim(ClaimTypes.Name,usuarioEncontrado.NombreUsuario),
                 new Claim(ClaimTypes.NameIdentifier,usuarioEncontrado.IdUsuario.ToString()),
-                new Claim("UrlFoto",usuarioEncontrado.UrlFoto),
+                new Claim("NombreFoto",usuarioEncontrado.NombreFoto),
                 new Claim("Dni",usuarioEncontrado.Dni)
                 };
 
@@ -148,7 +149,7 @@ namespace SistEcomPan.Web.Controllers
                 List<Claim> claims = new List<Claim>(){
                 new Claim(ClaimTypes.Name,clienteEncontrado.NombreUsuario),
                 new Claim(ClaimTypes.NameIdentifier,clienteEncontrado.IdCliente.ToString()),
-                new Claim("UrlFoto",clienteEncontrado.UrlFoto),
+                new Claim("NombreFoto",clienteEncontrado.NombreFoto),
                 new Claim("Dni",clienteEncontrado.Dni),
                 new Claim(ClaimTypes.Role,"Cliente")
                 };

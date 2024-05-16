@@ -12,6 +12,7 @@
         public int? IdRol { get; set; }
         public string? NombreRol { get; set; }
         public string? UrlFoto { get; set; }
+        public string? NombreFoto { get; set; }
         public int? EsActivo { get; set; }
     }
 }
