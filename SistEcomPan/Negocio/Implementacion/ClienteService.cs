@@ -238,7 +238,7 @@ namespace Negocio.Implementacion
                 usuarioEncontrado.Clave = _encriptservice.EncriptarPassword(entidad.Clave);
                 usuarioEncontrado.Estado = true;
 
-                if (usuarioEncontrado.NombreFoto == "")
+                if (usuarioEncontrado.NombreFoto == "" || NombreFoto!="")
                     usuarioEncontrado.NombreFoto = NombreFoto;
 
                 if (Foto != null && Foto.Length > 0)

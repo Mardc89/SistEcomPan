@@ -198,7 +198,7 @@ function agregarProducto(button) {
     else if (cantidad > stock) {
         alert("La cantidad supera al stock");
     }
-    else if (cantidad < stock) {
+    else if (cantidad <= stock) {
 
         let total = 0;
         let cantidadTotal = 0, nuevaCantidad = 0;
@@ -211,12 +211,15 @@ function agregarProducto(button) {
                 // El producto ya está en laP tabla, incrementar la cantidad
                 let cantidadExistente = parseFloat(fila.cells[3].textContent);
                 nuevaCantidad = cantidadExistente + cantidad;
-                fila.cells[3].textContent = nuevaCantidad;
-                cantidadTotal = nuevaCantidad;
-                cantidad = cantidadTotal;
-                total = precio * cantidad;
-                fila.cells[5].textContent = total.toFixed(2);
-                calcularTotal();
+                if (nuevaCantidad <= stock) {
+                    fila.cells[3].textContent = nuevaCantidad;
+                    cantidadTotal = nuevaCantidad;
+                    cantidad = cantidadTotal;
+                    total = precio * cantidad;
+                    fila.cells[5].textContent = total.toFixed(2);
+                    calcularTotal();
+                    return;
+                }
                 return;
             }
 

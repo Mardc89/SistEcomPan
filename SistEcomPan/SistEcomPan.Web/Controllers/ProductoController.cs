@@ -60,6 +60,8 @@ namespace SistEcomPan.Web.Controllers
                     Stock=item.Stock,
                     NombreCategoria = nombreCategoria.Where(x => x.IdCategoria == item.IdCategoria).First().TipoDeCategoria,
                     UrlImagen=item.UrlImagen,
+                    NombreImagen=item.NombreImagen,
+                    
 
                 });
             }
@@ -182,7 +184,8 @@ namespace SistEcomPan.Web.Controllers
                             Precio=item.Precio,
                             Estado = Convert.ToBoolean(item.Estado),
                             Stock=item.Stock,
-                            UrlImagen=item.UrlImagen
+                            UrlImagen=item.UrlImagen,
+                            NombreImagen=item.NombreImagen
                             
                         });
                     }
@@ -207,7 +210,8 @@ namespace SistEcomPan.Web.Controllers
                             NombreCategoria = nombreCategoria.Where(x => x.IdCategoria == item.IdCategoria).First().TipoDeCategoria,
                             Estado=Convert.ToInt32(item.Estado),
                             Stock=item.Stock,
-                            UrlImagen=item.UrlImagen
+                            UrlImagen=item.UrlImagen,
+                            NombreImagen=item.NombreImagen
 
                         });
                     }

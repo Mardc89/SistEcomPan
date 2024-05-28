@@ -27,7 +27,7 @@ namespace Datos.Implementacion
 
             using (var connection = new SqlConnection(_cadenaSQL))
             {
-                using (var command = new SqlCommand("Buscar", connection))
+                using (var command = new SqlCommand("BuscarServicio", connection))
                 {
                     command.CommandType = CommandType.StoredProcedure;
 

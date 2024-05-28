@@ -139,7 +139,7 @@ namespace SistEcomPan.Web.Controllers
                     });
                 }
                 entidadUsuario.ElementAt(0).IdUsuario = int.Parse(idUsuario);
-                bool resultado = await _usuarioServicio.GuardarPerfil(entidadUsuario.First());
+                bool resultado = await _usuarioServicio.GuardarPerfil(entidadUsuario.First(),fotoStream,NombreFoto);
                 response.Estado = resultado;
                 
             }
@@ -330,6 +330,7 @@ namespace SistEcomPan.Web.Controllers
         public async Task<IActionResult> Salir()
         {
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+            HttpContext.Session.Clear();
             return RedirectToAction("Login","Acceso");
 
         }

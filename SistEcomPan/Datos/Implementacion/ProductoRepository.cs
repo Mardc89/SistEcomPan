@@ -53,30 +53,40 @@ namespace Datos.Implementacion
             return lista;
         }
 
-        public async Task<bool> Guardar(Productos modelo)
+        public async Task<Productos> Crear(Productos modelo)
         {
-            using (var conexion = new SqlConnection(_cadenaSQL))
+            try
             {
+                using (var conexion = new SqlConnection(_cadenaSQL))
+                {
                 conexion.Open();
-                SqlCommand cmd = new SqlCommand("SPGuardarProductos", conexion);
-                cmd.Parameters.AddWithValue("Descripcion", modelo.Descripcion);
-                cmd.Parameters.AddWithValue("IdCategoria", modelo.IdCategoria);
-                cmd.Parameters.AddWithValue("Precio", modelo.Precio);
-                cmd.Parameters.AddWithValue("UrlImagen", modelo.UrlImagen);
-                cmd.Parameters.AddWithValue("NombreImagen", modelo.NombreImagen);
-                cmd.Parameters.AddWithValue("Estado", modelo.Estado);
-                cmd.Parameters.AddWithValue("Stock", modelo.Stock);
-                cmd.Parameters.AddWithValue("FechaRegistro", modelo.FechaRegistro);
+                SqlCommand cmd = new SqlCommand("SPRegistrarProductos", conexion);
+                cmd.Parameters.AddWithValue("@Descripcion", modelo.Descripcion);
+                cmd.Parameters.AddWithValue("@IdCategoria", modelo.IdCategoria);
+                cmd.Parameters.AddWithValue("@Precio", modelo.Precio);
+                cmd.Parameters.AddWithValue("@UrlImagen", modelo.UrlImagen);
+                cmd.Parameters.AddWithValue("@NombreImagen", modelo.NombreImagen);
+                cmd.Parameters.AddWithValue("@Estado", modelo.Estado);
+                cmd.Parameters.AddWithValue("@Stock", modelo.Stock);
                 cmd.CommandType = CommandType.StoredProcedure;
 
-                int filaAfectada = await cmd.ExecuteNonQueryAsync();
+                SqlParameter outputParameter = new SqlParameter();
+                outputParameter.ParameterName = "@IdProducto";
+                outputParameter.SqlDbType = SqlDbType.Int;
+                outputParameter.Direction = ParameterDirection.Output;
+                cmd.Parameters.Add(outputParameter);
+                await cmd.ExecuteNonQueryAsync();
 
-                if (filaAfectada > 0)
-                    return true;
-                else
-                    return false;
+                int ProductoId = Convert.ToInt32(outputParameter.Value);
+                modelo.IdProducto = ProductoId;
 
+                return modelo;
+                }            
+            }
+            catch (Exception)
+            {
 
+                throw;
             }
         }
 
@@ -134,7 +144,7 @@ namespace Datos.Implementacion
 
 
 
-        public Task<Productos> Crear(Productos modelo)
+        public Task<bool> Guardar(Productos modelo)
         {
             throw new NotImplementedException();
         }

@@ -25,7 +25,17 @@ namespace Negocio.Implementacion
             try
             {
                 IQueryable<Configuracion> query = await _repositorio.Obtener("ServicioCorreo");
-                Dictionary<string, string> Config = query.ToDictionary(keySelector: c => c.Propiedad, elementSelector: c => c.Valor);
+                Dictionary<string, string> Config = query.ToDictionary(c => c.Propiedad,c => c.Valor);
+
+                var requiredKeys = new[] { "correo", "clave", "alias", "host", "puerto" };
+                foreach (var key in requiredKeys)
+                {
+                    if (!Config.ContainsKey(key))
+                    {
+                        throw new KeyNotFoundException($"La clave de configuración '{key}' no fue encontrada.");
+                    }
+                }
+
 
                 var credenciales = new NetworkCredential(Config["correo"], Config["clave"]);
 

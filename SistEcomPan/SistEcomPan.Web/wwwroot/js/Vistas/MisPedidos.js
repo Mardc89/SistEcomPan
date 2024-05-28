@@ -17,6 +17,20 @@ const itemPagina = 4; // Cantidad de productos por página
 
 
 
+function cambiarFecha(fecha) {
+
+    const fechaOriginal = new Date(fecha);
+    const dia = fechaOriginal.getDate();
+    const mes = fechaOriginal.getMonth() + 1;
+    const año = fechaOriginal.getFullYear();
+
+    const fechaFormateada = `${dia}/${mes}/${año}`;
+
+    return fechaFormateada;
+
+}
+
+
 
 $(document).ready(function () {
     let busqueda = "";
@@ -32,7 +46,11 @@ $(document).ready(function () {
             { "data": "idPedido", "searchable": false },
             { "data": "codigo" },
             { "data": "montoTotal" },
-            { "data": "fechaPedido" },
+            {
+                "data": "fechaPedido", render: function (data) {
+                    return cambiarFecha(data);
+                }
+            },
             {
                 "data": "estado", render: function (data) {
                     if (data == "Pagado")
@@ -83,6 +101,7 @@ function buscarDetallePedido(idPedido, page = 1) {
             <td>${pedido.idPedido}</td>
             <td>${pedido.idDetallePedido}</td>
             <td>${pedido.descripcionProducto}</td>
+            <td>${pedido.precio}</td>
             <td>${pedido.cantidad}</td>
             <td>${pedido.total}</td>
           `;
@@ -126,7 +145,7 @@ function buscarDetallePedido(idPedido, page = 1) {
 
 // Función para resaltar la página actual
 function resaltarPaginaActual() {
-    const paginationItems = document.querySelectorAll('#DetallePag .page-item');
+    const paginationItems = document.querySelectorAll('#DetallePagination .page-item');
     paginationItems.forEach(item => {
         item.classList.remove('active');
         const link = item.querySelector('.page-link');

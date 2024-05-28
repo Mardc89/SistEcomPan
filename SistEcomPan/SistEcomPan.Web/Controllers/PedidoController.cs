@@ -12,7 +12,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace SistEcomPan.Web.Controllers
 {
-  
+    [Authorize]
     public class PedidoController : Controller
     {
         private readonly IPedidoService _pedidoService;
@@ -30,7 +30,7 @@ namespace SistEcomPan.Web.Controllers
             _detallePedidoService = detallePedidoService;
         }
 
-        [Authorize(Roles = "Administrador")]
+     
         public IActionResult NuevoPedido()
         {
 
@@ -124,20 +124,39 @@ namespace SistEcomPan.Web.Controllers
         public async Task<IActionResult> ObtenerPedidos(string searchTerm = "", int page = 1, int itemsPerPage = 4)
         {
             var Pedidolista = await _pedidoService.Lista();
-
+            var clientes = await _clienteService.ObtenerNombre();
             // Filtro de búsqueda por término de búsqueda (searchTerm)
             var pedidosFiltrados = Pedidolista.Where(p =>
                 string.IsNullOrWhiteSpace(searchTerm) || p.Codigo.ToLower().Contains(searchTerm.ToLower())
             );
 
-            var clientePedido = pedidosFiltrados.First().IdCliente;
-            var clientes = await _clienteService.ObtenerNombre();
-            var clienteEncontrado = clientes.Where(x => x.IdCliente ==clientePedido).First().Nombres +""+  
-                                    clientes.Where(x => x.IdCliente == clientePedido).First().Apellidos;
-            // Paginación
-            var pedidosPaginados = pedidosFiltrados.Skip((page - 1) * itemsPerPage).Take(itemsPerPage).ToList();
+            List<VMPedido> vmPedidos = new List<VMPedido>();
 
-            return StatusCode(StatusCodes.Status200OK, new { pedidos = pedidosPaginados, totalItems = pedidosFiltrados.Count(), nombreCliente = clienteEncontrado });
+            foreach (var item in pedidosFiltrados)
+            {
+                vmPedidos.Add(new VMPedido
+                {
+                    IdPedido = item.IdPedido,
+                    IdCliente = item.IdCliente,
+                    Codigo = item.Codigo,
+                    MontoTotal = Convert.ToString(item.MontoTotal),
+                    Estado = item.Estado,
+                    FechaPedido = item.FechaPedido,
+                    NombresCompletos= clientes.Where(x => x.IdCliente ==item.IdCliente).FirstOrDefault().Nombres + "" +
+                                      clientes.Where(x => x.IdCliente == item.IdCliente).FirstOrDefault().Apellidos
+
+                });
+            }
+
+                   
+            // Paginación
+            var pedidosPaginados = vmPedidos.Skip((page - 1) * itemsPerPage).Take(itemsPerPage).ToList();
+
+            return StatusCode(StatusCodes.Status200OK, new { pedidos = pedidosPaginados, totalItems = vmPedidos.Count()});
+
+
+
+
         }
 
      
@@ -207,7 +226,8 @@ namespace SistEcomPan.Web.Controllers
                     IdPedido = item.IdPedido,
                     DescripcionProducto = Productos.Where(x=>x.IdProducto==item.IdProducto).First().Descripcion,
                     Cantidad = item.Cantidad,
-                    Total = Convert.ToString(item.Total)
+                    Precio = Convert.ToString(Productos.Where(x=>x.IdProducto==item.IdProducto).First().Precio),
+                    Total  = Convert.ToString(item.Total)
                 });
             }
 

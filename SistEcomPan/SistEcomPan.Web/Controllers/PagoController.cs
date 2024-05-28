@@ -1,4 +1,5 @@
 ﻿using Entidades;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Negocio.Implementacion;
 using Negocio.Interfaces;
@@ -7,21 +8,22 @@ using SistEcomPan.Web.Tools.Response;
 
 namespace SistEcomPan.Web.Controllers
 {
+    [Authorize]
     public class PagoController : Controller
     {
         private readonly IPagoService _pagoService;
         private readonly IClienteService _clienteService;
         private readonly IPedidoService _pedidoService;
         private readonly ICategoriaService _categoriaService;
-        private readonly IDetallePedidoService _detallePedidoService;
+        private readonly IDetallePagoService _detallePagoService;
 
-        public PagoController(IPagoService pagoService, IClienteService clienteService, IPedidoService pedidoService, ICategoriaService categoriaService, IDetallePedidoService detallePedidoService)
+        public PagoController(IPagoService pagoService, IClienteService clienteService, IPedidoService pedidoService, ICategoriaService categoriaService, IDetallePagoService detallePagoService)
         {
             _pagoService = pagoService;
             _clienteService = clienteService;
             _pedidoService = pedidoService;
             _categoriaService = categoriaService;
-            _detallePedidoService = detallePedidoService;
+            _detallePagoService = detallePagoService;
         }
         public IActionResult Index()
         {
@@ -30,6 +32,13 @@ namespace SistEcomPan.Web.Controllers
 
         public IActionResult NuevoPago()
         {
+            return View();
+        }
+
+        [Authorize(Roles = "Cliente")]
+        public IActionResult MisPagos()
+        {
+
             return View();
         }
 
@@ -209,6 +218,85 @@ namespace SistEcomPan.Web.Controllers
 
             return StatusCode(StatusCodes.Status200OK, gResponse);
 
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> ObtenerMisPagos(string searchTerm, string busqueda = "")
+        {
+            var Pagolista = await _pagoService.Lista();
+            var clientelista = await _clienteService.Lista();
+            var PedidosLista = await _pedidoService.Lista();
+
+            var idCliente = clientelista.Where(x => x.Dni == searchTerm).Select(x => x.IdCliente).FirstOrDefault();
+            //var estadoCliente = Pedidolista.Where(x => x.IdCliente == idCliente).Select(x => x.Estado).FirstOrDefault();
+            var idPedido = PedidosLista.Where(x => x.IdCliente == idCliente).Select(x => x.IdPedido).ToList();
+
+            //var PagosPedidos = PedidosLista.Where(x => x.IdPedido == idPedido[i])
+
+            // Filtro de búsqueda por término de búsqueda (searchTerm)
+            var pedidosFiltrados = Pagolista.Where(p => idPedido.Contains(p.IdPedido)).ToList();
+            
+
+            var MisPagos = pedidosFiltrados.Where(p =>
+            string.IsNullOrWhiteSpace(busqueda) || p.Estado.ToLower().Contains(busqueda.ToLower()) ||
+            p.FechaDePago.Date == (DateTime.TryParse(busqueda, out DateTime fechaBusqueda) ? fechaBusqueda.Date : p.FechaDePago.Date)
+            );
+
+            List<VMPago> vmPagos = new List<VMPago>();
+
+            foreach (var item in MisPagos)
+            {
+                vmPagos.Add(new VMPago
+                {
+                    IdPago = item.IdPago,
+                    MontoDePedido=Convert.ToString(item.MontoDePedido),  
+                    Descuento=Convert.ToString(item.Descuento),
+                    CodigoPedido = PedidosLista.Where(x => x.IdPedido == item.IdPedido).Select(x => x.Codigo).First(),
+                    MontoTotalDePago = Convert.ToString(item.MontoTotalDePago),
+                    MontoDeuda=Convert.ToString(item.MontoDeuda), 
+                    FechaPago=item.FechaDePago,
+                    Estado = item.Estado
+                }); 
+            }
+
+
+            // Paginación
+            var pagosPaginados = vmPagos.ToList();
+
+            return StatusCode(StatusCodes.Status200OK, new { data = pagosPaginados, totalItems = vmPagos.Count()});
+        }
+
+
+        [HttpGet]
+        public async Task<IActionResult> ObtenerMiDetallePago(int idPago, int page = 1, int itemsPerPage = 4)
+        {
+            var DetallePagolista = await _detallePagoService.Lista();
+            var Pedidolista = await _pedidoService.Lista();
+
+            var MisPedidos = DetallePagolista.Where(p => p.IdPago.Equals(idPago)
+            );
+
+         
+            List<VMDetallePago> vmDetallePagos = new List<VMDetallePago>();
+
+            foreach (var item in MisPedidos)
+            {
+                vmDetallePagos.Add(new VMDetallePago
+                {
+                    IdDetallePago = item.IdDetallePago,
+                    IdPago = item.IdPago,
+                    MontoAPagar=Convert.ToString(item.MontoAPagar),
+                    PagoDelCliente=Convert.ToString(item.PagoDelCliente),
+                    DeudaDelCliente=Convert.ToString(item.DeudaDelCliente),
+                    CambioDelCliente=Convert.ToString(item.CambioDelCliente)
+                });
+            }
+
+
+            // Paginación
+            var pagosPaginados = vmDetallePagos.Skip((page - 1) * itemsPerPage).Take(itemsPerPage).ToList();
+
+            return StatusCode(StatusCodes.Status200OK, new { detallePago = pagosPaginados, totalItems = vmDetallePagos.Count() });
         }
 
     }

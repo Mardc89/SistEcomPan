@@ -1,4 +1,39 @@
-﻿$(document).ready(function () {
+﻿
+
+function ObtenerDatosUsuario() {
+
+    fetch("/Home/ObtenerUsuario")
+        .then(response => {
+            $(".container-fluid").LoadingOverlay("hide");
+            return response.ok ? response.json() : Promise.reject(response);
+        })
+        .then(responseJson => {
+            if (responseJson.estado) {
+                const d = responseJson.objeto
+
+                $("#ImgFoto").attr("src", `/ImagenesPerfil/${d.nombreFoto}`)
+                $("#txtDni").val(d.dni)
+                $("#txtIdRol").val(d.idRol)
+                $("#txtNombres").val(d.nombres)
+                $("#txtApellidos").val(d.apellidos)
+                $("#txtCorreo").val(d.correo)
+                $("#txtNombreUsuario").val(d.nombreUsuario)
+                $("#txtClave").val(d.clave)
+                $("#txtRol").val(d.nombreRol)
+                let ImagenPerfil = $("#ImgFoto").attr("src");
+                const NuevaImagen = `${ImagenPerfil}`;
+                $("#userDropdown img.img-profile").attr("src", NuevaImagen);
+
+            }
+            else {
+
+                swal("Lo sentimos", responseJson.mensaje, "error")
+            }
+        })
+
+}
+
+$(document).ready(function () {
 
     fetch("/Usuario/ListaRoles")
         .then(response => {
@@ -16,31 +51,7 @@
 
     $(".container-fluid").LoadingOverlay("show");
 
-    fetch("/Home/ObtenerUsuario")
-        .then(response => {
-            $(".container-fluid").LoadingOverlay("hide");
-            return response.ok ? response.json() : Promise.reject(response);
-        })
-        .then(responseJson => {
-            if (responseJson.estado) {
-                const d = responseJson.objeto
-
-                $("#ImgFoto").attr("src", `/Imagenes/${d.nombreFoto}`)
-                $("#txtDni").val(d.dni)
-                $("#txtIdRol").val(d.idRol)
-                $("#txtNombres").val(d.nombres)
-                $("#txtApellidos").val(d.apellidos)
-                $("#txtCorreo").val(d.correo)
-                $("#txtNombreUsuario").val(d.nombreUsuario)
-                $("#txtClave").val(d.clave)
-                $("#txtRol").val(d.nombreRol)
-           
-            }
-            else {
-
-                swal("Lo sentimos", responseJson.mensaje, "error")
-            }
-        })
+    ObtenerDatosUsuario();
 
 })
 
@@ -108,6 +119,9 @@ $("#btnGuardarCambios").click(function () {
                     .then(responseJson => {
                         if (responseJson.estado) {
                             swal("Listo", "Los Cambios fueron Guardados", "success")
+                            ObtenerDatosUsuario();
+
+                                                           
                         }
                         else {
                             swal("Lo sentimos", responseJson.mensaje, "error")

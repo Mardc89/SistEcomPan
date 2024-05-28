@@ -8,7 +8,8 @@ const MODELO_BASE = {
     nombreCategoria:"",
     estado: 1,
     stock: "",
-    urlImagen:"",
+    urlImagen: "",
+    nombreImagen:"",
 
 }
 
@@ -30,7 +31,7 @@ $(document).ready(function () {
             }
         })
 
-    tablaData = $('#tbdataProducto').DataTable({
+    tablaDataProducto = $('#tbdataProducto').DataTable({
         responsive: true,
         "ajax": {
             "url": '/Producto/Lista',
@@ -40,9 +41,10 @@ $(document).ready(function () {
         "columns": [
             { "data": "idProducto", "searchable": false },
             {
-                "data": "urlImagen", render: function (data) {
+                "data": "nombreImagen", render: function (data) {
                     let ruta = data;
-                    let rutaRelativa = ruta.replace('C:\\Proyects\\SistEcomPan\\SistEcomPan\\SistEcomPan.Web\\wwwroot\\Imagenes\\', 'Imagenes/');
+                    let nombreCarpeta = /ImagenesProducto/;
+                    let rutaRelativa = `${nombreCarpeta}${ruta}`;
                     return `<img style="height:60px" src=${rutaRelativa} class="rounded mx-auto d-block"/>`;
                 }
 
@@ -93,9 +95,8 @@ $(document).ready(function () {
 
 
 function mostrarModal(modelo = MODELO_BASE) {
-    debugger;
-    let rutaCompleta = modelo.urlImagen;
-    let rutaRelativa = rutaCompleta.replace('C:\\Proyects\\SistEcomPan\\SistEcomPan\\SistEcomPan.Web\\wwwroot\\Imagenes\\', 'Imagenes/');
+    const rutaBase = '/ImagenesProducto/';
+    let rutaRelativa = rutaBase + modelo.nombreImagen;
     $("#txtIdProducto").val(modelo.idProducto)
     $("#txtDescripcion").val(modelo.descripcion)
     $("#txtStock").val(modelo.stock)
@@ -133,6 +134,7 @@ $("#btnGuardarProducto").click(function () {
     modelo["stock"] = $("#txtStock").val()
     modelo["idCategoria"] = $("#cboCategoria").val()
     modelo["estado"] = $("#cboEstado").val()
+    modelo["nombreImagen"] = $("#imgProducto").attr("src").split('/').pop()
 
     const inputFoto = document.getElementById("txtImagen")
 
@@ -143,7 +145,7 @@ $("#btnGuardarProducto").click(function () {
 
     $("#modalDataProducto").find("div.modal-content").LoadingOverlay("show");
 
-    if (modelo.idUsuario == 0) {
+    if (modelo.idProducto == 0) {
 
         fetch("/Producto/Crear", {
             method: "POST",
@@ -220,7 +222,7 @@ $("#tbdataProducto tbody").on("click", ".btn-eliminar", function () {
 
     swal({
         title: "¿Estas Seguro?",
-        text: `Eliminar al usuario "${data.nombre}"`,
+        text: `Eliminar  "${data.descripcion}"`,
         type: "warning",
         showCancelButton: true,
         confirmButtonClass: "btn-danger",

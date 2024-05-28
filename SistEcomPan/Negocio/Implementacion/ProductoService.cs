@@ -38,7 +38,7 @@ namespace Negocio.Implementacion
 
                 if (Foto != null && Foto.Length > 0)
                 {
-                    var path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "ImgProducto");
+                    var path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "ImagenesProducto");
                     if (!Directory.Exists(path))
                     {
                         Directory.CreateDirectory(path);
@@ -86,22 +86,22 @@ namespace Negocio.Implementacion
             try
             {
                 IQueryable<Productos> buscarProducto = await _repositorio.Consultar();
-                IQueryable<Productos>productoEncontrado = buscarProducto.Where(u => u.IdProducto == entidad.IdProducto);
+                IQueryable<Productos> productoEncontrado = buscarProducto.Where(u => u.IdProducto == entidad.IdProducto);
                 Productos productoEditar = productoEncontrado.First();
 
                 productoEditar.Descripcion = entidad.Descripcion;
                 productoEditar.IdCategoria = entidad.IdCategoria;
-                productoEditar.Precio= entidad.Precio;
+                productoEditar.Precio = entidad.Precio;
                 productoEditar.Estado = entidad.Estado;
                 productoEditar.Stock = entidad.Stock;
-                
 
-                if (productoEditar.NombreImagen == "")
+
+                if (productoEditar.NombreImagen == "" || NombreFoto!="")
                     productoEditar.NombreImagen = NombreFoto;
-
+                
                 if (Foto != null && Foto.Length > 0)
                 {
-                    var path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "ImgProducto");
+                    var path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "ImagenesProducto");
                     if (!Directory.Exists(path))
                     {
                         Directory.CreateDirectory(path);

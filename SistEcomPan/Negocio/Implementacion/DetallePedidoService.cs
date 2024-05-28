@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace Negocio.Implementacion
-{
+{ 
     public class DetallePedidoService : IDetallePedidoService
     {
         private readonly IGenericRepository<DetallePedido>_repositorioDetallePedido ;

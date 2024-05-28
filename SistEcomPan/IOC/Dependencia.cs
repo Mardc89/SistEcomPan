@@ -28,6 +28,7 @@ namespace IOC
             services.AddScoped<IGenericRepository<Pedidos>, PedidoRepository>();
             services.AddScoped<IGenericRepository<Pagos>, PagoRepository>();
             services.AddScoped<IGenericRepository<DetallePedido>, DetallePedidoRepository>();
+            services.AddScoped<IGenericRepository<DetallePago>, DetallePagoRepository>();
             services.AddScoped<IGenericRepository<NumeroDocumento>, NumDocumentoRepository>();
 
             services.AddScoped<IGenericRepository<Usuarios>, UsuarioRepository>();
@@ -46,6 +47,7 @@ namespace IOC
             services.AddScoped<IProductoService, ProductoService>();
             services.AddScoped<ICategoriaService, CategoriaService>();
             services.AddScoped<IDetallePedidoService, DetallePedidoService>();
+            services.AddScoped<IDetallePagoService, DetallePagoService>();
 
 
         }

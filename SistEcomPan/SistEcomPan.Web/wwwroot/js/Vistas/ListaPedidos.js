@@ -78,7 +78,7 @@ function buscarPedidos(searchTer = '', page = 1) {
         .then(data => {
             const pedidos = data.pedidos; // Array de productos obtenidos
             const totalItems = data.totalItems; // Total de productos encontrados
-            const nombre = data.nombreCliente;
+          /*  const nombre = data.nombresCompletos;*/
             // Actualizar la tabla modal con los productos obtenidos 
             const productTable = document.getElementById('PedidoBuscado');
             productTable.innerHTML = '';
@@ -88,7 +88,7 @@ function buscarPedidos(searchTer = '', page = 1) {
                 row.innerHTML = `
             <td>${pedido.idPedido}</td>
             <td>${pedido.codigo}</td>
-            <td>${nombre}</td>
+            <td>${pedido.nombresCompletos}</td>
             <td>${pedido.montoTotal}</td>
             <td>${pedido.estado}</td>
             <td>${cambiarFecha(pedido.fechaPedido)}</td>

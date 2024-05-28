@@ -90,6 +90,10 @@
                 <div id="collapsePago" class="collapse" data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
                         <a class="collapse-item" href="@Url.Action("NuevoPago","Pago")">Nuevo Pago</a>
+                        @if (User.IsInRole("Cliente"))
+                        {
+                            <a class="collapse-item" href="@Url.Action("MisPagos","Pago")">Mis Pagos</a>
+                        }
                         <a class="collapse-item" href="@Url.Action("HistorialPago","Pago")">Historial Pago</a>
                     </div>
                 </div>
@@ -103,9 +107,9 @@
                 </a>
                 <div id="collapsePedido" class="collapse" data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
-                        @if (User.IsInRole("Administrador")) {
-                            <a class="collapse-item" href="@Url.Action("NuevoPedido","Pedido")">Nuevo Pedido</a>
-                        }
+                      
+                       <a class="collapse-item" href="@Url.Action("NuevoPedido","Pedido")">Nuevo Pedido</a>
+                        
                         @if (User.IsInRole("Cliente")) {
                             <a class="collapse-item" href="@Url.Action("MisPedidos","Pedido")">Mis Pedidos</a>
                         }

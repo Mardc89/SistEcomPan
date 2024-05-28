@@ -10,6 +10,7 @@ namespace SistEcomPan.Web.Models.ViewModels
         public string NombreCategoria { get; set; }
         public decimal Precio { get; set; }
         public string UrlImagen { get; set; }
+        public string NombreImagen { get; set; }
         public int? Estado { get; set; }
         public int Stock { get; set; }
     }

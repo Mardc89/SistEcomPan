@@ -18,13 +18,14 @@ namespace Negocio.Implementacion
         private readonly IGenericRepository<Clientes> _repositorioCliente;
         private readonly IEncriptService _encriptservice;
         private readonly ICorreoService _correoService;
-        private readonly IHostEnvironment _environment;
-        public UsuarioService(IEncriptService encriptservice, ICorreoService correoService, IGenericRepository<Usuarios> repositorio,IHostEnvironment environment)
+      
+        public UsuarioService(IEncriptService encriptservice, ICorreoService correoService, IGenericRepository<Usuarios> repositorio,IGenericRepository<Clientes> repositorioCliente)
         {
             _encriptservice = encriptservice;
             _correoService = correoService;
             _repositorio = repositorio;
-            _environment = environment;
+            _repositorioCliente = repositorioCliente;
+           
         }
 
         public async Task<bool> CambiarClave(int IdUsuario, string claveActual, string claveNueva)
@@ -165,7 +166,7 @@ namespace Negocio.Implementacion
                 usuarioEditar.IdRol = entidad.IdRol;
                 usuarioEditar.Estado = entidad.Estado;
 
-                if (usuarioEditar.NombreFoto == "")
+                if (usuarioEditar.NombreFoto == "" || NombreFoto!="")
                     usuarioEditar.NombreFoto = NombreFoto;
 
                 if (Foto != null && Foto.Length > 0)
@@ -232,7 +233,7 @@ namespace Negocio.Implementacion
             }
         }
 
-        public async Task<bool> GuardarPerfil(Usuarios entidad)
+        public async Task<bool> GuardarPerfil(Usuarios entidad, Stream Foto = null, string NombreFoto = "")
         {
             try
             {
@@ -242,10 +243,40 @@ namespace Negocio.Implementacion
 
                 if (usuarioEncontrado == null)
                     throw new TaskCanceledException("El Usuario no Existe");
-
-                usuarioEncontrado.Correo = entidad.Correo;
+           
+                usuarioEncontrado.Dni = entidad.Dni;
                 usuarioEncontrado.Nombres = entidad.Nombres;
-                
+                usuarioEncontrado.Apellidos = entidad.Apellidos;
+                usuarioEncontrado.Correo = entidad.Correo;
+                usuarioEncontrado.IdRol = entidad.IdRol;
+                usuarioEncontrado.NombreUsuario = entidad.NombreUsuario;
+                usuarioEncontrado.Clave = _encriptservice.EncriptarPassword(entidad.Clave);
+                usuarioEncontrado.Estado = true;
+
+                if (usuarioEncontrado.NombreFoto == "" || NombreFoto!="")
+                    usuarioEncontrado.NombreFoto = NombreFoto;
+
+                if (Foto != null && Foto.Length > 0)
+                {
+                    var path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "ImagenesPerfil");
+                    if (!Directory.Exists(path))
+                    {
+                        Directory.CreateDirectory(path);
+                    }
+
+                    string fullpath = Path.Combine(path, NombreFoto);
+
+                    string UrlFoto = fullpath;
+
+                    using (var stream = new FileStream(fullpath, FileMode.Create))
+                    {
+                        Foto.CopyTo(stream);
+
+                    }
+                    usuarioEncontrado.UrlFoto = UrlFoto;
+                }
+
+
                 bool respuesta = await _repositorio.Editar(usuarioEncontrado);
 
                 return respuesta;
