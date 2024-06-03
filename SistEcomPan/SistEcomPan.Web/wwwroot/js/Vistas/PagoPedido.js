@@ -14,6 +14,21 @@ const MODELO_BASE = {
 }
 
 let tablaDataPago;
+const itemPagina = 4; 
+
+function cambiarFecha(fecha) {
+
+    const fechaOriginal = new Date(fecha);
+    const dia = fechaOriginal.getDate();
+    const mes = fechaOriginal.getMonth() + 1;
+    const año = fechaOriginal.getFullYear();
+
+    const fechaFormateada = `${dia}/${mes}/${año}`;
+
+    return fechaFormateada;
+
+}
+
 
 $(document).ready(function () {
 
@@ -45,7 +60,11 @@ $(document).ready(function () {
             { "data": "montoTotalDePago" },
             { "data": "montoDeuda" },
             { "data": "nombreCliente" },
-            { "data": "fechaPago" },
+            {
+                "data": "fechaPago", render: function (data) {
+                    return cambiarFecha(data);
+                }
+            },
             {
                 "data": "estado", render: function (data) {
                     if (data == "Pagado")
@@ -67,18 +86,8 @@ $(document).ready(function () {
             }
         ],
         order: [[0, "desc"]],
-        dom: "Bfrtip",
-        buttons: [
-            {
-                text: "Exportar Excel",
-                extend: "excelHtml5",
-                title: "",
-                filename: "Reporte Usuarios",
-                exportOptions: {
-                    columns: [2, 3, 4, 5, 6]
-                }
-            }, 'pageLength'
-        ],
+        paging: true,
+        pageLength: itemPagina,
         language: {
             url: "https://cdn.datatables.net/plugin-ins/1.11.5/i18n/es-Es.json"
         },

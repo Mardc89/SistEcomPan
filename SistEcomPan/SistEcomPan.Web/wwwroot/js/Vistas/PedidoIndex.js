@@ -108,8 +108,8 @@ function MostrarProduct(TerminoBusqueda = '', pagina = 1) {
             <td>${producto.stock}</td>
             <td>${producto.precio.toFixed(2)}</td>
             <td><input type="text" class="form-control form-control-sm" id="txtCantidad" placeholder="Ingrese Cantidad"></td>
-            <td>
-            <button onclick="agregarProducto(this)" class="btn btn-danger btn-sm" style="display:inline-block;">Add</button>
+            <td class="d-flex">
+            <button onclick="agregarProducto(this)" class="btn btn-danger btn-sm mr-2" style="display:inline-block;">Add</button>
             <button onclick="eliminarProducto(this)"class="btn btn-primary btn-sm" style="display:inline-block;">De</button>
             </td>
           `;

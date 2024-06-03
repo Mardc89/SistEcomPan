@@ -8,6 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Datos.Interfaces;
+using System.Linq.Expressions;
 
 namespace Datos.Implementacion
 {
@@ -122,7 +123,7 @@ namespace Datos.Implementacion
             }
         }
 
-        public Task<IQueryable<Mensajes>> Consultar(string consulta)
+        public Task<IQueryable<Mensajes>> Consultar(Expression<Func<Mensajes, bool>> filtro = null)
         {
             throw new NotImplementedException();
         }

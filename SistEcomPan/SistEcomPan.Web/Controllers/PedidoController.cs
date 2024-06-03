@@ -175,7 +175,7 @@ namespace SistEcomPan.Web.Controllers
 
             var MisPedidos = pedidosFiltrados.Where(p =>
             string.IsNullOrWhiteSpace(busqueda) || p.Estado.ToLower().Contains(busqueda.ToLower()) ||
-            p.FechaPedido.Date==(DateTime.TryParse(busqueda,out DateTime fechaBusqueda)?fechaBusqueda.Date:p.FechaPedido.Date)
+            p.FechaPedido.Value.Date==(DateTime.TryParse(busqueda,out DateTime fechaBusqueda)?fechaBusqueda.Date:p.FechaPedido.Value.Date)
             );
 
             List<VMPedido> vmPedidos = new List<VMPedido>();

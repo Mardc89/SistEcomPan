@@ -128,7 +128,7 @@ function buscarDetallePedido(idPedido, page = 1) {
 
                 link.addEventListener('click', () => {
                     PaginaInicial = i;
-                    buscarPedidos(searchTer, PaginaInicial);
+                    buscarDetallePedido(idPedido, PaginaInicial);
                     resaltarPaginaActual();
                 });
 

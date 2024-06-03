@@ -14,6 +14,7 @@ const MODELO_BASE = {
 }
 
 let tablaDataProducto;
+const itemPagina = 4; 
 
 $(document).ready(function () {
 
@@ -74,19 +75,9 @@ $(document).ready(function () {
             }
         ],
         order: [[0, "desc"]],
-        dom: "Bfrtip",
         responsive: true,
-        buttons: [
-            {
-                text: "Exportar Excel",
-                extend: "excelHtml5",
-                title: "",
-                filename: "Reporte Usuarios",
-                exportOptions: {
-                    columns: [2, 3, 4, 5, 6]
-                }
-            }, 'pageLength'
-        ],
+        paging: true,
+        pageLength: itemPagina,
         language: {
             url: "https://cdn.datatables.net/plugin-ins/1.11.5/i18n/es-Es.json"
         },

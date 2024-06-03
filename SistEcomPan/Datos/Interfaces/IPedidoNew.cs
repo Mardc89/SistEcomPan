@@ -13,5 +13,6 @@ namespace Datos.Interfaces
     {
         Task<Pedidos> Registrar(Pedidos modelo,DataTable DataTable);
         Task<List<Pedidos>> Reporte(DateTime FechaInicio,DateTime FechaFin);
+        Task<IQueryable<Pedidos>> ConsultarPedido(DateTime? fechaPedido = null);
     }
 }

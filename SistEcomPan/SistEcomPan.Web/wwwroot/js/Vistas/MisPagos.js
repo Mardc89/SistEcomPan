@@ -132,14 +132,14 @@ function buscarDetallePago(idPago, page = 1) {
 
                 link.addEventListener('click', () => {
                     PaginaInicialPago = i;
-                    buscarPagos(searchTer, PaginaInicialPago);
-                    resaltarPaginaActual();
+                    buscarDetallePago(idPago, PaginaInicialPago);
+                    resaltarPaginaPagoActual();
                 });
 
                 pagination.appendChild(li);
             }
 
-            resaltarPaginaActual();
+            resaltarPaginaPagoActual();
         })
         .catch(error => {
             console.error('Error al buscar productos:', error);
@@ -148,12 +148,12 @@ function buscarDetallePago(idPago, page = 1) {
 
 
 // Función para resaltar la página actual
-function resaltarPaginaActual() {
+function resaltarPaginaPagoActual() {
     const paginationItems = document.querySelectorAll('#DetallePagoPagination .page-item');
     paginationItems.forEach(item => {
         item.classList.remove('active');
         const link = item.querySelector('.page-link');
-        if (link.textContent === PaginaInicial.toString()) {
+        if (link.textContent === PaginaInicialPago.toString()) {
             item.classList.add('active');
         }
     });

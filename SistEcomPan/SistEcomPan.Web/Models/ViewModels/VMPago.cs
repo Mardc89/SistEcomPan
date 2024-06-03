@@ -13,7 +13,7 @@ namespace SistEcomPan.Web.Models.ViewModels
         public string NombreCliente { get; set; }
         public string MontoDeuda { get; set; }
         public DateTime FechaPago { get; set; }
-        public DateTime FechaPedido { get; set; }
+        public DateTime? FechaPedido { get; set; }
         public string Estado { get; set; }
         public List<VMDetallePago> DetallePago { get; set; }
 

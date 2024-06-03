@@ -41,6 +41,7 @@ namespace IOC
             services.AddScoped<IRolService, RolService>();
             services.AddScoped<IDistritoService, DistritoService>();
             services.AddScoped<IUsuarioService, UsuarioService>();
+            services.AddScoped<IDashBoardService, DashBoardService>();
             services.AddScoped<IPedidoService, PedidoService>();
             services.AddScoped<IPagoService, PagoService>();
             services.AddScoped<IClienteService, ClienteService>();
@@ -48,6 +49,7 @@ namespace IOC
             services.AddScoped<ICategoriaService, CategoriaService>();
             services.AddScoped<IDetallePedidoService, DetallePedidoService>();
             services.AddScoped<IDetallePagoService, DetallePagoService>();
+            services.AddScoped<ProductoRepository>();
 
 
         }

@@ -8,6 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Datos.Interfaces;
+using System.Linq.Expressions;
 
 namespace Datos.Implementacion
 {
@@ -180,6 +181,46 @@ namespace Datos.Implementacion
             }
 
             return lista.AsQueryable();
+        }
+
+
+        public async Task<Dictionary<string, int>> ProductosTopUltimaSemana()
+        {
+            Dictionary<string, int> resultado = new Dictionary<string, int>();
+
+            try
+            {
+                using (var conexion = new SqlConnection(_cadenaSQL))
+                {
+                    conexion.Open();
+
+                    // Obtener la fecha de inicio (una semana atrás)
+                    DateTime fechaInicio = DateTime.Now.AddDays(-7);
+
+                    // Comando SQL para llamar al procedimiento almacenado
+                    using (var cmd = new SqlCommand("SPProductosTopUltimaSemana", conexion))
+                    {
+                        cmd.CommandType = CommandType.StoredProcedure;
+                        cmd.Parameters.AddWithValue("@FechaInicio", fechaInicio);
+
+                        using (var reader = await cmd.ExecuteReaderAsync())
+                        {
+                            while (await reader.ReadAsync())
+                            {
+                                string producto = reader["Descripcion"].ToString();
+                                int total = Convert.ToInt32(reader["Total"]);
+                                resultado[producto] = total;
+                            }
+                        }
+                    }
+                }
+            }
+            catch
+            {
+                throw;
+            }
+
+            return resultado;
         }
 
         public Task<IQueryable<Productos>> Obtener(string consulta)

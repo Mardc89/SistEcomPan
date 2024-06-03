@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
@@ -144,10 +145,7 @@ namespace Datos.Implementacion
             return modelo;
         }
 
-        public Task<List<Pedidos>> Reporte(DateTime FechaInicio, DateTime FechaFin)
-        {
-            throw new NotImplementedException();
-        }
+
 
         public Task<bool> Guardar(Pedidos modelo)
         {
@@ -160,14 +158,17 @@ namespace Datos.Implementacion
             throw new NotImplementedException();
         }
 
-        public async Task<IQueryable<Pedidos>> Consultar()
+        public async Task<IQueryable<Pedidos>> ConsultarPedido(DateTime?fechaPedido=null)
         {
+
+
             List<Pedidos> lista = new List<Pedidos>();
             using (var conexion = new SqlConnection(_cadenaSQL))
             {
                 conexion.Open();
-                SqlCommand cmd = new SqlCommand("SPListaPedidos", conexion);
+                SqlCommand cmd = new SqlCommand("SPConsultarPedidos", conexion);
                 cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@FechaPedido",(object)fechaPedido??DBNull.Value);
 
                 using (var dr = await cmd.ExecuteReaderAsync())
                 {
@@ -180,7 +181,7 @@ namespace Datos.Implementacion
                             Codigo = dr["Codigo"].ToString(),
                             MontoTotal =Convert.ToDecimal(dr["MontoTotal"]),                  
                             Estado = dr["Estado"].ToString(),
-                            FechaPedido = Convert.ToDateTime(dr["FechaRegistro"])
+                            FechaPedido = Convert.ToDateTime(dr["FechaPedido"])
                         });
                     }
                 }
@@ -194,6 +195,14 @@ namespace Datos.Implementacion
             throw new NotImplementedException();
         }
 
+        public Task<IQueryable<Pedidos>> Consultar()
+        {
+            throw new NotImplementedException();
+        }
 
+        public Task<List<Pedidos>> Reporte(DateTime FechaInicio, DateTime FechaFin)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

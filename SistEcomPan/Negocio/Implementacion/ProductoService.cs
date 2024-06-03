@@ -14,11 +14,10 @@ namespace Negocio.Implementacion
     public class ProductoService:IProductoService
     {
         private readonly IGenericRepository<Productos> _repositorio;
-        private readonly IHostEnvironment _environment;
+        
         public ProductoService(IGenericRepository<Productos> repositorio, IHostEnvironment environment)
         {
             _repositorio = repositorio;
-            _environment = environment;
         }
 
         public async Task<Productos> Crear(Productos entidad, Stream Foto = null, string NombreFoto = "")
