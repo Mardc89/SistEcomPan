@@ -78,5 +78,15 @@ namespace Datos.Implementacion
         {
             throw new NotImplementedException();
         }
+
+        public Task<DetallePedido> Buscar(string? c = null, string? p = null, int? d = null)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<DetallePedido> Verificar(string? c = null, string? p = null, int? d = null)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

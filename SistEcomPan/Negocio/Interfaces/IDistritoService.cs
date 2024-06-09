@@ -11,5 +11,6 @@ namespace Negocio.Interfaces
     {
         Task<List<Distritos>> lista();
         Task<IQueryable<Distritos>> ObtenerNombre();
+        Task<string> ConsultarDistrito(int? IdDistrito);
     }
 }

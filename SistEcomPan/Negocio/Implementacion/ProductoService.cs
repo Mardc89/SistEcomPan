@@ -20,13 +20,18 @@ namespace Negocio.Implementacion
             _repositorio = repositorio;
         }
 
+        public Task<string> ConsultarProducto()
+        {
+            throw new NotImplementedException();
+        }
+
         public async Task<Productos> Crear(Productos entidad, Stream Foto = null, string NombreFoto = "")
         {
 
-            IQueryable<Productos> productos = await _repositorio.Consultar();
-            IQueryable<Productos> productoEvaluado = productos.Where(u => u.Descripcion == entidad.Descripcion);
-            Productos productoExiste = productoEvaluado.FirstOrDefault();
-
+            //IQueryable<Productos> productos = await _repositorio.Consultar();
+            //IQueryable<Productos> productoEvaluado = productos.Where(u => u.Descripcion == entidad.Descripcion);
+            //Productos productoExiste = productoEvaluado.FirstOrDefault();
+            Productos productoExiste = await _repositorio.Buscar(entidad.Descripcion);
 
             if (productoExiste != null)
                 throw new TaskCanceledException("El Producto ya Existe");
@@ -74,19 +79,21 @@ namespace Negocio.Implementacion
         public async Task<Productos> Editar(Productos entidad, Stream Foto = null, string NombreFoto = "")
         {
 
-            IQueryable<Productos> productos = await _repositorio.Consultar();
-            IQueryable<Productos> productoEvaluado = productos.Where(u => u.Descripcion == entidad.Descripcion && u.IdProducto != entidad.IdProducto);
-            Productos productoExiste = productoEvaluado.FirstOrDefault();
-
+            //IQueryable<Productos> productos = await _repositorio.Consultar();
+            //IQueryable<Productos> productoEvaluado = productos.Where(u => u.Descripcion == entidad.Descripcion && u.IdProducto != entidad.IdProducto);
+            //Productos productoExiste = productoEvaluado.FirstOrDefault();
+            Productos productoExiste = await _repositorio.Verificar(entidad.Descripcion,null,entidad.IdProducto);
 
             if (productoExiste != null)
                 throw new TaskCanceledException("El Producto ya Existe");
 
             try
             {
-                IQueryable<Productos> buscarProducto = await _repositorio.Consultar();
-                IQueryable<Productos> productoEncontrado = buscarProducto.Where(u => u.IdProducto == entidad.IdProducto);
-                Productos productoEditar = productoEncontrado.First();
+                //IQueryable<Productos> buscarProducto = await _repositorio.Consultar();
+                //IQueryable<Productos> productoEncontrado = buscarProducto.Where(u => u.IdProducto == entidad.IdProducto);
+                //Productos productoEditar = productoEncontrado.First();
+
+                Productos productoEditar = await _repositorio.Buscar(null, null, entidad.IdProducto);
 
                 productoEditar.Descripcion = entidad.Descripcion;
                 productoEditar.IdCategoria = entidad.IdCategoria;
@@ -139,9 +146,11 @@ namespace Negocio.Implementacion
         {
             try
             {
-                IQueryable<Productos> productos = await _repositorio.Consultar();
-                IQueryable<Productos> productoEvaluado = productos.Where(u => u.IdProducto == IdProducto);
-                Productos productoEncontrado = productoEvaluado.FirstOrDefault();
+                //IQueryable<Productos> productos = await _repositorio.Consultar();
+                //IQueryable<Productos> productoEvaluado = productos.Where(u => u.IdProducto == IdProducto);
+                //Productos productoEncontrado = productoEvaluado.FirstOrDefault();
+
+                Productos productoEncontrado = await _repositorio.Buscar(null,null,IdProducto);
 
                 if (productoEncontrado == null)
                     throw new TaskCanceledException("El Producto no Existe");
@@ -149,7 +158,7 @@ namespace Negocio.Implementacion
                 string nombreFoto = productoEncontrado.NombreImagen;
                 bool respuesta = await _repositorio.Eliminar(productoEncontrado.IdProducto);
 
-                if (respuesta)
+                if (productoEncontrado.UrlImagen!="")
                     System.IO.File.Delete(productoEncontrado.UrlImagen);
 
                 return true;

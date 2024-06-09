@@ -223,5 +223,15 @@ namespace Datos.Implementacion
         {
             throw new NotImplementedException();
         }
+
+        public Task<Pagos> Buscar(string? c = null, string? p = null, int? d = null)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<Pagos> Verificar(string? c = null, string? p = null, int? d = null)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

@@ -14,5 +14,6 @@ namespace Negocio.Interfaces
         Task<Categorias> Editar(Categorias entidad);
         Task<bool> Eliminar(int IdCategoria);
         Task<IQueryable<Categorias>> ObtenerNombre();
+        Task<string> ConsultarCategoria(int IdCategoria);
     }
 }

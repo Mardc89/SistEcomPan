@@ -227,5 +227,73 @@ namespace Datos.Implementacion
         {
             throw new NotImplementedException();
         }
+
+        public async Task<Productos> Buscar(string? Descripcion = null, string? NombreImagen = null, int? IdProducto = null)
+        {
+            Productos lista = null;
+            using (var conexion = new SqlConnection(_cadenaSQL))
+            {
+                conexion.Open();
+                SqlCommand cmd = new SqlCommand("SPConsultarProductos", conexion);
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@Descripcion", (object)Descripcion ?? DBNull.Value);
+                cmd.Parameters.AddWithValue("@IdProducto", (object)IdProducto ?? DBNull.Value);
+                cmd.Parameters.AddWithValue("@NombreImagen", (object)NombreImagen ?? DBNull.Value);
+                using (var dr = await cmd.ExecuteReaderAsync())
+                {
+                    while (await dr.ReadAsync())
+                    {
+                        lista = new Productos
+                        {
+                            IdProducto = Convert.ToInt32(dr["IdProducto"]),
+                            Descripcion = dr["Descripcion"].ToString(),
+                            IdCategoria = Convert.ToInt32(dr["IdCategoria"]),
+                            Precio = Convert.ToDecimal(dr["Precio"]),
+                            UrlImagen = dr["UrlImagen"].ToString(),
+                            NombreImagen = dr["NombreImagen"].ToString(),
+                            Estado = Convert.ToBoolean(dr["Estado"]),
+                            Stock = Convert.ToInt32(dr["Stock"]),
+                            FechaRegistro = Convert.ToDateTime(dr["FechaRegistro"])
+                        };
+                    }
+                }
+            }
+
+            return lista;
+        }
+
+        public async Task<Productos> Verificar(string? Descripcion = null, string? NombreImagen = null, int? IdProducto = null)
+        {
+            Productos lista = null;
+            using (var conexion = new SqlConnection(_cadenaSQL))
+            {
+                conexion.Open();
+                SqlCommand cmd = new SqlCommand("SPConsultarDescripcionProducto", conexion);
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@Descripcion", (object)Descripcion ?? DBNull.Value);
+                cmd.Parameters.AddWithValue("@IdProducto", (object)IdProducto ?? DBNull.Value);
+                cmd.Parameters.AddWithValue("@NombreImagen", (object)NombreImagen ?? DBNull.Value);
+                using (var dr = await cmd.ExecuteReaderAsync())
+                {
+                    while (await dr.ReadAsync())
+                    {
+                        lista = new Productos
+                        {
+                            IdProducto = Convert.ToInt32(dr["IdProducto"]),
+                            Descripcion = dr["Descripcion"].ToString(),
+                            IdCategoria = Convert.ToInt32(dr["IdCategoria"]),
+                            Precio = Convert.ToDecimal(dr["Precio"]),
+                            UrlImagen = dr["UrlImagen"].ToString(),
+                            NombreImagen = dr["NombreImagen"].ToString(),
+                            Estado = Convert.ToBoolean(dr["Estado"]),
+                            Stock = Convert.ToInt32(dr["Stock"]),
+                            FechaRegistro = Convert.ToDateTime(dr["FechaRegistro"])
+                        };
+                    }
+                }
+            }
+
+            return lista;
+        }
     }
 }

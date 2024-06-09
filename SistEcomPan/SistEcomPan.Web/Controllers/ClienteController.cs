@@ -70,8 +70,9 @@ namespace SistEcomPan.Web.Controllers
                     Clave = _encriptService.DesencriptarPassword(item.Clave), 
                     Estado = Convert.ToInt32(item.Estado),
                     UrlFoto = item.UrlFoto,                 
-                    NombreDistrito = nombreDistrito.Where(x => x.IdDistrito == item.IdDistrito).First().NombreDistrito,
-                    
+                    //NombreDistrito = nombreDistrito.Where(x => x.IdDistrito == item.IdDistrito).First().NombreDistrito,
+                    NombreDistrito = await _distritoService.ConsultarDistrito(item.IdDistrito)
+
                 });
             }
             return StatusCode(StatusCodes.Status200OK, new { data = vmClienteLista });
@@ -153,7 +154,7 @@ namespace SistEcomPan.Web.Controllers
                             NombreUsuario = item.NombreUsuario,
                             Clave = _encriptService.DesencriptarPassword(item.Clave),  
                             Estado = Convert.ToInt32(item.Estado),                          
-                            NombreDistrito = nombreDistrito.Where(x => x.IdDistrito == item.IdDistrito).First().NombreDistrito,
+                            NombreDistrito = await _distritoService.ConsultarDistrito(item.IdDistrito),
                             UrlFoto = item.UrlFoto,
                           
                         });
@@ -251,7 +252,7 @@ namespace SistEcomPan.Web.Controllers
                             NombreUsuario = item.NombreUsuario,
                             Clave = _encriptService.DesencriptarPassword(item.Clave),
                             Estado = Convert.ToInt32(item.Estado),
-                            NombreDistrito = nombreDistrito.Where(x => x.IdDistrito == item.IdDistrito).First().NombreDistrito,
+                            NombreDistrito = await _distritoService.ConsultarDistrito(item.IdDistrito),
                             UrlFoto = item.UrlFoto,
                           
 

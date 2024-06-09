@@ -55,7 +55,7 @@ namespace SistEcomPan.Web.Controllers
         {
             var lista = await _pedidoService.Lista();
             List<VMPedido> vmListaPedidos = new List<VMPedido>();
-            var clientes = await _clienteService.ObtenerNombre();
+            //var clientes = await _clienteService.ObtenerNombre();
             foreach (var item in lista)
             {
                 vmListaPedidos.Add(new VMPedido
@@ -65,9 +65,10 @@ namespace SistEcomPan.Web.Controllers
                     Codigo = item.Codigo,
                     MontoTotal = Convert.ToString(item.MontoTotal),
                     Estado = item.Estado,
-                    NombresCompletos= clientes.Where(x => x.IdCliente == item.IdCliente).First().Nombres +
-                    clientes.Where(x => x.IdCliente == item.IdCliente).First().Apellidos,
-                    FechaPedido=item.FechaPedido
+                    //NombresCompletos= clientes.Where(x => x.IdCliente == item.IdCliente).First().Nombres +
+                    //clientes.Where(x => x.IdCliente == item.IdCliente).First().Apellidos,
+                    NombresCompletos = await _clienteService.ObtenerNombreCompleto(item.IdCliente),
+                    FechaPedido =item.FechaPedido
                  
                 }) ;
             }
@@ -79,14 +80,15 @@ namespace SistEcomPan.Web.Controllers
         {
             var Clientelista = await _clienteService.Lista();
             List<VMCliente> vmClientelista = new List<VMCliente>();
-            var clientes = await _clienteService.ObtenerNombre();
+            //var clientes = await _clienteService.ObtenerNombre();
             foreach (var item in Clientelista)
             {
                 vmClientelista.Add(new VMCliente
                 {
                     IdCliente=item.IdCliente,
-                    NombreCompleto = clientes.Where(x => x.IdCliente == item.IdCliente).First().Nombres +" "+
-                    clientes.Where(x => x.IdCliente == item.IdCliente).First().Apellidos
+                    //NombreCompleto = clientes.Where(x => x.IdCliente == item.IdCliente).First().Nombres +" "+
+                    //clientes.Where(x => x.IdCliente == item.IdCliente).First().Apellidos
+                    NombreCompleto = await _clienteService.ObtenerNombreCompleto(item.IdCliente)
 
                 });
             }
@@ -142,8 +144,9 @@ namespace SistEcomPan.Web.Controllers
                     MontoTotal = Convert.ToString(item.MontoTotal),
                     Estado = item.Estado,
                     FechaPedido = item.FechaPedido,
-                    NombresCompletos= clientes.Where(x => x.IdCliente ==item.IdCliente).FirstOrDefault().Nombres + "" +
-                                      clientes.Where(x => x.IdCliente == item.IdCliente).FirstOrDefault().Apellidos
+                    //NombresCompletos= clientes.Where(x => x.IdCliente ==item.IdCliente).FirstOrDefault().Nombres + "" +
+                    //                  clientes.Where(x => x.IdCliente == item.IdCliente).FirstOrDefault().Apellidos
+                    NombresCompletos = await _clienteService.ObtenerNombreCompleto(item.IdCliente)
 
                 });
             }
@@ -196,9 +199,8 @@ namespace SistEcomPan.Web.Controllers
 
             var clientePedido = pedidosFiltrados.FirstOrDefault().IdCliente;
 
-            var clientes = await _clienteService.ObtenerNombre();
-            var clienteEncontrado = clientes.Where(x => x.IdCliente == clientePedido).FirstOrDefault().Nombres + "" +
-                                    clientes.Where(x => x.IdCliente == clientePedido).FirstOrDefault().Apellidos;
+            //var clientes = await _clienteService.ObtenerNombre();
+            var clienteEncontrado = await _clienteService.ObtenerNombreCompleto(clientePedido);
             // Paginación
             var pedidosPaginados = vmPedidos.ToList();
 
@@ -456,8 +458,8 @@ namespace SistEcomPan.Web.Controllers
             var Clientelista = await _clienteService.Lista();
             List<VMCliente> vmClientelista = new List<VMCliente>();
             var clientes = await _clienteService.ObtenerNombre();           
-            var nombres = clientes.FirstOrDefault(x => nombreCompleto.StartsWith(x.Nombres)).Nombres;
-            var apellidos = clientes.FirstOrDefault(x => nombreCompleto.EndsWith(x.Apellidos)).Apellidos;
+            var apellidos = clientes.FirstOrDefault(x => nombreCompleto.StartsWith(x.Apellidos)).Apellidos;
+            var nombres = clientes.FirstOrDefault(x => nombreCompleto.EndsWith(x.Nombres)).Nombres;
              vmClientelista.Add(new VMCliente
              {
                  IdCliente = clientes.Where(x => x.Apellidos == apellidos && x.Nombres == nombres).First().IdCliente,

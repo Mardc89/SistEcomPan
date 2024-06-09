@@ -198,6 +198,38 @@ namespace Datos.Implementacion
             return lista.AsQueryable();
         }
 
+        public async Task<Categorias> Buscar(string? Estado = null, string?TipoDeCategoria = null, int? IdCategoria = null)
+        {
+            Categorias lista = null;
+            using (var conexion = new SqlConnection(_cadenaSQL))
+            {
+                conexion.Open();
+                SqlCommand cmd = new SqlCommand("SPConsultarCategorias", conexion);
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@IdCategoria", (object)IdCategoria ?? DBNull.Value);
+                cmd.Parameters.AddWithValue("@TipoDeCategoria", (object)TipoDeCategoria ?? DBNull.Value);
+                using (var dr = await cmd.ExecuteReaderAsync())
+                {
+                    while (await dr.ReadAsync())
+                    {
+                        lista = new Categorias
+                        {
+                            IdCategoria = Convert.ToInt32(dr["IdCategoria"]),
+                            TipoDeCategoria = dr["TipoDeCategoria"].ToString(),
+                            FechaRegistro = Convert.ToDateTime(dr["FechaRegistro"]),
+                            Estado = Convert.ToBoolean(dr["Estado"])
+                        };
+                    }
+                }
+            }
 
+            return lista;
+
+        }
+
+        public Task<Categorias> Verificar(string? c = null, string? p = null, int? d = null)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

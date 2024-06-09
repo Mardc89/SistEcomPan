@@ -11,6 +11,6 @@ namespace Negocio.Interfaces
     {
         Task<List<Roles>> lista();
         Task<IQueryable<Roles>> ObtenerNombre();
-        
+        Task<string>ConsultarRol(int? IdRol);
     }
 }

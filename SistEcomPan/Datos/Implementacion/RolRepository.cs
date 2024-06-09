@@ -149,5 +149,36 @@ namespace Datos.Implementacion
         {
             throw new NotImplementedException();
         }
+
+        public async Task<Roles> Buscar(string? NombreRol = null, string? Estado = null, int? IdRol = null)
+        {
+            Roles lista = null;
+            using (var conexion = new SqlConnection(_cadenaSQL))
+            {
+                conexion.Open();
+                SqlCommand cmd = new SqlCommand("SPConsultarRoles", conexion);
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@IdRol", (object)IdRol ?? DBNull.Value);
+                using (var dr = await cmd.ExecuteReaderAsync())
+                {
+                    while (await dr.ReadAsync())
+                    {
+                        lista = new Roles
+                        {
+
+                            NombreRol = dr["NombreRol"].ToString(),
+
+                        };
+                    }
+                }
+            }
+
+            return lista;
+        }
+
+        public Task<Roles> Verificar(string? NombreRol = null, string? Estado = null, int? IdRol = null)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

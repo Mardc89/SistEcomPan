@@ -132,5 +132,57 @@ namespace Datos.Implementacion
         {
             throw new NotImplementedException();
         }
+
+        public async Task<Distritos> Buscar(string? Descripcion = null, string? NombreDistrito = null, int? IdDistrito = null)
+        {
+            Distritos lista = null;
+            using (var conexion = new SqlConnection(_cadenaSQL))
+            {
+                conexion.Open();
+                SqlCommand cmd = new SqlCommand("SPConsultarDistritos", conexion);
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@IdDistrito", (object)IdDistrito ?? DBNull.Value);
+                cmd.Parameters.AddWithValue("@NombreDistrito", (object)NombreDistrito ?? DBNull.Value);
+                using (var dr = await cmd.ExecuteReaderAsync())
+                {
+                    while (await dr.ReadAsync())
+                    {
+                        lista = new Distritos
+                        {
+                            IdDistrito = Convert.ToInt32(dr["IdDistrito"]),
+                            NombreDistrito = dr["NombreDistrito"].ToString()
+                        };
+                    }
+                }
+            }
+
+            return lista;
+        }
+
+        public async Task<Distritos> Verificar(string? Descripcion = null, string? NombreDistrito = null, int? IdDistrito = null)
+        {
+            Distritos lista = null;
+            using (var conexion = new SqlConnection(_cadenaSQL))
+            {
+                conexion.Open();
+                SqlCommand cmd = new SqlCommand("SPConsultarNombreDistrito", conexion);
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@IdDistrito", (object)IdDistrito ?? DBNull.Value);
+                cmd.Parameters.AddWithValue("@NombreDistrito", (object)NombreDistrito ?? DBNull.Value);
+                using (var dr = await cmd.ExecuteReaderAsync())
+                {
+                    while (await dr.ReadAsync())
+                    {
+                        lista = new Distritos
+                        {
+                            IdDistrito = Convert.ToInt32(dr["IdDistrito"]),
+                            NombreDistrito = dr["NombreDistrito"].ToString()
+                        };
+                    }
+                }
+            }
+
+            return lista;
+        }
     }
 }

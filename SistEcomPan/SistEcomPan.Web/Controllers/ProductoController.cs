@@ -59,7 +59,8 @@ namespace SistEcomPan.Web.Controllers
                     Estado=Convert.ToInt32(item.Estado),
                     Stock=item.Stock,
                     NombreCategoria = nombreCategoria.Where(x => x.IdCategoria == item.IdCategoria).First().TipoDeCategoria,
-                    UrlImagen=item.UrlImagen,
+                    //NombreCategoria = await _categoriaService.ConsultarCategoria(item.IdCategoria),
+                    UrlImagen =item.UrlImagen,
                     NombreImagen=item.NombreImagen,
                     
 

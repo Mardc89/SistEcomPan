@@ -20,8 +20,13 @@ namespace Negocio.Implementacion
             _encriptservice = encriptservice;
             _correoService = correoService;
             _repositorio = repositorio;
+ 
         }
-
+        public async Task<string> ObtenerNombreCompleto(int IdCliente)
+        {
+            Clientes clientes = await _repositorio.Buscar(null,null,IdCliente);
+            return clientes.Nombres +" "+ clientes.Apellidos;
+        }
         public async Task<List<Clientes>> Lista()
         {
             List<Clientes> query = await _repositorio.Lista();
@@ -37,10 +42,9 @@ namespace Negocio.Implementacion
         public async Task<Clientes> Crear(Clientes entidad, Stream Foto = null, string NombreFoto = "", string UrlPlantillaCorreo = "")
         {
 
-            IQueryable<Clientes> clientes = await _repositorio.Consultar();
-            IQueryable<Clientes> usuarioEvaluado = clientes.Where(u => u.Correo == entidad.Correo);
-            Clientes usuarioExiste = usuarioEvaluado.FirstOrDefault();
-
+            Clientes usuarioExiste = await _repositorio.Buscar(entidad.Correo);
+            //IQueryable<Clientes> usuarioEvaluado = clientes.Where(u => u.Correo == entidad.Correo);
+            //Clientes usuarioExiste = clientes.FirstOrDefault();
 
             if (usuarioExiste != null)
                 throw new TaskCanceledException("El Correo no Existe");
@@ -126,19 +130,20 @@ namespace Negocio.Implementacion
         public async Task<Clientes> Editar(Clientes entidad, Stream Foto = null, string NombreFoto = "")
         {
 
-            IQueryable<Clientes> clientes = await _repositorio.Consultar();
-            IQueryable<Clientes> usuarioEvaluado = clientes.Where(u => u.Correo == entidad.Correo && u.IdCliente != entidad.IdCliente);
-            Clientes usuarioExiste = usuarioEvaluado.FirstOrDefault();
-
+            //IQueryable<Clientes> clientes = await _repositorio.Consultar();
+            //IQueryable<Clientes> usuarioEvaluado = clientes.Where(u => u.Correo == entidad.Correo && u.IdCliente != entidad.IdCliente);
+            //Clientes usuarioExiste = usuarioEvaluado.FirstOrDefault();
+            Clientes usuarioExiste = await _repositorio.Verificar(entidad.Correo,null, entidad.IdCliente);
 
             if (usuarioExiste != null)
-                throw new TaskCanceledException("El Correo no Existe");
+                throw new TaskCanceledException("El Correo ya Existe");
 
             try
             {
-                IQueryable<Clientes> buscarUsuario = await _repositorio.Consultar();
-                IQueryable<Clientes> usuarioEncontrado = buscarUsuario.Where(u => u.IdCliente != entidad.IdCliente);
-                Clientes usuarioEditar = usuarioEncontrado.First();
+                //IQueryable<Clientes> buscarUsuario = await _repositorio.Consultar();
+                //IQueryable<Clientes> usuarioEncontrado = buscarUsuario.Where(u => u.IdCliente == entidad.IdCliente);
+                //Clientes usuarioEditar = usuarioEncontrado.First();
+                Clientes usuarioEditar = await _repositorio.Buscar(null,null, entidad.IdCliente);
 
                 usuarioEditar.NombreUsuario = entidad.NombreUsuario;
                 usuarioEditar.Correo = entidad.Correo;
@@ -174,9 +179,11 @@ namespace Negocio.Implementacion
         {
             try
             {
-                IQueryable<Clientes> usuarios = await _repositorio.Consultar();
-                IQueryable<Clientes> usuarioEvaluado = usuarios.Where(u => u.IdCliente == IdCliente);
-                Clientes usuarioEncontrado = usuarioEvaluado.FirstOrDefault();
+                //IQueryable<Clientes> usuarios = await _repositorio.Consultar();
+                //IQueryable<Clientes> usuarioEvaluado = usuarios.Where(u => u.IdCliente == IdCliente);
+                //Clientes usuarioEncontrado = usuarioEvaluado.FirstOrDefault();
+
+                Clientes usuarioEncontrado = await _repositorio.Buscar(null,null,IdCliente);
 
                 if (usuarioEncontrado == null)
                     throw new TaskCanceledException("El Usuario no Existe");
@@ -197,9 +204,11 @@ namespace Negocio.Implementacion
         public async Task<Clientes> ObtenerPorCredenciales(string correo, string clave)
         {
             string ClaveEncriptada = _encriptservice.EncriptarPassword(clave);
-            IQueryable<Clientes> usuarios = await _repositorio.Consultar();
-            IQueryable<Clientes> usuarioEvaluado = usuarios.Where(u => u.Correo.Equals(correo) && u.Clave.Equals(ClaveEncriptada));
-            Clientes usuarioEncontrado = usuarioEvaluado.FirstOrDefault();
+            //IQueryable<Clientes> usuarios = await _repositorio.Consultar();
+            //IQueryable<Clientes> usuarioEvaluado = usuarios.Where(u => u.Correo.Equals(correo) && u.Clave.Equals(ClaveEncriptada));
+            //Clientes usuarioEncontrado = usuarioEvaluado.FirstOrDefault();
+
+            Clientes usuarioEncontrado = await _repositorio.Buscar(correo,ClaveEncriptada,null);
 
             return usuarioEncontrado;
 
@@ -208,9 +217,11 @@ namespace Negocio.Implementacion
         public async Task<Clientes> ObtenerPorId(int IdCliente)
         {
 
-            IQueryable<Clientes> usuarios = await _repositorio.Consultar();
-            IQueryable<Clientes> usuarioEvaluado = usuarios.Where(u => u.IdCliente == IdCliente);
-            Clientes usuarioEncontrado = usuarioEvaluado.FirstOrDefault();
+            //IQueryable<Clientes> usuarios = await _repositorio.Consultar();
+            //IQueryable<Clientes> usuarioEvaluado = usuarios.Where(u => u.IdCliente == IdCliente);
+            //Clientes usuarioEncontrado = usuarioEvaluado.FirstOrDefault();
+
+            Clientes usuarioEncontrado = await _repositorio.Buscar(null,null,IdCliente);
 
             return usuarioEncontrado;
         }
@@ -219,9 +230,11 @@ namespace Negocio.Implementacion
         {
             try
             {
-                IQueryable<Clientes> usuarios = await _repositorio.Consultar();
-                IQueryable<Clientes> usuarioEvaluado = usuarios.Where(u => u.IdCliente == entidad.IdCliente);
-                Clientes usuarioEncontrado = usuarioEvaluado.FirstOrDefault();
+                //IQueryable<Clientes> usuarios = await _repositorio.Consultar();
+                //IQueryable<Clientes> usuarioEvaluado = usuarios.Where(u => u.IdCliente == entidad.IdCliente);
+                //Clientes usuarioEncontrado = usuarioEvaluado.FirstOrDefault();
+
+                Clientes usuarioEncontrado = await _repositorio.Buscar(null,null,entidad.IdCliente);
 
                 if (usuarioEncontrado == null)
                     throw new TaskCanceledException("El Usuario no Existe");
@@ -277,9 +290,11 @@ namespace Negocio.Implementacion
         {
             try
             {
-                IQueryable<Clientes> clientes = await _repositorio.Consultar();
-                IQueryable<Clientes> usuarioEvaluado = clientes.Where(u => u.IdCliente == IdCliente);
-                Clientes usuarioEncontrado = usuarioEvaluado.FirstOrDefault();
+                //IQueryable<Clientes> clientes = await _repositorio.Consultar();
+                //IQueryable<Clientes> usuarioEvaluado = clientes.Where(u => u.IdCliente == IdCliente);
+                //Clientes usuarioEncontrado = usuarioEvaluado.FirstOrDefault();
+
+                Clientes usuarioEncontrado = await _repositorio.Buscar(null,null,IdCliente);
 
                 if (usuarioEncontrado == null)
                     throw new TaskCanceledException("El Usuario no Existe");
@@ -303,9 +318,11 @@ namespace Negocio.Implementacion
         {
             try
             {
-                IQueryable<Clientes> usuarios = await _repositorio.Consultar();
-                IQueryable<Clientes> usuarioEvaluado = usuarios.Where(u => u.Correo == Correo);
-                Clientes usuarioEncontrado = usuarioEvaluado.FirstOrDefault();
+                //IQueryable<Clientes> usuarios = await _repositorio.Consultar();
+                //IQueryable<Clientes> usuarioEvaluado = usuarios.Where(u => u.Correo == Correo);
+                //Clientes usuarioEncontrado = usuarioEvaluado.FirstOrDefault();
+
+                Clientes usuarioEncontrado = await _repositorio.Buscar(Correo);
 
                 if (usuarioEncontrado == null)
                     throw new TaskCanceledException("El Usuario no Existe");
@@ -358,5 +375,7 @@ namespace Negocio.Implementacion
                 throw;
             }
         }
+
+
     }
 }

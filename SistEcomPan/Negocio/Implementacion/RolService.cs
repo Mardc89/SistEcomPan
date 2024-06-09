@@ -21,6 +21,13 @@ namespace Negocio.Implementacion
         {
             _repositorio = repositorio;
         }
+
+        public async Task<string> ConsultarRol(int? IdRol)
+        {
+            Roles roles = await _repositorio.Buscar(null,null,IdRol);
+            return roles.NombreRol;
+        }
+
         public async Task<List<Roles>> lista()
         {
             List<Roles> query = await _repositorio.Lista();

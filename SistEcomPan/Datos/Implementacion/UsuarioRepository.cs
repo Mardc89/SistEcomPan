@@ -230,5 +230,79 @@ namespace Datos.Implementacion
         {
             throw new NotImplementedException();
         }
+
+        public async Task<Usuarios> Buscar(string? Correo = null, string? Clave = null, int? IdUsuario = null)
+        {
+            Usuarios lista = null;
+            using (var conexion = new SqlConnection(_cadenaSQL))
+            {
+                conexion.Open();
+                SqlCommand cmd = new SqlCommand("SPConsultarUsuarios", conexion);
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@Correo", (object)Correo ?? DBNull.Value);
+                cmd.Parameters.AddWithValue("@IdUsuario", (object)IdUsuario ?? DBNull.Value);
+                cmd.Parameters.AddWithValue("@Clave", (object)Clave ?? DBNull.Value);
+                using (var dr = await cmd.ExecuteReaderAsync())
+                {
+                    while (await dr.ReadAsync())
+                    {
+                        lista = new Usuarios
+                        {
+                            IdUsuario = Convert.ToInt32(dr["Idusuario"]),
+                            Dni = dr["Dni"].ToString(),
+                            Nombres = dr["Nombres"].ToString(),
+                            Apellidos = dr["Apellidos"].ToString(),
+                            Correo = dr["Correo"].ToString(),
+                            NombreUsuario = dr["NombreUsuario"].ToString(),
+                            Clave = dr["Clave"].ToString(),
+                            IdRol = Convert.ToInt32(dr["IdRol"]),
+                            FechaRegistro = Convert.ToDateTime(dr["FechaRegistro"]),
+                            Estado = Convert.ToBoolean(dr["Estado"]),
+                            UrlFoto = dr["UrlFoto"].ToString(),
+                            NombreFoto = dr["NombreFoto"].ToString()
+                        };
+                    }
+                }
+            }
+
+            return lista;
+        }
+
+        public async Task<Usuarios> Verificar(string? Correo = null, string? Clave = null, int? IdCliente = null)
+        {
+            Usuarios lista = null;
+            using (var conexion = new SqlConnection(_cadenaSQL))
+            {
+                conexion.Open();
+                SqlCommand cmd = new SqlCommand("SPConsultarUsuarioCorreo", conexion);
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@Correo", (object)Correo ?? DBNull.Value);
+                cmd.Parameters.AddWithValue("@IdCliente", (object)IdCliente ?? DBNull.Value);
+                cmd.Parameters.AddWithValue("@Clave", (object)Clave ?? DBNull.Value);
+                using (var dr = await cmd.ExecuteReaderAsync())
+                {
+                    while (await dr.ReadAsync())
+                    {
+                        lista = new Usuarios
+                        {
+                            IdUsuario = Convert.ToInt32(dr["Idusuario"]),
+                            Dni = dr["Dni"].ToString(),
+                            Nombres = dr["Nombres"].ToString(),
+                            Apellidos = dr["Apellidos"].ToString(),
+                            Correo = dr["Correo"].ToString(),
+                            NombreUsuario = dr["NombreUsuario"].ToString(),
+                            Clave = dr["Clave"].ToString(),
+                            IdRol = Convert.ToInt32(dr["IdRol"]),
+                            FechaRegistro = Convert.ToDateTime(dr["FechaRegistro"]),
+                            Estado = Convert.ToBoolean(dr["Estado"]),
+                            UrlFoto = dr["UrlFoto"].ToString(),
+                            NombreFoto = dr["NombreFoto"].ToString()
+                        };
+                    }
+                }
+            }
+
+            return lista;
+        }
     }
 }

@@ -22,6 +22,11 @@ namespace Datos.Implementacion
 
         }
 
+        public Task<NumeroDocumento> Buscar(string? c = null, string? p = null, int? d = null)
+        {
+            throw new NotImplementedException();
+        }
+
         public async Task<IQueryable<NumeroDocumento>> Consultar()
         {
             List<NumeroDocumento> lista = new List<NumeroDocumento>();
@@ -93,6 +98,11 @@ namespace Datos.Implementacion
         }
 
         public Task<IQueryable<NumeroDocumento>> Obtener(string consulta)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<NumeroDocumento> Verificar(string? c = null, string? p = null, int? d = null)
         {
             throw new NotImplementedException();
         }

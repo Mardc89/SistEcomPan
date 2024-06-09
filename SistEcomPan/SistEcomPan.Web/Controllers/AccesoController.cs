@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Authentication;
 using Negocio.Implementacion;
 using Newtonsoft.Json;
 using SistEcomPan.Web.Tools.Response;
+using Microsoft.DotNet.Scaffolding.Shared.Project;
 
 namespace SistEcomPan.Web.Controllers
 {
@@ -18,7 +19,7 @@ namespace SistEcomPan.Web.Controllers
         private readonly IUsuarioService _usuarioServicio;
         private readonly IClienteService _clienteServicio;
         private readonly IRolService _rolServicio;
-        private readonly IEncriptService _encriptServicio;
+
 
         public AccesoController(IUsuarioService usuarioServicio,IClienteService clienteServicio,IRolService rolServicio)
         {
@@ -51,7 +52,7 @@ namespace SistEcomPan.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> LoginCliente(VMCliente modelo)
         {
-            GenericResponse<VMUsuario> gResponse = new GenericResponse<VMUsuario>();
+            GenericResponse<VMCliente> gResponse = new GenericResponse<VMCliente>();
 
             try
             {
@@ -59,8 +60,7 @@ namespace SistEcomPan.Web.Controllers
                 string NombreFoto = "";
                 Stream fotoStream = null;
                 string urlPlantillaCorreo = $"{this.Request.Scheme}://{this.Request.Host}/Plantilla/EnviarClave?correo=[correo]&clave=[clave]";
-                var Usuariolista = await _usuarioServicio.Lista();
-
+                //var Usuariolista = await _usuarioServicio.Lista();
 
                 List<Clientes> listaClientes = new List<Clientes>();
                 List<VMCliente> listaVMClientes = new List<VMCliente>();
@@ -71,7 +71,6 @@ namespace SistEcomPan.Web.Controllers
                     {
                         listaClientes.Add(new Clientes
                         {
-                            IdCliente = item.IdCliente,
                             TipoCliente=item.TipoCliente,
                             Dni = item.Dni,
                             Nombres = item.Nombres,
@@ -81,7 +80,7 @@ namespace SistEcomPan.Web.Controllers
                             Telefono=item.Telefono,
                             IdDistrito = item.IdDistrito,
                             NombreUsuario = item.NombreUsuario,
-                            Clave = _encriptServicio.DesencriptarPassword(item.Clave),
+                            Clave = item.Clave,
                             Estado =true,
                             UrlFoto=""
                         });
@@ -126,8 +125,9 @@ namespace SistEcomPan.Web.Controllers
                 new Claim("Dni",usuarioEncontrado.Dni)
                 };
 
-                var UsuarioRoles = await _rolServicio.ObtenerNombre();
-                var nombreRoles = UsuarioRoles.Where(x => x.IdRol == usuarioEncontrado.IdRol).Select(x => x.NombreRol).First();
+                //var UsuarioRoles = await _rolServicio.ObtenerNombre();
+                //var nombreRoles = UsuarioRoles.Where(x => x.IdRol == usuarioEncontrado.IdRol).Select(x => x.NombreRol).First();
+                var nombreRoles = await _rolServicio.ConsultarRol(usuarioEncontrado.IdRol);
                 claims.Add(new Claim(ClaimTypes.Role, nombreRoles));
 
                 ClaimsIdentity claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
