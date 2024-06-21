@@ -5,7 +5,7 @@ using System.Text;
 
 
 EncriptService nuevo=new EncriptService();
-var nueva=nuevo.EncriptarPassword("1mardc5");
+var nueva=nuevo.EncriptarPassword("453421");
 Console.WriteLine("la nueva es:" + nueva);
 var vieja = nuevo.DesencriptarPassword(nueva);
 Console.WriteLine("la nueva es:" + vieja);

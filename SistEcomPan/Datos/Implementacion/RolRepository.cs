@@ -88,9 +88,9 @@ namespace Datos.Implementacion
             {
                 conexion.Open();
                 SqlCommand cmd = new SqlCommand("SPEditarRoles", conexion);
-                cmd.Parameters.AddWithValue("IdRol", modelo.IdRol);
-                cmd.Parameters.AddWithValue("NombreRol", modelo.NombreRol);
-                cmd.Parameters.AddWithValue("Estado", modelo.Estado);
+                cmd.Parameters.AddWithValue("@IdRol", modelo.IdRol);
+                cmd.Parameters.AddWithValue("@NombreRol", modelo.NombreRol);
+                cmd.Parameters.AddWithValue("@Estado", modelo.Estado);
                 cmd.CommandType = CommandType.StoredProcedure;
 
                 int filaAfectada = await cmd.ExecuteNonQueryAsync();
@@ -111,7 +111,7 @@ namespace Datos.Implementacion
             {
                 conexion.Open();
                 SqlCommand cmd = new SqlCommand("SPEliminarRoles", conexion);
-                cmd.Parameters.AddWithValue("IdRol", id);
+                cmd.Parameters.AddWithValue("@IdRol", id);
                 cmd.CommandType = CommandType.StoredProcedure;
 
                 int filaAfectada = await cmd.ExecuteNonQueryAsync();
@@ -135,9 +135,36 @@ namespace Datos.Implementacion
             throw new NotImplementedException();
         }
 
-        public Task<Roles> Crear(Roles modelo)
+        public async Task<Roles> Crear(Roles modelo)
         {
-            throw new NotImplementedException();
+            try
+            {
+                using (var conexion = new SqlConnection(_cadenaSQL))
+                {
+                    conexion.Open();
+                    SqlCommand cmd = new SqlCommand("SPRegistrarRol", conexion);
+                    cmd.Parameters.AddWithValue("@NombreRol", modelo.NombreRol);
+                    cmd.Parameters.AddWithValue("@Estado", modelo.Estado);
+                    cmd.CommandType = CommandType.StoredProcedure;
+
+                    SqlParameter outputParameter = new SqlParameter();
+                    outputParameter.ParameterName = "@IdRol";
+                    outputParameter.SqlDbType = SqlDbType.Int;
+                    outputParameter.Direction = ParameterDirection.Output;
+                    cmd.Parameters.Add(outputParameter);
+                    await cmd.ExecuteNonQueryAsync();
+
+                    int RolId = Convert.ToInt32(outputParameter.Value);
+                    modelo.IdRol = RolId;
+
+                    return modelo;
+                }
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
         }
 
         public Task<IQueryable<Roles>> Consultar()
@@ -159,15 +186,16 @@ namespace Datos.Implementacion
                 SqlCommand cmd = new SqlCommand("SPConsultarRoles", conexion);
                 cmd.CommandType = CommandType.StoredProcedure;
                 cmd.Parameters.AddWithValue("@IdRol", (object)IdRol ?? DBNull.Value);
+                cmd.Parameters.AddWithValue("@NombreRol", (object)NombreRol ?? DBNull.Value);
                 using (var dr = await cmd.ExecuteReaderAsync())
                 {
                     while (await dr.ReadAsync())
                     {
                         lista = new Roles
                         {
-
+                            IdRol = Convert.ToInt32(dr["IdRol"]),
                             NombreRol = dr["NombreRol"].ToString(),
-
+                            Estado = Convert.ToBoolean(dr["Estado"])
                         };
                     }
                 }
@@ -176,9 +204,32 @@ namespace Datos.Implementacion
             return lista;
         }
 
-        public Task<Roles> Verificar(string? NombreRol = null, string? Estado = null, int? IdRol = null)
+        public async Task<Roles> Verificar(string? NombreRol = null, string? Estado = null, int? IdRol = null)
         {
-            throw new NotImplementedException();
+            Roles lista = null;
+            using (var conexion = new SqlConnection(_cadenaSQL))
+            {
+                conexion.Open();
+                SqlCommand cmd = new SqlCommand("SPConsultarNombreRol", conexion);
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@IdRol", (object)IdRol ?? DBNull.Value);
+                cmd.Parameters.AddWithValue("@NombreRol", (object)NombreRol ?? DBNull.Value);
+                using (var dr = await cmd.ExecuteReaderAsync())
+                {
+                    while (await dr.ReadAsync())
+                    {
+                        lista = new Roles
+                        {
+                            IdRol = Convert.ToInt32(dr["IdRol"]),
+                            NombreRol = dr["NombreRol"].ToString(),
+                            Estado = Convert.ToBoolean(dr["Estado"])
+
+                        };
+                    }
+                }
+            }
+
+            return lista;
         }
     }
 }

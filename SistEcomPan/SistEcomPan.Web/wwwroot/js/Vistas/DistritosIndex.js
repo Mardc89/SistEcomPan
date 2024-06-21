@@ -1,40 +1,27 @@
 ﻿
 
 const MODELO_BASE = {
-    idCategoria: 0,
-    tipoDeCategoria: "",
-    estado: 1,
+    idDistrito: 0,
+    nombreDistrito: "",
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      
 
 }
 
-let tablaDataCategoria;
-const itemPagina = 4;
+let tablaDataDistrito;
+const itemPaginaDistrito = 4;
 
 $(document).ready(function () {
 
-
-
-    tablaDataCategoria = $('#tbdataCategoria').DataTable({
+    tablaDataDistrito = $('#tbdataDistrito').DataTable({
         responsive: true,
         "ajax": {
-            "url": '/Categoria/Lista',
+            "url": '/Distrito/ListaDistritos',
             "type": "GET",
             "datatype": "json"
         },
         "columns": [
-            { "data": "idCategoria", "searchable": false },
-            { "data": "tipoDeCategoria" },
-            {
-                "data": "estado", render: function (data) {
-                    if (data == 1)
-                        return '<span class="badge badge-info">Activo</span>';
-                    else
-                        return '<span class="badge badge-danger">No Activo</span>';
-
-
-                }
-
-            },
+            { "data": "idDistrito", "searchable": false },
+            { "data": "nombreDistrito" },
             {
                 "defaultContent": '<button class="btn btn-primary btn-editar btn-sm mr-2"><i class="fas fa-pencil-alt"></i></button>' +
                     '<button class= "btn btn-danger btn-eliminar btn-sm"><i class= "fas fa-trash-alt"></i></button>',
@@ -47,7 +34,7 @@ $(document).ready(function () {
         order: [[0, "desc"]],
         responsive: true,
         paging: true,
-        pageLength: itemPagina,
+        pageLength: itemPaginaDistrito,
         language: {
             url: "https://cdn.datatables.net/plugin-ins/1.11.5/i18n/es-Es.json"
         },
@@ -57,20 +44,19 @@ $(document).ready(function () {
 
 function mostrarModal(modelo = MODELO_BASE) {
 
-    $("#txtIdCategoria").val(modelo.idCategoria)
-    $("#txtDescripcion").val(modelo.tipoDeCategoria)
-    $("#cboEstado").val(modelo.estado)
+    $("#txtIdDistrito").val(modelo.idDistrito)
+    $("#txtNombreDistrito").val(modelo.nombreDistrito)
 
-    $("#modalDataCategoria").modal("show")
+    $("#modalDataDistrito").modal("show")
 }
 
 
-$("#btnNuevaCategoria").click(function () {
+$("#btnNuevoDistrito").click(function () {
     mostrarModal()
 })
 
 
-$("#btnGuardarCategoria").click(function () {
+$("#btnGuardarDistrito").click(function () {
 
     const inputs = $("input.input-validar").serializeArray();
     const inputs_sin_valor = inputs.filter((item) => item.value.trim() == "")
@@ -83,28 +69,28 @@ $("#btnGuardarCategoria").click(function () {
     }
 
     const modelo = structuredClone(MODELO_BASE);
-    modelo["idCategoria"] = parseInt($("#txtIdCategoria").val())
-    modelo["tipoDeCategoria"] = $("#txtDescripcion").val()
-    modelo["estado"] = $("#cboEstado").val()
+    modelo["idDistrito"] = parseInt($("#txtIdDistrito").val())
+    modelo["nombreDistrito"] = $("#txtNombreDistrito").val()
+ 
 
 
-    $("#modalDataCategoria").find("div.modal-content").LoadingOverlay("show");
+    $("#modalDataDistrito").find("div.modal-content").LoadingOverlay("show");
 
-    if (modelo.idCategoria == 0) {
+    if (modelo.idDistrito == 0) {
 
-        fetch("/Categoria/Crear", {
+        fetch("/Distrito/Crear", {
             method: "POST",
             headers: { "Content-Type": "application/json;charset=utf-8" },
             body: JSON.stringify(modelo)
         })
             .then(response => {
-                $("#modalDataCategoria").find("div.modal-content").LoadingOverlay("hide");
+                $("#modalDataDistrito").find("div.modal-content").LoadingOverlay("hide");
                 return response.ok ? response.json() : Promise.reject(response);
             })
             .then(responseJson => {
                 if (responseJson.estado) {
-                    tablaDataCategoria.row.add(responseJson.objeto).draw(false)
-                    $("#modalDataCategoria").modal("hide")
+                    tablaDataDistrito.row.add(responseJson.objeto).draw(false)
+                    $("#modalDataDistrito").modal("hide")
                     swal("Listo", "el producto fue creado", "success")
                 }
                 else {
@@ -114,22 +100,22 @@ $("#btnGuardarCategoria").click(function () {
     }
     else {
 
-        fetch("/Categoria/Editar", {
+        fetch("/Distrito/Editar", {
             method: "PUT",
             headers: { "Content-Type": "application/json;charset=utf-8" },
             body: JSON.stringify(modelo)
         })
             .then(response => {
-                $("#modalDataCategoria").find("div.modal-content").LoadingOverlay("hide");
+                $("#modalDataDistrito").find("div.modal-content").LoadingOverlay("hide");
                 return response.ok ? response.json() : Promise.reject(response);
             })
             .then(responseJson => {
 
                 if (responseJson.estado) {
 
-                    tablaDataCategoria.row(filaSeleccionada).data(responseJson.objeto).draw(false);
+                    tablaDataDistrito.row(filaSeleccionada).data(responseJson.objeto).draw(false);
                     filaSeleccionada = null;
-                    $("#modalDataCategoria").modal("hide")
+                    $("#modalDataDistrito").modal("hide")
                     swal("Listo", "el producto fue modificado", "success")
                 } else {
                     swal("Lo sentimos", responseJson.mensaje, "error")
@@ -145,19 +131,19 @@ $("#btnGuardarCategoria").click(function () {
 
 let filaSeleccionada;
 
-$("#tbdataCategoria tbody").on("click", ".btn-editar", function () {
+$("#tbdataDistrito tbody").on("click", ".btn-editar", function () {
 
     if ($(this).closest("tr").hasClass("child")) {
         filaSeleccionada = $(this).closest("tr").prev();
     } else {
         filaSeleccionada = $(this).closest("tr");
     }
-    const data = tablaDataCategoria.row(filaSeleccionada).data();
+    const data = tablaDataDistrito.row(filaSeleccionada).data();
     mostrarModal(data);
 })
 
 
-$("#tbdataCategoria tbody").on("click", ".btn-eliminar", function () {
+$("#tbdataDistrito tbody").on("click", ".btn-eliminar", function () {
 
     let fila;
     if ($(this).closest("tr").hasClass("child")) {
@@ -165,7 +151,7 @@ $("#tbdataCategoria tbody").on("click", ".btn-eliminar", function () {
     } else {
         fila = $(this).closest("tr");
     }
-    const data = tablaDataCategoria.row(fila).data();
+    const data = tablaDataDistrito.row(fila).data();
 
     swal({
         title: "¿Estas Seguro?",
@@ -183,7 +169,7 @@ $("#tbdataCategoria tbody").on("click", ".btn-eliminar", function () {
             if (respuesta) {
 
                 $(".showSweetAlert").LoadingOverlay("show");
-                fetch(`/Categoria/Eliminar?IdCategoria=${data.idCategoria}`, {
+                fetch(`/Distrito/Eliminar?IdDistrito=${data.idDistrito}`, {
                     method: "DELETE",
 
                 })
@@ -194,7 +180,7 @@ $("#tbdataCategoria tbody").on("click", ".btn-eliminar", function () {
                     .then(responseJson => {
                         if (responseJson.estado) {
 
-                            tablaDataCategoria.row(fila).remove().draw();
+                            tablaDataDistrito.row(fila).remove().draw();
                             swal("Listo", "el producto fue eliminado", "success")
 
                         }

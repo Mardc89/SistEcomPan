@@ -9,7 +9,10 @@ namespace Negocio.Interfaces
 {
     public interface IDistritoService
     {
-        Task<List<Distritos>> lista();
+        Task<List<Distritos>> Lista();
+        Task<Distritos> Crear(Distritos entidad);
+        Task<Distritos> Editar(Distritos entidad);
+        Task<bool> Eliminar(int IdCategoria);
         Task<IQueryable<Distritos>> ObtenerNombre();
         Task<string> ConsultarDistrito(int? IdDistrito);
     }

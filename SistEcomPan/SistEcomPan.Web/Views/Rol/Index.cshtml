@@ -4,8 +4,7 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-
-@section Estilos{
+@section Estilos {
 
     <link href="~/vendor/datatables/dataTables.bootstrap4.min.css" rel="stylesheet">
     <link href="~/vendor/datatables/extensiones/css/responsive.dataTables.min.css" rel="stylesheet">
@@ -13,32 +12,31 @@
 
 }
 
-
 <div class="container-fluid">
+    <!-- DataTales Example -->
     <div class="card shadow mb-4">
         <div class="card-header py-3 bg-primary">
-            <h6 class="m-0 font-weight-bold text-white">Lista de Categorias</h6>
+            <h6 class="m-0 font-weight-bold text-white">Lista de Roles</h6>
         </div>
         <div class="card-body">
             <div class="row">
                 <div class="col-sm-3">
-                    <button class="btn btn-success" id="btnNuevaCategoria"><i class="fas fa-plus-circle"></i> Nueva Categoria</button>
+                    <button class="btn btn-success" id="btnNuevoRol"><i class="fas fa-plus-circle"></i> Nuevo Rol</button>
                 </div>
             </div>
             <hr />
             <div class="row">
                 <div class="col-sm-12">
-                    <table class="table table-bordered" id="tbdataCategoria" cellspacing="0" style="width:100%">
+                    <table class="table table-bordered" id="tbdataRol" cellspacing="0" style="width:100%">
                         <thead>
                             <tr>
                                 <th>Id</th>
-                                <th>Descripcion</th>
+                                <th>Nombre de Rol</th>
                                 <th>Estado</th>
                                 <th>Acciones</th>
                             </tr>
                         </thead>
                         <tbody>
-
                         </tbody>
                     </table>
                 </div>
@@ -47,25 +45,27 @@
     </div>
 
     <!--  Modal-->
-    <div class="modal fade" id="modalDataCategoria" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static">
-        <div class="modal-dialog" role="document">
+    <div class="modal fade" id="modalDataRol" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static">
+        <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h6>Detalle Categoria</h6>
+                    <h6>Roles</h6>
                     <button class="close" type="button" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">×</span>
                     </button>
                 </div>
                 <div class="modal-body">
                     <form>
-                        <input type="hidden" value="0" id="txtIdCategoria">
+                        <input type="hidden" value="0" id="txtIdRol">
                         <div class="row">
-                            <div class="col-sm-12">
+                            <div class="col-sm-8">
                                 <div class="form-row">
-                                    <div class="form-group col-sm-6">
-                                        <label for="txtDescripcion">Descripcion</label>
-                                        <input type="text" class="form-control form-control-sm" id="txtDescripcion">
+                                    <div class="form-group col-sm-12">
+                                        <label for="txtNombreRol">Nombre de Rol</label>
+                                        <input type="text" class="form-control form-control-sm input-validar" id="txtNombreRol" name="NombreRol">
                                     </div>
+                                </div>
+                                <div class="form-row">
                                     <div class="form-group col-sm-6">
                                         <label for="cboEstado">Estado</label>
                                         <select class="form-control form-control-sm" id="cboEstado">
@@ -75,11 +75,13 @@
                                     </div>
                                 </div>
                             </div>
+
+
                         </div>
                     </form>
                 </div>
                 <div class="modal-footer">
-                    <button class="btn btn-primary btn-sm" type="button" id="btnGuardarCategoria">Guardar</button>
+                    <button class="btn btn-primary btn-sm" type="button" id="btnGuardarRol">Guardar</button>
                     <button class="btn btn-danger btn-sm" type="button" data-dismiss="modal">Cancel</button>
                 </div>
             </div>
@@ -88,7 +90,7 @@
 
 </div>
 
-@section Scripts{
+@section Scripts {
 
     <script src="~/vendor/datatables/jquery.dataTables.min.js"></script>
     <script src="~/vendor/datatables/dataTables.bootstrap4.min.js"></script>
@@ -98,6 +100,7 @@
     <script src="~/vendor/datatables/extensiones/js/buttons.html5.min.js"></script>
     <script src="~/vendor/datatables/extensiones/js/buttons.print.min.js"></script>
 
-    <script src="~/js/Vistas/CategoriaIndex.js"></script>
+    <script src="~/js/Vistas/RolesIndex.js"></script>
 
 }
+

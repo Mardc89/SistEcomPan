@@ -83,10 +83,9 @@ namespace Datos.Implementacion
             {
                 conexion.Open();
                 SqlCommand cmd = new SqlCommand("SPEditarCategorias", conexion);
-                cmd.Parameters.AddWithValue("IdCategoria", modelo.IdCategoria);
-                cmd.Parameters.AddWithValue("TipoDeCategoria", modelo.TipoDeCategoria);
-                cmd.Parameters.AddWithValue("FechaRegistro", modelo.FechaRegistro);
-                cmd.Parameters.AddWithValue("Estado", modelo.Estado);
+                cmd.Parameters.AddWithValue("@IdCategoria", modelo.IdCategoria);
+                cmd.Parameters.AddWithValue("@TipoDeCategoria", modelo.TipoDeCategoria);
+                cmd.Parameters.AddWithValue("@Estado", modelo.Estado);
                 cmd.CommandType = CommandType.StoredProcedure;
 
                 int filaAfectada = await cmd.ExecuteNonQueryAsync();
@@ -107,7 +106,7 @@ namespace Datos.Implementacion
             {
                 conexion.Open();
                 SqlCommand cmd = new SqlCommand("SPEliminarCategorias", conexion);
-                cmd.Parameters.AddWithValue("IdCategoria",id);
+                cmd.Parameters.AddWithValue("@IdCategoria",id);
                 cmd.CommandType = CommandType.StoredProcedure;
 
                 int filaAfectada = await cmd.ExecuteNonQueryAsync();
@@ -165,9 +164,37 @@ namespace Datos.Implementacion
 
         }
 
-        public Task<Categorias> Crear(Categorias modelo)
+        public async Task<Categorias> Crear(Categorias modelo)
         {
-            throw new NotImplementedException();
+            try
+            {
+                using (var conexion = new SqlConnection(_cadenaSQL))
+                {
+                    conexion.Open();
+                    SqlCommand cmd = new SqlCommand("SPRegistrarCategoria", conexion);
+                    cmd.Parameters.AddWithValue("@TipoDeCategoria", modelo.TipoDeCategoria);
+                    cmd.Parameters.AddWithValue("@Estado", modelo.Estado);
+
+                    cmd.CommandType = CommandType.StoredProcedure;
+
+                    SqlParameter outputParameter = new SqlParameter();
+                    outputParameter.ParameterName = "@IdCategoria";
+                    outputParameter.SqlDbType = SqlDbType.Int;
+                    outputParameter.Direction = ParameterDirection.Output;
+                    cmd.Parameters.Add(outputParameter);
+                    await cmd.ExecuteNonQueryAsync();
+
+                    int CategoriaId = Convert.ToInt32(outputParameter.Value);
+                    modelo.IdCategoria = CategoriaId;
+
+                    return modelo;
+                }
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
         }
 
 
@@ -227,9 +254,32 @@ namespace Datos.Implementacion
 
         }
 
-        public Task<Categorias> Verificar(string? c = null, string? p = null, int? d = null)
+        public async Task<Categorias> Verificar(string? Estado = null, string?TipoDeCategoria = null, int? IdCategoria = null)
         {
-            throw new NotImplementedException();
+            Categorias lista = null;
+            using (var conexion = new SqlConnection(_cadenaSQL))
+            {
+                conexion.Open();
+                SqlCommand cmd = new SqlCommand("SPConsultarTipoDeCategoria", conexion);
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@IdCategoria", (object)IdCategoria ?? DBNull.Value);
+                cmd.Parameters.AddWithValue("@TipoDeCategoria", (object)TipoDeCategoria ?? DBNull.Value);
+                using (var dr = await cmd.ExecuteReaderAsync())
+                {
+                    while (await dr.ReadAsync())
+                    {
+                        lista = new Categorias
+                        {
+                            IdCategoria = Convert.ToInt32(dr["IdCategoria"]),
+                            TipoDeCategoria = dr["TipoDeCategoria"].ToString(),
+                            FechaRegistro = Convert.ToDateTime(dr["FechaRegistro"]),
+                            Estado = Convert.ToBoolean(dr["Estado"])
+                        };
+                    }
+                }
+            }
+
+            return lista;
         }
     }
 }

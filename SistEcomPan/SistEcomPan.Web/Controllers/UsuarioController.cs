@@ -31,7 +31,7 @@ namespace SistEcomPan.Web.Controllers
         [HttpGet]
         public async Task<IActionResult> ListaRoles()
         {
-            var lista = await _rolService.lista();
+            var lista = await _rolService.Lista();
             List<VMRol> vmListaRoles = new List<VMRol>();
             foreach (var item in lista)
             {

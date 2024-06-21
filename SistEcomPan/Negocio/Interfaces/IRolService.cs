@@ -9,7 +9,10 @@ namespace Negocio.Interfaces
 {
     public interface IRolService
     {
-        Task<List<Roles>> lista();
+        Task<List<Roles>> Lista();
+        Task<Roles> Crear(Roles entidad);
+        Task<Roles> Editar(Roles entidad);
+        Task<bool> Eliminar(int IdRol);
         Task<IQueryable<Roles>> ObtenerNombre();
         Task<string>ConsultarRol(int? IdRol);
     }

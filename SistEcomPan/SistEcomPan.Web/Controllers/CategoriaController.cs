@@ -6,8 +6,7 @@ using Negocio.Implementacion;
 using SistEcomPan.Web.Models.ViewModels;
 using Newtonsoft.Json;
 using SistEcomPan.Web.Tools.Response;
-using Microsoft.AspNetCore.Authorization;
-
+using Microsoft.AspNetCore.Authorization; 
 
 namespace SistEcomPan.Web.Controllers
 {
@@ -26,7 +25,7 @@ namespace SistEcomPan.Web.Controllers
             return View();
         }
         [HttpGet]
-        public async Task<IActionResult> ListaCategoriass()
+        public async Task<IActionResult> ListaCategorias()
         {
             var lista = await _categoriaService.Lista();
             List<VMCategoria> vmListaCategorias = new List<VMCategoria>();

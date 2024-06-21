@@ -30,11 +30,11 @@ namespace SistEcomPan.Web.Controllers
             return View();
         }
 
-        [AllowAnonymous]
+        
         [HttpGet]
         public async Task<IActionResult> ListaDistritos()
         {
-            var lista = await _distritoService.lista();
+            var lista = await _distritoService.Lista();
             List<VMDistrito> vmListaDistritos = new List<VMDistrito>();
             foreach (var item in lista)
             {
@@ -52,30 +52,65 @@ namespace SistEcomPan.Web.Controllers
         {
             var clienteLista = await _clienteService.Lista();
             List<VMCliente> vmClienteLista = new List<VMCliente>();
-            var nombreDistrito = await _distritoService.ObtenerNombre();
+            //var nombreDistrito = await _distritoService.ObtenerNombre();
             foreach (var item in clienteLista)
             {
                 vmClienteLista.Add(new VMCliente
                 {
                     IdCliente = item.IdCliente,
-                    TipoCliente=item.TipoCliente,
+                    TipoCliente = item.TipoCliente,
                     Dni = item.Dni,
                     Nombres = item.Nombres,
                     Apellidos = item.Apellidos,
+                    NombreCompleto=item.Apellidos+""+item.Nombres,
                     Correo = item.Correo,
-                    Direccion=item.Direccion,
-                    Telefono=item.Telefono, 
+                    Direccion = item.Direccion,
+                    Telefono =item.Telefono,
                     IdDistrito = item.IdDistrito,
                     NombreUsuario = item.NombreUsuario,
-                    Clave = _encriptService.DesencriptarPassword(item.Clave), 
+                    Clave = _encriptService.DesencriptarPassword(item.Clave),   
                     Estado = Convert.ToInt32(item.Estado),
-                    UrlFoto = item.UrlFoto,                 
+                    UrlFoto = item.UrlFoto,
+                    NombreFoto =item.NombreFoto,
                     //NombreDistrito = nombreDistrito.Where(x => x.IdDistrito == item.IdDistrito).First().NombreDistrito,
                     NombreDistrito = await _distritoService.ConsultarDistrito(item.IdDistrito)
 
                 });
             }
             return StatusCode(StatusCodes.Status200OK, new { data = vmClienteLista });
+        }
+
+
+        [HttpGet]
+        public async Task<IActionResult> ObtenerClientes(string searchTerm = "", int page = 1, int itemsPerPage = 4)
+        {
+            var clienteLista = await _clienteService.Lista();                       
+            var pedidosFiltrados = clienteLista.Where(p =>
+                string.IsNullOrWhiteSpace(searchTerm) || p.Apellidos.ToLower().Contains(searchTerm.ToLower())
+            );
+            List<VMCliente> vmClienteLista = new List<VMCliente>();
+            //var nombreDistrito = await _distritoService.ObtenerNombre();
+            foreach (var item in clienteLista)
+            {
+                vmClienteLista.Add(new VMCliente
+                {
+                    IdCliente = item.IdCliente,
+                    TipoCliente = item.TipoCliente,
+                    Dni = item.Dni,
+                    NombreCompleto = item.Apellidos + " " + item.Nombres,
+                    Correo = item.Correo,
+                    Direccion = item.Direccion,
+                    Telefono = item.Telefono,
+                    NombreUsuario = item.NombreUsuario,
+                    //NombreFoto = item.NombreFoto,
+                    NombreDistrito = await _distritoService.ConsultarDistrito(item.IdDistrito)
+
+                });
+            }
+
+            var pedidosPaginados = vmClienteLista.Skip((page - 1) * itemsPerPage).Take(itemsPerPage).ToList();
+
+            return StatusCode(StatusCodes.Status200OK, new { clientes = pedidosPaginados, totalItems = vmClienteLista.Count() });
         }
 
         [HttpPost]

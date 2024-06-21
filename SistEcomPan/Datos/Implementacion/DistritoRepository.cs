@@ -76,8 +76,8 @@ namespace Datos.Implementacion
             {
                 conexion.Open();
                 SqlCommand cmd = new SqlCommand("SPEditarDistritos", conexion);
-                cmd.Parameters.AddWithValue("IdDistrito", modelo.IdDistrito);
-                cmd.Parameters.AddWithValue("NombreDistrito", modelo.NombreDistrito);
+                cmd.Parameters.AddWithValue("@IdDistrito", modelo.IdDistrito);
+                cmd.Parameters.AddWithValue("@NombreDistrito", modelo.NombreDistrito);
                 cmd.CommandType = CommandType.StoredProcedure;
 
                 int filaAfectada = await cmd.ExecuteNonQueryAsync();
@@ -98,7 +98,7 @@ namespace Datos.Implementacion
             {
                 conexion.Open();
                 SqlCommand cmd = new SqlCommand("SPEliminarDistritos", conexion);
-                cmd.Parameters.AddWithValue("IdDistrito", id);                                                                                                                                                                                             
+                cmd.Parameters.AddWithValue("@IdDistrito", id);                                                                                                                                                                                             
                 cmd.CommandType = CommandType.StoredProcedure;
 
                 int filaAfectada = await cmd.ExecuteNonQueryAsync();
@@ -117,9 +117,36 @@ namespace Datos.Implementacion
             throw new NotImplementedException();
         }
 
-        public Task<Distritos> Crear(Distritos modelo)
+        public async Task<Distritos> Crear(Distritos modelo)
         {
-            throw new NotImplementedException();
+            try
+            {
+                using (var conexion = new SqlConnection(_cadenaSQL))
+                {
+                    conexion.Open();
+                    SqlCommand cmd = new SqlCommand("SPRegistrarDistrito", conexion);
+                    cmd.Parameters.AddWithValue("@NombreDeDistrito", modelo.NombreDistrito);
+
+                    cmd.CommandType = CommandType.StoredProcedure;
+
+                    SqlParameter outputParameter = new SqlParameter();
+                    outputParameter.ParameterName = "@IdDistrito";
+                    outputParameter.SqlDbType = SqlDbType.Int;
+                    outputParameter.Direction = ParameterDirection.Output;
+                    cmd.Parameters.Add(outputParameter);
+                    await cmd.ExecuteNonQueryAsync();
+
+                    int DistritoId = Convert.ToInt32(outputParameter.Value);
+                    modelo.IdDistrito = DistritoId;
+
+                    return modelo;
+                }
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
         }
 
 

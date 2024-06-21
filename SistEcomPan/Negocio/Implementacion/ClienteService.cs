@@ -42,7 +42,7 @@ namespace Negocio.Implementacion
         public async Task<Clientes> Crear(Clientes entidad, Stream Foto = null, string NombreFoto = "", string UrlPlantillaCorreo = "")
         {
 
-            Clientes usuarioExiste = await _repositorio.Buscar(entidad.Correo);
+            Clientes usuarioExiste = await _repositorio.Buscar(entidad.Correo,null,null);
             //IQueryable<Clientes> usuarioEvaluado = clientes.Where(u => u.Correo == entidad.Correo);
             //Clientes usuarioExiste = clientes.FirstOrDefault();
 
@@ -148,13 +148,35 @@ namespace Negocio.Implementacion
                 usuarioEditar.NombreUsuario = entidad.NombreUsuario;
                 usuarioEditar.Correo = entidad.Correo;
                 usuarioEditar.Nombres = entidad.Nombres;
+                usuarioEditar.Dni = entidad.Dni;
+                usuarioEditar.Apellidos = entidad.Apellidos;
+                usuarioEditar.Clave = _encriptservice.EncriptarPassword(entidad.Clave);
+                usuarioEditar.TipoCliente = entidad.TipoCliente;
+                usuarioEditar.Estado = entidad.Estado;
+                usuarioEditar.Telefono = entidad.Telefono;
+                usuarioEditar.Direccion = entidad.Direccion;
 
                 if (usuarioEditar.NombreFoto == "")
                     usuarioEditar.NombreFoto = NombreFoto;
 
-                if (Foto != null)
+                if (Foto != null && Foto.Length > 0)
                 {
-                    usuarioEditar.UrlFoto = entidad.UrlFoto;
+                    var path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "Imagenes");
+                    if (!Directory.Exists(path))
+                    {
+                        Directory.CreateDirectory(path);
+                    }
+
+                    string fullpath = Path.Combine(path, NombreFoto);
+
+                    string UrlFoto = fullpath;
+
+                    using (var stream = new FileStream(fullpath, FileMode.Create))
+                    {
+                        Foto.CopyTo(stream);
+
+                    }
+                    usuarioEditar.UrlFoto = UrlFoto;
                 }
 
                 bool respuesta = await _repositorio.Editar(usuarioEditar);
@@ -185,11 +207,16 @@ namespace Negocio.Implementacion
 
                 Clientes usuarioEncontrado = await _repositorio.Buscar(null,null,IdCliente);
 
+
+
                 if (usuarioEncontrado == null)
                     throw new TaskCanceledException("El Usuario no Existe");
 
                 string nombreFoto = usuarioEncontrado.NombreFoto;
                 bool respuesta = await _repositorio.Eliminar(usuarioEncontrado.IdCliente);
+
+                if (nombreFoto != "")
+                    System.IO.File.Delete(usuarioEncontrado.UrlFoto);
 
                 return true;
 

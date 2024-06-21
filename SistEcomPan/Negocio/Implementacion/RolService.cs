@@ -28,7 +28,7 @@ namespace Negocio.Implementacion
             return roles.NombreRol;
         }
 
-        public async Task<List<Roles>> lista()
+        public async Task<List<Roles>> Lista()
         {
             List<Roles> query = await _repositorio.Lista();
             return query;
@@ -38,6 +38,92 @@ namespace Negocio.Implementacion
         {
             List<Roles> lista = await _repositorio.Lista();
             return lista.AsQueryable();
+        }
+
+        public async Task<Roles> Crear(Roles entidad)
+        {
+            //IQueryable<Categorias> categorias = await _repositorio.Consultar();
+            //IQueryable<Categorias> categoriaEvaluada = categorias.Where(u => u.TipoDeCategoria == entidad.TipoDeCategoria);
+            //Categorias categoriaExiste = categoriaEvaluada.FirstOrDefault();
+            Roles rolExiste = await _repositorio.Buscar(entidad.NombreRol,null, null);
+
+            if (rolExiste != null)
+                throw new TaskCanceledException("El Rol ya Existe");
+
+            try
+            {
+                Roles RolCreado = await _repositorio.Crear(entidad);
+
+                if (RolCreado.IdRol == 0)
+                    throw new TaskCanceledException("No se pudo crear el Rol");
+
+                return RolCreado;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+
+        }
+
+        public async Task<Roles> Editar(Roles entidad)
+        {
+
+            //IQueryable<Categorias> categorias = await _repositorio.Consultar();
+            //IQueryable<Categorias> categoriaEvaluada = categorias.Where(u => u.TipoDeCategoria == entidad.TipoDeCategoria && u.IdCategoria != entidad.IdCategoria);
+            //Categorias categoriaExiste = categoriaEvaluada.FirstOrDefault();
+            Roles rolExiste = await _repositorio.Verificar(entidad.NombreRol,null, entidad.IdRol);
+
+            if (rolExiste != null)
+                throw new TaskCanceledException("El Rol ya Existe");
+
+            try
+            {
+                //IQueryable<Categorias> buscarCategoria = await _repositorio.Consultar();
+                //IQueryable<Categorias> categoriaEncontrada = buscarCategoria.Where(u => u.IdCategoria == entidad.IdCategoria);
+                //Categorias categoriaEditar = categoriaEncontrada.First();
+                Roles rolEditar = await _repositorio.Buscar(null, null, entidad.IdRol);
+                rolEditar.NombreRol = entidad.NombreRol;
+                rolEditar.Estado = entidad.Estado;
+
+                bool respuesta = await _repositorio.Editar(rolEditar);
+
+                if (!respuesta)
+                    throw new TaskCanceledException("No se pudo modificar el rol");
+
+                return rolEditar;
+
+
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+        public async Task<bool> Eliminar(int IdRol)
+        {
+            try
+            {
+                //IQueryable<Categorias> categorias = await _repositorio.Consultar();
+                //IQueryable<Categorias> categoriaEvaluada = categorias.Where(u => u.IdCategoria == IdCategoria);
+                //Categorias categoriaEncontrada = categoriaEvaluada.FirstOrDefault();
+                Roles rolEncontrado = await _repositorio.Buscar(null, null, IdRol);
+                if (rolEncontrado == null)
+                    throw new TaskCanceledException("El Rol no Existe");
+
+                bool respuesta = await _repositorio.Eliminar(rolEncontrado.IdRol);
+
+                return respuesta;
+
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
         }
     }
 }

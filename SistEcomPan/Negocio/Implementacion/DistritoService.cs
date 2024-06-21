@@ -17,7 +17,7 @@ namespace Negocio.Implementacion
         {
             _repositorio = repositorio;
         }
-        public async Task<List<Distritos>> lista()
+        public async Task<List<Distritos>> Lista()
         {
             List<Distritos> query = await _repositorio.Lista();
             return query;

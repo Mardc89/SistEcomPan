@@ -52,7 +52,7 @@
     <None Include="wwwroot\js\Vistas\DashBoard_Index.js" />
     <None Include="wwwroot\js\Vistas\PerfilUsuario.js" />
     <None Include="wwwroot\js\Vistas\PedidoIndex.js" />
-    <None Include="wwwroot\js\Vistas\Usuario_index.js" />
+    <None Include="wwwroot\js\Vistas\UsuarioIndex.js" />
     <None Include="wwwroot\scss\navs\_global.scss" />
     <None Include="wwwroot\scss\navs\_sidebar.scss" />
     <None Include="wwwroot\scss\navs\_topbar.scss" />

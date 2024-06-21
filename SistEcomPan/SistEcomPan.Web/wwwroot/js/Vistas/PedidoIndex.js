@@ -17,6 +17,115 @@ $(document).ready(function () {
 
 })
 
+$("#btnCliente").click(function () {
+    mostrarClientes();
+})
+
+
+function mostrarClientes() {
+/*    obtenerFecha();*/
+    buscarClientes();
+    $("#modalDataPedidoCliente").modal("show");
+}
+
+document.addEventListener("DOMContentLoaded", function () {
+    document.getElementById('ClienteBuscado').addEventListener('click', function (event) {
+
+
+        if (event.target.tagName == 'TD') {
+
+            const fila = event.target.parentNode;
+            const nombreCompleto = fila.cells[2].textContent;
+
+            document.getElementById('txtNombreCliente').value = nombreCompleto;
+
+            $("#modalDataPedidoCliente").modal("hide");
+        }
+
+    });
+});
+
+
+const ClientesPorPagina = 4; // Cantidad de productos por página
+let PagClienteInicial = 1; // Página actual al cargar
+
+
+function buscarClientes(searchTer = '', page = 1) {
+    fetch(`/Cliente/ObtenerClientes?searchTerm=${searchTer}&page=${page}&itemsPerPage=${ClientesPorPagina}`)
+        .then(response => response.json())
+        .then(data => {
+            const clientes = data.clientes; // Array de productos obtenidos
+            const totalItems = data.totalItems; // Total de productos encontrados
+            /*  const nombre = data.nombresCompletos;*/
+            // Actualizar la tabla modal con los productos obtenidos 
+            const clientTable = document.getElementById('ClienteBuscado');
+            clientTable.innerHTML = '';
+
+            clientes.forEach(cliente => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+            <td>${cliente.idCliente}</td>
+            <td>${cliente.dni}</td>
+            <td>${cliente.nombreCompleto}</td>
+            <td>${cliente.correo}</td>
+            <td>${cliente.direccion}</td>
+            <td>${cliente.telefono}</td>
+          `;
+                clientTable.appendChild(row);
+            });
+
+            // Generar la paginación
+            const totalPages = Math.ceil(totalItems / ClientesPorPagina);
+            const pagination = document.getElementById('paginacionCliente');
+            pagination.innerHTML = '';
+
+            for (let i = 1; i <= totalPages; i++) {
+                const li = document.createElement('li');
+                li.classList.add('page-item');
+                const link = document.createElement('a');
+                link.classList.add('page-link');
+                link.href = '#';
+                link.textContent = i;
+                li.appendChild(link);
+
+                if (i === PagClienteInicial) {
+                    li.classList.add('active');
+                }
+
+                link.addEventListener('click', () => {
+                    PagClienteInicial = i;
+                    buscarClientes(searchTer, PagClienteInicial);
+                    resaltarPagCliente();
+                });
+
+                pagination.appendChild(li);
+            }
+
+            resaltarPagCliente();
+        })
+        .catch(error => {
+            console.error('Error al buscar productos:', error);
+        });
+}
+
+
+function resaltarPagCliente() {
+    const paginationItems = document.querySelectorAll('#PaginacionCliente .page-item');
+    paginationItems.forEach(item => {
+        item.classList.remove('active');
+        const link = item.querySelector('.page-link');
+        if (link.textContent === PagClienteInicial.toString()) {
+            item.classList.add('active');
+        }
+    });
+}
+
+
+
+
+
+
+
 
 function obtenerFecha() {
     let fechaActual = new Date();

@@ -140,8 +140,8 @@ namespace Datos.Implementacion
             using (var conexion = new SqlConnection(_cadenaSQL))
             {
                 conexion.Open();
-                SqlCommand cmd = new SqlCommand("SPEliminarClientes", conexion);
-                cmd.Parameters.AddWithValue("IdCliente", id);
+                SqlCommand cmd = new SqlCommand("SPEliminarCliente", conexion);
+                cmd.Parameters.AddWithValue("@IdCliente", id);
                 cmd.CommandType = CommandType.StoredProcedure;
 
                 int filaAfectada = await cmd.ExecuteNonQueryAsync();

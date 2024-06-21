@@ -60,7 +60,7 @@ namespace Negocio.Implementacion
             //IQueryable<Usuarios> usuarios = await _repositorio.Consultar();
             //IQueryable <Usuarios>usuarioEvaluado=usuarios.Where(u => u.Correo == entidad.Correo);
             //Usuarios usuarioExiste=usuarioEvaluado.FirstOrDefault();
-            Usuarios usuarioExiste = await _repositorio.Buscar(entidad.Correo);
+            Usuarios usuarioExiste = await _repositorio.Buscar(entidad.Correo,null,null);
 
             if (usuarioExiste != null)
                 throw new TaskCanceledException("El Correo no Existe");

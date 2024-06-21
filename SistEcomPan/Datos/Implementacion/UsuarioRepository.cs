@@ -268,7 +268,7 @@ namespace Datos.Implementacion
             return lista;
         }
 
-        public async Task<Usuarios> Verificar(string? Correo = null, string? Clave = null, int? IdCliente = null)
+        public async Task<Usuarios> Verificar(string? Correo = null, string? Clave = null, int? IdUsuario = null)
         {
             Usuarios lista = null;
             using (var conexion = new SqlConnection(_cadenaSQL))
@@ -277,7 +277,7 @@ namespace Datos.Implementacion
                 SqlCommand cmd = new SqlCommand("SPConsultarUsuarioCorreo", conexion);
                 cmd.CommandType = CommandType.StoredProcedure;
                 cmd.Parameters.AddWithValue("@Correo", (object)Correo ?? DBNull.Value);
-                cmd.Parameters.AddWithValue("@IdCliente", (object)IdCliente ?? DBNull.Value);
+                cmd.Parameters.AddWithValue("@IdUsuario", (object)IdUsuario ?? DBNull.Value);
                 cmd.Parameters.AddWithValue("@Clave", (object)Clave ?? DBNull.Value);
                 using (var dr = await cmd.ExecuteReaderAsync())
                 {

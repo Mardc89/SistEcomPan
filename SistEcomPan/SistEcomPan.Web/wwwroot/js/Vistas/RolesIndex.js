@@ -1,29 +1,27 @@
 ﻿
 
+
 const MODELO_BASE = {
-    idCategoria: 0,
-    tipoDeCategoria: "",
-    estado: 1,
+    idRol: 0,
+    nombreRol: "",
+    estado: 1
 
 }
 
-let tablaDataCategoria;
+let tablaDataRol;
 const itemPagina = 4;
 
 $(document).ready(function () {
-
-
-
-    tablaDataCategoria = $('#tbdataCategoria').DataTable({
+    tablaDataRol = $('#tbdataRol').DataTable({
         responsive: true,
         "ajax": {
-            "url": '/Categoria/Lista',
+            "url": '/Rol/Lista',
             "type": "GET",
             "datatype": "json"
         },
         "columns": [
-            { "data": "idCategoria", "searchable": false },
-            { "data": "tipoDeCategoria" },
+            { "data": "idRol", "searchable": false },
+            { "data": "nombreRol" },
             {
                 "data": "estado", render: function (data) {
                     if (data == 1)
@@ -57,20 +55,19 @@ $(document).ready(function () {
 
 function mostrarModal(modelo = MODELO_BASE) {
 
-    $("#txtIdCategoria").val(modelo.idCategoria)
-    $("#txtDescripcion").val(modelo.tipoDeCategoria)
+    $("#txtIdRol").val(modelo.idRol)
+    $("#txtNombreRol").val(modelo.nombreRol)
     $("#cboEstado").val(modelo.estado)
-
-    $("#modalDataCategoria").modal("show")
+    $("#modalDataRol").modal("show")
 }
 
 
-$("#btnNuevaCategoria").click(function () {
+$("#btnNuevoRol").click(function () {
     mostrarModal()
 })
 
 
-$("#btnGuardarCategoria").click(function () {
+$("#btnGuardarRol").click(function () {
 
     const inputs = $("input.input-validar").serializeArray();
     const inputs_sin_valor = inputs.filter((item) => item.value.trim() == "")
@@ -83,29 +80,31 @@ $("#btnGuardarCategoria").click(function () {
     }
 
     const modelo = structuredClone(MODELO_BASE);
-    modelo["idCategoria"] = parseInt($("#txtIdCategoria").val())
-    modelo["tipoDeCategoria"] = $("#txtDescripcion").val()
+    modelo["idRol"] = parseInt($("#txtIdRol").val())
+    modelo["nombreRol"] = $("#txtNombreRol").val()
     modelo["estado"] = $("#cboEstado").val()
+  
 
 
-    $("#modalDataCategoria").find("div.modal-content").LoadingOverlay("show");
+    $("#modalDataRol").find("div.modal-content").LoadingOverlay("show");
 
-    if (modelo.idCategoria == 0) {
+    if (modelo.idRol == 0) {
 
-        fetch("/Categoria/Crear", {
+        fetch("/Rol/Crear", {
             method: "POST",
             headers: { "Content-Type": "application/json;charset=utf-8" },
             body: JSON.stringify(modelo)
+            
         })
             .then(response => {
-                $("#modalDataCategoria").find("div.modal-content").LoadingOverlay("hide");
+                $("#modalDataRol").find("div.modal-content").LoadingOverlay("hide");
                 return response.ok ? response.json() : Promise.reject(response);
             })
             .then(responseJson => {
                 if (responseJson.estado) {
-                    tablaDataCategoria.row.add(responseJson.objeto).draw(false)
-                    $("#modalDataCategoria").modal("hide")
-                    swal("Listo", "el producto fue creado", "success")
+                    tablaDataRol.row.add(responseJson.objeto).draw(false)
+                    $("#modalDataRol").modal("hide")
+                    swal("Listo", "el Rol fue creado", "success")
                 }
                 else {
                     swal("Lo sentimos", responseJson.mensaje, "error")
@@ -114,23 +113,23 @@ $("#btnGuardarCategoria").click(function () {
     }
     else {
 
-        fetch("/Categoria/Editar", {
+        fetch("/Rol/Editar", {
             method: "PUT",
             headers: { "Content-Type": "application/json;charset=utf-8" },
             body: JSON.stringify(modelo)
         })
             .then(response => {
-                $("#modalDataCategoria").find("div.modal-content").LoadingOverlay("hide");
+                $("#modalDataRol").find("div.modal-content").LoadingOverlay("hide");
                 return response.ok ? response.json() : Promise.reject(response);
             })
             .then(responseJson => {
 
                 if (responseJson.estado) {
 
-                    tablaDataCategoria.row(filaSeleccionada).data(responseJson.objeto).draw(false);
+                    tablaDataRol.row(filaSeleccionada).data(responseJson.objeto).draw(false);
                     filaSeleccionada = null;
-                    $("#modalDataCategoria").modal("hide")
-                    swal("Listo", "el producto fue modificado", "success")
+                    $("#modalDataRol").modal("hide")
+                    swal("Listo", "el Rol fue modificado", "success")
                 } else {
                     swal("Lo sentimos", responseJson.mensaje, "error")
                 }
@@ -145,19 +144,19 @@ $("#btnGuardarCategoria").click(function () {
 
 let filaSeleccionada;
 
-$("#tbdataCategoria tbody").on("click", ".btn-editar", function () {
+$("#tbdataRol tbody").on("click", ".btn-editar", function () {
 
     if ($(this).closest("tr").hasClass("child")) {
         filaSeleccionada = $(this).closest("tr").prev();
     } else {
         filaSeleccionada = $(this).closest("tr");
     }
-    const data = tablaDataCategoria.row(filaSeleccionada).data();
+    const data = tablaDataRol.row(filaSeleccionada).data();
     mostrarModal(data);
 })
 
 
-$("#tbdataCategoria tbody").on("click", ".btn-eliminar", function () {
+$("#tbdataRol tbody").on("click", ".btn-eliminar", function () {
 
     let fila;
     if ($(this).closest("tr").hasClass("child")) {
@@ -165,11 +164,11 @@ $("#tbdataCategoria tbody").on("click", ".btn-eliminar", function () {
     } else {
         fila = $(this).closest("tr");
     }
-    const data = tablaDataCategoria.row(fila).data();
+    const data = tablaDataRol.row(fila).data();
 
     swal({
         title: "¿Estas Seguro?",
-        text: `Eliminar  "${data.tipoDeCategoria}"`,
+        text: `Eliminar  "${data.nombreRol}"`,
         type: "warning",
         showCancelButton: true,
         confirmButtonClass: "btn-danger",
@@ -183,7 +182,7 @@ $("#tbdataCategoria tbody").on("click", ".btn-eliminar", function () {
             if (respuesta) {
 
                 $(".showSweetAlert").LoadingOverlay("show");
-                fetch(`/Categoria/Eliminar?IdCategoria=${data.idCategoria}`, {
+                fetch(`/Rol/Eliminar?IdRol=${data.idRol}`, {
                     method: "DELETE",
 
                 })
@@ -194,8 +193,8 @@ $("#tbdataCategoria tbody").on("click", ".btn-eliminar", function () {
                     .then(responseJson => {
                         if (responseJson.estado) {
 
-                            tablaDataCategoria.row(fila).remove().draw();
-                            swal("Listo", "el producto fue eliminado", "success")
+                            tablaDataRol.row(fila).remove().draw();
+                            swal("Listo", "el Rol fue eliminado", "success")
 
                         }
                         else {
