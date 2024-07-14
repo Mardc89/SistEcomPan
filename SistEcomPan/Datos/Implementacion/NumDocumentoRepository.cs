@@ -56,6 +56,16 @@ namespace Datos.Implementacion
 
         }
 
+        public Task<List<NumeroDocumento>> Consultar(string? c = null, string? p = null, string? d = null)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<List<NumeroDocumento>> ConsultarLista()
+        {
+            throw new NotImplementedException();
+        }
+
         public Task<NumeroDocumento> Crear(NumeroDocumento modelo)
         {
             throw new NotImplementedException();

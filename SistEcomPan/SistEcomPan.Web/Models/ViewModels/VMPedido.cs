@@ -10,7 +10,7 @@ namespace SistEcomPan.Web.Models.ViewModels
         public string Dni { get; set; }
         public string Nombres { get; set; }
         public string Apellidos { get; set; }
-        public string NombresCompletos { get; set; }
+        public string? NombresCompletos { get; set; }
         public string Codigo { get; set; }
         public string MontoTotal { get; set; }
         public string Estado { get; set; }

@@ -21,8 +21,9 @@ namespace SistEcomPan.Web.Controllers
         private readonly IRolService _rolServicio;
 
 
-        public AccesoController(IUsuarioService usuarioServicio,IClienteService clienteServicio,IRolService rolServicio)
-        {
+        public AccesoController(IUsuarioService usuarioServicio,IClienteService clienteServicio,IRolService rolServicio) 
+        { 
+                                                                                                                                                                                                                                                                                                                                                                                                                                                      
             _usuarioServicio= usuarioServicio;
             _clienteServicio= clienteServicio;
             _rolServicio = rolServicio;
@@ -97,7 +98,7 @@ namespace SistEcomPan.Web.Controllers
                 gResponse.Estado = false;
                 gResponse.Mensaje = ex.Message;
 
-            }
+            }                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         
 
             return RedirectToAction("Login", "Acceso");
         }
@@ -122,7 +123,8 @@ namespace SistEcomPan.Web.Controllers
                 new Claim(ClaimTypes.Name,usuarioEncontrado.NombreUsuario),
                 new Claim(ClaimTypes.NameIdentifier,usuarioEncontrado.IdUsuario.ToString()),
                 new Claim("NombreFoto",usuarioEncontrado.NombreFoto),
-                new Claim("Dni",usuarioEncontrado.Dni)
+                new Claim("Dni",usuarioEncontrado.Dni),
+                new Claim("NombreCompleto",usuarioEncontrado.Apellidos+" "+usuarioEncontrado.Nombres)
                 };
 
                 //var UsuarioRoles = await _rolServicio.ObtenerNombre();
@@ -151,7 +153,8 @@ namespace SistEcomPan.Web.Controllers
                 new Claim(ClaimTypes.NameIdentifier,clienteEncontrado.IdCliente.ToString()),
                 new Claim("NombreFoto",clienteEncontrado.NombreFoto),
                 new Claim("Dni",clienteEncontrado.Dni),
-                new Claim(ClaimTypes.Role,"Cliente")
+                new Claim(ClaimTypes.Role,"Cliente"),
+                new Claim("NombreCompleto",clienteEncontrado.Apellidos+" "+clienteEncontrado.Nombres )
                 };
 
                 ClaimsIdentity claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);

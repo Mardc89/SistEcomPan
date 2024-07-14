@@ -132,7 +132,67 @@ function buscarPedidos(searchTer = '', page = 1) {
 
 
 
+const ListProductPagina = 4; // Cantidad de productos por página
+let ListPaginaInicial = 1; // Página actual al cargar
 
+
+function buscarListPedidos(searchTer = '', page = 1) {
+    fetch(`/Pedido/ObtenerPedidos?searchTerm=${searchTer}&page=${page}&itemsPerPage=${ListProductPagina}`)
+        .then(response => response.json())
+        .then(data => {
+            const pedidos = data.pedidos; // Array de productos obtenidos
+            const totalItems = data.totalItems; // Total de productos encontrados
+            /*  const nombre = data.nombresCompletos;*/
+            // Actualizar la tabla modal con los productos obtenidos 
+            const productTable = document.getElementById('PedidoBuscado');
+            productTable.innerHTML = '';
+
+            pedidos.forEach(pedido => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+            <td>${pedido.idPedido}</td>
+            <td>${pedido.codigo}</td>
+            <td>${pedido.nombresCompletos}</td>
+            <td>${pedido.montoTotal}</td>
+            <td>${pedido.estado}</td>
+            <td>${cambiarFecha(pedido.fechaPedido)}</td>
+          `;
+                productTable.appendChild(row);
+            });
+
+            // Generar la paginación
+            const totalPages = Math.ceil(totalItems / ListProductPorPagina);
+            const pagination = document.getElementById('paginacion');
+            pagination.innerHTML = '';
+
+            for (let i = 1; i <= totalPages; i++) {
+                const li = document.createElement('li');
+                li.classList.add('page-item');
+                const link = document.createElement('a');
+                link.classList.add('page-link');
+                link.href = '#';
+                link.textContent = i;
+                li.appendChild(link);
+
+                if (i === ListPaginaInicial) {
+                    li.classList.add('active');
+                }
+
+                link.addEventListener('click', () => {
+                    PaginaInicial = i;
+                    buscarListPedidos(searchTer, ListPaginaInicial);
+                    resaltarListPagActual();
+                });
+
+                pagination.appendChild(li);
+            }
+
+            resaltarListPagActual();
+        })
+        .catch(error => {
+            console.error('Error al buscar productos:', error);
+        });
+}
     
 
 

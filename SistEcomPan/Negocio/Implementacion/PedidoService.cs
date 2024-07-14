@@ -30,9 +30,24 @@ namespace Negocio.Implementacion
             throw new NotImplementedException();
         }
 
-        public Task<List<Pedidos>> Historial(string numeroPedido, string fechaInicio, string fechaFin)
+        public async Task<List<Pedidos>> Historial(string numeroPedido, string fechaInicio, string fechaFin)
         {
-            throw new NotImplementedException();
+            fechaInicio = fechaInicio is null ? "" : fechaInicio;
+            fechaFin = fechaFin is null ? "" : fechaFin;
+
+
+            if (fechaInicio != "" && fechaFin != "")
+            {
+                List<Pedidos> query = await _repositorioPedido.Consultar(null, fechaInicio, fechaFin);
+                return query;
+            }
+            else
+            {
+                List<Pedidos> query = await _repositorioPedido.Consultar(numeroPedido, null, null);
+                return query;
+            }
+
+
         }
 
         public async Task<List<Productos>> ObtenerProductos(string busqueda)

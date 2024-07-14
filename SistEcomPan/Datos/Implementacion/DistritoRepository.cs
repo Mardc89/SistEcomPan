@@ -211,5 +211,15 @@ namespace Datos.Implementacion
 
             return lista;
         }
+
+        public Task<List<Distritos>> ConsultarLista()
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<List<Distritos>> Consultar(string? c = null, string? p = null, string? d = null)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

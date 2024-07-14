@@ -66,7 +66,7 @@ function buscarClientes(searchTer = '', page = 1) {
                 row.innerHTML = `
             <td>${cliente.idCliente}</td>
             <td>${cliente.dni}</td>
-            <td>${cliente.nombreCompleto}</td>
+            <td class="nombres">${cliente.nombreCompleto}</td>
             <td>${cliente.correo}</td>
             <td>${cliente.direccion}</td>
             <td>${cliente.telefono}</td>
@@ -104,7 +104,7 @@ function buscarClientes(searchTer = '', page = 1) {
             resaltarPagCliente();
         })
         .catch(error => {
-            console.error('Error al buscar productos:', error);
+            console.error('Error al buscar clientes:', error);
         });
 }
 
@@ -121,7 +121,11 @@ function resaltarPagCliente() {
 }
 
 
-
+document.getElementById('BuscarNombreCliente').addEventListener('input', function (event) {
+    const Busqueda = event.target.value;
+    PagClienteInicial = 1; // Reiniciar a la primera página al realizar una nueva búsqueda
+    buscarClientes(Busqueda, PagClienteInicial);
+});
 
 
 
@@ -145,43 +149,58 @@ function obtenerFecha() {
 }
 
 
-
-$("#cboNombreCliente").change(function () {
-    var nombreCliente = $("#cboNombreCliente option:selected").text();
-    fetch(`/Pedido/ListaNumeroDocumento?nombreCompleto=${nombreCliente}`)
-        .then(response => {
-            return response.ok ? response.json() : Promise.reject(response);
-        })
-        .then(responseJson => {
-            if (responseJson.length > 0) {
-                responseJson.forEach((item) => {
-                    $("#txtDocumentoCliente").val(item.dni)
-                })
-            }
-        })
-
-})
-
-$("#txtDocumentoCliente").click(function () {
-    if ($("#txtDocumentoCliente").val().length == 8) {
-        var numeroDocumento = $("#txtDocumentoCliente").val();
-        fetch(`/Pedido/ListaClientes?numeroDocumento=${numeroDocumento}`)
+if (userRol==="Administrador") {
+    /* let DniCliente = document.getElementById("DniPersonal").textContent;*/
+    document.getElementById("btnCliente").disabled = false;
+    $("#ClienteBuscado").on('click', 'tr', function () {
+        var nombreCliente = $(this).find('.nombres').text();
+        $("#ClienteBuscado").removeClass('selected');
+        $(this).addClass('selected');
+        fetch(`/Pedido/ListaNumeroDocumento?nombreCompleto=${nombreCliente}`)
             .then(response => {
                 return response.ok ? response.json() : Promise.reject(response);
             })
             .then(responseJson => {
                 if (responseJson.length > 0) {
                     responseJson.forEach((item) => {
-                        $("#cboNombreCliente").val(item.idCliente).text(item.nombreCompleto);                       
+                        $("#txtDocumentoCliente").val(item.dni)
                     })
                 }
             })
-    }
 
-})
+    })
+
+    $("#txtDocumentoCliente").click(function () {
+        if ($("#txtDocumentoCliente").val().length == 8) {
+            var numeroDocumento = $("#txtDocumentoCliente").val();
+            fetch(`/Pedido/ListaClientes?numeroDocumento=${numeroDocumento}`)
+                .then(response => {
+                    return response.ok ? response.json() : Promise.reject(response);
+                })
+                .then(responseJson => {
+                    if (responseJson.length > 0) {
+                        responseJson.forEach((item) => {
+                            $("#txtNombreCliente").val(item.nombreCompleto);
+                        })
+                    }
+                })
+        }
+
+    })
 
 
+    
 
+}
+else if (userRol === "Cliente") {
+    document.getElementById("btnCliente").disabled = true;
+    let DniCliente = document.getElementById("DniPersonal").textContent;
+    let nombresCompletos = document.getElementById("NombreCompleto").textContent;
+    document.getElementById("txtDocumentoCliente").value=DniCliente;
+    document.getElementById("txtNombreCliente").value = nombresCompletos;
+   
+    
+}
 function ModalPedidos() {
     MostrarProduct();
   

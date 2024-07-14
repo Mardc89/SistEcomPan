@@ -1,0 +1,195 @@
+﻿
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+
+@section Estilos {
+    <link href="~/vendor/datatables/dataTables.bootstrap4.min.css" rel="stylesheet">
+    <link href="~/vendor/datatables/extensiones/css/responsive.dataTables.min.css" rel="stylesheet">
+    <link href="~/vendor/datatables/extensiones/css/buttons.dataTables.min.css" rel="stylesheet">
+
+}
+
+
+<div class="card shadow mb-4">
+    <div class="card-header py-3 bg-primary">
+        <h6 class="m-0 font-weight-bold text-white">Lista de Pedidos</h6>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-sm-3">
+                <button class="btn-success" id="btnNuevoPago"><i class="fas fa-user-plus"></i>Nuevo Pedido</button>
+            </div>
+        </div>
+        <hr />
+        <div class="row">
+            <div class="col-sm-12">
+                <table class="table table-bordered" id="tbDataAllPedidos" width="100%" cellspacing="0" style="width:100%">
+                    <thead>
+                        <tr>
+                            <th>N°</th>
+                            <th>Codigo</th>
+                            <th>Nombre del Cliente</th>
+                            <th>Monto De Pedido</th>
+                            <th>Fecha De Pago</th>
+                            <th>Estado</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- Ventana modal -->
+<div class="modal fade" id="modalDataDetallePedido" tabindex="-1" role="dialog" aria-labelledby="searchModalLabel" aria-hidden="true" data-backdrop="static">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+
+                <h6>Detalle Pedido</h6>
+                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+
+                @*      <h5 class="modal-title" id="searchModalLabel">Buscar Productos</h5> *@
+                @*                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+                </button>*@
+            </div>
+            <div class="modal-body">
+                <div class="row align-items-center">
+                    <div class="form-group col-sm-4 d-flex align-items-center">
+                        <label for="txtInicialDetallePedido" class="mr-2 mb-0" style="white-space:nowrap;">Monto Pedido</label>
+                        <input type="text" class="form-control form-control-sm input-validar" id="txtInicialDetallePedido" name="InicialDetallePedido" />
+                    </div>
+                    <div class="form-group col-sm-4 d-flex align-items-center">
+                        <label for="txtFinalDetallePedido" class="mr-2 mb-0" style="white-space:nowrap;">Monto Final</label>
+                        <input type="text" class="form-control form-control-sm input-validar" id="txtFinalDetallePedido" name="FinalDetallePedido" />
+                    </div>
+                    <div class="form-group col-sm-4 d-flex align-items-center">
+                        <button class="btn btn-danger btn-sm mr-2 " type="button" id="btnAgregar">Agregar</button>
+                        <button class="btn btn-primary btn-sm" type="button" id="btnGuardarPedido">Guardar</button>
+                    </div>
+                    @*                     <div class="form-group col-sm-3">
+
+                    </div> *@
+
+
+                </div>
+                <!-- Aquí va el contenido del formulario de búsqueda -->
+                <!-- Aquí se muestra la tabla de productos -->
+                <table class="table table-sm" id="tbDetallePedidos">
+                    <!-- Aquí van las filas de la tabla -->
+                    <thead>
+                        <tr>
+                            <th>Numero de Pedido</th>
+                            <th>Producto</th>
+                            <th>Precio</th>
+                            <th>Cantidad</th>
+                            <th>Total</th>
+                        </tr>
+                    </thead>
+                    <tbody id="DetallePedidoBuscado">
+                    </tbody>
+                </table>
+                <!-- Aquí se muestra la paginación -->
+            </div>
+            <div class="modal-footer">
+
+
+
+                <nav id="DetallePedidoPagination" class="pagination justify-content-center" aria-label="Page navigation example">
+
+                </nav>
+
+
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="modal fade" id="modalDataPedido" tabindex="-1" role="dialog" aria-labelledby="searchModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="searchModalLabel">Buscar Productos</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <!-- Aquí va el contenido del formulario de búsqueda -->
+                <div class="row">
+                    <div class="col-12">
+                        <!-- Input para la búsqueda -->
+                        <input type="text" id="BusquedaPedidos" class="form-control" placeholder="Buscar...">
+                    </div>
+                    @*                    <div class="col-2">
+                    <!-- Botón para iniciar la búsqueda -->
+                    <button type="button" class="btn btn-primary btn-block">Buscar</button>
+                    </div>*@
+                </div>
+                <br>
+                <!-- Aquí se muestra la tabla de productos -->
+                <table class="table table-striped" id="DataProducto">
+                    <!-- Aquí van las filas de la tabla -->
+                    <thead>
+                        <tr>
+                            <th>Codigo</th>
+                            <th>Descripcion</th>
+                            <th>Categoria</th>
+                            <th>Stock</th>
+                            <th>Precio</th>
+                            <th>Cantidad</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="ProductoBuscado">
+                    </tbody>
+                </table>
+                <!-- Aquí se muestra la paginación -->
+            </div>
+            <div class="modal-footer">
+                <nav id="Paginations" class="pagination justify-content-center" aria-label="Page navigation example">
+
+                </nav>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+@section Scripts {
+
+
+    <script src="~/vendor/datatables/jquery.dataTables.min.js"></script>
+    <script src="~/vendor/datatables/dataTables.bootstrap4.min.js"></script>
+    <script src="~/vendor/datatables/extensiones/js/dataTables.responsive.min.js"></script>
+    <script src="~/vendor/datatables/extensiones/js/dataTables.buttons.min.js"></script>
+    <script src="~/vendor/datatables/extensiones/js/jszip.min.js"></script>
+    <script src="~/vendor/datatables/extensiones/js/buttons.html5.min.js"></script>
+    <script src="~/vendor/datatables/extensiones/js/buttons.print.min.js"></script>
+
+
+    <script src="~/js/Vistas/CrudPedidos.js"></script>
+
+}
+
+

@@ -21,7 +21,7 @@
         <div class="card-body">
             <div class="row">
                 <div class="col-sm-3">
-                    <button class="btn btn-success" id="btnNuevoProducto"><i class="fas fa-plus-circle"></i> Nuevo Producto</button>
+                    <button class="btn btn-success" id="btnNuevoProducto"><i class="fas fa-plus-circle"></i> Nuevo Pedido</button>
                 </div>
             </div>
             <hr />
@@ -39,7 +39,7 @@
                                 <th>Estado</th>
                                 <th>Acciones</th>
                             </tr>
-                        </thead>
+                        </thead>  
                         <tbody>
                         </tbody>
                     </table>
@@ -96,7 +96,10 @@
                                 <div class="form-row">
                                     <div class="form-group col-sm-6">
                                         <label for="txtImagen">Imagen</label>
-                                        <input class="form-control-file" type="file" id="txtImagen" />
+                                        <div class="custom-file">
+                                            <input type="file" class="custom-file-input" id="txtImagen">
+                                            <label class="custom-file-label" for="txtImagen">Seleccionar Imagen</label>
+                                        </div>
                                     </div>
                                 </div>
                             </div>

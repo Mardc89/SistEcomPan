@@ -83,14 +83,18 @@ namespace SistEcomPan.Web.Controllers
 
         [HttpGet]
         public async Task<IActionResult> ObtenerClientes(string searchTerm = "", int page = 1, int itemsPerPage = 4)
-        {
+       {
             var clienteLista = await _clienteService.Lista();                       
             var pedidosFiltrados = clienteLista.Where(p =>
-                string.IsNullOrWhiteSpace(searchTerm) || p.Apellidos.ToLower().Contains(searchTerm.ToLower())
+                string.IsNullOrWhiteSpace(searchTerm) || p.Apellidos.ToLower().EndsWith(searchTerm.ToLower())||
+                p.Apellidos.ToLower().StartsWith(searchTerm.ToLower())|| 
+                p.Nombres.ToLower().StartsWith(searchTerm.ToLower())||
+                p.Nombres.ToLower().EndsWith(searchTerm.ToLower())||
+                p.Dni.ToLower().Contains(searchTerm.ToLower())
             );
             List<VMCliente> vmClienteLista = new List<VMCliente>();
             //var nombreDistrito = await _distritoService.ObtenerNombre();
-            foreach (var item in clienteLista)
+            foreach (var item in pedidosFiltrados)
             {
                 vmClienteLista.Add(new VMCliente
                 {

@@ -66,9 +66,9 @@
                                 <div class="form-group col-sm-4">
                                     <input type="text" class="form-control form-control-sm" id="txtFecha" placeholder="Fecha">
                                 </div>
-                                <div class="form-group col-sm-4">
+@*                                 <div class="form-group col-sm-4">
                                     <input type="text" class="form-control form-control-sm" id="txtOrdenPedido" placeholder="Orden de Pedido">
-                                </div>
+                                </div> *@
                                 <div class="form-group col-sm-4">
                                     <input type="text" class="form-control form-control-sm" id="txtEstado" placeholder="Estado" value="Pendiente" disabled>
                                 </div>
@@ -120,17 +120,17 @@
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="searchModalLabel3">Buscar Productos</h5>
-                @*                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <h5 class="modal-title" id="searchModalLabel3">Buscar Clientes</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
-                </button>*@
+                </button>
             </div>
             <div class="modal-body">
                 <!-- Aquí va el contenido del formulario de búsqueda -->
                 <div class="row">
                     <div class="col-12">
                         <!-- Input para la búsqueda -->
-                        <input type="text" id="searchInputs" class="form-control" placeholder="Buscar...">
+                        <input type="text" id="BuscarNombreCliente" class="form-control" placeholder="Buscar...">
                     </div>
                     @*                    <div class="col-2">
                     <!-- Botón para iniciar la búsqueda -->
@@ -139,7 +139,7 @@
                 </div>
                 <br>
                 <!-- Aquí se muestra la tabla de productos -->
-                <table class="table table-striped" id="">
+                <table class="table table-striped" id="BuscandoClientes">
                     <!-- Aquí van las filas de la tabla -->
                     <thead>
                         <tr>
@@ -171,9 +171,9 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="searchModalLabel">Buscar Productos</h5>
-@*                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
-                </button>*@
+                </button>
             </div>
             <div class="modal-body">
                 <!-- Aquí va el contenido del formulario de búsqueda -->
@@ -219,7 +219,9 @@
 
 
 
-
+<script>
+    var userRol = "@(User.IsInRole("Administrador") ? "Administrador" : User.IsInRole("Cliente") ? "Cliente": "otro")";
+</script>
 
     @section Scripts{
 
@@ -234,6 +236,7 @@
 
 
     <script src="~/js/Vistas/PedidoIndex.js"></script>
+
 
 }
 

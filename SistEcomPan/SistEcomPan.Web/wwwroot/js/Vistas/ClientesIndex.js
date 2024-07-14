@@ -52,8 +52,10 @@ $(document).ready(function () {
             {
                 "data": "nombreFoto", render: function (data) {
                     let ruta = data;
-                    let nombreCarpeta = /Imagenes/;
+                    let nombreCarpeta = /ImagenesPerfil/;
                     let rutaRelativa = `${nombreCarpeta}${ruta}`;
+                    if (data == "" || data == null)
+                        rutaRelativa = '/ImagenDefault/ImgUser.png';
                     return `<img style="height:60px" src=${rutaRelativa} class="rounded mx-auto d-block"/>`;
                 }
 
@@ -105,10 +107,13 @@ $(document).ready(function () {
 
 
 function mostrarModal(modelo = MODELO_BASE) {
-    const rutaBase = '/Imagenes/';
+    const rutaBase = '/ImagenesPerfil/';
     //let rutaCompleta = modelo.urlFoto;
     //let rutaRelativa = rutaCompleta.replace('C:\\Proyects\\SistEcomPan\\SistEcomPan\\SistEcomPan.Web\\wwwroot\\Imagenes\\', '/Imagenes/');
     let rutaRelativa = rutaBase + modelo.nombreFoto;
+    if (modelo.nombreFoto == "") {
+        rutaRelativa = '/ImagenDefault/ImgUser.png';
+    }
     $("#txtIdCliente").val(modelo.idCliente)
     $("#txtDni").val(modelo.dni)
     $("#txtNombres").val(modelo.nombres)
@@ -206,6 +211,7 @@ $("#btnGuardarCliente").click(function () {
                     tablaDataCliente.row(filaSeleccionada).data(responseJson.objeto).draw(false);
                     filaSeleccionada = null;
                     $("#modalDataCliente").modal("hide")
+                  
                     swal("Listo", "el usuario fue modificado", "success")
                 } else {
                     swal("Lo sentimos", responseJson.mensaje, "error")

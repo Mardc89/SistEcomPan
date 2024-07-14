@@ -281,5 +281,15 @@ namespace Datos.Implementacion
 
             return lista;
         }
+
+        public Task<List<Categorias>> ConsultarLista()
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<List<Categorias>> Consultar(string? c = null, string? p = null, string? d = null)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

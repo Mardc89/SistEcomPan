@@ -59,13 +59,13 @@ $("#btnGuardarDescuento").click(function () {
 
 
 
-const itemPagina = 3; // Cantidad de productos por página
+const itemPaginaDes = 3; // Cantidad de productos por página
 let  paginaActual= 1; // Página actual al cargar
 
 
 function buscarProductos(busquedaDetalle = '',pagina = 1) {
     busquedaDetalle = document.getElementById("searchInput").value;
-    fetch(`/Pedido/ObtenerDetalleFinal?searchTerm=${busquedaDetalle}&page=${pagina}&itemsPerPage=${itemPagina}`)
+    fetch(`/Pedido/ObtenerDetalleFinal?searchTerm=${busquedaDetalle}&page=${pagina}&itemsPerPage=${itemPaginaDes}`)
         .then(response => response.json())
         .then(data => {
             const detallePedidos = data.pedidos;
@@ -112,7 +112,7 @@ function buscarProductos(busquedaDetalle = '',pagina = 1) {
 
            
             // Generar la paginación
-            const totalPages = Math.ceil(totalItems / itemPagina);
+            const totalPages = Math.ceil(totalItems / itemPaginaDes);
             const paginationDes = document.getElementById('paginacionDes');
             paginationDes.innerHTML = '';
             let Inicial = 1;

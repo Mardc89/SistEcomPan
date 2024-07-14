@@ -231,5 +231,11 @@ namespace Datos.Implementacion
 
             return lista;
         }
+
+
+        public Task<List<Roles>> Consultar(string? c = null, string? p = null, string? d = null)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

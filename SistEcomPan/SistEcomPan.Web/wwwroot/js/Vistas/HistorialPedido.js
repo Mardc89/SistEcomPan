@@ -69,26 +69,26 @@ $("#btnBuscar").click(function () {
 
     $(".card-body").find("div.row").LoadingOverlay("show");
 
-    fetch(`/Pedido/Historial?numeroVenta=${codigo}&fechaInicio=${fechaInicio}&fechaFin=${fechaFin}`)
+    fetch(`/Pedido/Historial?codigo=${codigo}&fechaInicio=${fechaInicio}&fechaFin=${fechaFin}`)
         .then(response => {
             $(".card-body").find("div.row").LoadingOverlay("hide");
             return response.ok ? response.json() : Promise.reject(response);
         })
         .then(responseJson => {
 
-            $("#tbpedido tbody").html("");
+            $("#tbPedido tbody").html("");
 
             if (responseJson.length > 0) {
 
                 responseJson.forEach((pedido) => {
 
-                    $("#tbpedido tbody").append(
+                    $("#tbPedido tbody").append(
                         $("<tr>").append(                       
-                            $("<td>").text(venta.codigo),
-                            $("<td>").text(venta.documentoCliente),
-                            $("<td>").text(venta.nombreCliente),
-                            $("<td>").text(venta.total),
-                            $("<td>").text(venta.fechaRegistro),
+                            $("<td>").text(pedido.codigo),
+                            $("<td>").text(pedido.dni),
+                            $("<td>").text(pedido.nombresCompletos),
+                            $("<td>").text(pedido.montoTotal),
+                            $("<td>").text(pedido.fechaPedido),
                             $("<td>").append(
                                 $("<button>").addClass("btn btn-info btn-sm").append(
                                     $("<i>").addClass("fas fa-eye")
@@ -105,7 +105,7 @@ $("#btnBuscar").click(function () {
 
 
 
-$("#tbpedido tbody").on("click", ".btn-info", function () {
+$("#tbPedido tbody").on("click", ".btn-info", function () {
 
     let d = $(this).data("pedido")
 

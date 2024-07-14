@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
+using System.Globalization;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
@@ -158,7 +159,7 @@ namespace Datos.Implementacion
             throw new NotImplementedException();
         }
 
-        public async Task<IQueryable<Pedidos>> ConsultarPedido(DateTime?fechaPedido=null)
+        public async Task<List<Pedidos>> Consultar(string? Codigo=null,string? FechaInicio=null,string? FechaFin = null)
         {
 
 
@@ -166,9 +167,11 @@ namespace Datos.Implementacion
             using (var conexion = new SqlConnection(_cadenaSQL))
             {
                 conexion.Open();
-                SqlCommand cmd = new SqlCommand("SPConsultarPedidos", conexion);
+                SqlCommand cmd = new SqlCommand("SPHistorialPedidos", conexion);
                 cmd.CommandType = CommandType.StoredProcedure;
-                cmd.Parameters.AddWithValue("@FechaPedido",(object)fechaPedido??DBNull.Value);
+                cmd.Parameters.AddWithValue("@CodigoPedido", (object)Codigo ?? DBNull.Value);
+                cmd.Parameters.AddWithValue("@FechaInicio", string.IsNullOrEmpty(FechaInicio)?DBNull.Value:DateTime.ParseExact(FechaInicio, "dd/MM/yyyy", new CultureInfo("es-PE")));
+                cmd.Parameters.AddWithValue("@FechaFin", string.IsNullOrEmpty(FechaFin)?DBNull.Value:DateTime.ParseExact(FechaFin, "dd/MM/yyyy", new CultureInfo("es-PE")));
 
                 using (var dr = await cmd.ExecuteReaderAsync())
                 {
@@ -187,7 +190,7 @@ namespace Datos.Implementacion
                 }
             }
 
-            return lista.AsQueryable();
+            return lista;           
         }
 
         public Task<IQueryable<Pedidos>> Obtener(string consulta)
@@ -195,9 +198,35 @@ namespace Datos.Implementacion
             throw new NotImplementedException();
         }
 
-        public Task<IQueryable<Pedidos>> Consultar()
+        public async Task<IQueryable<Pedidos>> Consultar()
         {
-            throw new NotImplementedException();
+
+            List<Pedidos> lista = new List<Pedidos>();
+            using (var conexion = new SqlConnection(_cadenaSQL))
+            {
+                conexion.Open();
+                SqlCommand cmd = new SqlCommand("SPConsultarPedidos", conexion);
+                cmd.CommandType = CommandType.StoredProcedure;
+                //cmd.Parameters.AddWithValue("@FechaPedido", (object)fechaPedido ?? DBNull.Value);
+
+                using (var dr = await cmd.ExecuteReaderAsync())
+                {
+                    while (await dr.ReadAsync())
+                    {
+                        lista.Add(new Pedidos
+                        {
+                            IdPedido = Convert.ToInt32(dr["IdPedido"]),
+                            IdCliente = Convert.ToInt32(dr["IdCliente"]),
+                            Codigo = dr["Codigo"].ToString(),
+                            MontoTotal = Convert.ToDecimal(dr["MontoTotal"]),
+                            Estado = dr["Estado"].ToString(),
+                            FechaPedido = Convert.ToDateTime(dr["FechaPedido"])
+                        });
+                    }
+                }
+            }
+
+            return lista.AsQueryable();
         }
 
         public Task<List<Pedidos>> Reporte(DateTime FechaInicio, DateTime FechaFin)
@@ -205,12 +234,44 @@ namespace Datos.Implementacion
             throw new NotImplementedException();
         }
 
-        public Task<Pedidos> Buscar(string? c = null, string? p = null, int? d = null)
+        public async Task<Pedidos> Buscar(string? fechaPedido = null, string? p = null, int? d = null)
+        {
+            Pedidos lista = null;
+            using (var conexion = new SqlConnection(_cadenaSQL))
+            {
+                conexion.Open();
+                SqlCommand cmd = new SqlCommand("SPConsultarPedidos", conexion);
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@FechaPedido", (object)fechaPedido ?? DBNull.Value);
+
+                using (var dr = await cmd.ExecuteReaderAsync())
+                {
+                    while (await dr.ReadAsync())
+                    {
+                        lista=new Pedidos
+                        {
+                            IdPedido = Convert.ToInt32(dr["IdPedido"]),
+                            IdCliente = Convert.ToInt32(dr["IdCliente"]),
+                            Codigo = dr["Codigo"].ToString(),
+                            MontoTotal = Convert.ToDecimal(dr["MontoTotal"]),
+                            Estado = dr["Estado"].ToString(),
+                            FechaPedido = Convert.ToDateTime(dr["FechaPedido"])
+                        };
+                    }
+                }
+            }
+
+            return lista;
+        }
+
+        public Task<Pedidos> Verificar(string? c = null, string? p = null, int? d = null)
         {
             throw new NotImplementedException();
         }
 
-        public Task<Pedidos> Verificar(string? c = null, string? p = null, int? d = null)
+
+
+        public Task<IQueryable<Pedidos>> ConsultarPedido(DateTime? fechaPedido = null)
         {
             throw new NotImplementedException();
         }

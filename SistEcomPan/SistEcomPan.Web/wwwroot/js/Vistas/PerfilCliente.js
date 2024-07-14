@@ -1,4 +1,34 @@
-﻿
+﻿    function ObtenerDatosCliente(){
+        fetch("/Home/ObtenerCliente")
+            .then(response => {
+                $(".container-fluid").LoadingOverlay("hide");
+                return response.ok ? response.json() : Promise.reject(response);
+            })
+            .then(responseJson => {
+                if (responseJson.estado) {
+                    const d = responseJson.objeto
+
+                    $("#ImgFoto").attr("src", `/ImagenesPerfil/${d.nombreFoto}`)
+                    /*                $("#txtFoto").val(d.urlFoto)*/
+                    $("#txtDni").val(d.dni)
+                    $("#txtIdDistrito").val(d.idDistrito)
+                    $("#txtTipoCliente").val(d.tipoCliente)
+                    $("#txtNombres").val(d.nombres)
+                    $("#txtApellidos").val(d.apellidos)
+                    $("#txtCorreo").val(d.correo)
+                    $("#txtDireccion").val(d.direccion)
+                    $("#txtTelefono").val(d.telefono)
+                    $("#txtDistrito").val(d.nombreDistrito)
+                    $("#txtNombreUsuario").val(d.nombreUsuario)
+                    $("#txtClave").val(d.clave)
+
+                }
+                else {
+
+                    swal("Lo sentimos", responseJson.mensaje, "error")
+                }
+            })
+    }
 $(document).ready(function () {
 
     fetch("/Cliente/ListaDistritos")
@@ -16,36 +46,9 @@ $(document).ready(function () {
         })
 
     $(".container-fluid").LoadingOverlay("show");
+    ObtenerDatosCliente();
 
-    fetch("/Home/ObtenerCliente")
-        .then(response => {
-            $(".container-fluid").LoadingOverlay("hide");
-            return response.ok ? response.json() : Promise.reject(response);
-        })
-        .then(responseJson => {
-            if (responseJson.estado) {
-                const d = responseJson.objeto
 
-                $("#ImgFoto").attr("src", `/ImagenesPerfil/${d.nombreFoto}`)
-/*                $("#txtFoto").val(d.urlFoto)*/
-                $("#txtDni").val(d.dni)
-                $("#txtIdDistrito").val(d.idDistrito)
-                $("#txtTipoCliente").val(d.tipoCliente)
-                $("#txtNombres").val(d.nombres)
-                $("#txtApellidos").val(d.apellidos)
-                $("#txtCorreo").val(d.correo)
-                $("#txtDireccion").val(d.direccion)
-                $("#txtTelefono").val(d.telefono)
-                $("#txtDistrito").val(d.nombreDistrito)
-                $("#txtNombreUsuario").val(d.nombreUsuario)
-                $("#txtClave").val(d.clave)
-
-            }
-            else {
-
-                swal("Lo sentimos", responseJson.mensaje, "error")
-            }
-        })
 
 })
 
@@ -116,6 +119,7 @@ $("#btnGuardarCambios").click(function () {
                     .then(responseJson => {
                         if (responseJson.estado) {
                             swal("Listo", "Los Cambios fueron Guardados", "success")
+                            ObtenerDatosCliente();
                         }
                         else {
                             swal("Lo sentimos", responseJson.mensaje, "error")

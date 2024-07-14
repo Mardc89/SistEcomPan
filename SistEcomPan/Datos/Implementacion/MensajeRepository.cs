@@ -153,5 +153,10 @@ namespace Datos.Implementacion
         {
             throw new NotImplementedException();
         }
+
+        public Task<List<Mensajes>> Consultar(string? c = null, string? p = null, string? d = null)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

@@ -72,7 +72,7 @@ namespace Negocio.Implementacion
 
                 if (Foto != null && Foto.Length > 0)
                 {
-                    var path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot","Imagenes");
+                    var path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot","ImagenesPerfil");
                     if (!Directory.Exists(path))
                     {
                         Directory.CreateDirectory(path);
@@ -174,7 +174,7 @@ namespace Negocio.Implementacion
 
                 if (Foto != null && Foto.Length > 0)
                 {
-                    var path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "Imagenes");
+                    var path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "ImagenesPerfil");
                     if (!Directory.Exists(path))
                     {
                         Directory.CreateDirectory(path);

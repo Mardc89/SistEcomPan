@@ -11,6 +11,7 @@ namespace SistEcomPan.Web.Tools.ViewComponents
             string nombreUsuario = "";
             string nombreFotoUsuario = "";
             string dniUsuario = "";
+            string nombreCompleto = "";
 
             if (claimUser.Identity.IsAuthenticated){
                 nombreUsuario = claimUser.Claims
@@ -19,10 +20,12 @@ namespace SistEcomPan.Web.Tools.ViewComponents
 
                 nombreFotoUsuario = ((ClaimsIdentity)claimUser.Identity).FindFirst("NombreFoto").Value;
                 dniUsuario = ((ClaimsIdentity)claimUser.Identity).FindFirst("Dni").Value;
+                nombreCompleto = ((ClaimsIdentity)claimUser.Identity).FindFirst("NombreCompleto").Value;
             }
 
             ViewData["nombreUsuario"] = nombreUsuario;
             ViewData["nombreFotoUsuario"] = nombreFotoUsuario;
+            ViewData["nombreCompleto"] = nombreCompleto;
             ViewData["dniUsuario"] = dniUsuario;
 
             return View();

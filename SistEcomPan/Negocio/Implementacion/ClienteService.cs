@@ -27,6 +27,11 @@ namespace Negocio.Implementacion
             Clientes clientes = await _repositorio.Buscar(null,null,IdCliente);
             return clientes.Nombres +" "+ clientes.Apellidos;
         }
+        public async Task<string> ObtenerDni(int IdCliente)
+        {
+            Clientes clientes = await _repositorio.Buscar(null, null, IdCliente);
+            return clientes.Dni;
+        }
         public async Task<List<Clientes>> Lista()
         {
             List<Clientes> query = await _repositorio.Lista();
@@ -57,7 +62,7 @@ namespace Negocio.Implementacion
 
                 if (Foto != null && Foto.Length > 0)
                 {
-                    var path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "Imagenes");
+                    var path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "ImagenesPerfil");
                     if (!Directory.Exists(path))
                     {
                         Directory.CreateDirectory(path);
@@ -161,7 +166,7 @@ namespace Negocio.Implementacion
 
                 if (Foto != null && Foto.Length > 0)
                 {
-                    var path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "Imagenes");
+                    var path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "ImagenesPerfil");
                     if (!Directory.Exists(path))
                     {
                         Directory.CreateDirectory(path);

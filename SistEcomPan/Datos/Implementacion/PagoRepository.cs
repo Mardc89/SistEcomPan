@@ -233,5 +233,15 @@ namespace Datos.Implementacion
         {
             throw new NotImplementedException();
         }
+
+        public Task<List<Pagos>> ConsultarLista()
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<List<Pagos>> Consultar(string? c = null, string? p = null, string? d = null)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

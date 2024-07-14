@@ -304,5 +304,11 @@ namespace Datos.Implementacion
 
             return lista;
         }
+
+
+        public Task<List<Usuarios>> Consultar(string? c = null, string? p = null, string? d = null)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
