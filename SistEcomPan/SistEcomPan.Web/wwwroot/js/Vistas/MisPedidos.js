@@ -11,6 +11,11 @@ const MODELO_BASE = {
 
 }
 
+document.getElementById("btnNuevoPedido").addEventListener("click", function () {
+    window.location.href = 'NuevoPedido';
+});
+
+
 let tablaDataMisPedidos;
 
 const itemPagina = 4; // Cantidad de productos por página
@@ -33,6 +38,7 @@ function cambiarFecha(fecha) {
 
 
 $(document).ready(function () {
+    ObtenerDatosCliente();
     let busqueda = "";
     let busquedaDetalle = document.getElementById("DniPersonal").textContent;
     tablaDataMisPedidos = $('#tbDataMisPedidos').DataTable({

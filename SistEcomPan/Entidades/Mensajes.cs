@@ -9,10 +9,14 @@ namespace Entidades
     public class Mensajes
     {
         public int IdMensaje { get; set; }
-        public int IdCliente { get; set; }
-        public Clientes Cliente { get; set; }
-        public string Asunto { get; set; }
-        public string Descripcion{ get; set; }
-        public DateTime Fecha { get; set; }
+        public int IdRemitente { get; set; }  
+        public string? Asunto { get; set; }
+        public string? Cuerpo { get; set; }
+        public string Remitente { get; set; }
+        public int? IdRespuestaMensaje{ get; set; } 
+        public DateTime FechaDeMensaje { get; set; }
+        public Clientes Clientes { get; set; }
+        public Usuarios Usuarios { get; set; }
+
     }
 }

@@ -27,6 +27,27 @@ namespace Negocio.Implementacion
             Clientes clientes = await _repositorio.Buscar(null,null,IdCliente);
             return clientes.Nombres +" "+ clientes.Apellidos;
         }
+
+        public async Task<string> ObtenerCorreo(int IdCliente)
+        {
+            Clientes clientes = await _repositorio.Buscar(null, null, IdCliente);
+            return clientes.Correo;
+        }
+        public async Task<int> ObtenerIdCorreoCliente(string correo)
+        {
+
+            try
+            {
+                Clientes clientes = await _repositorio.Buscar(correo, null, null);
+                return clientes?.IdCliente??0;
+
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+
+        }
         public async Task<string> ObtenerDni(int IdCliente)
         {
             Clientes clientes = await _repositorio.Buscar(null, null, IdCliente);
@@ -52,7 +73,7 @@ namespace Negocio.Implementacion
             //Clientes usuarioExiste = clientes.FirstOrDefault();
 
             if (usuarioExiste != null)
-                throw new TaskCanceledException("El Correo no Existe");
+                throw new TaskCanceledException("El Correo ya Existe");
 
             try
             {

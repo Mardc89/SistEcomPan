@@ -13,6 +13,12 @@ const MODELO_BASE = {
 
 }
 
+document.getElementById("btnNuevoPedido").addEventListener("click", function () {
+    window.location.href = 'NuevoPedido';
+});
+
+
+
 let tablaAllPedidos;
 
 const itemPagina = 4; // Cantidad de productos por página
@@ -27,45 +33,8 @@ $("#btnAgregar").click(function () {
     ModalPedidos();
 })
 
-//$('#modalDataPedido').on('show.bs.modal', function () {
-//    var zIndex = 1050 + (10 * $('.modal:visible').length);
-//    $(this).css('z-index', zIndex);
-//    setTimeout(function () {
-//        $('.modal-backdrop').not('.modal-stack').css('z-index', zIndex - 1).addClass('modal-stack');
-//    }, 0);
-//});
-
-//$('#modalDataPedido').on('hidden.bs.modal', function () {
-//    if ($('.modal:visible').length) {
-//        setTimeout(function () {
-//            $(document.body).addClass('modal-open');
-//        }, 0);
-//    }
-//});
 
 
-//$('#modalDataPedido').on('show.bs.modal', function () {
-//    var zIndex = 1050 + (10 * $('.modal:visible').length);
-//    $(this).css('z-index', zIndex);
-//    setTimeout(function () {
-//        $('.modal-backdrop').not('.modal-stack').css('z-index', zIndex - 1).addClass('modal-stack');
-//    }, 0);
-//});
-
-//$('#modalDataDetallePedido').on('hidden.bs.modal', function () {
-//    if ($('.modal:visible').length) {
-//        setTimeout(function () {
-//            $(document.body).addClass('modal-open');
-//        }, 0);
-//    }
-//});
-
-// Ensure backdrop for first modal stays in place
-//$('#modalDataDetallePedido').on('hidden.bs.modal', function () {
-//    if ($('#modalDataPedido').is(':visible')) {
-//        $('body').addClass('modal-open');
-//    }
-//});
 
 function cambiarFecha(fecha) {
 
@@ -263,7 +232,7 @@ function BuscarDetallePedido(idPedido) {
                 }
                 const row = document.createElement('tr');
                 row.innerHTML = `  
-            <td>${pedido.idPedido}</td>
+            <td>${pedido.idProducto}</td>
             <td>${pedido.descripcionProducto}</td>
             <td>${precio.toFixed(2)}</td>
             <td><input type="text" class="form-control form-control-sm" id="txtCantidad" placeholder="Ingrese Cantidad" value=${pedido.cantidad} disabled></td>
@@ -280,31 +249,7 @@ function BuscarDetallePedido(idPedido) {
             const pagination = document.getElementById('DetallePedidoPagination');
             pagination.innerHTML = '';
 
-            //for (let i = 1; i <= totalPages; i++) {
-            //    const li = document.createElement('li');
-            //    li.classList.add('page-item');
-            //    const link = document.createElement('a');
-            //    link.classList.add('page-link');
-            //    link.href = '#';
-            //    link.textContent = i;
-            //    li.appendChild(link);
 
-            //    if (i === PaginaInicial) {
-            //        li.classList.add('active');
-            //    /*    calcularTotal(PaginaInicial);*/
-            //    }
-
-            //    link.addEventListener('click', () => {
-            //        PaginaInicial = i;
-            //        BuscarDetallePedido(idPedido, PaginaInicial);
-                  
-            //        resaltarPaginaDetalleActual();
-            //    });
-
-            //    pagination.appendChild(li);
-            //}
-
-          /*  resaltarPaginaDetalleActual();*/
         })
         .catch(error => {
             console.error('Error al buscar productos:', error);
@@ -333,7 +278,7 @@ function EliminarProducto(button) {
 
 function agregarProducto(button) {
     const row = button.parentNode.parentNode;
-    const IdProducto = row.cells[0].textContent;
+    let IdProducto = row.cells[0].textContent;
     const descripcion = row.cells[1].textContent;
     const categoria = row.cells[2].textContent;
     const stock = parseFloat(row.cells[3].textContent);
@@ -354,7 +299,8 @@ function agregarProducto(button) {
         let cantidadTotal = 0, nuevaCantidad = 0;
         const tablaProductos = document.getElementById('DetallePedidoBuscado');
         const filas = tablaProductos.getElementsByTagName('tr');
-
+        //const filaID = filas[0];
+        //IdProducto = filaID.cells[0].textContent;
         for (let i = 0; i < filas.length; i++) {
             const fila = filas[i];
     /*        alert("soy:"+cantidadEscogida)*/
@@ -368,17 +314,19 @@ function agregarProducto(button) {
                 alert(cantidad);
                 nuevaCantidad = cantidadExistente + cantidad;
                 if (nuevaCantidad <= stock) {
-                    fila.cells[3].textContent = nuevaCantidad;
+                    cantidadInicial.value = nuevaCantidad;
                     alert(nuevaCantidad);
                     cantidadTotal = nuevaCantidad;
-                    cantidad = cantidadTotal;
-                    total = precio * cantidad;
+                    total = precio * cantidadTotal;
                     fila.cells[4].textContent = total.toFixed(2);
-                    cantidadInicial.value = total.toFixed(2);
-                    cantidadInicial.disabled = true;
+                    cantidadInicial.value = cantidadTotal;
+                  /*  cantidadInicial.disabled = true;*/
                     alert(fila.cells[4].textContent);
                     calcularTotal();
                     return;
+                }
+                else {
+                    alert("cantidad superar al stock:"+ nuevaCantidad);
                 }
                 return;
             }
@@ -405,51 +353,32 @@ function agregarProducto(button) {
 
 
 
-
+let totalPedido = 0;
 function calcularTotal() {
-    let total = 0;
+    totalPedido = 0;
     const tabla = document.getElementById('tbDetallePedidos').getElementsByTagName('tbody')[0];
     const filas = tabla.getElementsByTagName('tr');
 /*    let suma = 0;*/
     for (let i = 0; i < filas.length; i++) {
             const fila = filas[i];
             const totalFila = parseFloat(fila.cells[4].textContent);
-            total += totalFila;
+            totalPedido += totalFila;
 
     }
-    document.getElementById('txtFinalDetallePedido').value = total.toFixed(2);
-    alert("el total es:" + total);
+    document.getElementById('txtFinalDetallePedido').value = totalPedido.toFixed(2);
+    alert("el total es:" + totalPedido);
 /*    suma = suma + total;*/
    
 }
 
-//function calcularTotal(paginas) {
 
-//    const tabla = document.getElementById('tbDetallePedidos').getElementsByTagName('tbody')[0];
-//    const filas = tabla.getElementsByTagName('tr');
-//    for (let j = paginas; j <= paginas; j++) {
-//        for (let i = 0; i < filas.length; i++) {
-//            const fila = filas[i];
-//            const totalFila = parseFloat(fila.cells[5].textContent);
-//            total += totalFila;
 
-//        }
-//        suma = suma + total;
-//    }
-//    document.getElementById('montoTotalPedido').textContent = suma.toFixed(2);
-    
-//}
-
-// Evento cuando el usuario escribe en la barra de búsqueda
-//document.getElementById('searchInputs').addEventListener('input', function (event) {
-//    const searchTer = event.target.value;
-//    PaginaInicial = 1; // Reiniciar a la primera página al realizar una nueva búsqueda
-//    buscarDetallePedido(searchTer, PaginaInicial);
-//});
+let idPedidos = 0;
 
 function mostrarModalDetallePedido(modelo = MODELO_BASE) {
 
-    let idPedidos = modelo.idPedido;
+    idPedidos = modelo.idPedido;
+    let montoTotal = modelo.montoTotal;
 /*    suma = 0, total = 0;*/
     BuscarDetallePedido(idPedidos);
     $("#txtInicialDetallePedido").val(modelo.montoTotal);
@@ -463,77 +392,7 @@ $("#btnNuevoProducto").click(function () {
 })
 
 
-//$("#btnGuardarProducto").click(function () {
 
-
-
-//    const modelo = structuredClone(MODELO_BASE);
-//    modelo["idProducto"] = parseInt($("#txtIdProducto").val())
-//    modelo["descripcion"] = $("#txtDescripcion").val()
-//    modelo["precio"] = $("#txtPrecio").val()
-//    modelo["stock"] = $("#txtStock").val()
-//    modelo["idCategoria"] = $("#cboCategoria").val()
-//    modelo["estado"] = $("#cboEstado").val()
-
-//    const inputFoto = document.getElementById("txtImagen")
-
-//    const formData = new FormData();
-
-//    formData.append("foto", inputFoto.files[0])
-//    formData.append("modelo", JSON.stringify(modelo))
-
-//    $("#modalDataProducto").find("div.modal-content").LoadingOverlay("show");
-
-//    if (modelo.idUsuario == 0) {
-
-//        fetch("/Producto/Crear", {
-//            method: "POST",
-//            body: formData
-//        })
-//            .then(response => {
-//                $("#modalDataProducto").find("div.modal-content").LoadingOverlay("hide");
-//                return response.ok ? response.json() : Promise.reject(response);
-//            })
-//            .then(responseJson => {
-//                if (responseJson.estado) {
-//                    tablaDataProducto.row.add(responseJson.objeto).draw(false)
-//                    $("#modalDataProducto").modal("hide")
-//                    swal("Listo", "el producto fue creado", "success")
-//                }
-//                else {
-//                    swal("Lo sentimos", responseJson.mensaje, "error")
-//                }
-//            })
-//    }
-//    else {
-
-//        fetch("/Producto/Editar", {
-//            method: "PUT",
-//            body: formData
-//        })
-//            .then(response => {
-//                $("#modalDataProducto").find("div.modal-content").LoadingOverlay("hide");
-//                return response.ok ? response.json() : Promise.reject(response);
-//            })
-//            .then(responseJson => {
-
-//                if (responseJson.estado) {
-
-//                    tablaDataProducto.row(filaSeleccionada).data(responseJson.objeto).draw(false);
-//                    filaSeleccionada = null;
-//                    $("#modalDataProducto").modal("hide")
-//                    swal("Listo", "el producto fue modificado", "success")
-//                } else {
-//                    swal("Lo sentimos", responseJson.mensaje, "error")
-//                }
-//            })
-
-
-
-
-
-//    }
-//})
 
 let filaSeleccionada;
 
@@ -605,4 +464,75 @@ $("#tbdataProducto tbody").on("click", ".btn-eliminar", function () {
 
     )
 
+})
+
+
+
+$("#btnActualizarPedido").click(function () {
+    debugger;
+    const tablaProductos = document.getElementById('tbDetallePedidos');
+    const filas = tablaProductos.getElementsByTagName('tr');
+
+    let productosPedidos = [];
+
+    for (let i = 1; i < filas.length; i++) {
+        const fila = filas[i];
+        const idPedido = idPedidos;
+        const idProducto = fila.cells[0].textContent;
+        let cantidadInicial = fila.cells[3].querySelector('input');
+        const cantidad = cantidadInicial.value;
+        const total = fila.cells[4].textContent;
+
+        const producto = {
+            idPedido: idPedido,
+            idProducto: idProducto,
+            cantidad: cantidad,
+            total: total
+        };
+        productosPedidos.push(producto);
+    }
+
+
+    if (productosPedidos.length < 1) {
+        toastr.warning("", "Debes Ingresar Productos")
+        return;
+    }
+
+    const vmDetallePedido = productosPedidos;
+
+    const pedido = {
+        idPedido:idPedidos,
+        montoTotal: $("#txtFinalDetallePedido").val(),
+        DetallePedido: vmDetallePedido
+
+    }
+ /*   alert("los pedidos:" + pedido[0].montoTotal);*/
+
+
+
+    $("#btnActualizarPedido").LoadingOverlay("show");
+    
+    fetch("/Pedido/ActualizarPedido", {
+        method: "POST",
+        headers: { "Content-Type": "application/json;charset=utf-8" },
+        body: JSON.stringify(pedido)
+    })
+        .then(response => {
+            $("#btnActualizarPedido").LoadingOverlay("hide");
+            return response.ok ? response.json() : Promise.reject(response);
+        })
+        .then(responseJson => {
+            if (responseJson.estado) {
+                productosPedidos = [];
+                /*      $("#txtDocumentoCliente").val("")*/
+                tablaAllPedidos.row(filaSeleccionada).data(responseJson.objeto).draw(false);
+                filaSeleccionada = null;
+                $("#modalDataDetallePedido").modal("hide")
+                swal("Pedido Actualizado", `Nuevo Monto:${responseJson.objeto.montoTotal}`, "success")
+            }
+            else {
+                swal("Lo sentimos", "No se pudo Actualizar el Pedido", "error")
+
+            }
+        })
 })

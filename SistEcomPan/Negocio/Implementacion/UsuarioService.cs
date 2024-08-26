@@ -63,7 +63,7 @@ namespace Negocio.Implementacion
             Usuarios usuarioExiste = await _repositorio.Buscar(entidad.Correo,null,null);
 
             if (usuarioExiste != null)
-                throw new TaskCanceledException("El Correo no Existe");
+                throw new TaskCanceledException("El Correo ya Existe");
            
             try
             {
@@ -300,6 +300,32 @@ namespace Negocio.Implementacion
             return query;
         }
 
+        public async Task<string> ObtenerNombreCompleto(int IdUsuario)
+        {
+            Usuarios usuarios = await _repositorio.Buscar(null, null, IdUsuario);
+            return usuarios.Nombres + " " + usuarios.Apellidos;
+        }
+        public async Task<string> ObtenerCorreo(int IdUsuario)
+        {
+            Usuarios usuarios = await _repositorio.Buscar(null, null, IdUsuario);
+            return usuarios.Correo;
+        }
+        public async Task<int> ObtenerIdCorreoUsuario(string correo)
+        {
+
+            try
+            {
+                Usuarios usuarios = await _repositorio.Buscar(correo, null, null);
+
+                return usuarios?.IdUsuario??0;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+
+        }
+
         public async Task<Usuarios> ObtenerPorCredenciales(string correo, string clave)
         {
             string ClaveEncriptada = _encriptservice.EncriptarPassword(clave);
@@ -404,6 +430,14 @@ namespace Negocio.Implementacion
             }
         }
 
+        public Task<int> IdDestinatario(string correo)
+        {
+            throw new NotImplementedException();
+        }
 
+        public Task<int> IdRemitente(string correo)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

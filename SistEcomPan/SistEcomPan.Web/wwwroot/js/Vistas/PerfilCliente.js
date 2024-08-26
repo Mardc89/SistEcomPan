@@ -1,4 +1,6 @@
-﻿    function ObtenerDatosCliente(){
+﻿
+
+function ObtenerDatosCliente(){
         fetch("/Home/ObtenerCliente")
             .then(response => {
                 $(".container-fluid").LoadingOverlay("hide");
@@ -9,7 +11,6 @@
                     const d = responseJson.objeto
 
                     $("#ImgFoto").attr("src", `/ImagenesPerfil/${d.nombreFoto}`)
-                    /*                $("#txtFoto").val(d.urlFoto)*/
                     $("#txtDni").val(d.dni)
                     $("#txtIdDistrito").val(d.idDistrito)
                     $("#txtTipoCliente").val(d.tipoCliente)
@@ -17,10 +18,12 @@
                     $("#txtApellidos").val(d.apellidos)
                     $("#txtCorreo").val(d.correo)
                     $("#txtDireccion").val(d.direccion)
-                    $("#txtTelefono").val(d.telefono)
-                    $("#txtDistrito").val(d.nombreDistrito)
+                    $("#txtTelefono").val(d.telefono)                
                     $("#txtNombreUsuario").val(d.nombreUsuario)
                     $("#txtClave").val(d.clave)
+                    let ImagenPerfil = $("#ImgFoto").attr("src");
+                    const NuevaImagen = `${ImagenPerfil}`;
+                    $("#userDropdown img.img-profile").attr("src", NuevaImagen);
 
                 }
                 else {
@@ -31,7 +34,7 @@
     }
 $(document).ready(function () {
 
-    fetch("/Cliente/ListaDistritos")
+    fetch("/Distrito/ListDistritos")
         .then(response => {
             return response.ok ? response.json() : Promise.reject(response);
         })
@@ -51,6 +54,13 @@ $(document).ready(function () {
 
 
 })
+
+
+
+
+
+
+
 
 
 $("#btnGuardarCambios").click(function () {

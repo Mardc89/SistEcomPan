@@ -250,6 +250,7 @@ namespace SistEcomPan.Web.Controllers
                 {
                     IdDetallePedido = item.IdDetallePedido,
                     IdPedido = item.IdPedido,
+                    IdProducto=item.IdProducto,
                     DescripcionProducto = Productos.Where(x => x.IdProducto == item.IdProducto).First().Descripcion,
                     Cantidad = item.Cantidad,
                     Precio = Convert.ToString(Productos.Where(x => x.IdProducto == item.IdProducto).First().Precio),
@@ -544,11 +545,15 @@ namespace SistEcomPan.Web.Controllers
             var nombreCompletos = clientes.Where(x => x.Dni == numeroDocumento).First().Nombres + " " +
             clientes.Where(x => x.Dni == numeroDocumento).First().Apellidos;
             var idcliente = clientes.Where(x => x.Dni == numeroDocumento).First().IdCliente;
-
+            var direccion = clientes.Where(x => x.Dni == numeroDocumento).First().Direccion;
+            var telefono = clientes.Where(x => x.Dni == numeroDocumento).First().Telefono;
             vmClientelista.Add(new VMCliente
             {
                IdCliente =idcliente,
-               NombreCompleto=nombreCompletos
+               NombreCompleto=nombreCompletos,
+               Direccion=direccion,
+               Telefono=telefono
+               
             });
             
             return StatusCode(StatusCodes.Status200OK, vmClientelista);
@@ -562,10 +567,13 @@ namespace SistEcomPan.Web.Controllers
             var clientes = await _clienteService.ObtenerNombre();           
             var apellidos = clientes.FirstOrDefault(x => nombreCompleto.StartsWith(x.Apellidos)).Apellidos;
             var nombres = clientes.FirstOrDefault(x => nombreCompleto.EndsWith(x.Nombres)).Nombres;
+             
              vmClientelista.Add(new VMCliente
              {
                  IdCliente = clientes.Where(x => x.Apellidos == apellidos && x.Nombres == nombres).First().IdCliente,
-                 Dni = clientes.Where(x => x.Apellidos==apellidos && x.Nombres==nombres).First().Dni
+                 Dni = clientes.Where(x => x.Apellidos==apellidos && x.Nombres==nombres).First().Dni,
+                 Direccion= clientes.Where(x => x.Apellidos == apellidos && x.Nombres == nombres).First().Direccion,
+                 Telefono= clientes.Where(x => x.Apellidos == apellidos && x.Nombres == nombres).First().Telefono
              }) ;
             
             return StatusCode(StatusCodes.Status200OK, vmClientelista);
@@ -646,6 +654,149 @@ namespace SistEcomPan.Web.Controllers
             return StatusCode(StatusCodes.Status200OK, gResponse);
 
         }
+
+        [HttpPost]
+        public async Task<IActionResult> ActualizarPedido([FromBody] VMPedido modelo)
+        {
+            GenericResponse<VMPedido> gResponse = new GenericResponse<VMPedido>();
+
+            try
+            {
+                List<Pedidos> listaPedidos = new List<Pedidos>();
+                List<VMPedido> listaVMPedidos = new List<VMPedido>();
+                List<DetallePedido> detallePedido = new List<DetallePedido>();
+                var clientes = await _clienteService.ObtenerNombre();
+                if (modelo != null)
+                {
+                    //listaVMPedidos.Add(modelo);
+                    //foreach (var item in listaVMPedidos)
+                    //{
+                    listaPedidos.Add(new Pedidos
+                    {
+                        IdPedido=modelo.IdPedido,
+                        //IdCliente = clientes.Where(x => x.Dni == modelo.Dni).First().IdCliente,
+                        MontoTotal = Convert.ToDecimal(modelo.MontoTotal),
+                   
+                        DetallePedido = modelo.DetallePedido.Select(detalle => new DetallePedido
+                        {
+                            IdPedido=detalle.IdPedido,
+                            IdProducto = detalle.IdProducto,
+                            Cantidad = detalle.Cantidad,
+                            Total = Convert.ToDecimal(detalle.Total)
+                        }).ToList()
+
+                    });
+                    //}
+                }
+
+                Pedidos pedidoCreado = await _pedidoService.Actualizar(listaPedidos.First());
+
+                List<VMPedido> vmPedidolista = new List<VMPedido>();
+                List<Pedidos> listPedidos = new List<Pedidos>();
+                if (pedidoCreado != null)
+                {
+                    //listPedidos.Add(pedidoCreado);
+                    //foreach (var item in listPedidos)
+                    //{
+                    vmPedidolista.Add(new VMPedido
+                    {
+                        IdPedido = modelo.IdPedido,
+                        MontoTotal = Convert.ToString(pedidoCreado.MontoTotal),
+                                          
+                        DetallePedido = pedidoCreado.DetallePedido.Select(detalle => new VMDetallePedido
+                        {
+                            IdPedido=detalle.IdPedido,
+                            IdProducto = detalle.IdProducto,
+                            Cantidad = detalle.Cantidad,
+                            Total = Convert.ToString(detalle.Total)
+                        }).ToList()
+                    });
+                    //}
+                }
+
+                gResponse.Estado = true;
+                gResponse.objeto = vmPedidolista.First();
+
+            }
+            catch (Exception ex)
+            {
+                gResponse.Estado = false;
+                gResponse.Mensaje = ex.Message;
+
+            }
+
+            return StatusCode(StatusCodes.Status200OK, gResponse);
+
+        }
+
+        //[HttpPost]
+        //public async Task<IActionResult> ActualizarDetallePedido([FromBody] VMDetallePedido modelo,int IdPedido)
+        //{
+        //    GenericResponse<VMPedido> gResponse = new GenericResponse<VMPedido>();
+
+        //    try
+        //    {
+        //        List<DetallePedido> listaPedidos = new List<DetallePedido>();
+        //        List<VMDetallePedido> listaVMDetallePedido = new List<VMDetallePedido>();
+        //        //List<DetallePedido> detallePedido = new List<DetallePedido>();
+        //        var clientes = await _clienteService.ObtenerNombre();
+        //        if (modelo != null)
+        //        {
+        //            listaVMDetallePedido.Add(modelo);
+        //            foreach (var item in listaVMDetallePedido)
+        //            {
+        //                listaPedidos.Add(new DetallePedido
+        //                {
+        //                    IdPedido = IdPedido,
+        //                    IdProducto = item.IdProducto,
+        //                    Cantidad = item.Cantidad,
+        //                    Total = Convert.ToDecimal(item.Total)
+        //                });
+        //            }
+
+        //         }
+        //            //}
+                
+
+        //        DetallePedido pedidoCreado = await _pedidoService.(listaPedidos.First());
+
+        //        List<VMPedido> vmPedidolista = new List<VMPedido>();
+        //        List<Pedidos> listPedidos = new List<Pedidos>();
+        //        if (pedidoCreado != null)
+        //        {
+        //            //listPedidos.Add(pedidoCreado);
+        //            //foreach (var item in listPedidos)
+        //            //{
+        //            vmPedidolista.Add(new VMPedido
+        //            {
+
+        //                MontoTotal = Convert.ToString(pedidoCreado.MontoTotal),
+        //                FechaPedido = pedidoCreado.FechaPedido,
+        //                Estado = pedidoCreado.Estado,
+        //                DetallePedido = pedidoCreado.DetallePedido.Select(detalle => new VMDetallePedido
+        //                {
+        //                    IdProducto = detalle.IdProducto,
+        //                    Cantidad = detalle.Cantidad,
+        //                    Total = Convert.ToString(detalle.Total)
+        //                }).ToList()
+        //            });
+        //            //}
+        //        }
+
+        //        gResponse.Estado = true;
+        //        gResponse.objeto = vmPedidolista.First();
+
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        gResponse.Estado = false;
+        //        gResponse.Mensaje = ex.Message;
+
+        //    }
+
+        //    return StatusCode(StatusCodes.Status200OK, gResponse);
+
+        //}
 
         [HttpDelete]
         public async Task<IActionResult> Eliminar(int IdPedido)

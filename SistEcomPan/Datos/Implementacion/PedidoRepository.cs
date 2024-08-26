@@ -146,7 +146,51 @@ namespace Datos.Implementacion
             return modelo;
         }
 
+        public async Task<Pedidos> ActualizarDetallePedido(Pedidos modelo, DataTable DetallePedido)
+        {
 
+            bool resultado = false;
+            string Mensaje = "";
+            try
+            {
+                using (var conexion = new SqlConnection(_cadenaSQL))
+                {
+                    conexion.Open();
+                    SqlCommand cmd = new SqlCommand("SPActualizarDetallePedidos", conexion);
+                    cmd.Parameters.AddWithValue("@IdPedido", modelo.IdPedido);                
+                    cmd.Parameters.AddWithValue("@MontoTotal", modelo.MontoTotal);               
+                    cmd.Parameters.AddWithValue("@DetallePedido", DetallePedido);
+                    cmd.CommandType = CommandType.StoredProcedure;
+
+
+                    SqlParameter outputParameter = new SqlParameter();
+                    outputParameter.ParameterName = "@IdPedidos";
+                    outputParameter.SqlDbType = SqlDbType.Int;
+                    outputParameter.Direction = ParameterDirection.Output;
+                    cmd.Parameters.Add(outputParameter);
+
+                    SqlParameter outputParameter2 = new SqlParameter();
+                    outputParameter2.ParameterName = "@Resultado";
+                    outputParameter2.SqlDbType = SqlDbType.Bit;
+                    outputParameter2.Direction = ParameterDirection.Output;
+                    cmd.Parameters.Add(outputParameter2);
+
+                    await cmd.ExecuteNonQueryAsync();
+
+                    resultado = Convert.ToBoolean(cmd.Parameters["@Resultado"].Value);
+                    int PedidoId = Convert.ToInt32(outputParameter.Value);
+                    modelo.IdPedido = PedidoId;
+
+                }
+            }
+            catch (Exception ex)
+            {
+                resultado = false;
+                Mensaje = ex.Message;
+            }
+            return modelo;
+            
+        }
 
         public Task<bool> Guardar(Pedidos modelo)
         {

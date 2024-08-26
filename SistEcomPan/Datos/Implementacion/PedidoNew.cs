@@ -98,5 +98,61 @@ namespace Datos.Implementacion
             }
         }
 
-    }
+        public async Task <Pedidos>Actualizando(Pedidos entidad)
+        {
+            //List< DetallePedido > ListaDetallePedido= new List<DetallePedido>();
+            //ListaDetallePedido.Add(entidad);
+
+            using (SqlConnection conexion = new SqlConnection(_cadenaSQL))
+            {
+                conexion.Open();
+                SqlTransaction transaccion = conexion.BeginTransaction();
+                try
+                {
+                    SqlCommand cmd = conexion.CreateCommand();
+                    cmd.Transaction = transaccion;
+                    decimal total = 0, subtotal = 0;
+                    //int idPedido = ListaDetallePedido.ElementAt(0).IdPedido;
+                    DataTable detallePedido = new DataTable();
+                    detallePedido.Locale = new CultureInfo("es-Pe");
+                    detallePedido.Columns.Add("IdProducto", typeof(string));
+                    detallePedido.Columns.Add("Cantidad", typeof(int));
+                    detallePedido.Columns.Add("Total", typeof(decimal));
+
+                    foreach (var detalle in entidad.DetallePedido)
+                    {
+
+
+                        IQueryable<Productos> producto = await _repositorioProducto.Consultar();
+                        IQueryable<Productos> productoEncontrado = producto.Where(u => u.IdProducto == detalle.IdProducto);
+                        var PrecioProducto = productoEncontrado.First().Precio;
+
+                        subtotal = Convert.ToDecimal(detalle.Cantidad.ToString()) * PrecioProducto;
+                        total += subtotal;
+
+                        IQueryable<Productos> buscarProducto = await _repositorioProducto.Consultar();
+                        IQueryable<Productos> productoStock = buscarProducto.Where(u => u.IdProducto == detalle.IdProducto);
+                        Productos productoEditar = productoStock.First();
+                        productoEditar.Stock = productoEditar.Stock - detalle.Cantidad;
+                        await _repositorioProducto.Editar(productoEditar);
+
+                        detallePedido.Rows.Add(new object[] {
+                        detalle.IdProducto,
+                        detalle.Cantidad,
+                        subtotal
+                        });
+                    }
+                    entidad.MontoTotal = total;
+                    transaccion.Commit();
+                    return await _repositorioPedido.ActualizarDetallePedido(entidad, detallePedido);
+                }
+                catch (Exception)
+                {
+                    transaccion.Rollback();
+                    throw;
+                }
+            }
+        }
+
+        }
 }

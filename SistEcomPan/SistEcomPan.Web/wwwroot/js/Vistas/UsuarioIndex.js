@@ -42,7 +42,7 @@ $(document).ready(function () {
             "datatype": "json"
         },
         "columns": [
-            { "data": "idUsuario","searchable": false },
+            { "data": "idUsuario","searchable": false},
             {
                 "data": "nombreFoto", render: function (data) {
                     let ruta = data;

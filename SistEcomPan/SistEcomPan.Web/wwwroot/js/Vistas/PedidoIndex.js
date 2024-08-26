@@ -164,6 +164,8 @@ if (userRol==="Administrador") {
                 if (responseJson.length > 0) {
                     responseJson.forEach((item) => {
                         $("#txtDocumentoCliente").val(item.dni)
+                        $("#txtDireccionCliente").val(item.direccion)
+                        $("#txtTelefonoCliente").val(item.telefono)
                     })
                 }
             })
@@ -181,6 +183,8 @@ if (userRol==="Administrador") {
                     if (responseJson.length > 0) {
                         responseJson.forEach((item) => {
                             $("#txtNombreCliente").val(item.nombreCompleto);
+                            $("#txtDireccionCliente").val(item.direccion);
+                            $("#txtTelefonoCliente").val(item.telefono);
                         })
                     }
                 })
@@ -198,6 +202,19 @@ else if (userRol === "Cliente") {
     let nombresCompletos = document.getElementById("NombreCompleto").textContent;
     document.getElementById("txtDocumentoCliente").value=DniCliente;
     document.getElementById("txtNombreCliente").value = nombresCompletos;
+
+    fetch(`/Pedido/ListaClientes?numeroDocumento=${DniCliente}`)
+        .then(response => {
+            return response.ok ? response.json() : Promise.reject(response);
+        })
+        .then(responseJson => {
+            if (responseJson.length > 0) {
+                responseJson.forEach((item) => {
+                    $("#txtDireccionCliente").val(item.direccion);
+                    $("#txtTelefonoCliente").val(item.telefono);
+                })
+            }
+        })
    
     
 }
@@ -461,7 +478,7 @@ $("#btnEnviarPedido").click(function () {
     const pedido = {
         dni: $("#txtDocumentoCliente").val(),
         montoTotal: $("#montoTotal").text(),
-        estado: $("#txtEstado").val(),
+        estado: "Pendiente",
         DetallePedido: vmDetallePedido
 
     }

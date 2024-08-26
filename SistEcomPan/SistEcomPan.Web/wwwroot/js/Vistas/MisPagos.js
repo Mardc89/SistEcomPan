@@ -13,6 +13,8 @@ const MODELO_BASE = {
 
 }
 
+
+
 let tablaDataMisPagos;
 
 const itemPagina = 4; // Cantidad de productos por página

@@ -18,6 +18,12 @@ namespace Negocio.Interfaces
         Task<bool> GuardarPerfil(Usuarios entidad, Stream foto = null, string Nombrefoto = "");
         Task<bool> CambiarClave(int IdUsuario, string claveActual, string claveNueva);
         Task<bool> RestablecerClave(string claveNueva, string correo, string UrlPlantillaCorreo);
+        Task<int> ObtenerIdCorreoUsuario(string correo);
+        Task<string> ObtenerNombreCompleto(int IdUsuario);
+        Task<string> ObtenerCorreo(int IdUsuario);
+        Task<int> IdDestinatario(string correo);
+        Task<int> IdRemitente(string correo);
+
 
     }
 }

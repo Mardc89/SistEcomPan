@@ -20,6 +20,8 @@ namespace Negocio.Interfaces
         Task<bool> RestablecerClave(string ClaveNueva, string Correo, string UrlPlantillaCorreo);
         Task<IQueryable<Clientes>> ObtenerNombre();
         Task<string> ObtenerNombreCompleto(int IdCliente);
+        Task<string> ObtenerCorreo(int IdCliente);
+        Task<int> ObtenerIdCorreoCliente(string correo);
         Task<string> ObtenerDni(int IdCliente);
     }
 }

@@ -12,6 +12,7 @@ namespace Negocio.Interfaces
     {
         Task<List<Productos>> ObtenerProductos(string busqueda);
         Task<Pedidos> Registrar(Pedidos entidad);
+        Task <Pedidos>Actualizar(Pedidos entidad);
         Task<bool> Eliminar(int IdPedido);
         Task<List<Pedidos>> Historial(string numeroPedido, string fechaInicio, string fechaFin);
         Task<Pedidos> Detalle(string numeroPedido);

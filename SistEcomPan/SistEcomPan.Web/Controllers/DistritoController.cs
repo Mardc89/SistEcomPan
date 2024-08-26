@@ -36,6 +36,22 @@ namespace SistEcomPan.Web.Controllers
             return StatusCode(StatusCodes.Status200OK, new { data = vmListaDistritos });
         }
 
+        [HttpGet]
+        public async Task<IActionResult> ListDistritos()
+        {
+            var lista = await _distritoService.Lista();
+            List<VMDistrito> vmListaDistritos = new List<VMDistrito>();
+            foreach (var item in lista)
+            {
+                vmListaDistritos.Add(new VMDistrito
+                {
+                    IdDistrito = item.IdDistrito,
+                    NombreDistrito = item.NombreDistrito
+                });
+            }
+            return StatusCode(StatusCodes.Status200OK, vmListaDistritos);
+        }
+
         //[HttpGet]
         //public async Task<IActionResult> Lista()
         //{
@@ -78,13 +94,13 @@ namespace SistEcomPan.Web.Controllers
                 Distritos distritoCreado = await _distritoService.Crear(listaDistritos.First());
 
                 List<VMDistrito> vmDistritolista = new List<VMDistrito>();
-                List<Distritos> listCategorias = new List<Distritos>();
+                List<Distritos> listDistritos = new List<Distritos>();
                 if (distritoCreado != null)
                 {
-                    listCategorias.Add(distritoCreado);
+                    listDistritos.Add(distritoCreado);
 
 
-                    foreach (var item in listCategorias)
+                    foreach (var item in listDistritos)
                     {
                         vmDistritolista.Add(new VMDistrito
                         {

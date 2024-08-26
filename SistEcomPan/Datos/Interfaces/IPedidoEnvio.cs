@@ -11,5 +11,6 @@ namespace Datos.Interfaces
     public interface IPedidoEnvio
     {
         Task<Pedidos> Registrando(Pedidos modelo);
+        Task <Pedidos>Actualizando(Pedidos entidad);
     }
 }

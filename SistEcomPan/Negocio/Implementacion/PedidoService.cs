@@ -71,6 +71,19 @@ namespace Negocio.Implementacion
             }
         }
 
+        public async Task<Pedidos> Actualizar(Pedidos detalle)
+        {
+            try
+            {
+                 return await _repositorioPedidoEnvio.Actualizando(detalle);
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
         public Task<List<DetallePedido>> Reporte(string fechaInicio, string fechaFin)
         {
             throw new NotImplementedException();
