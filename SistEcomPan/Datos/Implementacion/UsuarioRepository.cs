@@ -232,7 +232,7 @@ namespace Datos.Implementacion
         }
 
         public async Task<Usuarios> Buscar(string? Correo = null, string? Clave = null, int? IdUsuario = null)
-        {
+            {
             Usuarios lista = null;
             using (var conexion = new SqlConnection(_cadenaSQL))
             {

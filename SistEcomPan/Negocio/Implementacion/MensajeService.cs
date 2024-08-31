@@ -258,7 +258,7 @@ namespace Negocio.Implementacion
             else if (Tipo == "Usuario")
             {
                 nombreCorreo = await _repositorioUsuario.ObtenerCorreo(IdRemitente);
-            }
+                                                      }
 
             return nombreCorreo;
         }

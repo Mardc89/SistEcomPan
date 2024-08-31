@@ -1,5 +1,4 @@
 ﻿
-
 const RemitenteMensaje = {
     idMensaje: 0,
     asunto: "",
@@ -8,7 +7,6 @@ const RemitenteMensaje = {
     nombreDestinatario: "",
     idRespuestaMensaje:0,
     correoRemitente: ""
-
 }
 
 const DestinatarioMensaje = {
@@ -96,94 +94,92 @@ $(document).ready(function () {
 })
 
 
-const ProductosPorPag = 4; // Cantidad de productos por página
-let PaginaInicialPago = 1; // Página actual al cargar
 
-
-function buscarDetallePago(idPago, page = 1) {
-    fetch(`/Pago/ObtenerMiDetallePago?idPago=${idPago}&page=${page}&itemsPerPage=${ProductosPorPag}`)
+let intervaloActualizacion;
+debugger;
+function actualizarMensajes(asunto) {
+    fetch(`/Mensaje/ObtenerMensajeDeAsunto?asunto=${asunto}`)
         .then(response => response.json())
         .then(data => {
-            const DetallePagos = data.detallePago; // Array de productos obtenidos
-            const totalItems = data.totalItems; // Total de productos encontrados
-            // Actualizar la tabla modal con los productos obtenidos 
-            const productTable = document.getElementById('DetallePagoBuscado');
-            productTable.innerHTML = '';
+            const mensajes = data.data;
+            const area = document.getElementById('DetalleAsuntoMensaje');
+            area.innerHTML = '';
 
-            DetallePagos.forEach(pago => {
-                const row = document.createElement('tr');
-                row.innerHTML = `  
-            <td>${pago.idPago}</td>
-            <td>${pago.idDetallePago}</td>
-            <td>${pago.montoAPagar}</td>
-            <td>${pago.pagoDelCliente}</td>
-            <td>${pago.deudaDelCliente}</td>
-            <td>${pago.cambioDelCliente}</td>
-          `;
-                productTable.appendChild(row);
+            mensajes.forEach(mensaje => {
+                const nombreRemitente = mensaje.nombreRemitente;
+                const fecha = cambiarFecha(mensaje.fechaDeMensaje);
+                const mensajeElemento = document.createElement('p');
+                mensajeElemento.innerHTML = `<strong>${nombreRemitente}</strong><span style="float:right;">${fecha}</span><br>${mensaje.cuerpo}`;
+                area.appendChild(mensajeElemento);
             });
-
-            // Generar la paginación
-            const totalPages = Math.ceil(totalItems / ProductosPorPag);
-            const pagination = document.getElementById('DetallePagoPagination');
-            pagination.innerHTML = '';
-
-            for (let i = 1; i <= totalPages; i++) {
-                const li = document.createElement('li');
-                li.classList.add('page-item');
-                const link = document.createElement('a');
-                link.classList.add('page-link');
-                link.href = '#';
-                link.textContent = i;
-                li.appendChild(link);
-
-                if (i === PaginaInicialPago) {
-                    li.classList.add('active');
-                }
-
-                link.addEventListener('click', () => {
-                    PaginaInicialPago = i;
-                    buscarDetallePago(idPago, PaginaInicialPago);
-                    resaltarPaginaPagoActual();
-                });
-
-                pagination.appendChild(li);
-            }
-
-            resaltarPaginaPagoActual();
         })
         .catch(error => {
-            console.error('Error al buscar productos:', error);
+            console.error('Error al buscar mensajes:', error);
         });
 }
 
+let AsuntoRemitente = "";
+function iniciarActualizacion(AsuntoRemitente) {
+    intervaloActualizacion = setInterval(() => {
+        actualizarMensajes(AsuntoRemitente);
+    }, 60000);
+}
 
-// Función para resaltar la página actual
-function resaltarPaginaPagoActual() {
-    const paginationItems = document.querySelectorAll('#DetallePagoPagination .page-item');
-    paginationItems.forEach(item => {
-        item.classList.remove('active');
-        const link = item.querySelector('.page-link');
-        if (link.textContent === PaginaInicialPago.toString()) {
-            item.classList.add('active');
-        }
-    });
+function detenerActualizacion() {
+    clearInterval(intervaloActualizacion);
 }
 
 
 
-function mostrarModalDetallePago(modelo = MODELO_BASE) {
 
-    let idPagos = modelo.idPago;
-    buscarDetallePago(idPagos)
+function mostrarModalRespuesta(remitenteMensaje = RemitenteMensaje) {
+    // Llamada inicial para cargar los mensajes
+    AsuntoRemitente = remitenteMensaje.asunto,
+    actualizarMensajes(AsuntoRemitente);
 
-    $("#modalDataMiDetallePago").modal("show")
+    // Iniciar el intervalo de actualización
+    iniciarActualizacion(AsuntoRemitente);
+
+    $("#txtResptIdMensaje").val(remitenteMensaje.idMensaje);
+    $("#txtResptAsunto").val(remitenteMensaje.asunto);
+    $("#txtResptCorreoRemitente").val(remitenteMensaje.correoRemitente);
+    $("#txtResptCorreoDestinatario").val(remitenteMensaje.correoDestinatario);
+    $("#modalDataMensajeRespuesta").modal("show");
 }
 
+// Detener el intervalo cuando el modal se cierra
+$('#modalDataMensajeRespuesta').on('hidden.bs.modal', function () {
+    clearInterval(intervaloActualizacion);
+});
 
-$("#btnNuevoProducto").click(function () {
-    mostrarModal()
-})
+let filaSeleccionada;
+
+$("#tbDataMisMensajes tbody").on("click", ".btnResponder", function () {
+    if ($(this).closest("tr").hasClass("child")) {
+        filaSeleccionada = $(this).closest("tr").prev();
+    } else {
+        filaSeleccionada = $(this).closest("tr");
+    }
+    const data = tablaDataMisMensajes.row(filaSeleccionada).data();
+    mostrarModalRespuesta(data);
+});
+
+
+//$("#tbDataMisMensajes tbody").on("click", ".btnResponder", function () {
+//    if ($(this).closest("tr").hasClass("child")) {
+//        filaSeleccionada = $(this).closest("tr").prev();
+//    } else {
+//        filaSeleccionada = $(this).closest("tr");
+//    }
+//    const data = tablaDataMisMensajes.row(filaSeleccionada).data();
+//    mostrarModalRespuesta(data);
+//})
+
+
+
+
+
+
 
 function mostrarModal(remitenteMensaje = RemitenteMensaje, destinatarioMensaje = DestinatarioMensaje) {
     $("#txtIdMensaje").val(remitenteMensaje.idMensaje)
@@ -199,17 +195,22 @@ $("#btnNuevoMensaje").click(function () {
     mostrarModal()
 })
 
-//document.getElementById("txtResptCuerpo").addEventListener("input", function (event) {
-//    let textoDelEscritor = event.target.value;
-//    alert(textoDelEscritor);
-//});
+document.getElementById("txtMensajeRespuesta").addEventListener("input", function (event) {
+    let textoDelEscritor = event.target.innerHTML;
+    if (textoDelEscritor.length > 0) {
+        detenerActualizacion();
+    }
+    else {
+        iniciarActualizacion(AsuntoRemitente);
+    }
+});
 //$("#btnRespuestaDelMensaje").click(function () {
 //    alert("Que tal amigos");
 //})
 
 
 $("#btnRespuestaDelMensaje").click(function () {
-
+  
     const inputs = $("input.input-validar").serializeArray();
     const inputs_sin_valor = inputs.filter((item) => item.value.trim() == "")
 
@@ -241,76 +242,95 @@ $("#btnRespuestaDelMensaje").click(function () {
     const modelo = { remitenteMensaje, destinatarioMensaje };  
 
 
-    $("#modalDataMensaje").find("div.modal-content").LoadingOverlay("show");
-
-    if (remitenteMensaje.idMensaje!= 0) {
-
-        fetch("/Mensaje/EnviarMensajeRespuesta", {
-            method: "POST",
-            headers: { "Content-Type": "application/json;charset=utf-8" },
-            body: JSON.stringify(modelo)
-        })
-            .then(response => {
-                $("#modalDataMensaje").find("div.modal-content").LoadingOverlay("hide");
-                return response.ok ? response.json() : Promise.reject(response);
+  /*  $("#modalDataMensaje").find("div.modal-content").LoadingOverlay("show");*/
+    detenerActualizacion();
+    if (remitenteMensaje.idMensaje != 0) {
+        
+        try {
+            fetch("/Mensaje/EnviarMensajeRespuesta", {
+                method: "POST",
+                headers: { "Content-Type": "application/json;charset=utf-8" },
+                body: JSON.stringify(modelo)
             })
-            .then(responseJson => {
-                if (responseJson.estado) {
-                    tablaDataMensaje.row.add(responseJson.objeto).draw(false)
-                    $("#modalDataMensaje").modal("hide")
-                    swal("Listo", "el mensaje fue enviado", "success")
-                }
-                else {
-                    swal("Lo sentimos", responseJson.mensaje, "error")
-                }
-            })
+                .then(response => {
+                    /*  $("#modalDataMensaje").find("div.modal-content").LoadingOverlay("hide");*/
+                 /*   alert("bien");*/
+                    if (!response.ok) {
+                        throw new Error("HTTP error,status=" + response.status);
+                    }
+                    return response.ok ? response.json() : Promise.reject(response);
+                })
+                .then(responseJson => {
+                    if (responseJson.estado) {
+                     /*   tablaDataMisMensajes.row.add(responseJson.objeto).draw(false)*/
+                        //$("#modalDataMensaje").modal("hide")
+                        //swal("Listo", "el mensaje fue enviado", "success")
+                    }
+                    else {
+                        swal("Lo sentimos", responseJson.mensaje, "error")
+                    }
+                }).catch(error => {
+
+                    alert("Error en la solicitud:" + error);
+                    console.error("Error en la solicitud", error);
+                })
+        } catch (error) {
+
+            alert("Error en la solicitud:" + error);
+            console.error("Error en la solicitud", error);
+        }
+
     }
+
+    $("#txtMensajeRespuesta").text("");
+    iniciarActualizacion(AsuntoRemitente);
 
 })
 
 
-function mostrarModalRespuesta(remitenteMensaje = RemitenteMensaje,destinatarioMensaje = DestinatarioMensaje) {
-    fetch(`/Mensaje/ObtenerMensajeDeAsunto?asunto=${remitenteMensaje.asunto}`)
-        .then(response => response.json())
-        .then(data => {
-            const mensajes = data.data;
-            const area = document.getElementById('DetalleAsuntoMensaje');
-            area.innerHTML = '';
+//function mostrarModalRespuesta(remitenteMensaje = RemitenteMensaje) {
+//    fetch(`/Mensaje/ObtenerMensajeDeAsunto?asunto=${remitenteMensaje.asunto}`)
+//        .then(response => response.json())
+//        .then(data => {
+//            const mensajes = data.data;
+//            const area = document.getElementById('DetalleAsuntoMensaje');
+//            area.innerHTML = '';
 
-            mensajes.forEach(mensaje => {
-                const nombreRemitente = mensaje.nombreRemitente;
-                const fecha = cambiarFecha(mensaje.fechaDeMensaje);
-                const mensajeElemento = document.createElement('p');
-                mensajeElemento.innerHTML = `<strong>${nombreRemitente}</strong><span style="float:right;">${fecha}</span><br>${mensaje.cuerpo}`;
-/*                area.value += `${mensaje.nombreRemitente}\t\t\t\t ${cambiarFecha(mensaje.fechaDeMensaje)}\n ${mensaje.cuerpo}\n`;*/
-/*                area.value += `${mensaje.cuerpo}\n`;*/
-                /*   area.value += `Destinatario:${mensaje.nombreDestinatario}\n`;*/
-                area.appendChild(mensajeElemento);
-            });
+//            mensajes.forEach(mensaje => {
+//                const nombreRemitente = mensaje.nombreRemitente;
+//                const fecha = cambiarFecha(mensaje.fechaDeMensaje);
+//                const mensajeElemento = document.createElement('p');
+//                mensajeElemento.innerHTML = `<strong>${nombreRemitente}</strong><span style="float:right;">${fecha}</span><br>${mensaje.cuerpo}`;
+///*                area.value += `${mensaje.nombreRemitente}\t\t\t\t ${cambiarFecha(mensaje.fechaDeMensaje)}\n ${mensaje.cuerpo}\n`;*/
+///*                area.value += `${mensaje.cuerpo}\n`;*/
+//                /*   area.value += `Destinatario:${mensaje.nombreDestinatario}\n`;*/
+//                area.appendChild(mensajeElemento);
+//            });
 
-        })
-        .catch(error => {
-            console.error('Error al buscar mensajes:', error);        });
+//        })
+//        .catch(error => {
+//            console.error('Error al buscar mensajes:', error);        });
 
 
 
-    $("#txtResptIdMensaje").val(remitenteMensaje.idMensaje)
-    $("#txtResptAsunto").val(remitenteMensaje.asunto)
-    $("#txtResptCorreoRemitente").val(remitenteMensaje.correoRemitente)
-    $("#txtResptCorreoDestinatario").val(remitenteMensaje.correoDestinatario)
-    $("#modalDataMensajeRespuesta").modal("show")
-}
+//    $("#txtResptIdMensaje").val(remitenteMensaje.idMensaje)
+//    $("#txtResptAsunto").val(remitenteMensaje.asunto)
+//    $("#txtResptCorreoRemitente").val(remitenteMensaje.correoRemitente)
+//    $("#txtResptCorreoDestinatario").val(remitenteMensaje.correoDestinatario)
+//    $("#modalDataMensajeRespuesta").modal("show")
+//}
 
-let filaSeleccionada;
-$("#tbDataMisMensajes tbody").on("click", ".btnResponder", function () {
-    if ($(this).closest("tr").hasClass("child")) {
-        filaSeleccionada = $(this).closest("tr").prev();
-    } else {
-        filaSeleccionada = $(this).closest("tr");
-    }
-    const data = tablaDataMisMensajes.row(filaSeleccionada).data();
-    mostrarModalRespuesta(data);
-})
+//$("#DetalleAsuntoMensaje").on("input",function () {
+//    const asuntoDeMensaje = $(this).val();
+//    remitenteMensaje = RemitenteMensaje
+//    remitenteMensaje.asunto=asuntoDeMensaje
+//    mostrarModalRespuesta(remitenteMensaje);
+
+//});
+
+
+
+
 
 
 

@@ -10,6 +10,7 @@ namespace Negocio.Interfaces
     public interface IMensajeService
     {
         Task<Mensajes> Registrar(Mensajes entidad,DestinatarioMensaje destino);
+        Task<Mensajes> RegistrarMensaje(Mensajes entidad, DestinatarioMensaje destino);
         Task<Mensajes> Editar(Mensajes entidad);
         Task<bool> Eliminar(int IdMensaje);
         Task<List<Mensajes>> Lista();
@@ -22,6 +23,7 @@ namespace Negocio.Interfaces
         Task<int> IdRemitente(string correo);
         Task<string> Destinatario(string correo);
         Task<string> Remitente(string correo);
+      
 
     }
 }

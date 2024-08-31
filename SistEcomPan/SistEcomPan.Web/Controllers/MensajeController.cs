@@ -227,7 +227,7 @@ namespace SistEcomPan.Web.Controllers
                     }
                 }
 
-                Mensajes mensajeCreado = await _mensajeService.Registrar(listaMensajes.First(),listaDestinoMensajes.First());
+                Mensajes mensajeCreado = await _mensajeService.RegistrarMensaje(listaMensajes.First(),listaDestinoMensajes.First());
 
                 List<VMMensaje> vmMensajelista = new List<VMMensaje>();
                 List<Mensajes> listMensajes = new List<Mensajes>();
