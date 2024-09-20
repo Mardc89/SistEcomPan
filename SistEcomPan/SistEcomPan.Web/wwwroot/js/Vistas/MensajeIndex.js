@@ -35,7 +35,7 @@ let IdRespuesta,NombreDelDestinatario,nombresDelUsuario;
 
 $(document).ready(function () {
 
-    tablaDataMensaje = $('#tbdataMensaje').DataTable({
+    tablaDataMensaje = $('#tbDataMensajes').DataTable({
         responsive: true,
         "ajax": {
             "url": '/Mensaje/ListaMensajes',
@@ -97,6 +97,14 @@ $(document).ready(function () {
                 debugger;
                 $(row).find(".btnResponder").prop("disabled", true);
             }
+            if (data.nombreRemitente !== nombresDelUsuario) {
+                debugger;
+                $(row).find(".btn-editar").prop("disabled", true);
+            }
+            if (data.nombreRemitente !== nombresDelUsuario) {
+                debugger;
+                $(row).find(".btn-eliminar").prop("disabled", true);
+            }
 
         },
         order: [[0, "desc"]],
@@ -108,6 +116,93 @@ $(document).ready(function () {
         },
     });
 })
+
+
+
+let socket;
+
+function connectWebSocket() {
+    socket = new WebSocket("wss://localhost:7078/ws");
+
+    socket.onmessage = function (event) {
+        const message = JSON.parse(event.data);
+        actualizarMensajes(message.remitenteMensaje.asunto);
+    };
+
+    socket.onclose = function (event) {
+        console.log("WebSocket is closed now.");
+        // Reconectar si es necesario
+        setTimeout(connectWebSocket, 1000);
+    };
+
+    socket.onerror = function (error) {
+        console.error("WebSocket error:", error);
+    };
+}
+
+connectWebSocket();
+
+
+
+/*let intervaloActualizacion;*/
+function actualizarMensajes(asunto) {
+    fetch(`/Mensaje/ObtenerMensajeDeAsunto?asunto=${asunto}`)
+        .then(response => response.json())
+        .then(data => {
+            const mensajes = data.data;
+            const area = document.getElementById('DetalleAsuntoMensaje');
+            area.innerHTML = "";
+
+            mensajes.forEach(mensaje => {
+                const nombreRemitente = mensaje.nombreRemitente;
+                const fecha = cambiarFecha(mensaje.fechaDeMensaje);
+
+                
+                    const mensajeElemento = document.createElement('p');
+                    mensajeElemento.innerHTML = `<strong>${nombreRemitente}</strong><span style="float:right;">${fecha}</span><br>${mensaje.cuerpo}`;
+                    area.appendChild(mensajeElemento);
+                
+
+            });
+        })
+        .catch(error => {
+            console.error('Error al buscar mensajes:', error);
+        });
+}
+
+let AsuntoRemitente = "";
+
+
+function mostrarModalRespuesta(remitenteMensaje = RemitenteMensaje) {
+    // Llamada inicial para cargar los mensajes
+    AsuntoRemitente = remitenteMensaje.asunto,
+    actualizarMensajes(AsuntoRemitente);
+
+    // Iniciar el intervalo de actualización
+    /* iniciarActualizacion(AsuntoRemitente);*/
+
+    $("#txtResptIdMensaje").val(remitenteMensaje.idMensaje);
+    $("#txtResptAsunto").val(remitenteMensaje.asunto);
+    $("#txtResptCorreoRemitente").val(remitenteMensaje.correoRemitente);
+    $("#txtResptCorreoDestinatario").val(remitenteMensaje.correoDestinatario);
+    $("#modalDataMensajeRespuesta").modal("show");
+}
+
+
+
+let filaSeleccionada;
+
+$("#tbDataMensajes tbody").on("click", ".btnResponder", function () {
+    if ($(this).closest("tr").hasClass("child")) {
+        filaSeleccionada = $(this).closest("tr").prev();
+    } else {
+        filaSeleccionada = $(this).closest("tr");
+    }
+    const data = tablaDataMensaje.row(filaSeleccionada).data();
+    mostrarModalRespuesta(data);
+});
+
+
 
 
 function mostrarModal(remitenteMensaje = RemitenteMensaje, destinatarioMensaje = DestinatarioMensaje) {
@@ -144,6 +239,95 @@ else if (userRol === "Cliente") {
     //}
     
 }
+
+
+$("#btnRespuestaDelMensaje").click(function () {
+
+    const inputs = $("input.input-validar").serializeArray();
+    const inputs_sin_valor = inputs.filter((item) => item.value.trim() == "")
+
+    if (inputs_sin_valor.length > 0) {
+        const mensaje = `Debe completar el campo:"${inputs_sin_valor[0].name}"`;
+        toastr.warning("", mensaje)
+        $(`input[name="${inputs_sin_valor[0].name}"]`).focus()
+        return;
+    }
+
+    let asunto = $("#txtResptAsunto").val();
+    if (!asunto.startsWith("Respuesta:")) {
+        asunto = "Respuesta:" + asunto;
+    }
+
+
+
+    debugger;
+    const remitenteMensaje = structuredClone(RemitenteMensaje);
+    remitenteMensaje["idMensaje"] = parseInt($("#txtResptIdMensaje").val())
+    remitenteMensaje["asunto"] = asunto
+    remitenteMensaje["cuerpo"] = $("#txtMensajeRespuesta").text()
+    remitenteMensaje["correoRemitente"] = $("#txtResptCorreoDestinatario").val()
+    remitenteMensaje["idRespuestaMensaje"] = remitenteMensaje["idMensaje"];
+
+    const destinatarioMensaje = structuredClone(DestinatarioMensaje);
+    destinatarioMensaje["idMensaje"] = parseInt($("#txtResptIdMensaje").val())
+    destinatarioMensaje["correoDestinatario"] = $("#txtResptCorreoRemitente").val()
+
+
+    //modelo["remitente"] = RolUsuario
+    //modelo["destinatario"] = RolUsuario
+    //modelo["idRemitente"]=dniDelCliente
+
+    const modelo = { remitenteMensaje, destinatarioMensaje };
+
+
+    /*  $("#modalDataMensaje").find("div.modal-content").LoadingOverlay("show");*/
+    /* detenerActualizacion();*/
+    if (remitenteMensaje.idMensaje != 0) {
+
+        try {
+        
+            fetch("/Mensaje/EnviarMensajeRespuesta", {
+                method: "POST",
+                headers: { "Content-Type": "application/json;charset=utf-8" },
+                body: JSON.stringify(modelo)
+            })
+                .then(response => {
+                    /*  $("#modalDataMensaje").find("div.modal-content").LoadingOverlay("hide");*/
+                    /*   alert("bien");*/
+                    if (!response.ok) {
+                        throw new Error("HTTP error,status=" + response.status);
+                    }
+                    return response.ok ? response.json() : Promise.reject(response);
+                })
+                .then(responseJson => {
+                    if (responseJson.estado) {
+                        /*   tablaDataMisMensajes.row.add(responseJson.objeto).draw(false)*/
+                        //$("#modalDataMensaje").modal("hide")
+                        //swal("Listo", "el mensaje fue enviado", "success")
+                        /*  actualizarMensajes(AsuntoRemitente);*/
+                        socket.send(JSON.stringify(modelo));
+                    }
+                    else {
+                        swal("Lo sentimos", responseJson.mensaje, "error")
+                    }
+                }).catch(error => {
+
+                    alert("Error en la solicitud:" + error);
+                    console.error("Error en la solicitud", error);
+                })
+        } catch (error) {
+
+            alert("Error en la solicitud:" + error);
+            console.error("Error en la solicitud", error);
+        }
+
+    }
+
+    $("#txtMensajeRespuesta").text("");
+    /*  iniciarActualizacion(AsuntoRemitente);*/
+
+
+})
 
 
 $("#btnGuardarMensaje").click(function () {
@@ -207,7 +391,7 @@ $("#btnGuardarMensaje").click(function () {
         fetch("/Mensaje/Editar", {
             method: "PUT",
             headers: { "Content-Type": "application/json;charset=utf-8" },
-            body: JSON.stringify(datosDelMensaje)
+            body: JSON.stringify(modelo)
         })
             .then(response => {
                 $("#modalDataMensaje").find("div.modal-content").LoadingOverlay("hide");
@@ -217,37 +401,33 @@ $("#btnGuardarMensaje").click(function () {
 
                 if (responseJson.estado) {
 
-                    tablaDataDistrito.row(filaSeleccionada).data(responseJson.objeto).draw(false);
+                    tablaDataMensaje.row(filaSeleccionada).data(responseJson.objeto).draw(false);
                     filaSeleccionada = null;
                     $("#modalDataMensaje").modal("hide")
-                    swal("Listo", "el producto fue modificado", "success")
+                    swal("Listo", "el mensaje fue modificado", "success")
                 } else {
                     swal("Lo sentimos", responseJson.mensaje, "error")
                 }
             })
 
-
-
-
-
     }
 })
 
-let filaSeleccionada;
 
-$("#tbdataDistrito tbody").on("click", ".btn-editar", function () {
+
+$("#tbDataMensajes tbody").on("click", ".btn-editar", function () {
 
     if ($(this).closest("tr").hasClass("child")) {
         filaSeleccionada = $(this).closest("tr").prev();
     } else {
         filaSeleccionada = $(this).closest("tr");
     }
-    const data = tablaDataDistrito.row(filaSeleccionada).data();
+    const data = tablaDataMensaje.row(filaSeleccionada).data();
     mostrarModal(data);
 })
 
 
-$("#tbdataDistrito tbody").on("click", ".btn-eliminar", function () {
+$("#tbDataMensajes tbody").on("click", ".btn-eliminar", function () {
 
     let fila;
     if ($(this).closest("tr").hasClass("child")) {
@@ -255,11 +435,11 @@ $("#tbdataDistrito tbody").on("click", ".btn-eliminar", function () {
     } else {
         fila = $(this).closest("tr");
     }
-    const data = tablaDataDistrito.row(fila).data();
+    const data = tablaDataMensaje.row(fila).data();
 
     swal({
         title: "¿Estas Seguro?",
-        text: `Eliminar  "${data.tipoDeCategoria}"`,
+        text: `Eliminar  "${data.asunto}"`,
         type: "warning",
         showCancelButton: true,
         confirmButtonClass: "btn-danger",
@@ -273,7 +453,7 @@ $("#tbdataDistrito tbody").on("click", ".btn-eliminar", function () {
             if (respuesta) {
 
                 $(".showSweetAlert").LoadingOverlay("show");
-                fetch(`/Distrito/Eliminar?IdDistrito=${data.idDistrito}`, {
+                fetch(`/Mensaje/Eliminar?IdMensaje=${data.idMensaje}`, {
                     method: "DELETE",
 
                 })
@@ -284,8 +464,8 @@ $("#tbdataDistrito tbody").on("click", ".btn-eliminar", function () {
                     .then(responseJson => {
                         if (responseJson.estado) {
 
-                            tablaDataDistrito.row(fila).remove().draw();
-                            swal("Listo", "el producto fue eliminado", "success")
+                            tablaDataMensaje.row(fila).remove().draw();
+                            swal("Listo", "el mensaje fue eliminado", "success")
 
                         }
                         else {

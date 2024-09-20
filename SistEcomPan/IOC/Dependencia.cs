@@ -25,6 +25,7 @@ namespace IOC
             services.AddScoped<IPagoContado, PagoNew>();
             services.AddScoped<IGenericRepository<Distritos>, DistritoRepository>();
             services.AddScoped<IGenericRepository<DestinatarioMensaje>, DestinatarioMensajeRepository>();
+            services.AddScoped<IGenericRepository<Mensajes>,MensajeRepository>();
             services.AddScoped<IGenericRepository<Categorias>, CategoriaRepository>();
             services.AddScoped<IGenericRepository<Productos>, ProductoRepository>();
             services.AddScoped<IGenericRepository<Pedidos>, PedidoRepository>();
@@ -46,6 +47,7 @@ namespace IOC
             services.AddScoped<IDestinatarioMensajeService, DestinatarioMensajeService>();
             services.AddScoped<IUsuarioService, UsuarioService>();
             services.AddScoped<IDashBoardService, DashBoardService>();
+            services.AddScoped<IDashBoardServiceCliente, DashBoardServiceCliente>();
             services.AddScoped<IPedidoService, PedidoService>();
             services.AddScoped<IPagoService, PagoService>();
             services.AddScoped<IClienteService, ClienteService>();

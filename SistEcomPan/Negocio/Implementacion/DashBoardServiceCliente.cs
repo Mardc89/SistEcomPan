@@ -11,40 +11,34 @@ using System.Threading.Tasks;
 
 namespace Negocio.Implementacion
 {
-    public class DashBoardService : IDashBoardService
+    public class DashBoardServiceCliente : IDashBoardServiceCliente
     {
         private readonly IPedidoNew _repositorioPedidos;
-        private readonly IGenericRepository<Categorias> _repositorioCategoria;
-        private readonly IGenericRepository<Productos> _repositorioProducto;
         private readonly IGenericRepository<Pagos> _repositorioPagos;
         private readonly IGenericRepository<Clientes> _repositorioClientes;
         private readonly IGenericRepository<Mensajes> _repositorioMensajes;
         private readonly ProductoRepository _repositorioProductoTop;
-        private DateTime FechaInicio=DateTime.Now;
+        private DateTime FechaInicio = DateTime.Now;
 
-        public DashBoardService
+        public DashBoardServiceCliente
         (
             ProductoRepository repositorioProductoTop,
-            IGenericRepository<Categorias> repositorioCategoria,
             IPedidoNew repositorioPedidos,
-            IGenericRepository<Productos> repositorioProducto,
             IGenericRepository<Pagos> repositorioPagos,
             IGenericRepository<Mensajes> repositorioMensajes,
             IGenericRepository<Clientes> repositorioClientes
         )
         {
             _repositorioProductoTop = repositorioProductoTop;
-            _repositorioCategoria = repositorioCategoria;
-            _repositorioProducto = repositorioProducto;
-            _repositorioPedidos=repositorioPedidos;
+            _repositorioPedidos = repositorioPedidos;
             _repositorioMensajes = repositorioMensajes;
             _repositorioPagos = repositorioPagos;
             _repositorioClientes = repositorioClientes;
             FechaInicio = FechaInicio;
 
-        }        
-        
-        
+        }
+
+
         public async Task<int> TotalPedidosUltimaSemana()
         {
             try
@@ -59,14 +53,14 @@ namespace Negocio.Implementacion
 
                 throw;
             }
-           
-        }       
+
+        }
         public async Task<string> TotalIngresosUltimaSemana()
         {
             try
             {
                 List<Pedidos> query = await _repositorioPedidos.ConsultarPedido(FechaInicio.Date);
-                decimal resultado = query.Select(x => x.MontoTotal).Sum(x=>x.Value);
+                decimal resultado = query.Select(x => x.MontoTotal).Sum(x => x.Value);
 
                 return Convert.ToString(resultado, new CultureInfo("es-PE"));
 
@@ -76,31 +70,19 @@ namespace Negocio.Implementacion
 
                 throw;
             }
-        }        
-        
-        public async Task<int> TotalProductos()
-        {
-            try
-            {
-                List<Productos> query = await _repositorioProducto.Lista();
-                int total = query.Count();
-
-                return total;
-
-            }
-            catch
-            {
-
-                throw;
-            }
         }
 
-        public async Task<int> TotalDeMisPedidos(int idCliente)
+
+
+        public async Task<int> TotalDeMisPedidos(string correo)
         {
             try
             {
-                List<Pedidos> query = await _repositorioPedidos.BuscarTotal(null,null,idCliente);
-                int total = query.Count();
+                Clientes cliente= await _repositorioClientes.Buscar(correo, null,null);
+                var IdCliente = cliente.IdCliente;
+
+                List<Pedidos> pedidos = await _repositorioPedidos.BuscarTotal(null, null,IdCliente);
+                int total =pedidos.Count();
 
                 return total;
 
@@ -129,7 +111,7 @@ namespace Negocio.Implementacion
                 // Filtro de búsqueda por término de búsqueda (searchTerm)
                 var pedidosFiltrados = Pagolista.Where(p => idPedido.Contains(p.IdPedido)).ToList();
 
-                int total =pedidosFiltrados.Count();
+                int total = pedidosFiltrados.Count();
 
                 return total;
 
@@ -200,28 +182,6 @@ namespace Negocio.Implementacion
             return await _repositorioProductoTop.ProductosTopUltimaSemana();
 
         }
-
-        public async Task<int> TotalCategorias()
-        {
-            try
-            {
-                List<Categorias> query = await _repositorioCategoria.Lista();
-                int total = query.Count();
-
-                return total;
-
-            }
-            catch
-            {
-
-                throw;
-            }
-        }
-
-
-
-
-
 
     }
 }

@@ -25,7 +25,7 @@ namespace Negocio.Implementacion
         public async Task<string> ObtenerNombreCompleto(int IdCliente)
         {
             Clientes clientes = await _repositorio.Buscar(null,null,IdCliente);
-            return clientes.Nombres +" "+ clientes.Apellidos;
+            return clientes.Apellidos +" "+ clientes.Nombres;
         }
 
         public async Task<string> ObtenerCorreo(int IdCliente)
@@ -274,9 +274,9 @@ namespace Negocio.Implementacion
             //IQueryable<Clientes> usuarioEvaluado = usuarios.Where(u => u.IdCliente == IdCliente);
             //Clientes usuarioEncontrado = usuarioEvaluado.FirstOrDefault();
 
-            Clientes usuarioEncontrado = await _repositorio.Buscar(null,null,IdCliente);
+            Clientes cliente = await _repositorio.Buscar(null,null,IdCliente);
 
-            return usuarioEncontrado;
+            return cliente;
         }
 
         public async Task<bool> GuardarPerfil(Clientes entidad, Stream Foto = null, string NombreFoto = "")

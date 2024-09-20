@@ -86,8 +86,6 @@ namespace Datos.Implementacion
                 conexion.Open();
                 SqlCommand cmd = new SqlCommand("SPEditarMensajes", conexion);
                 cmd.Parameters.AddWithValue("IdMensaje", modelo.IdMensaje);
-                cmd.Parameters.AddWithValue("IdCliente", modelo.IdRemitente);
-                cmd.Parameters.AddWithValue("Asunto", modelo.Asunto);
                 cmd.Parameters.AddWithValue("Cuerpo", modelo.Cuerpo);
                 cmd.CommandType = CommandType.StoredProcedure;
 
@@ -109,7 +107,7 @@ namespace Datos.Implementacion
             {
                 conexion.Open();
                 SqlCommand cmd = new SqlCommand("SPEliminarMensajes", conexion);
-                cmd.Parameters.AddWithValue("IdMensaje", id);
+                cmd.Parameters.AddWithValue("@IdMensaje", id);
                 cmd.CommandType = CommandType.StoredProcedure;
 
                 int filaAfectada = await cmd.ExecuteNonQueryAsync();
@@ -230,12 +228,12 @@ namespace Datos.Implementacion
                     {
                         lista = new Mensajes
                         {
-                            IdMensaje = Convert.ToInt32(dr["IdMensaje"]), 
+                            IdMensaje = Convert.ToInt32(dr["IdMensaje"]),
                             Remitente = dr["Remitente"].ToString(),
                             IdRemitente = Convert.ToInt32(dr["IdRemitente"]),
                             Asunto = dr["Asunto"].ToString(),
-                            Cuerpo = dr["Cuerpo"].ToString(),                         
-                            IdRespuestaMensaje = Convert.ToInt32(dr["IdRespuestaMensaje"]),
+                            Cuerpo = dr["Cuerpo"].ToString(),
+                            IdRespuestaMensaje = dr["IdRespuestaMensaje"] as int?,
                             FechaDeMensaje = Convert.ToDateTime(dr["FechaDeMensaje"])
                         };
                     }
@@ -245,12 +243,12 @@ namespace Datos.Implementacion
             return lista;
         }
 
-        public async Task<Mensajes> Verificar(string? Descripcion = null, string? Asunto = null, int? IdMensaje = null)
+        public async Task<Mensajes> Verificar(string? Cuerpo = null, string? Asunto = null, int? IdMensaje = null)
         {
             Mensajes lista = null;
             using (var conexion = new SqlConnection(_cadenaSQL))
             {
-                SqlCommand cmd = new SqlCommand("SPVerificarMensaje", conexion);
+                SqlCommand cmd = new SqlCommand("SPVerificarMensajes", conexion);
                 conexion.Open();
                 cmd.CommandType = CommandType.StoredProcedure;
                 cmd.Parameters.AddWithValue("@IdMensaje", (object)IdMensaje ?? DBNull.Value);

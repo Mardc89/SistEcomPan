@@ -49,7 +49,7 @@
     <None Include="wwwroot\js\sb-admin-2.min.js" />
     <None Include="wwwroot\js\Vistas\chart-bar-demo.js" />
     <None Include="wwwroot\js\Vistas\chart-pie-demo.js" />
-    <None Include="wwwroot\js\Vistas\DashBoard_Index.js" />
+    <None Include="wwwroot\js\Vistas\DashBoardCliente.js" />
     <None Include="wwwroot\js\Vistas\PerfilUsuario.js" />
     <None Include="wwwroot\js\Vistas\PedidoIndex.js" />
     <None Include="wwwroot\js\Vistas\UsuarioIndex.js" />
@@ -1887,6 +1887,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.WebSockets" Version="2.2.1" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="6.0.17" />
   </ItemGroup>
 

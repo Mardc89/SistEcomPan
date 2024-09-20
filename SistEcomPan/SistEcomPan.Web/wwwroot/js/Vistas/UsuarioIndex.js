@@ -17,7 +17,7 @@ const MODELO_BASE={
 }
 
 let tablaData;
-
+const itemPagina = 4;
 $(document).ready(function () {
 
     fetch("/Usuario/ListaRoles")
@@ -81,18 +81,9 @@ $(document).ready(function () {
             }
         ],
         order: [[0, "desc"]],
-        dom: "Bfrtip",
-        buttons: [
-            {
-                text: "Exportar Excel",
-                extend: "excelHtml5",
-                title: "",
-                filename: "Reporte Usuarios",
-                exportOptions: {
-                    columns: [2, 3, 4, 5, 6]
-                }
-            }, 'pageLength'
-        ],
+        responsive: true,
+        paging: true,
+        pageLength: itemPagina,
         language: {
             url: "https://cdn.datatables.net/plugin-ins/1.11.5/i18n/es-Es.json"
         },

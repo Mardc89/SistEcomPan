@@ -303,7 +303,7 @@ namespace Negocio.Implementacion
         public async Task<string> ObtenerNombreCompleto(int IdUsuario)
         {
             Usuarios usuarios = await _repositorio.Buscar(null, null, IdUsuario);
-            return usuarios.Nombres + " " + usuarios.Apellidos;
+            return usuarios.Apellidos + " " + usuarios.Nombres;
         }
         public async Task<string> ObtenerCorreo(int IdUsuario)
         {

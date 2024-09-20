@@ -5,7 +5,9 @@ using Negocio.Implementacion;
 using Negocio.Interfaces;
 using NuGet.ContentModel;
 using SistEcomPan.Web.Models.ViewModels;
+using SistEcomPan.Web.Tools.Handler;
 using SistEcomPan.Web.Tools.Response;
+using System.Text.Json;
 
 namespace SistEcomPan.Web.Controllers
 {
@@ -42,15 +44,15 @@ namespace SistEcomPan.Web.Controllers
             List<Mensajes> mensajes = new List<Mensajes>();
             var ListaDestinatarioMensaje = await _destinatarioMensajeService.Lista();
             var idCliente = clientelista.Where(x => x.Dni == searchTerm).Select(x => x.IdCliente).FirstOrDefault();
-            var IndicesClientes = ListaDestinatarioMensaje.Where(x => x.IdDestinatario == idCliente).Select(x => x.IdMensaje).ToList();
-            var mensajesRemitentes = ListaDeMensajes.Where(p => p.IdRemitente == idCliente && p.IdRespuestaMensaje == null).ToList();
-            if (IndicesClientes!=null)
+            var IndiceDestinatario = ListaDestinatarioMensaje.Where(x => x.IdDestinatario == idCliente).Select(x => x.IdMensaje).ToList();
+            var mensajesRemitentes = ListaDeMensajes.Where(p => p.IdRemitente == idCliente  && p.IdRespuestaMensaje == null).ToList();
+            if (IndiceDestinatario.Count>0)
             {
-                var mensajesDestinatario = ListaDeMensajes.Where(p => IndicesClientes.Contains(p.IdMensaje)).ToList();
+                var mensajesDestinatario = ListaDeMensajes.Where(p =>IndiceDestinatario.Contains(p.IdMensaje)).ToList();
                 mensajes.AddRange(mensajesDestinatario);
             }
 
-            else if (mensajesRemitentes != null)
+            if (mensajesRemitentes.Count>0)
             {
                 mensajes.AddRange(mensajesRemitentes);
             }
@@ -81,21 +83,23 @@ namespace SistEcomPan.Web.Controllers
 
 
             // Paginación
-            var pagosPaginados = vmMensajes.ToList();
+            var misMensajesPaginados = vmMensajes.ToList();
 
-            return StatusCode(StatusCodes.Status200OK, new { data = pagosPaginados, totalItems = vmMensajes.Count() });
+            return StatusCode(StatusCodes.Status200OK, new { data = misMensajesPaginados, totalItems = vmMensajes.Count() });
         }
 
         [HttpGet]
         public async Task<IActionResult> ObtenerMensajeDeAsunto(string asunto)
         {
+            string asuntoAbuscar=asunto.Contains(":")?asunto.Substring(asunto.IndexOf(":") + 1).Trim():asunto;
+            
             var ListaDeMensajes = await _mensajeService.Lista();
             //var clientelista = await _clienteService.Lista();
             //List<Mensajes> mensajes = new List<Mensajes>();
             //var ListaDestinatarioMensaje = await _destinatarioMensajeService.Lista();
             //var idCliente = clientelista.Where(x => x.Dni == searchTerm).Select(x => x.IdCliente).FirstOrDefault();
             //var IndicesClientes = ListaDestinatarioMensaje.Where(x => x.IdDestinatario == idCliente).Select(x => x.IdMensaje).ToList();
-            var MisMensajes = ListaDeMensajes.Where(p => p.Asunto == asunto || p.Asunto.Contains(asunto)).ToList();
+            var MisMensajes = ListaDeMensajes.Where(p => p.Asunto == asuntoAbuscar || p.Asunto.Contains(asuntoAbuscar)).ToList();
 
             List<VMMensaje> vmMensajes = new List<VMMensaje>();
 
@@ -251,6 +255,9 @@ namespace SistEcomPan.Web.Controllers
                     }
                 }
 
+                string mensajeJson = JsonSerializer.Serialize(vmMensajelista);
+                await MensajeWebSocketHandler.SendMessageAsync(mensajeJson);
+
                 gResponse.Estado = true;
                 gResponse.objeto = vmMensajelista.First();
 
@@ -271,6 +278,8 @@ namespace SistEcomPan.Web.Controllers
         {
             GenericResponse<VMMensaje> gResponse = new GenericResponse<VMMensaje>();
 
+
+
             try
             {
                 List<Mensajes> listaMensajes = new List<Mensajes>();
@@ -284,12 +293,12 @@ namespace SistEcomPan.Web.Controllers
                     {
                         listaMensajes.Add(new Mensajes
                         {
-                            IdMensaje = Convert.ToInt32(item.RemitenteMensaje.IdMensaje),
-                            IdRemitente = await _mensajeService.IdRemitente(item.RemitenteMensaje.CorreoRemitente),
-                            Asunto = item.RemitenteMensaje.Asunto,
-                            Cuerpo = item.RemitenteMensaje.Cuerpo,
-                            Remitente = await _mensajeService.Remitente(item.RemitenteMensaje.CorreoRemitente),
-                            IdRespuestaMensaje = item.RemitenteMensaje.IdRespuestaMensaje
+                            IdMensaje = Convert.ToInt32(modelo.RemitenteMensaje.IdMensaje),
+                            IdRemitente = await _mensajeService.IdRemitente(modelo.RemitenteMensaje.CorreoRemitente),
+                            Asunto = modelo.RemitenteMensaje.Asunto,
+                            Cuerpo = modelo.RemitenteMensaje.Cuerpo,
+                            Remitente = await _mensajeService.Remitente(modelo.RemitenteMensaje.CorreoRemitente),
+                            IdRespuestaMensaje = modelo.RemitenteMensaje.IdRespuestaMensaje
                         });
                     }
 
@@ -297,13 +306,15 @@ namespace SistEcomPan.Web.Controllers
                     {
                         listaDestinoMensajes.Add(new DestinatarioMensaje
                         {
-                            IdMensaje = Convert.ToInt32(item.DestinatarioMensaje.IdMensaje),
-                            IdDestinatario = await _mensajeService.IdDestinatario(item.DestinatarioMensaje.CorreoDestinatario),
-                            Destinatario = await _mensajeService.Destinatario(item.DestinatarioMensaje.CorreoDestinatario)
+                            IdMensaje = Convert.ToInt32(modelo.DestinatarioMensaje.IdMensaje),
+                            IdDestinatario = await _mensajeService.IdDestinatario(modelo.DestinatarioMensaje.CorreoDestinatario),
+                            Destinatario = await _mensajeService.Destinatario(modelo.DestinatarioMensaje.CorreoDestinatario)
                         });
+
                     }
                 }
-
+                                     
+               
                 Mensajes mensajeCreado = await _mensajeService.Registrar(listaMensajes.First(), listaDestinoMensajes.First());
 
                 List<VMMensaje> vmMensajelista = new List<VMMensaje>();
@@ -311,20 +322,21 @@ namespace SistEcomPan.Web.Controllers
                 if (mensajeCreado != null)
                 {
                     listMensajes.Add(mensajeCreado);
-
-
                     foreach (var item in listMensajes)
-                    {
-                        vmMensajelista.Add(new VMMensaje
-                        {
-                            IdMensaje = Convert.ToInt32(item.IdMensaje),
-                            Asunto = item.Asunto,
-                            Cuerpo = item.Cuerpo,
-                            NombreDestinatario = await _destinatarioMensajeService.NombreDelDestinatario(item.IdMensaje),
-                            NombreRemitente = await _mensajeService.NombreDelRemitente(item.Remitente, item.IdRemitente),
-                            FechaDeMensaje = item.FechaDeMensaje
+                    {                  
 
-                        });
+                    vmMensajelista.Add(new VMMensaje
+                    {
+                        IdMensaje = Convert.ToInt32(mensajeCreado.IdMensaje),
+                        Asunto = mensajeCreado.Asunto,
+                        Cuerpo = mensajeCreado.Cuerpo,
+                        NombreDestinatario = await _destinatarioMensajeService.NombreDelDestinatario(mensajeCreado.IdMensaje),
+                        NombreRemitente = await _mensajeService.NombreDelRemitente(mensajeCreado.Remitente, mensajeCreado.IdRemitente),
+                        FechaDeMensaje = mensajeCreado.FechaDeMensaje
+
+                    });  
+
+
                     }
                 }
 
@@ -344,7 +356,7 @@ namespace SistEcomPan.Web.Controllers
         }
 
         [HttpPut]
-        public async Task<IActionResult> Editar([FromBody] VMMensaje modelo)
+        public async Task<IActionResult> Editar([FromBody] VMRemitenteDestinatario modelo)
         {
             GenericResponse<VMMensaje> gResponse = new GenericResponse<VMMensaje>();
 
@@ -352,7 +364,8 @@ namespace SistEcomPan.Web.Controllers
             {
 
                 List<Mensajes> listaMensajes = new List<Mensajes>();
-                List<VMMensaje> listaVMMensajes = new List<VMMensaje>();
+                List<VMRemitenteDestinatario> listaVMMensajes = new List<VMRemitenteDestinatario>();
+                //List<VMMensaje> listaVMMensajes = new List<VMMensaje>();
                 if (modelo != null)
                 {
                     listaVMMensajes.Add(modelo);
@@ -360,10 +373,10 @@ namespace SistEcomPan.Web.Controllers
                     {
                         listaMensajes.Add(new Mensajes
                         {
-                            IdMensaje = Convert.ToInt32(item.IdMensaje),
-                            IdRemitente = Convert.ToInt32(item.IdRemitente),
-                            Asunto = item.Asunto,
-                            Cuerpo = item.Cuerpo
+                            IdMensaje = Convert.ToInt32(item.RemitenteMensaje.IdMensaje),
+                            IdRemitente = Convert.ToInt32(item.RemitenteMensaje.IdRemitente),
+                            Asunto = item.RemitenteMensaje.Asunto,
+                            Cuerpo = item.RemitenteMensaje.Cuerpo
                         });
                     }
                 }
@@ -403,13 +416,13 @@ namespace SistEcomPan.Web.Controllers
         }
 
         [HttpDelete]
-        public async Task<IActionResult> Eliminar(int IdDistrito)
+        public async Task<IActionResult> Eliminar(int IdMensaje)
         {
             GenericResponse<string> gResponse = new GenericResponse<string>();
 
             try
             {
-                gResponse.Estado = await _mensajeService.Eliminar(IdDistrito);
+                gResponse.Estado = await _mensajeService.Eliminar(IdMensaje);
 
             }
             catch (Exception ex)

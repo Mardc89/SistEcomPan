@@ -165,10 +165,26 @@ namespace SistEcomPan.Web.Controllers
         public async Task<IActionResult> ObtenerPedidos(string searchTerm = "", int page = 1, int itemsPerPage = 4)
         {
             var Pedidolista = await _pedidoService.Lista();
-            var clientes = await _clienteService.ObtenerNombre();
+            var clientes = await _clienteService.Lista();  
+            var pedidosPendientes = Pedidolista.Where(p => p.Estado.Equals("Pendiente")).ToList();
+            int?IDdeCliente=null;
+            if (!string.IsNullOrEmpty(searchTerm))
+            {
+                IDdeCliente = clientes
+
+                .Where(p => p.Apellidos.ToLower().Contains(searchTerm.ToLower()) || p.Nombres.ToLower().Contains(searchTerm.ToLower()))
+                .Select(p => (int?)p.IdCliente)
+                .FirstOrDefault();
+            }
+          
             // Filtro de búsqueda por término de búsqueda (searchTerm)
-            var pedidosFiltrados = Pedidolista.Where(p =>
-                string.IsNullOrWhiteSpace(searchTerm) || p.Codigo.ToLower().Contains(searchTerm.ToLower())
+          
+
+            //var pedidosFiltrados = pedidosPendientes.Where(p => p.IdCliente==1).ToList();
+
+
+            var pedidosFiltrados = pedidosPendientes.Where(p =>
+                string.IsNullOrWhiteSpace(searchTerm) || p.Codigo.Contains(searchTerm.ToLower()) ||(IDdeCliente!=null && p.IdCliente.Equals(IDdeCliente))
             );
 
             List<VMPedido> vmPedidos = new List<VMPedido>();

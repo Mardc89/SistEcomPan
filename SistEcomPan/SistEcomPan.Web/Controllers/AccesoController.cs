@@ -8,9 +8,10 @@ using System.Security.Claims;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication;
 using Negocio.Implementacion;
-using Newtonsoft.Json;
+using Newtonsoft.Json;                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
 using SistEcomPan.Web.Tools.Response;
 using Microsoft.DotNet.Scaffolding.Shared.Project;
+using System.Reflection;
 
 namespace SistEcomPan.Web.Controllers
 {
@@ -73,7 +74,7 @@ namespace SistEcomPan.Web.Controllers
                         listaClientes.Add(new Clientes
                         {
                             TipoCliente=item.TipoCliente,
-                            Dni = item.Dni,
+                            Dni = item.Dni,       
                             Nombres = item.Nombres,
                             Apellidos = item.Apellidos,
                             Correo = item.Correo,
@@ -106,9 +107,9 @@ namespace SistEcomPan.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> Login(VMUsuarioLogin modelo)
         {
-            Usuarios usuarioEncontrado = await _usuarioServicio.ObtenerPorCredenciales(modelo.Correo, modelo.Clave);
-            Clientes clienteEncontrado = await _clienteServicio.ObtenerPorCredenciales(modelo.Correo, modelo.Clave);
-            if (usuarioEncontrado==null && clienteEncontrado==null)
+            Usuarios usuario = await _usuarioServicio.ObtenerPorCredenciales(modelo.Correo, modelo.Clave);
+            Clientes cliente = await _clienteServicio.ObtenerPorCredenciales(modelo.Correo, modelo.Clave);
+            if (usuario==null && cliente==null)
             {
                 ViewData["Mensaje"] = "El Usuario no Existe";
                 return View();
@@ -116,63 +117,134 @@ namespace SistEcomPan.Web.Controllers
 
             ViewData["Mensaje"] = null;
 
-            if (usuarioEncontrado != null)
+            if (usuario != null)
             {
 
-                List<Claim> claims = new List<Claim>(){
-                new Claim(ClaimTypes.Name,usuarioEncontrado.NombreUsuario),
-                new Claim(ClaimTypes.NameIdentifier,usuarioEncontrado.IdUsuario.ToString()),
-                new Claim("NombreFoto",usuarioEncontrado.NombreFoto),
-                new Claim("Dni",usuarioEncontrado.Dni),
-                new Claim("NombreCompleto",usuarioEncontrado.Apellidos+" "+usuarioEncontrado.Nombres)
-                };
+                //List<Claim> claims = new List<Claim>(){
+                //new Claim(ClaimTypes.Name,usuarioEncontrado.NombreUsuario),
+                //new Claim(ClaimTypes.NameIdentifier,usuarioEncontrado.IdUsuario.ToString()),
+                //new Claim("NombreFoto",usuarioEncontrado.NombreFoto),
+                //new Claim("Dni",usuarioEncontrado.Dni),
+                //new Claim("NombreCompleto",usuarioEncontrado.Apellidos+" "+usuarioEncontrado.Nombres)
+                //};
 
-                //var UsuarioRoles = await _rolServicio.ObtenerNombre();
-                //var nombreRoles = UsuarioRoles.Where(x => x.IdRol == usuarioEncontrado.IdRol).Select(x => x.NombreRol).First();
-                var nombreRoles = await _rolServicio.ConsultarRol(usuarioEncontrado.IdRol);
-                claims.Add(new Claim(ClaimTypes.Role, nombreRoles));
+                ////var UsuarioRoles = await _rolServicio.ObtenerNombre();
+                ////var nombreRoles = UsuarioRoles.Where(x => x.IdRol == usuarioEncontrado.IdRol).Select(x => x.NombreRol).First();
+                //var nombreRoles = await _rolServicio.ConsultarRol(usuarioEncontrado.IdRol);
+                //claims.Add(new Claim(ClaimTypes.Role, nombreRoles));
 
-                ClaimsIdentity claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+                //ClaimsIdentity claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
 
-                AuthenticationProperties properties = new AuthenticationProperties()
-                {
-                    AllowRefresh = true,
-                    IsPersistent = modelo.MantenerSesion
-                };
+                //AuthenticationProperties properties = new AuthenticationProperties()
+                //{
+                //    AllowRefresh = true,
+                //    IsPersistent = modelo.MantenerSesion
+                //};
 
-                await HttpContext.SignInAsync(
-                    CookieAuthenticationDefaults.AuthenticationScheme,
-                    new ClaimsPrincipal(claimsIdentity),
-                    properties
-                 );
+                //await HttpContext.SignInAsync(
+                //    CookieAuthenticationDefaults.AuthenticationScheme,
+                //    new ClaimsPrincipal(claimsIdentity),
+                //    properties
+                // );
+                await sigInUserAsync(usuario, modelo.MantenerSesion);
+                return RedirectToAction("Index", "DashBoard");
             }
-            else if (clienteEncontrado != null)
+            else if (cliente != null)
             {
-                List<Claim> claims = new List<Claim>(){
-                new Claim(ClaimTypes.Name,clienteEncontrado.NombreUsuario),
-                new Claim(ClaimTypes.NameIdentifier,clienteEncontrado.IdCliente.ToString()),
-                new Claim("NombreFoto",clienteEncontrado.NombreFoto),
-                new Claim("Dni",clienteEncontrado.Dni),
+                //List<Claim> claims = new List<Claim>(){
+                //new Claim(ClaimTypes.Name,clienteEncontrado.NombreUsuario),
+                //new Claim(ClaimTypes.NameIdentifier,clienteEncontrado.IdCliente.ToString()),
+                //new Claim("NombreFoto",clienteEncontrado.NombreFoto),
+                //new Claim("Dni",clienteEncontrado.Dni),
+                //new Claim(ClaimTypes.Role,"Cliente"),
+                //new Claim("NombreCompleto",clienteEncontrado.Apellidos+" "+clienteEncontrado.Nombres )
+                //};
+
+                //ClaimsIdentity claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+
+                //AuthenticationProperties properties = new AuthenticationProperties()
+                //{
+                //    AllowRefresh = true,
+                //    IsPersistent = modelo.MantenerSesion
+                //};
+
+                //await HttpContext.SignInAsync(
+                //    CookieAuthenticationDefaults.AuthenticationScheme,
+                //    new ClaimsPrincipal(claimsIdentity),
+                //    properties
+                // );
+                await sigInUserAsync(cliente, modelo.MantenerSesion);
+                return RedirectToAction("DashBoardCliente","DashBoard");
+            }
+
+            return RedirectToAction("Login", "Acceso");
+
+        }
+
+
+        private async Task sigInUserAsync(Usuarios user,bool mantenerSesion)
+        {
+            List<Claim> claims = new List<Claim>(){
+                new Claim(ClaimTypes.Name,user.NombreUsuario),
+                new Claim(ClaimTypes.NameIdentifier,user.IdUsuario.ToString()),
+                new Claim("NombreFoto",user.NombreFoto),
+                new Claim("Dni",user.Dni),
+                new Claim("Correo",user.Correo),
+                new Claim(ClaimTypes.Role,await _rolServicio.ConsultarRol(user.IdRol)),
+                new Claim("NombreCompleto",user.Apellidos+" "+user.Nombres)
+                };
+
+            //var UsuarioRoles = await _rolServicio.ObtenerNombre();
+            //var nombreRoles = UsuarioRoles.Where(x => x.IdRol == usuarioEncontrado.IdRol).Select(x => x.NombreRol).First();
+            //var nombreRoles = await _rolServicio.ConsultarRol(usuarioEncontrado.IdRol);
+            //claims.Add(new Claim(ClaimTypes.Role, nombreRoles));
+
+            ClaimsIdentity claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+
+            AuthenticationProperties properties = new AuthenticationProperties()
+            {
+                AllowRefresh = true,
+                IsPersistent = mantenerSesion
+            };
+
+            await HttpContext.SignInAsync(
+                CookieAuthenticationDefaults.AuthenticationScheme,
+                new ClaimsPrincipal(claimsIdentity),
+                properties
+             );
+        }
+
+        private async Task sigInUserAsync(Clientes cliente, bool mantenerSesion)
+        {
+            List<Claim> claims = new List<Claim>(){
+                new Claim(ClaimTypes.Name,cliente.NombreUsuario),
+                new Claim(ClaimTypes.NameIdentifier,cliente.IdCliente.ToString()),
+                new Claim("NombreFoto",cliente.NombreFoto),
+                new Claim("Dni",cliente.Dni),
+                new Claim("Correo",cliente.Correo),
                 new Claim(ClaimTypes.Role,"Cliente"),
-                new Claim("NombreCompleto",clienteEncontrado.Apellidos+" "+clienteEncontrado.Nombres )
+                new Claim("NombreCompleto",cliente.Apellidos+" "+cliente.Nombres)
+              
                 };
 
-                ClaimsIdentity claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+            //var UsuarioRoles = await _rolServicio.ObtenerNombre();
+            //var nombreRoles = UsuarioRoles.Where(x => x.IdRol == usuarioEncontrado.IdRol).Select(x => x.NombreRol).First();
+            //var nombreRoles = await _rolServicio.ConsultarRol(usuarioEncontrado.IdRol);
+            //claims.Add(new Claim(ClaimTypes.Role, nombreRoles));
 
-                AuthenticationProperties properties = new AuthenticationProperties()
-                {
-                    AllowRefresh = true,
-                    IsPersistent = modelo.MantenerSesion
-                };
+            ClaimsIdentity claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
 
-                await HttpContext.SignInAsync(
-                    CookieAuthenticationDefaults.AuthenticationScheme,
-                    new ClaimsPrincipal(claimsIdentity),
-                    properties
-                 );
-            }
+            AuthenticationProperties properties = new AuthenticationProperties()
+            {
+                AllowRefresh = true,
+                IsPersistent = mantenerSesion
+            };
 
-            return RedirectToAction("Index","Home");
+            await HttpContext.SignInAsync(
+                CookieAuthenticationDefaults.AuthenticationScheme,
+                new ClaimsPrincipal(claimsIdentity),
+                properties
+             );
         }
 
 

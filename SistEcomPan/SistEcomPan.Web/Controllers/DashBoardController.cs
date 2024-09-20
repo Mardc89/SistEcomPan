@@ -8,12 +8,24 @@ namespace SistEcomPan.Web.Controllers
     public class DashBoardController : Controller
     {
         private readonly IDashBoardService _dashBoardServicio;
-        public DashBoardController(IDashBoardService dashBoardServicio)
+        private readonly IDashBoardServiceCliente _dashBoardServicioCliente;
+        public DashBoardController(IDashBoardService dashBoardServicio, IDashBoardServiceCliente dashBoardServicioCliente)
         {
             _dashBoardServicio = dashBoardServicio;
+            _dashBoardServicioCliente = dashBoardServicioCliente;
         }
 
         public IActionResult Index()
+        {
+            return View();
+        }
+
+        public IActionResult DashBoardCliente()
+        {
+            return View();
+        }
+
+        public IActionResult DashBoard()
         {
             return View();
         }
@@ -72,5 +84,62 @@ namespace SistEcomPan.Web.Controllers
             return StatusCode(StatusCodes.Status200OK, gResponse);
 
         }
+
+
+        [HttpGet]
+        public async Task<IActionResult> ObtenerResumenCliente(string dni,string correo)
+        {
+            GenericResponse<VMDashBoardCliente> gResponse = new GenericResponse<VMDashBoardCliente>();
+
+            try
+            {
+                VMDashBoardCliente vmDashboard = new VMDashBoardCliente();
+                vmDashboard.TotalDeMisPedidos = await _dashBoardServicioCliente.TotalDeMisPedidos(correo);
+                //vmDashboard.TotalIngresos = await _dashBoardServicio.TotalIngresosUltimaSemana();
+                vmDashboard.TotalDeMisPagos = await _dashBoardServicioCliente.TotalDeMisPagos(dni);
+                vmDashboard.TotalDeMisMensajes = await _dashBoardServicioCliente.TotalDeMisMensajes(dni);
+
+                List<VMPedidosSemana> listaVentasSemana = new List<VMPedidosSemana>();
+                List<VMProductosSemana> listaProductosSemana = new List<VMProductosSemana>();
+
+                foreach (KeyValuePair<string, int> item in await _dashBoardServicioCliente.PedidosUltimaSemana())
+                {
+                    listaVentasSemana.Add(new VMPedidosSemana()
+                    {
+                        Fecha = item.Key,
+                        Total = item.Value
+                    });
+
+                }
+
+                foreach (KeyValuePair<string, int> item in await _dashBoardServicioCliente.ProductosTopUltimaSemana())
+                {
+                    listaProductosSemana.Add(new VMProductosSemana()
+                    {
+                        Producto = item.Key,
+                        Cantidad = item.Value
+                    });
+
+                }
+
+                vmDashboard.PedidosUltimaSemana = listaVentasSemana;
+                vmDashboard.ProductosTopUltimaSemana = listaProductosSemana;
+
+                gResponse.Estado = true;
+                gResponse.objeto = vmDashboard;
+
+            }
+            catch (Exception ex)
+            {
+                gResponse.Estado = false;
+                gResponse.Mensaje = ex.Message;
+
+
+            }
+
+            return StatusCode(StatusCodes.Status200OK, gResponse);
+
+        }
+
     }
 }

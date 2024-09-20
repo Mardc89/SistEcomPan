@@ -84,7 +84,7 @@ $(document).ready(function () {
                 // Pie Chart Example
                 let controlProducto = document.getElementById("chartProductos");
                 let myPieChart = new Chart(controlProducto, {
-                    type: 'doughnut',
+                    type: 'bar',
                     data: {
                         labels: piechart_labels,
                         datasets: [{
