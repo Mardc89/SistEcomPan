@@ -93,11 +93,11 @@ namespace SistEcomPan.Web.Controllers
 
             try
             {
-                VMDashBoardCliente vmDashboard = new VMDashBoardCliente();
-                vmDashboard.TotalDeMisPedidos = await _dashBoardServicioCliente.TotalDeMisPedidos(correo);
+                VMDashBoardCliente vmDashboardCliente = new VMDashBoardCliente();
+                vmDashboardCliente.TotalDeMisPedidos = await _dashBoardServicioCliente.TotalDeMisPedidos(correo);
                 //vmDashboard.TotalIngresos = await _dashBoardServicio.TotalIngresosUltimaSemana();
-                vmDashboard.TotalDeMisPagos = await _dashBoardServicioCliente.TotalDeMisPagos(dni);
-                vmDashboard.TotalDeMisMensajes = await _dashBoardServicioCliente.TotalDeMisMensajes(dni);
+                vmDashboardCliente.TotalDeMisPagos = await _dashBoardServicioCliente.TotalDeMisPagos(dni);
+                vmDashboardCliente.TotalDeMisMensajes = await _dashBoardServicioCliente.TotalDeMisMensajes(dni);
 
                 List<VMPedidosSemana> listaVentasSemana = new List<VMPedidosSemana>();
                 List<VMProductosSemana> listaProductosSemana = new List<VMProductosSemana>();
@@ -122,11 +122,11 @@ namespace SistEcomPan.Web.Controllers
 
                 }
 
-                vmDashboard.PedidosUltimaSemana = listaVentasSemana;
-                vmDashboard.ProductosTopUltimaSemana = listaProductosSemana;
+                vmDashboardCliente.PedidosUltimaSemana = listaVentasSemana;
+                vmDashboardCliente.ProductosTopUltimaSemana = listaProductosSemana;
 
                 gResponse.Estado = true;
-                gResponse.objeto = vmDashboard;
+                gResponse.objeto = vmDashboardCliente;
 
             }
             catch (Exception ex)

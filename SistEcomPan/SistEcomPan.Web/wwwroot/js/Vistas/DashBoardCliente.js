@@ -12,9 +12,9 @@
         .then(responseJson => {
             if (responseJson.estado) {
                 let d = responseJson.objeto
-                $("#TotalDeMisPagos").val(d.totalDeMisPagos)
-                $("#TotalDeMisMensajes").val(d.totalDeMisMensajes)
-                $("#TotalDeMisPedidos").val(d.totalDeMisPedidos)
+                $("#TotalDeMisPagos").text(d.totalDeMisPagos)
+                $("#TotalDeMisMensajes").text(d.totalDeMisMensajes)
+                $("#TotalDeMisPedidos").text(d.totalDeMisPedidos)
 
 
                 let barchart_labels;
