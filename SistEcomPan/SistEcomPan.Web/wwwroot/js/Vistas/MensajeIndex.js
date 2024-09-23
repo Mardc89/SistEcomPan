@@ -31,6 +31,8 @@ function cambiarFecha(fecha) {
 }
 
 
+
+
 let IdRespuesta,NombreDelDestinatario,nombresDelUsuario;
 
 $(document).ready(function () {
@@ -118,6 +120,116 @@ $(document).ready(function () {
 })
 
 
+$("#btnMensajeCliente").click(function () {
+    mostrarMensajesClientes();
+})
+
+
+function mostrarMensajesClientes() {
+    /*    obtenerFecha();*/
+    buscarClientes();
+
+    $("#modalDataMensajeCliente").modal("show");
+}
+
+document.addEventListener("DOMContentLoaded", function () {
+    document.getElementById('ClienteMensaje').addEventListener('click', function (event) {
+
+
+        if (event.target.tagName == 'TD') {
+
+            const fila = event.target.parentNode;
+            const correoDestino = fila.cells[3].textContent;
+
+            document.getElementById('txtCorreoDestinatario').value = correoDestino;
+
+            $("#modalDataMensajeCliente").modal("hide");
+        }
+
+    });
+});
+
+
+const ClientesPorPagina = 4; // Cantidad de productos por página
+let PagClienteInicial = 1; // Página actual al cargar
+
+
+function buscarClientes(searchTer = '', page = 1) {
+    fetch(`/Cliente/ObtenerClientes?searchTerm=${searchTer}&page=${page}&itemsPerPage=${ClientesPorPagina}`)
+        .then(response => response.json())
+        .then(data => {
+            const clientes = data.clientes; // Array de productos obtenidos
+            const totalItems = data.totalItems; // Total de productos encontrados
+            /*  const nombre = data.nombresCompletos;*/
+            // Actualizar la tabla modal con los productos obtenidos 
+            const clientTable = document.getElementById('ClienteMensaje');
+            clientTable.innerHTML = '';
+
+            clientes.forEach(cliente => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+            <td>${cliente.idCliente}</td>
+            <td>${cliente.dni}</td>
+            <td class="nombres">${cliente.nombreCompleto}</td>
+            <td>${cliente.correo}</td>
+            <td>${cliente.direccion}</td>
+            <td>${cliente.telefono}</td>
+          `;
+                clientTable.appendChild(row);
+            });
+
+            // Generar la paginación
+            const totalPages = Math.ceil(totalItems / ClientesPorPagina);
+            const pagination = document.getElementById('paginacionMensajeCliente');
+            pagination.innerHTML = '';
+
+            for (let i = 1; i <= totalPages; i++) {
+                const li = document.createElement('li');
+                li.classList.add('page-item');
+                const link = document.createElement('a');
+                link.classList.add('page-link');
+                link.href = '#';
+                link.textContent = i;
+                li.appendChild(link);
+
+                if (i === PagClienteInicial) {
+                    li.classList.add('active');
+                }
+
+                link.addEventListener('click', () => {
+                    PagClienteInicial = i;
+                    buscarClientes(searchTer, PagClienteInicial);
+                    resaltarPagCliente();
+                });
+
+                pagination.appendChild(li);
+            }
+
+            resaltarPagCliente();
+        })
+        .catch(error => {
+            console.error('Error al buscar clientes:', error);
+        });
+}
+
+
+function resaltarPagCliente() {
+    const paginationItems = document.querySelectorAll('#PaginacionCliente .page-item');
+    paginationItems.forEach(item => {
+        item.classList.remove('active');
+        const link = item.querySelector('.page-link');
+        if (link.textContent === PagClienteInicial.toString()) {
+            item.classList.add('active');
+        }
+    });
+}
+
+
+document.getElementById('BuscarNombreCliente').addEventListener('input', function (event) {
+    const Busqueda = event.target.value;
+    PagClienteInicial = 1; // Reiniciar a la primera página al realizar una nueva búsqueda
+    buscarClientes(Busqueda, PagClienteInicial);
+});
 
 let socket;
 
@@ -206,11 +318,21 @@ $("#tbDataMensajes tbody").on("click", ".btnResponder", function () {
 
 
 function mostrarModal(remitenteMensaje = RemitenteMensaje, destinatarioMensaje = DestinatarioMensaje) {
+    debugger
+    let correo = document.getElementById("CorreoPersonal").textContent;
+ 
+    let correoDestino = remitenteMensaje.correoDestinatario;
 
+    if (correoDestino == "" || correo == null || correoDestino === undefined) {
+        $("#txtCorreoRemitente").val(correo);
+    }
+    else {
+        $("#txtCorreoRemitente").val(remitenteMensaje.correoRemitente)
+    }
     $("#txtIdMensaje").val(remitenteMensaje.idMensaje)
     $("#txtAsunto").val(remitenteMensaje.asunto)
     $("#txtCuerpo").val(remitenteMensaje.cuerpo)
-    $("#txtCorreoRemitente").val(remitenteMensaje.correoRemitente)
+ 
     $("#txtCorreoDestinatario").val(remitenteMensaje.correoDestinatario)
 
     $("#modalDataMensaje").modal("show")
@@ -218,6 +340,7 @@ function mostrarModal(remitenteMensaje = RemitenteMensaje, destinatarioMensaje =
 
 
 $("#btnNuevoMensaje").click(function () {
+
     mostrarModal()
 })
 

@@ -73,9 +73,9 @@ $(document).ready(function () {
             {
                 "data": "estado", render: function (data) {
                     if (data == "Pagado")
-                        return '<span class="badge badge-info">Activo</span>';
+                        return '<span class="badge badge-info">Pagado</span>';
                     else
-                        return '<span class="badge badge-danger">No Activo</span>';
+                        return '<span class="badge badge-danger">Pendiente</span>';
 
 
                 }

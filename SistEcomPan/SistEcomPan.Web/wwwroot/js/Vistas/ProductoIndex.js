@@ -18,19 +18,19 @@ const itemPagina = 4;
 
 $(document).ready(function () {
 
-    //fetch("/Producto/ListaCategorias")
-    //    .then(response => {
-    //        return response.ok ? response.json() : Promise.reject(response);
-    //    })
-    //    .then(responseJson => {
-    //        if (responseJson.length > 0) {
-    //            responseJson.forEach((item) => {
-    //                $("#cboCategoria").append(
-    //                    $("<option>").val(item.idCategoria).text(item.tipoDeCategoria)
-    //                )
-    //            })
-    //        }
-    //    })
+    fetch("/Producto/ListaCategorias")
+        .then(response => {
+            return response.ok ? response.json() : Promise.reject(response);
+        })
+        .then(responseJson => {
+            if (responseJson.length > 0) {
+                responseJson.forEach((item) => {
+                    $("#cboCategoria").append(
+                        $("<option>").val(item.idCategoria).text(item.tipoDeCategoria)
+                    )
+                })
+            }
+        })
 
     tablaDataProducto = $('#tbdataProducto').DataTable({
         responsive: true,

@@ -224,10 +224,22 @@ $("#tbDataMisMensajes tbody").on("click", ".btnResponder", function () {
 
 
 function mostrarModal(remitenteMensaje = RemitenteMensaje, destinatarioMensaje = DestinatarioMensaje) {
+
+    let correo = document.getElementById("CorreoPersonal").textContent;
+
+    let correoDestino = remitenteMensaje.correoDestinatario;
+
+    if (correoDestino == "" || correo == null || correoDestino === undefined) {
+        $("#txtCorreoRemitente").val(correo);
+    }
+    else {
+        $("#txtCorreoRemitente").val(remitenteMensaje.correoRemitente)
+    }
+
     $("#txtIdMensaje").val(remitenteMensaje.idMensaje)
     $("#txtAsunto").val(remitenteMensaje.asunto)
     $("#txtCuerpo").val(remitenteMensaje.cuerpo)
-    $("#txtCorreoRemitente").val(remitenteMensaje.correoRemitente)
+/*    $("#txtCorreoRemitente").val(remitenteMensaje.correoRemitente)*/
     $("#txtCorreoDestinatario").val(remitenteMensaje.correoDestinatario)
     $("#modalDataMensaje").modal("show")
 }
