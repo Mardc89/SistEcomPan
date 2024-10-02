@@ -34,10 +34,27 @@ function cambiarFecha(fecha) {
 
 }
 
+function ObtenerDatosCliente() {
+    fetch("/Home/ObtenerCliente")
+        .then(response => {
+            return response.ok ? response.json() : Promise.reject(response);
+        })
+        .then(responseJson => {
+            if (responseJson.estado) {
+                const d = responseJson.objeto
+                $("#userDropdown img.img-profile").attr("src",`/ImagenesPerfil/${d.nombreFoto}`);
 
+            }
+            else {
+                swal("Lo sentimos", responseJson.mensaje, "error")
+            }
+        })
+}
 
 $(document).ready(function () {
-    
+
+    ObtenerDatosCliente();
+
     let busquedaPago = "";
     let busquedaDetallePago = document.getElementById("DniPersonal").textContent;
     tablaDataMisPagos = $('#tbDataMisPagos').DataTable({
@@ -104,7 +121,6 @@ function buscarDetallePago(idPago, page = 1) {
             DetallePagos.forEach(pago => {
                 const row = document.createElement('tr');
                 row.innerHTML = `  
-            <td>${pago.idPago}</td>
             <td>${pago.idDetallePago}</td>
             <td>${pago.montoAPagar}</td>
             <td>${pago.pagoDelCliente}</td>

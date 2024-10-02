@@ -44,7 +44,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
         if (event.target.tagName == 'TD') {
-
+            debugger
             const fila = event.target.parentNode;
             const idPedido = fila.cells[0].textContent;
             const codigo = fila.cells[1].textContent;
@@ -53,16 +53,39 @@ document.addEventListener("DOMContentLoaded", function () {
             const estado = fila.cells[4].textContent;
             const fecha = fila.cells[5].textContent;
 
+            fetch(`/Pago/ObtenerPagoPedido?searchTerm=${idPedido}`)
+                .then(response => response.json())
+                .then(data => {
+                    const pagos = data.data; // Array de productos obtenidos
+                    if (pagos && pagos.length > 0) {
+                        const Pagos = pagos[0];
+                        /* const totalItems = data.totalItems; */
+                        /*  const nombre = data.nombresCompletos;*/
+                        // Actualizar la tabla modal con los productos obtenidos
+                        document.getElementById('txtDescuento').value = Pagos.descuento;
+                        document.getElementById('txtMontoPago').value = Pagos.montoTotalDePago;
+                        document.getElementById('txtDeuda').value = Pagos.montoDeuda;
+                        document.getElementById('txtIdPago').value = Pagos.idPago;
+                    } else {
+                        console.error("No se encontraron Pagos");
+                    }
+                })
+                .catch(error => {
+                    console.error('Error al buscar Pagos:', error);
+                });
+      
             document.getElementById('txtIdPedido').value = idPedido;
             document.getElementById('txtCodigoPedido').value = codigo;
             document.getElementById('txtNombres').value = nombres;
             document.getElementById('txtMontoPedido').value = montoTotal;
             document.getElementById('txtEstado').value = estado;
             document.getElementById('txtFechaPedido').value = fecha;
-            document.getElementById('txtMontoPago').value = montoTotal;
+      /*      document.getElementById('txtMontoPago').value = montoTotal;*/
 
             $("#modalDataPedidos").modal("hide");
         }
+
+
 
     });
 });

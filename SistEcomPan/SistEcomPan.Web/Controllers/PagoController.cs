@@ -192,6 +192,11 @@ namespace SistEcomPan.Web.Controllers
                         IdPedido = pagoCreado.IdPedido,
                         MontoDeuda = Convert.ToString(pagoCreado.MontoDeuda),
                         Estado = pagoCreado.Estado,
+                        NombreCliente=modelo.NombreCliente,
+                        FechaPago= Convert.ToDateTime(pagoCreado.FechaDePago),
+                        MontoTotalDePago=modelo.MontoTotalDePago,
+                        MontoDePedido=modelo.MontoDePedido,
+                        Descuento=modelo.Descuento,
                         DetallePago = pagoCreado.DetallePago.Select(detalle => new VMDetallePago
                         {
                             MontoAPagar = Convert.ToString(detalle.MontoAPagar),
@@ -219,6 +224,50 @@ namespace SistEcomPan.Web.Controllers
             return StatusCode(StatusCodes.Status200OK, gResponse);
 
         }
+
+        [HttpGet]
+        public async Task<IActionResult> ObtenerPagoPedido(int searchTerm)
+        {
+            var Pagolista = await _pagoService.Lista();
+            var clientelista = await _clienteService.Lista();
+            var PedidosLista = await _pedidoService.Lista();
+
+            //var idCliente = clientelista.Where(x => x.id == searchTerm).Select(x => x.IdCliente).FirstOrDefault();
+            //var estadoCliente = Pedidolista.Where(x => x.IdCliente == idCliente).Select(x => x.Estado).FirstOrDefault();
+            var pagosFiltrados = Pagolista.Where(x => x.IdPedido == searchTerm).ToList();
+
+            //var PagosPedidos = PedidosLista.Where(x => x.IdPedido == idPedido[i])
+
+            // Filtro de búsqueda por término de búsqueda (searchTerm)
+
+
+
+            var MisPagos = pagosFiltrados;
+
+            List<VMPago> vmPagos = new List<VMPago>();
+
+            foreach (var item in MisPagos)
+            {
+                vmPagos.Add(new VMPago
+                {
+                    IdPago = item.IdPago,
+                    MontoDePedido = Convert.ToString(item.MontoDePedido),
+                    Descuento = Convert.ToString(item.Descuento),
+                    CodigoPedido = PedidosLista.Where(x => x.IdPedido == item.IdPedido).Select(x => x.Codigo).First(),
+                    MontoTotalDePago = Convert.ToString(item.MontoTotalDePago),
+                    MontoDeuda = Convert.ToString(item.MontoDeuda),
+                    FechaPago = item.FechaDePago,
+                    Estado = item.Estado
+                });
+            }
+
+
+            // Paginación
+            var pagosPaginados = vmPagos.ToList();
+
+            return StatusCode(StatusCodes.Status200OK, new { data = pagosPaginados, totalItems = vmPagos.Count() });
+        }
+
 
         [HttpGet]
         public async Task<IActionResult> ObtenerMisPagos(string searchTerm, string busqueda = "")

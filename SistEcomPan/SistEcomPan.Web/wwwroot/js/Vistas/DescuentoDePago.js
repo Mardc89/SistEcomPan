@@ -17,14 +17,15 @@ $("#opcion1").click(function () {
 })
 
 $("#btnGuardarDescuento").click(function () {
-
+    debugger
     let idPago = document.getElementById("txtIdPago").value;
 
-    if (idPago==0) {
+    if (idPago>0) {
         let descuentoPedido = $("#txtDescuentoPedido").val();
         $("#txtDescuento").val(descuentoPedido);
         let monto = $("#txtImporteFinal").val();
         $("#txtMontoPago").val(monto);
+        $("#txtDeuda").val(monto);
     }
     $("#modalDataDescuento").modal("hide");
 
@@ -37,7 +38,8 @@ $("#btnGuardarDescuento").click(function () {
 
 
 
-//    let pago = document.getElementById("txtPagoCliente").value;
+//    let pago = document.getElementById("txtPagoCliente").value;yo 17w7byash5aq
+
 //    let descuento = document.getElementById("txtDescuento").value;
 //    let monto = document.getElementById("txtMontoPedido").value;
 

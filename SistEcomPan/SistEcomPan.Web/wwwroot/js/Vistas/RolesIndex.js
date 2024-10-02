@@ -11,7 +11,25 @@ const MODELO_BASE = {
 let tablaDataRol;
 const itemPagina = 4;
 
+function ObtenerDatosUsuario() {
+    fetch("/Home/ObtenerUsuario")
+        .then(response => {
+            return response.ok ? response.json() : Promise.reject(response);
+        })
+        .then(responseJson => {
+            if (responseJson.estado) {
+                const d = responseJson.objeto
+                $("#userDropdown img.img-profile").attr("src", `/ImagenesPerfil/${d.nombreFoto}`);
+
+            }
+            else {
+                swal("Lo sentimos", responseJson.mensaje, "error")
+            }
+        })
+}
+
 $(document).ready(function () {
+    ObtenerDatosUsuario();
     tablaDataRol = $('#tbdataRol').DataTable({
         responsive: true,
         "ajax": {

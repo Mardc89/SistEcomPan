@@ -126,7 +126,7 @@ function MostrarProduct(TerminoBusqueda = '', pagina = 1) {
             <td><input type="text" class="form-control form-control-sm" id="txtCantidad" placeholder="Ingrese Cantidad"></td>
             <td class="d-flex">
             <button onclick="agregarProducto(this)" class="btn btn-danger btn-sm mr-2" style="display:inline-block;">Add</button>
-            <button onclick="eliminarProducto(this)"class="btn btn-primary btn-sm" style="display:inline-block;">De</button>
+
             </td>
           `;
                 i++;

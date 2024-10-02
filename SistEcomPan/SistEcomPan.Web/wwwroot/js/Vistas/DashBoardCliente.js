@@ -1,4 +1,25 @@
-﻿$(document).ready(function () {
+﻿
+
+function ObtenerDatosCliente() {
+    fetch("/Home/ObtenerCliente")
+        .then(response => {
+            return response.ok ? response.json() : Promise.reject(response);
+        })
+        .then(responseJson => {
+            if (responseJson.estado) {
+                const d = responseJson.objeto
+                $("#userDropdown img.img-profile").attr("src", `/ImagenesPerfil/${d.nombreFoto}`);
+            }
+            else {
+                swal("Lo sentimos", responseJson.mensaje, "error")
+            }
+        })
+}
+
+
+
+$(document).ready(function () {
+    ObtenerDatosCliente();
     debugger;
     let dni = document.getElementById("DniPersonal").textContent;
     let correo = document.getElementById("CorreoPersonal").textContent;

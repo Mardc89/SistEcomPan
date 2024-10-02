@@ -37,9 +37,27 @@ function cambiarFecha(fecha) {
 
 }
 
+function ObtenerDatosCliente() {
+    fetch("/Home/ObtenerCliente")
+        .then(response => {
+            return response.ok ? response.json() : Promise.reject(response);
+        })
+        .then(responseJson => {
+            if (responseJson.estado) {
+                const d = responseJson.objeto
+                $("#userDropdown img.img-profile").attr("src", `/ImagenesPerfil/${d.nombreFoto}`);
+            }
+            else {
+                swal("Lo sentimos", responseJson.mensaje, "error")
+            }
+        })
+}
+
+
 let nombreDelUsuario, NombreDelDestinatario;
 
 $(document).ready(function () {
+    ObtenerDatosCliente();
     debugger;
     let busquedaMensaje = "";
     let busquedaDetalleMensaje = document.getElementById("DniPersonal").textContent;

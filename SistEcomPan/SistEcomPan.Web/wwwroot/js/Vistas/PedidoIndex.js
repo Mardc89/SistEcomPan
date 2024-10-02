@@ -1,6 +1,25 @@
 ﻿
+function ObtenerDatosUsuario() {
+    fetch("/Home/ObtenerUsuario")
+        .then(response => {
+            return response.ok ? response.json() : Promise.reject(response);
+        })
+        .then(responseJson => {
+            if (responseJson.estado) {
+                const d = responseJson.objeto
+                $("#userDropdown img.img-profile").attr("src", `/ImagenesPerfil/${d.nombreFoto}`);
+
+            }
+            else {
+                swal("Lo sentimos", responseJson.mensaje, "error")
+            }
+        })
+}
+
+
 $(document).ready(function () {
     obtenerFecha();
+    ObtenerDatosUsuario();
     fetch("/Pedido/ListaNombres")
         .then(response => {
             return response.ok ? response.json() : Promise.reject(response);
@@ -231,7 +250,7 @@ $("#btnGuardar").click(function () {
 
 const ElementosDePagina = 3; // Cantidad de productos por página
 let actualDePagina = 1; // Página actual al cargar
-
+let indice =actualDePagina-1;
 function MostrarProduct(TerminoBusqueda = '', pagina = 1) {
     fetch(`/Pedido/ObtenerProductos?searchTerm=${TerminoBusqueda}&page=${pagina}&itemsPerPage=${ElementosDePagina}`)
         .then(response => response.json())
@@ -239,7 +258,7 @@ function MostrarProduct(TerminoBusqueda = '', pagina = 1) {
             const productos = data.productos; // Array de productos obtenidos
             const totalItems = data.totalItems; // Total de productos encontrados
             const categoria = data.categoria;
-            let i = 0;
+         
             // Actualizar la tabla modal con los productos obtenidos 
             const productTable = document.getElementById('ProductoBuscado');
             productTable.innerHTML = '';
@@ -249,16 +268,16 @@ function MostrarProduct(TerminoBusqueda = '', pagina = 1) {
                 row.innerHTML = `
             <td>${producto.idProducto}</td>
             <td>${producto.descripcion}</td>
-            <td>${categoria[i]}</td>
+            <td>${categoria[indice]}</td>
             <td>${producto.stock}</td>
             <td>${producto.precio.toFixed(2)}</td>
             <td><input type="text" class="form-control form-control-sm" id="txtCantidad" placeholder="Ingrese Cantidad"></td>
             <td class="d-flex">
             <button onclick="agregarProducto(this)" class="btn btn-danger btn-sm mr-2" style="display:inline-block;">Add</button>
-            <button onclick="eliminarProducto(this)"class="btn btn-primary btn-sm" style="display:inline-block;">De</button>
+
             </td>
           `;
-                i++;
+                indice++;
                 productTable.appendChild(row);
                 
 
@@ -279,11 +298,13 @@ function MostrarProduct(TerminoBusqueda = '', pagina = 1) {
                 liA.appendChild(linkA);
 
                 if (i === actualDePagina) {
+                   
                     liA.classList.add('active');
                 }
 
                 linkA.addEventListener('click', () => {
                     actualDePagina = i;
+                    indice = actualDePagina * 3 - 3;
                     MostrarProduct(TerminoBusqueda, actualDePagina);
                     resaltarPagActual();
                  
@@ -436,6 +457,7 @@ function resaltarPagActual() {
 document.getElementById('BusquedaPedidos').addEventListener('input', function (event) {
     const TerminoBusqueda = event.target.value;
     actualDePagina = 1; // Reiniciar a la primera página al realizar una nueva búsqueda
+    indice = 0;
     MostrarProduct(TerminoBusqueda, actualDePagina);
 });
 
