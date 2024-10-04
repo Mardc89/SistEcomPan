@@ -287,9 +287,13 @@ namespace SistEcomPan.Web.Controllers
             
 
             var MisPagos = pedidosFiltrados.Where(p =>
-            string.IsNullOrWhiteSpace(busqueda) || p.Estado.ToLower().Contains(busqueda.ToLower()) ||
-            p.FechaDePago.Date == (DateTime.TryParse(busqueda, out DateTime fechaBusqueda) ? fechaBusqueda.Date : p.FechaDePago.Date)
+            string.IsNullOrWhiteSpace(busqueda) || p.Estado.ToLower().Contains(busqueda.ToLower())
             );
+
+//            var MisPagos = pedidosFiltrados.Where(p =>
+//string.IsNullOrWhiteSpace(busqueda) || p.Estado.ToLower().Contains(busqueda.ToLower()) ||
+//p.FechaDePago.Date == (DateTime.TryParse(busqueda, out DateTime fechaBusqueda) ? fechaBusqueda.Date : p.FechaDePago.Date)
+//);
 
             List<VMPago> vmPagos = new List<VMPago>();
 

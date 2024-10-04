@@ -17,13 +17,15 @@ namespace Negocio.Implementacion
         private readonly IGenericRepository<Productos> _repositorioProducto;
         private readonly IPedidoEnvio _repositorioPedidoEnvio;
         private readonly IGenericRepository<Pedidos> _repositorioPedido;
+        private readonly IGenericRepository<Pagos> _repositorioPago;
 
         public PedidoService(IGenericRepository<Productos> repositorioProducto,IPedidoEnvio repositorioPedidoEnvio,
-            IGenericRepository<Pedidos> repositorioPedido)
+            IGenericRepository<Pedidos> repositorioPedido, IGenericRepository<Pagos> repositorioPago)
         {
             _repositorioProducto = repositorioProducto;
             _repositorioPedidoEnvio = repositorioPedidoEnvio;
             _repositorioPedido = repositorioPedido;
+            _repositorioPago = repositorioPago;
         }
         public Task<Pedidos> Detalle(string numeroPedido)
         {
@@ -101,9 +103,29 @@ namespace Negocio.Implementacion
             return lista.AsQueryable();
         }
 
-        public Task<bool> Eliminar(int IdPedido)
+        public async Task<bool> Eliminar(int IdPedido)
         {
-            throw new NotImplementedException();
+            try
+            {
+                Pedidos pedidoEncontrado = await _repositorioPedido.Buscar(null, null, IdPedido);
+                Pagos   pagoEncontrado = await _repositorioPago.Buscar(null, null, pedidoEncontrado.IdPedido);           
+                if (pedidoEncontrado == null)
+                    throw new ArgumentException("El Pedido no Existe");   
+                if (pagoEncontrado == null)
+                    throw new ArgumentException("El Pago no Existe");
+                if (pagoEncontrado.MontoDeuda>=0)        
+                    throw new InvalidOperationException("No se puede eliminar");
+                if (pagoEncontrado.MontoDeuda==pagoEncontrado.MontoDePedido && pagoEncontrado.Estado.Equals("Pendiente")) {
+                    return await _repositorioPedido.Eliminar(pedidoEncontrado.IdPedido);
+                }
+
+                return false;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
         }
 
     }

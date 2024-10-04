@@ -224,9 +224,37 @@ namespace Datos.Implementacion
             throw new NotImplementedException();
         }
 
-        public Task<Pagos> Buscar(string? c = null, string? p = null, int? d = null)
+        public async Task<Pagos> Buscar(string? estado = null, string? fecha = null, int? idPedido = null)
         {
-            throw new NotImplementedException();
+            Pagos lista = null;
+            using (var conexion = new SqlConnection(_cadenaSQL))
+            {
+                conexion.Open();
+                SqlCommand cmd = new SqlCommand("SPConsultarPagos", conexion);
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@FechaDePago",  (object)fecha ?? DBNull.Value);
+                cmd.Parameters.AddWithValue("@Estado", (object)estado ?? DBNull.Value);
+                cmd.Parameters.AddWithValue("@IdPedido", (object)idPedido ?? DBNull.Value);
+                using (var dr = await cmd.ExecuteReaderAsync())
+                {
+                    while (await dr.ReadAsync())
+                    {
+                        lista = new Pagos
+                        {
+                            IdPago = Convert.ToInt32(dr["IdPago"]),
+                            IdPedido = Convert.ToInt32(dr["IdPedido"]),
+                            MontoDePedido = Convert.ToDecimal(dr["MontoDePedido"]),
+                            Descuento = Convert.ToDecimal(dr["Descuento"]),
+                            MontoTotalDePago = Convert.ToDecimal(dr["MontoTotalDePago"]),
+                            MontoDeuda = Convert.ToDecimal(dr["MontoDeuda"]),
+                            FechaDePago = dr["FechaDePago"]!=DBNull.Value?Convert.ToDateTime(dr["FechaDePago"]):(DateTime?)null,
+                            Estado = dr["Estado"].ToString()
+                        };
+                    }
+                }
+            }
+
+            return lista;
         }
 
         public Task<Pagos> Verificar(string? c = null, string? p = null, int? d = null)

@@ -408,7 +408,7 @@ $("#tbDataAllPedidos tbody").on("click", ".btn-editar", function () {
 })
 
 
-$("#tbdataProducto tbody").on("click", ".btn-eliminar", function () {
+$("#tbDataAllPedidos tbody").on("click", ".btn-eliminar", function () {
 
     let fila;
     if ($(this).closest("tr").hasClass("child")) {
@@ -416,11 +416,11 @@ $("#tbdataProducto tbody").on("click", ".btn-eliminar", function () {
     } else {
         fila = $(this).closest("tr");
     }
-    const data = tablaDataProducto.row(fila).data();
+    const data = tablaAllPedidos.row(fila).data();
 
     swal({
         title: "¿Estas Seguro?",
-        text: `Eliminar al usuario "${data.nombre}"`,
+        text: `Eliminar al usuario "${data.idPedido}"`,
         type: "warning",
         showCancelButton: true,
         confirmButtonClass: "btn-danger",
@@ -434,7 +434,7 @@ $("#tbdataProducto tbody").on("click", ".btn-eliminar", function () {
             if (respuesta) {
 
                 $(".showSweetAlert").LoadingOverlay("show");
-                fetch(`/Producto/Eliminar?IdProducto=${data.idProducto}`, {
+                fetch(`/Pedido/Eliminar?IdPedido=${data.idPedido}`, {
                     method: "DELETE",
 
                 })
@@ -445,7 +445,7 @@ $("#tbdataProducto tbody").on("click", ".btn-eliminar", function () {
                     .then(responseJson => {
                         if (responseJson.estado) {
 
-                            tablaDataProducto.row(fila).remove().draw();
+                            tablaAllPedidos.row(fila).remove().draw();
                             swal("Listo", "el producto fue eliminado", "success")
 
                         }

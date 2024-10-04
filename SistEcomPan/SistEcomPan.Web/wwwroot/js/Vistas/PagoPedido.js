@@ -299,7 +299,7 @@ $("#tbdataPago tbody").on("click", ".btn-editar", function () {
 })
 
 
-$("#tbdata tbody").on("click", ".btn-eliminar", function () {
+$("#tbdataPago tbody").on("click", ".btn-eliminar", function () {
 
     let fila;
     if ($(this).closest("tr").hasClass("child")) {
@@ -307,11 +307,11 @@ $("#tbdata tbody").on("click", ".btn-eliminar", function () {
     } else {
         fila = $(this).closest("tr");
     }
-    const data = tablaData.row(fila).data();
+    const data = tablaDataPago.row(fila).data();
 
     swal({
         title: "¿Estas Seguro?",
-        text: `Eliminar al usuario "${data.nombre}"`,
+        text: `Eliminar al usuario "${data.idPago}"`,
         type: "warning",
         showCancelButton: true,
         confirmButtonClass: "btn-danger",
@@ -325,7 +325,7 @@ $("#tbdata tbody").on("click", ".btn-eliminar", function () {
             if (respuesta) {
 
                 $(".showSweetAlert").LoadingOverlay("show");
-                fetch(`/Usuario/Eliminar?IdUsuario=${data.idUsuario}`, {
+                fetch(`/Pago/Eliminar?IdPago=${data.idPago}`, {
                     method: "DELETE",
 
                 })
@@ -336,8 +336,8 @@ $("#tbdata tbody").on("click", ".btn-eliminar", function () {
                     .then(responseJson => {
                         if (responseJson.estado) {
 
-                            tablaData.row(fila).remove().draw();
-                            swal("Listo", "el usuario fue eliminado", "success")
+                            tablaDataPago.row(fila).remove().draw();
+                            swal("Listo", "el pago fue eliminado", "success")
 
                         }
                         else {
