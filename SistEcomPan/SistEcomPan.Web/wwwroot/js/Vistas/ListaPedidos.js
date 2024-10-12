@@ -315,7 +315,7 @@ function Evaluar(pago, descuento, monto) {
     else if (pagos < montofinal) {
         cambio = 0.00;
         deuda = montofinal - pagos;
-        estado = "Pendiente";
+        estado = "Existe Deuda";
 
     }
     else {

@@ -166,7 +166,7 @@ namespace SistEcomPan.Web.Controllers
         {
             var Pedidolista = await _pedidoService.Lista();
             var clientes = await _clienteService.Lista();  
-            var pedidosPendientes = Pedidolista.Where(p => p.Estado.Equals("Pendiente")).ToList();
+            var pedidosPendientes = Pedidolista.Where(p => p.Estado.Equals("Nuevo")).ToList();
             int?IDdeCliente=null;
             if (!string.IsNullOrEmpty(searchTerm))
             {

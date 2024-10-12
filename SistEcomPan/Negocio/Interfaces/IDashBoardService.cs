@@ -11,7 +11,8 @@ namespace Negocio.Interfaces
         Task<int> TotalPedidosUltimaSemana();
         Task<string> TotalIngresosUltimaSemana();
         Task<int> TotalProductos();
-        Task<int> TotalCategorias(); 
+        Task<int> TotalCategorias();
+        Task<int> TotalDeLatas();
         Task<Dictionary<string,int>>PedidosUltimaSemana();
         Task<Dictionary<string, int>> ProductosTopUltimaSemana();
     }

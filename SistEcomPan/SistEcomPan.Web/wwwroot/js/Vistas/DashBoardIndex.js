@@ -35,7 +35,7 @@ $(document).ready(function () {
                 $("#totalIngresos").text(d.totalIngresos)
                 $("#totalProductos").text(d.totalProductos)
                 $("#totalCategorias").text(d.totalCategorias)
-
+                $("#totalLatas").text(d.totalDeLatas)
 
                 let barchart_labels;
                 let barchart_data;

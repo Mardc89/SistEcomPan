@@ -8,6 +8,7 @@ using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 
 namespace Negocio.Implementacion
 {
@@ -15,6 +16,7 @@ namespace Negocio.Implementacion
     {
         private readonly IPedidoNew _repositorioPedidos;
         private readonly IGenericRepository<Categorias> _repositorioCategoria;
+        private readonly IGenericRepository<DetallePedido> _repositorioDetallePedido;
         private readonly IGenericRepository<Productos> _repositorioProducto;
         private readonly IGenericRepository<Pagos> _repositorioPagos;
         private readonly IGenericRepository<Clientes> _repositorioClientes;
@@ -30,7 +32,8 @@ namespace Negocio.Implementacion
             IGenericRepository<Productos> repositorioProducto,
             IGenericRepository<Pagos> repositorioPagos,
             IGenericRepository<Mensajes> repositorioMensajes,
-            IGenericRepository<Clientes> repositorioClientes
+            IGenericRepository<Clientes> repositorioClientes,
+            IGenericRepository<DetallePedido> repositorioDetallePedido
         )
         {
             _repositorioProductoTop = repositorioProductoTop;
@@ -40,6 +43,7 @@ namespace Negocio.Implementacion
             _repositorioMensajes = repositorioMensajes;
             _repositorioPagos = repositorioPagos;
             _repositorioClientes = repositorioClientes;
+            _repositorioDetallePedido = repositorioDetallePedido;
             FechaInicio = FechaInicio;
 
         }        
@@ -218,10 +222,44 @@ namespace Negocio.Implementacion
             }
         }
 
+        public async Task<int> TotalDeLatas()
+        {
+            try
+            {
+                List<DetallePedido> detallePedidos = new List<DetallePedido>();
+                List<DetallePedido> detallePedidosFinal = new List<DetallePedido>();
+                List<Pedidos> query = await _repositorioPedidos.ConsultarTotalDePedidos(FechaInicio.Date);
+                var ListPedidos = query.Select(x => x.IdPedido).ToList();
+              
+                foreach (var elemento in ListPedidos)
+                {
+                    var detalles = await _repositorioDetallePedido.Consultar(null, null, null,elemento);
+                    detallePedidos.AddRange(detalles);
+                }
 
+                var Productos = await _repositorioProducto.Lista();
+                var ProductosLatas=Productos.Where(x=>x.Descripcion.Contains("Lata de Pan")).Select(x=>x.IdProducto).ToList();
 
+                foreach (var elemento in ProductosLatas)
+                {
+                    var detallefinal = detallePedidos.Where(x => x.IdProducto.Equals(elemento)).ToList();
+                    if (detallefinal!=null)
+                    {
+                        detallePedidosFinal.AddRange(detallefinal);
+                    }
+                }
 
+                int suma = detallePedidosFinal.Sum(x=>x.Cantidad);
+                   
 
+                return suma;
 
+            }
+            catch
+            {
+
+                throw;
+            }
+        }
     }
 }

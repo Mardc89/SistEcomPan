@@ -10,7 +10,7 @@ namespace Datos.Interfaces
     public interface IGenericRepository<T> where T : class
     {
         Task<List<T>> Lista();
-        Task<List<T>> Consultar(string? c = null, string? p = null, string? d = null);
+        Task<List<T>> Consultar(string? c = null, string? p = null, string? m = null,int ? d = null);
         Task<bool> Guardar(T modelo);
         Task<T> Crear(T modelo);
         Task<bool> Editar(T modelo);

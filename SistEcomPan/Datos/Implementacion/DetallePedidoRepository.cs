@@ -79,9 +79,32 @@ namespace Datos.Implementacion
             throw new NotImplementedException();
         }
 
-        public Task<DetallePedido> Buscar(string? c = null, string? p = null, int? d = null)
+        public async Task<DetallePedido> Buscar(string? codigo = null, string? estado = null, int? idPedido = null)
         {
-            throw new NotImplementedException();
+            DetallePedido lista = null;
+            using (var conexion = new SqlConnection(_cadenaSQL))
+            {
+                conexion.Open();
+                SqlCommand cmd = new SqlCommand("SPConsultarDetallePedido", conexion);
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@IdPedido", (object)idPedido ?? DBNull.Value);
+                using (var dr = await cmd.ExecuteReaderAsync())
+                {
+                    while (await dr.ReadAsync())
+                    {
+                        lista = new DetallePedido
+                        {
+                            IdDetallePedido = Convert.ToInt32(dr["IdDetallePedido"]),
+                            IdPedido = Convert.ToInt32(dr["IdPedido"]),
+                            IdProducto = Convert.ToInt32(dr["IdProducto"]),
+                            Cantidad = Convert.ToInt32(dr["Cantidad"]),
+                            Total= Convert.ToDecimal(dr["Total"])
+                        };
+                    }
+                }
+            }
+
+            return lista;
         }
 
         public Task<DetallePedido> Verificar(string? c = null, string? p = null, int? d = null)
@@ -89,9 +112,65 @@ namespace Datos.Implementacion
             throw new NotImplementedException();
         }
 
-        public Task<List<DetallePedido>> Consultar(string? c = null, string? p = null, string? d = null)
+        public async Task<List<DetallePedido>> ConsultarDetallePedido(int IdPedido)
         {
-            throw new NotImplementedException();
+
+            List<DetallePedido> lista = new List<DetallePedido>();
+            using (var conexion = new SqlConnection(_cadenaSQL))
+            {
+                conexion.Open();
+                SqlCommand cmd = new SqlCommand("SPConsultarDetallePedido", conexion);
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@IdPedido", IdPedido);
+
+
+                using (var dr = await cmd.ExecuteReaderAsync())
+                {
+                    while (await dr.ReadAsync())
+                    {
+                        lista.Add(new DetallePedido
+                        {
+                            IdDetallePedido = Convert.ToInt32(dr["IdDetallePedido"]),
+                            IdPedido = Convert.ToInt32(dr["IdPedido"]),
+                            IdProducto = Convert.ToInt32(dr["IdProducto"]),
+                            Cantidad = Convert.ToInt32(dr["Cantidad"]),
+                            Total = Convert.ToDecimal(dr["Total"])
+                        });
+                    }
+                }
+            }
+
+            return lista;
+        }
+
+        public async Task<List<DetallePedido>> Consultar(string? c = null, string? m = null, string? p = null, int? IdPedido= null)
+        {
+            List<DetallePedido> lista = new List<DetallePedido>();
+            using (var conexion = new SqlConnection(_cadenaSQL))
+            {
+                conexion.Open();
+                SqlCommand cmd = new SqlCommand("SPConsultarDetallePedido", conexion);
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@IdPedido", Convert.ToInt32(IdPedido));
+
+
+                using (var dr = await cmd.ExecuteReaderAsync())
+                {
+                    while (await dr.ReadAsync())
+                    {
+                        lista.Add(new DetallePedido
+                        {
+                            IdDetallePedido = Convert.ToInt32(dr["IdDetallePedido"]),
+                            IdPedido = Convert.ToInt32(dr["IdPedido"]),
+                            IdProducto = Convert.ToInt32(dr["IdProducto"]),
+                            Cantidad = Convert.ToInt32(dr["Cantidad"]),
+                            Total = Convert.ToDecimal(dr["Total"])
+                        });
+                    }
+                }
+            }
+
+            return lista;
         }
     }
 }

@@ -258,7 +258,8 @@ function MostrarProduct(TerminoBusqueda = '', pagina = 1) {
             const productos = data.productos; // Array de productos obtenidos
             const totalItems = data.totalItems; // Total de productos encontrados
             const categoria = data.categoria;
-         
+            let nombreCarpeta = /ImagenesProducto/;
+      
             // Actualizar la tabla modal con los productos obtenidos 
             const productTable = document.getElementById('ProductoBuscado');
             productTable.innerHTML = '';
@@ -272,6 +273,7 @@ function MostrarProduct(TerminoBusqueda = '', pagina = 1) {
             <td>${producto.stock}</td>
             <td>${producto.precio.toFixed(2)}</td>
             <td><input type="text" class="form-control form-control-sm" id="txtCantidad" placeholder="Ingrese Cantidad"></td>
+            <td><img style = "height:60px" src = ${nombreCarpeta}${producto.nombreImagen} class="rounded mx-auto d-block" /></td>
             <td class="d-flex">
             <button onclick="agregarProducto(this)" class="btn btn-danger btn-sm mr-2" style="display:inline-block;">Add</button>
 
@@ -304,7 +306,7 @@ function MostrarProduct(TerminoBusqueda = '', pagina = 1) {
 
                 linkA.addEventListener('click', () => {
                     actualDePagina = i;
-                    indice = actualDePagina * 3 - 3;
+                    indice = actualDePagina * ElementosDePagina - ElementosDePagina;
                     MostrarProduct(TerminoBusqueda, actualDePagina);
                     resaltarPagActual();
                  
@@ -500,7 +502,7 @@ $("#btnEnviarPedido").click(function () {
     const pedido = {
         dni: $("#txtDocumentoCliente").val(),
         montoTotal: $("#montoTotal").text(),
-        estado: "Pendiente",
+        estado: "Nuevo",
         DetallePedido: vmDetallePedido
 
     }

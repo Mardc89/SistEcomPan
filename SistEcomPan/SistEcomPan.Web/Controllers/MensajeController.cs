@@ -11,6 +11,7 @@ using System.Text.Json;
 
 namespace SistEcomPan.Web.Controllers
 {
+    [Authorize]
     public class MensajeController : Controller
     {
         private readonly IMensajeService _mensajeService;

@@ -219,7 +219,7 @@ namespace Datos.Implementacion
             return lista;
         }
 
-        public Task<List<DestinatarioMensaje>> Consultar(string? c = null, string? p = null, string? d = null)
+        public Task<List<DestinatarioMensaje>> Consultar(string? c = null, string? p = null, string? m = null, int? d = null)
         {
             throw new NotImplementedException();
         }

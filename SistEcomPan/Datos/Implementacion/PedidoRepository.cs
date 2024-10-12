@@ -203,7 +203,7 @@ namespace Datos.Implementacion
             throw new NotImplementedException();
         }
 
-        public async Task<List<Pedidos>> Consultar(string? Codigo=null,string? FechaInicio=null,string? FechaFin = null)
+        public async Task<List<Pedidos>> Consultar(string? Codigo=null,string? FechaInicio=null,string? FechaFin = null,int?IdPedido=null)
         {
 
 
@@ -358,6 +358,38 @@ namespace Datos.Implementacion
                 SqlCommand cmd = new SqlCommand("SPHistorialDePedidos", conexion);
                 cmd.CommandType = CommandType.StoredProcedure;
                 cmd.Parameters.AddWithValue("@FechaInicio",FechaInicio);
+
+
+                using (var dr = await cmd.ExecuteReaderAsync())
+                {
+                    while (await dr.ReadAsync())
+                    {
+                        lista.Add(new Pedidos
+                        {
+                            IdPedido = Convert.ToInt32(dr["IdPedido"]),
+                            IdCliente = Convert.ToInt32(dr["IdCliente"]),
+                            Codigo = dr["Codigo"].ToString(),
+                            MontoTotal = Convert.ToDecimal(dr["MontoTotal"]),
+                            Estado = dr["Estado"].ToString(),
+                            FechaPedido = Convert.ToDateTime(dr["FechaPedido"])
+                        });
+                    }
+                }
+            }
+
+            return lista;
+        }
+
+        public async Task<List<Pedidos>> ConsultarTotalDePedidos(DateTime FechaInicio)
+        {
+
+            List<Pedidos> lista = new List<Pedidos>();
+            using (var conexion = new SqlConnection(_cadenaSQL))
+            {
+                conexion.Open();
+                SqlCommand cmd = new SqlCommand("SPTotalDePedidos", conexion);
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@FechaInicio", FechaInicio);
 
 
                 using (var dr = await cmd.ExecuteReaderAsync())
