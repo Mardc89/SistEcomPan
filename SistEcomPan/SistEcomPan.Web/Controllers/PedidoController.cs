@@ -166,7 +166,7 @@ namespace SistEcomPan.Web.Controllers
         {
             var Pedidolista = await _pedidoService.Lista();
             var clientes = await _clienteService.Lista();  
-            var pedidosPendientes = Pedidolista.Where(p => p.Estado.Equals("Nuevo")).ToList();
+            var pedidosPendientes = Pedidolista.Where(p => p.Estado.Equals("Nuevo")||p.Estado.Equals("Existe Deuda")).ToList();
             int?IDdeCliente=null;
             if (!string.IsNullOrEmpty(searchTerm))
             {
@@ -718,7 +718,10 @@ namespace SistEcomPan.Web.Controllers
                     {
                         IdPedido = modelo.IdPedido,
                         MontoTotal = Convert.ToString(pedidoCreado.MontoTotal),
-                                          
+                        Codigo=modelo.Codigo,
+                        NombresCompletos=modelo.NombresCompletos,
+                        FechaPedido= Convert.ToDateTime(pedidoCreado.FechaPedido),
+                        Estado=modelo.Estado,
                         DetallePedido = pedidoCreado.DetallePedido.Select(detalle => new VMDetallePedido
                         {
                             IdPedido=detalle.IdPedido,

@@ -50,7 +50,7 @@ function cambiarFecha(fecha) {
 }
 
 
-
+let NombresCompletos,Codigo,Estado;
 $(document).ready(function () {
    
     tablaAllPedidos = $('#tbDataAllPedidos').DataTable({
@@ -62,8 +62,18 @@ $(document).ready(function () {
         },
         "columns": [
             { "data": "idPedido", "searchable": false },
-            { "data": "codigo" },
-            {"data":"nombresCompletos"},
+            {
+                "data": "codigo", render: function (data) {
+                    Codigo = data;
+                    return Codigo;
+                }
+            },
+            {
+                "data": "nombresCompletos", render: function (data) {
+                    NombresCompletos = data;
+                    return NombresCompletos;
+                }
+            },
             { "data": "montoTotal" },
             {
                 "data": "fechaPedido", render: function (data) {
@@ -72,12 +82,18 @@ $(document).ready(function () {
             },
             {
                 "data": "estado", render: function (data) {
-                    if (data == "Pagado")
+                    if (data == "Pagado") {
+                        Estado = data;
                         return '<span class="badge badge-info">Pagado</span>';
-                    else if (data == "Existe Deuda")
+                    }
+                    else if (data == "Existe Deuda") {
+                        Estado = data;
                         return '<span class="badge badge-danger">Existe Deuda</span>';
-                    else
+                    }
+                    else if (data == "Nuevo"){
+                        Estado = data;
                         return '<span class="badge badge-success">Nuevo</span>';
+                    }
 
                 }
 
@@ -239,7 +255,7 @@ function BuscarDetallePedido(idPedido) {
             <td><input type="text" class="form-control form-control-sm" id="txtCantidad" placeholder="Ingrese Cantidad" value=${pedido.cantidad} disabled></td>
             <td>${pedido.total}</td>
             <td class="d-flex">
-            <button onclick="EliminarProducto(this)"class="btn btn-primary btn-sm">Eliminar</button>
+            <button onclick="EliminarProducto(this)"class="btn btn-primary btn-sm btnEliminarProducto">Eliminar</button>
             </td>
           `;
                 productTable.appendChild(row);
@@ -405,8 +421,37 @@ $("#tbDataAllPedidos tbody").on("click", ".btn-editar", function () {
         filaSeleccionada = $(this).closest("tr");
     }
     const data = tablaAllPedidos.row(filaSeleccionada).data();
+    NombresCompletos = data.nombresCompletos;
+    Codigo = data.codigo;
+    Estado = data.estado;
+    VerificarEstado(Estado)
     mostrarModalDetallePedido(data);
 })
+
+
+function VerificarEstado(estado) {
+
+    const botonAgregar = document.getElementById("btnAgregar");
+    const botonActualizar = document.getElementById("btnActualizarPedido");
+    const botonEliminar = document.getElementsByClassName("btnEliminarProducto");
+    if (estado === "Nuevo") {
+        botonAgregar.disabled = false;
+        botonActualizar.disabled = false;
+
+        for (let i = 0; i < botonEliminar.length; i++) {
+            botonEliminar[i].disabled = false;
+        }
+    }
+    else {
+        botonAgregar.disabled = true;
+        botonActualizar.disabled = true;
+
+        for (let i = 0; i < botonEliminar.length; i++) {
+            botonEliminar[i].disabled = true;
+        }
+    }
+
+}
 
 
 $("#tbDataAllPedidos tbody").on("click", ".btn-eliminar", function () {
@@ -501,8 +546,11 @@ $("#btnActualizarPedido").click(function () {
 
     const vmDetallePedido = productosPedidos;
 
-    const pedido = {
-        idPedido:idPedidos,
+    const pedidoActualizado = {
+        idPedido: idPedidos,
+        codigo: Codigo,
+        estado: Estado,
+        nombresCompletos: NombresCompletos,
         montoTotal: $("#txtFinalDetallePedido").val(),
         DetallePedido: vmDetallePedido
 
@@ -516,7 +564,7 @@ $("#btnActualizarPedido").click(function () {
     fetch("/Pedido/ActualizarPedido", {
         method: "POST",
         headers: { "Content-Type": "application/json;charset=utf-8" },
-        body: JSON.stringify(pedido)
+        body: JSON.stringify(pedidoActualizado)
     })
         .then(response => {
             $("#btnActualizarPedido").LoadingOverlay("hide");

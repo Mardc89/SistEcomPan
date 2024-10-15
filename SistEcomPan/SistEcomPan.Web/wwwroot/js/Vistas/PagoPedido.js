@@ -169,6 +169,9 @@ function mostrarModal(modelo = MODELO_BASE) {
     mostrarModal()
     })
 
+$("#btnClosePago").click(function () {
+    $("#txtPagoDelCliente").val("")
+})
 
 $("#btnGuardarPago").click(function () {
 

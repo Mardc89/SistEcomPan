@@ -15,5 +15,8 @@ namespace Entidades
         public decimal PagoDelCliente { get; set; }
         public decimal DeudaDelCliente { get; set; }
         public decimal CambioDelCliente { get; set; }
+
+        public DateTime? FechaPago { get; set; }
+
     }
 }

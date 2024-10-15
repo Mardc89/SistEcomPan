@@ -175,10 +175,18 @@ namespace Datos.Implementacion
                     outputParameter2.Direction = ParameterDirection.Output;
                     cmd.Parameters.Add(outputParameter2);
 
+                    SqlParameter outputParameter3 = new SqlParameter();
+                    outputParameter3.ParameterName = "@FechaPedido";
+                    outputParameter3.SqlDbType = SqlDbType.DateTime;
+                    outputParameter3.Direction = ParameterDirection.Output;
+                    cmd.Parameters.Add(outputParameter3);
+
                     await cmd.ExecuteNonQueryAsync();
 
                     resultado = Convert.ToBoolean(cmd.Parameters["@Resultado"].Value);
                     int PedidoId = Convert.ToInt32(outputParameter.Value);
+                    var FechaPedido = Convert.ToDateTime(outputParameter3.Value);
+                    modelo.FechaPedido = FechaPedido;
                     modelo.IdPedido = PedidoId;
 
                 }

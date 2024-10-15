@@ -131,10 +131,18 @@ namespace Datos.Implementacion
                     outputParameter2.Direction = ParameterDirection.Output;
                     cmd.Parameters.Add(outputParameter2);
 
+                    SqlParameter outputParameter3 = new SqlParameter();
+                    outputParameter3.ParameterName = "@FechaPago";
+                    outputParameter3.SqlDbType = SqlDbType.DateTime;
+                    outputParameter3.Direction = ParameterDirection.Output;
+                    cmd.Parameters.Add(outputParameter3);
+
                     await cmd.ExecuteNonQueryAsync();
 
                     resultado = Convert.ToBoolean(cmd.Parameters["@Resultado"].Value);
                     int PagoId = Convert.ToInt32(outputParameter.Value);
+                    var FechaPago= Convert.ToDateTime(outputParameter3.Value);
+                    modelo.FechaDePago = FechaPago;
                     modelo.IdPago = PagoId;
 
                 }

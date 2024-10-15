@@ -123,12 +123,14 @@ namespace SistEcomPan.Web.Controllers
                         MontoTotalDePago = Convert.ToString(pagoCreado.MontoTotalDePago),
                         MontoDeuda =Convert.ToString(pagoCreado.MontoDeuda),
                         Estado = pagoCreado.Estado,
+                        FechaPago=pagoCreado.FechaDePago,
                         DetallePago = pagoCreado.DetallePago.Select(detalle => new VMDetallePago
                         {
                             MontoAPagar = Convert.ToString(detalle.MontoAPagar),
                             PagoDelCliente = Convert.ToString(detalle.PagoDelCliente),
                             DeudaDelCliente = Convert.ToString(detalle.DeudaDelCliente),
                             CambioDelCliente = Convert.ToString(detalle.CambioDelCliente)
+                            
 
                         }).ToList()
 
@@ -193,16 +195,17 @@ namespace SistEcomPan.Web.Controllers
                         MontoDeuda = Convert.ToString(pagoCreado.MontoDeuda),
                         Estado = pagoCreado.Estado,
                         NombreCliente=modelo.NombreCliente,
-                        FechaPago= Convert.ToDateTime(pagoCreado.FechaDePago),
                         MontoTotalDePago=modelo.MontoTotalDePago,
                         MontoDePedido=modelo.MontoDePedido,
-                        Descuento=modelo.Descuento,
+                        Descuento=modelo.Descuento,                           
+                        FechaPago= Convert.ToDateTime(pagoCreado.FechaDePago),
                         DetallePago = pagoCreado.DetallePago.Select(detalle => new VMDetallePago
                         {
                             MontoAPagar = Convert.ToString(detalle.MontoAPagar),
                             PagoDelCliente = Convert.ToString(detalle.PagoDelCliente),
                             DeudaDelCliente = Convert.ToString(detalle.DeudaDelCliente),
-                            CambioDelCliente = Convert.ToString(detalle.CambioDelCliente)
+                            CambioDelCliente = Convert.ToString(detalle.CambioDelCliente),
+
 
                         }).ToList()
 

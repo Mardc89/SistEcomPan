@@ -63,7 +63,7 @@ document.addEventListener("DOMContentLoaded", function () {
                         /*  const nombre = data.nombresCompletos;*/
                         // Actualizar la tabla modal con los productos obtenidos
                         document.getElementById('txtDescuento').value = Pagos.descuento;
-                        document.getElementById('txtMontoPago').value = Pagos.montoTotalDePago;
+                        document.getElementById('txtMontoPago').value = Pagos.montoDeuda;
                         document.getElementById('txtDeuda').value = Pagos.montoDeuda;
                         document.getElementById('txtIdPago').value = Pagos.idPago;
                     } else {
