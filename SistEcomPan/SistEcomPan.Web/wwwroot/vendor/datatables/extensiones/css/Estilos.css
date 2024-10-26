@@ -1,0 +1,20 @@
+﻿
+@media (max-width: 576px) {
+    h6 {
+        font-size: 1rem;
+    }
+
+    .btn {
+        font-size: 0.875rem;
+    }
+
+    .form-control {
+        font-size: 0.875rem;
+    }
+
+    .table-responsive {
+        overflow-x: auto;
+        display: block;
+    }
+}
+

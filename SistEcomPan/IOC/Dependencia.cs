@@ -19,7 +19,9 @@ namespace IOC
         public static void InyectarDependencias(this IServiceCollection services)
         {
             services.AddScoped<IPedidoNew, PedidoRepository>();
+            services.AddScoped<IDevolucionNew, DevolucionRepository>();
             services.AddScoped<IPedidoEnvio, PedidoNew>();
+            services.AddScoped<IDevolucionProducto, DevolucionNew>();
             services.AddScoped<IPagoNew, PagoRepository>();
             services.AddScoped<IDestinatarioNew, MensajeRepository>();
             services.AddScoped<IPagoContado, PagoNew>();
@@ -29,8 +31,10 @@ namespace IOC
             services.AddScoped<IGenericRepository<Categorias>, CategoriaRepository>();
             services.AddScoped<IGenericRepository<Productos>, ProductoRepository>();
             services.AddScoped<IGenericRepository<Pedidos>, PedidoRepository>();
+            services.AddScoped<IGenericRepository<Devolucion>, DevolucionRepository>();
             services.AddScoped<IGenericRepository<Pagos>, PagoRepository>();
             services.AddScoped<IGenericRepository<DetallePedido>, DetallePedidoRepository>();
+            services.AddScoped<IGenericRepository<DetalleDevolucion>, DetalleDevolucionRepository>();
             services.AddScoped<IGenericRepository<DetallePago>, DetallePagoRepository>();
             services.AddScoped<IGenericRepository<NumeroDocumento>, NumDocumentoRepository>();
 
@@ -49,6 +53,8 @@ namespace IOC
             services.AddScoped<IDashBoardService, DashBoardService>();
             services.AddScoped<IDashBoardServiceCliente, DashBoardServiceCliente>();
             services.AddScoped<IPedidoService, PedidoService>();
+            services.AddScoped<IDevolucionService, DevolucionService>();
+            services.AddScoped<IDetalleDevolucionService, DetalleDevolucionService>();
             services.AddScoped<IPagoService, PagoService>();
             services.AddScoped<IClienteService, ClienteService>();
             services.AddScoped<IProductoService, ProductoService>();

@@ -179,17 +179,6 @@ function actualizarMensajes(asunto) {
 }
 
 let AsuntoRemitente = "";
-//function iniciarActualizacion(AsuntoRemitente) {
-//    intervaloActualizacion = setInterval(() => {
-//        actualizarMensajes(AsuntoRemitente);
-//    }, 60000);
-//}
-
-//function detenerActualizacion() {
-//    clearInterval(intervaloActualizacion);
-//}
-
-
 
 
 function mostrarModalRespuesta(remitenteMensaje = RemitenteMensaje) {
@@ -375,50 +364,6 @@ $("#btnRespuestaDelMensaje").click(function () {
   
 
 })
-
-
-//function mostrarModalRespuesta(remitenteMensaje = RemitenteMensaje) {
-//    fetch(`/Mensaje/ObtenerMensajeDeAsunto?asunto=${remitenteMensaje.asunto}`)
-//        .then(response => response.json())
-//        .then(data => {
-//            const mensajes = data.data;
-//            const area = document.getElementById('DetalleAsuntoMensaje');
-//            area.innerHTML = '';
-
-//            mensajes.forEach(mensaje => {
-//                const nombreRemitente = mensaje.nombreRemitente;
-//                const fecha = cambiarFecha(mensaje.fechaDeMensaje);
-//                const mensajeElemento = document.createElement('p');
-//                mensajeElemento.innerHTML = `<strong>${nombreRemitente}</strong><span style="float:right;">${fecha}</span><br>${mensaje.cuerpo}`;
-///*                area.value += `${mensaje.nombreRemitente}\t\t\t\t ${cambiarFecha(mensaje.fechaDeMensaje)}\n ${mensaje.cuerpo}\n`;*/
-///*                area.value += `${mensaje.cuerpo}\n`;*/
-//                /*   area.value += `Destinatario:${mensaje.nombreDestinatario}\n`;*/
-//                area.appendChild(mensajeElemento);
-//            });
-
-//        })
-//        .catch(error => {
-//            console.error('Error al buscar mensajes:', error);        });
-
-
-
-//    $("#txtResptIdMensaje").val(remitenteMensaje.idMensaje)
-//    $("#txtResptAsunto").val(remitenteMensaje.asunto)
-//    $("#txtResptCorreoRemitente").val(remitenteMensaje.correoRemitente)
-//    $("#txtResptCorreoDestinatario").val(remitenteMensaje.correoDestinatario)
-//    $("#modalDataMensajeRespuesta").modal("show")
-//}
-
-//$("#DetalleAsuntoMensaje").on("input",function () {
-//    const asuntoDeMensaje = $(this).val();
-//    remitenteMensaje = RemitenteMensaje
-//    remitenteMensaje.asunto=asuntoDeMensaje
-//    mostrarModalRespuesta(remitenteMensaje);
-
-//});
-
-
-
 
 
 

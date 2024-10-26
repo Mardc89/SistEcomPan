@@ -52,17 +52,24 @@ namespace Datos.Implementacion
                     {
 
 
-                        IQueryable<Productos> producto = await _repositorioProducto.Consultar();
-                        IQueryable<Productos> productoEncontrado = producto.Where(u => u.IdProducto == detalle.IdProducto);
-                        var PrecioProducto = productoEncontrado.First().Precio;
+                        //IQueryable<Productos> producto = await _repositorioProducto.Consultar();
+                        //IQueryable<Productos> productoEncontrado = producto.Where(u => u.IdProducto == detalle.IdProducto);
+                        //var PrecioProducto = productoEncontrado.First().Precio;
+
+                        Productos producto = await _repositorioProducto.Buscar(null,null,detalle.IdProducto);
+                        var PrecioProducto = producto.Precio;
 
                         subtotal = Convert.ToDecimal(detalle.Cantidad.ToString()) *PrecioProducto;
                         total += subtotal;
 
-                        IQueryable<Productos> buscarProducto = await _repositorioProducto.Consultar();
-                        IQueryable<Productos> productoStock = buscarProducto.Where(u => u.IdProducto == detalle.IdProducto);
-                        Productos productoEditar = productoStock.First();
+                        //IQueryable<Productos> buscarProducto = await _repositorioProducto.Consultar();
+                        //IQueryable<Productos> productoStock = buscarProducto.Where(u => u.IdProducto == detalle.IdProducto);
+                        //Productos productoEditar = productoStock.First();
+                        //productoEditar.Stock = productoEditar.Stock - detalle.Cantidad;
+
+                        Productos productoEditar = await _repositorioProducto.Buscar(null,null,detalle.IdProducto);
                         productoEditar.Stock = productoEditar.Stock - detalle.Cantidad;
+
                         await _repositorioProducto.Editar(productoEditar);
 
                         detallePedido.Rows.Add(new object[] {
@@ -133,9 +140,14 @@ namespace Datos.Implementacion
                         IQueryable<Productos> buscarProducto = await _repositorioProducto.Consultar();
                         IQueryable<Productos> productoStock = buscarProducto.Where(u => u.IdProducto == detalle.IdProducto);
                         Productos productoEditar = productoStock.First();
-                        productoEditar.Stock = productoEditar.Stock - detalle.Cantidad;
+                        if (productoEditar.Stock > 0) {
+                             productoEditar.Stock = productoEditar.Stock - detalle.Cantidad;
+                        }
+                        else
+                        {
+                            productoEditar.Stock = 0;
+                        }  
                         await _repositorioProducto.Editar(productoEditar);
-
                         detallePedido.Rows.Add(new object[] {
                         detalle.IdProducto,
                         detalle.Cantidad,

@@ -10,10 +10,12 @@ namespace Entidades
     {
         public int IdDetalleDevolucion { get; set; }
         public int IdDevolucion { get; set; }
-        public Devolucion Devolucion { get; set; }
-        public int IdProducto { get; set; }
-        public Productos Producto { get; set; }
-        public int Cantidad { get; set; }
+        public string Categoria { get; set; }
+        public string Descripcion { get; set; }       
+        public decimal Precio { get; set; }
+        public int CantidadPedido { get; set; }        
         public decimal? Total { get; set; }
+        public int CantidadDevolucion { get; set; }
+        public Devolucion Devolucion { get; set; }
     }
 }

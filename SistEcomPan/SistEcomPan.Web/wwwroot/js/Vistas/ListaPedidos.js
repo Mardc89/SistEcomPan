@@ -339,19 +339,6 @@ function Evaluar(pago, descuento, monto) {
 
 }
 
-
-
-
-
-
-// Función para calcular el monto total
-
-
-
-
-
-
-
 // Función para resaltar la página actual
 function resaltarPaginaActual() {
     const paginationItems = document.querySelectorAll('#paginacion .page-item');
@@ -371,10 +358,7 @@ document.getElementById('searchInputs').addEventListener('input', function (even
     buscarPedidos(searchTer, PaginaInicial);
 });
 
-//Llamada inicial para cargar productos al abrir la tabla modal
-//$('#modalData').on('show.bs.modal', function () {
-//    buscarProductos();
-//});
+
 
 
 

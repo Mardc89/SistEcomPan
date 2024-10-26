@@ -1,10 +1,12 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Negocio.Interfaces;
 using SistEcomPan.Web.Models.ViewModels;
 using SistEcomPan.Web.Tools.Response;
 
 namespace SistEcomPan.Web.Controllers
 {
+    [Authorize]
     public class DashBoardController : Controller
     {
         private readonly IDashBoardService _dashBoardServicio;

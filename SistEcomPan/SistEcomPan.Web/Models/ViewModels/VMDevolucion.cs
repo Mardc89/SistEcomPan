@@ -3,12 +3,13 @@
     public class VMDevolucion
     {
         public int IdDevolucion { get; set; }
-        public int? IdPedido { get; set; }
-        public string? NombreDelProducto { get; set; }    
-        public decimal? PrecioDelProducto { get; set; }
-        public string? NombreDelCliente { get; set; }
-        public int CantidadDevolucion { get; set; }
-        public decimal Total { get; set; }
-        public DateTime? FechaDeMensaje { get; set; }
+        public string CodigoPedido { get; set; }    
+        public string CodigoDevolucion { get; set; }
+        public decimal? MontoPedido { get; set; }
+        public decimal? Descuento { get; set; }
+        public decimal? MontoAPagar { get; set; }
+        public string? NombresCompletos { get; set; }
+        public DateTime? FechaDevolucion { get; set; }
+        public List<VMDetalleDevolucion> DetalleDevolucion { get; set; }
     }
 }

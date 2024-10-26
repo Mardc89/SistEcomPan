@@ -32,6 +32,7 @@ namespace SistEcomPan.Web.Controllers
 
         
         [HttpGet]
+        [AllowAnonymous]
         public async Task<IActionResult> ListaDistritos()
         {
             var lista = await _distritoService.Lista();

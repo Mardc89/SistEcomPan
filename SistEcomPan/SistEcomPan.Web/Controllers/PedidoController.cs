@@ -748,74 +748,7 @@ namespace SistEcomPan.Web.Controllers
 
         }
 
-        //[HttpPost]
-        //public async Task<IActionResult> ActualizarDetallePedido([FromBody] VMDetallePedido modelo,int IdPedido)
-        //{
-        //    GenericResponse<VMPedido> gResponse = new GenericResponse<VMPedido>();
 
-        //    try
-        //    {
-        //        List<DetallePedido> listaPedidos = new List<DetallePedido>();
-        //        List<VMDetallePedido> listaVMDetallePedido = new List<VMDetallePedido>();
-        //        //List<DetallePedido> detallePedido = new List<DetallePedido>();
-        //        var clientes = await _clienteService.ObtenerNombre();
-        //        if (modelo != null)
-        //        {
-        //            listaVMDetallePedido.Add(modelo);
-        //            foreach (var item in listaVMDetallePedido)
-        //            {
-        //                listaPedidos.Add(new DetallePedido
-        //                {
-        //                    IdPedido = IdPedido,
-        //                    IdProducto = item.IdProducto,
-        //                    Cantidad = item.Cantidad,
-        //                    Total = Convert.ToDecimal(item.Total)
-        //                });
-        //            }
-
-        //         }
-        //            //}
-                
-
-        //        DetallePedido pedidoCreado = await _pedidoService.(listaPedidos.First());
-
-        //        List<VMPedido> vmPedidolista = new List<VMPedido>();
-        //        List<Pedidos> listPedidos = new List<Pedidos>();
-        //        if (pedidoCreado != null)
-        //        {
-        //            //listPedidos.Add(pedidoCreado);
-        //            //foreach (var item in listPedidos)
-        //            //{
-        //            vmPedidolista.Add(new VMPedido
-        //            {
-
-        //                MontoTotal = Convert.ToString(pedidoCreado.MontoTotal),
-        //                FechaPedido = pedidoCreado.FechaPedido,
-        //                Estado = pedidoCreado.Estado,
-        //                DetallePedido = pedidoCreado.DetallePedido.Select(detalle => new VMDetallePedido
-        //                {
-        //                    IdProducto = detalle.IdProducto,
-        //                    Cantidad = detalle.Cantidad,
-        //                    Total = Convert.ToString(detalle.Total)
-        //                }).ToList()
-        //            });
-        //            //}
-        //        }
-
-        //        gResponse.Estado = true;
-        //        gResponse.objeto = vmPedidolista.First();
-
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        gResponse.Estado = false;
-        //        gResponse.Mensaje = ex.Message;
-
-        //    }
-
-        //    return StatusCode(StatusCodes.Status200OK, gResponse);
-
-        //}
 
         [HttpDelete]
         public async Task<IActionResult> Eliminar(int IdPedido)

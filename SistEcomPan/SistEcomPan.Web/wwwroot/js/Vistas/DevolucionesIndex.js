@@ -1,22 +1,22 @@
 ﻿
 
 const MODELO_BASE = {
-    idPedido: "",
-    codigo: "",
-    fechaPedido: "",
-    estado: "",
-    montoTotal:"",
-    nombresCompletos:"",
+    idDevolucion: "",
+    codigoDevolucion: "",
+    codigoPedido: "",
+    nombresCompletos: "",
+    montoPedido: "",
+    descuento: "",
+    montoAPagar: "",
+    fechaDevolucion: "",
 
 
 }
 
-document.getElementById("btnNuevoPedido").addEventListener("click", function () {
-    window.location.href = 'NuevoPedido';
-});
 
 
-let tablaDataMisPedidos;
+
+let tablaDataDevoluciones;
 
 const itemPagina = 4; // Cantidad de productos por página
 
@@ -35,15 +35,16 @@ function cambiarFecha(fecha) {
 
 }
 
-function ObtenerDatosCliente() {
-    fetch("/Home/ObtenerCliente")
+function ObtenerDatosUsuario() {
+    fetch("/Home/ObtenerUsuario")
         .then(response => {
             return response.ok ? response.json() : Promise.reject(response);
         })
         .then(responseJson => {
             if (responseJson.estado) {
                 const d = responseJson.objeto
-                $("#userDropdown img.img-profile").attr("src",`/ImagenesPerfil/${d.nombreFoto}`);
+                $("#userDropdown img.img-profile").attr("src", `/ImagenesPerfil/${d.nombreFoto}`);
+
             }
             else {
                 swal("Lo sentimos", responseJson.mensaje, "error")
@@ -54,35 +55,27 @@ function ObtenerDatosCliente() {
 $(document).ready(function () {
 
 
-    ObtenerDatosCliente();
-    let busqueda = "";
-    let busquedaDetalle = document.getElementById("DniPersonal").textContent;
-    tablaDataMisPedidos = $('#tbDataMisPedidos').DataTable({
+    ObtenerDatosUsuario();
+
+    tablaDataDevoluciones = $('#tbDataDevoluciones').DataTable({
         responsive: true,
         "ajax": {
-            "url": `/Pedido/ObtenerMisPedidos?searchTerm=${busquedaDetalle}&busqueda=${busqueda}`,
+            "url": `/Devolucion/ListaDevoluciones`,
             "type": "GET",
             "dataType": "json"
         },
         "columns": [
-            { "data": "idPedido", "searchable": false },
-            { "data": "codigo" },
-            { "data": "montoTotal" },
+            { "data": "idDevolucion", "searchable": false },
+            { "data": "nombresCompletos" },
+            { "data": "codigoPedido" },
+            { "data": "codigoDevolucion" },
+            { "data": "montoPedido" },
+            { "data": "descuento" },
+            { "data": "montoAPagar" },
             {
-                "data": "fechaPedido", render: function (data) {
+                "data": "fechaDevolucion", render: function (data) {
                     return cambiarFecha(data);
                 }
-            },
-            {
-                "data": "estado", render: function (data) {
-                    if (data == "Pagado")
-                        return '<span class="badge badge-info">Pagado</span>';
-                    else
-                        return '<span class="badge badge-danger">Pendiente</span>';
-
-
-                }
-
             },
             {
                 "defaultContent": '<button class="btn btn-primary btn-editar btn-sm mr-2"><i class="fas fa-pencil-alt"></i></button>' +
@@ -107,32 +100,33 @@ const ProductosPorPagina = 4; // Cantidad de productos por página
 let PaginaInicial = 1; // Página actual al cargar
 
 
-function buscarDetallePedido(idPedido, page = 1) {
-    fetch(`/Pedido/ObtenerMiDetallePedido?idPedido=${idPedido}&page=${page}&itemsPerPage=${ProductosPorPagina}`)
+function buscarDetalleDevolucion(idDevolucion, page = 1) {
+    fetch(`/Devolucion/ObtenerDetalleDevolucion?idDevolucion=${idDevolucion}&page=${page}&itemsPerPage=${ProductosPorPagina}`)
         .then(response => response.json())
         .then(data => {
-            const DetallePedidos = data.detallePedido; // Array de productos obtenidos
+            const DetalleDevolucion = data.detalleDevolucion; // Array de productos obtenidos
             const totalItems = data.totalItems; // Total de productos encontrados
             // Actualizar la tabla modal con los productos obtenidos 
-            const productTable = document.getElementById('DetalleBuscado');
+            const productTable = document.getElementById('DetalleDevolucion');
             productTable.innerHTML = '';
 
-            DetallePedidos.forEach(pedido => {
+            DetalleDevolucion.forEach(devolucion => {
                 const row = document.createElement('tr');
                 row.innerHTML = `  
-            <td>${pedido.idPedido}</td>
-            <td>${pedido.idDetallePedido}</td>
-            <td>${pedido.descripcionProducto}</td>
-            <td>${pedido.precio}</td>
-            <td>${pedido.cantidad}</td>
-            <td>${pedido.total}</td>
+            <td>${devolucion.idDetalleDevolucion}</td>
+            <td>${devolucion.categoria}</td>
+            <td>${devolucion.descripcion}</td>
+            <td>${devolucion.precio}</td>
+            <td>${devolucion.cantidadPedido}</td>            
+            <td>${devolucion.total}</td>
+            <td>${devolucion.cantidadDevolucion}</td>
           `;
                 productTable.appendChild(row);
             });
 
             // Generar la paginación
             const totalPages = Math.ceil(totalItems / ProductosPorPagina);
-            const pagination = document.getElementById('DetallePagination');
+            const pagination = document.getElementById('DetalleDevolucionPagination');
             pagination.innerHTML = '';
 
             for (let i = 1; i <= totalPages; i++) {
@@ -150,14 +144,14 @@ function buscarDetallePedido(idPedido, page = 1) {
 
                 link.addEventListener('click', () => {
                     PaginaInicial = i;
-                    buscarDetallePedido(idPedido, PaginaInicial);
-                    resaltarPaginaActual();
+                    buscarDetalleDevolucion(idPedido, PaginaInicial);
+                    resaltarPaginaDevolucionActual();
                 });
 
                 pagination.appendChild(li);
             }
 
-            resaltarPaginaActual();
+            resaltarPaginaDevolucionActual();
         })
         .catch(error => {
             console.error('Error al buscar productos:', error);
@@ -166,8 +160,8 @@ function buscarDetallePedido(idPedido, page = 1) {
 
 
 // Función para resaltar la página actual
-function resaltarPaginaActual() {
-    const paginationItems = document.querySelectorAll('#DetallePagination .page-item');
+function resaltarPaginaDevolucionActual() {
+    const paginationItems = document.querySelectorAll('#DetalleDevolucionPagination .page-item');
     paginationItems.forEach(item => {
         item.classList.remove('active');
         const link = item.querySelector('.page-link');
@@ -179,12 +173,12 @@ function resaltarPaginaActual() {
 
 
 
-function mostrarModalDetallePedido(modelo = MODELO_BASE) {
+function mostrarModalDetalleDevolucion(modelo = MODELO_BASE) {
 
-    let idPedidos = modelo.idPedido;
-    buscarDetallePedido(idPedidos)
-   
-    $("#modalDataMiDetalle").modal("show")
+    let idDevolucion = modelo.idDevolucion;
+    buscarDetalleDevolucion(idDevolucion)
+
+    $("#modalDataDetalleDevolucion").modal("show")
 }
 
 
@@ -193,17 +187,19 @@ $("#btnNuevoProducto").click(function () {
 })
 
 
+
+
 let filaSeleccionada;
 
-$("#tbDataMisPedidos tbody").on("click", ".btn-editar", function () {
+$("#tbDataDevoluciones tbody").on("click", ".btn-editar", function () {
 
     if ($(this).closest("tr").hasClass("child")) {
         filaSeleccionada = $(this).closest("tr").prev();
     } else {
         filaSeleccionada = $(this).closest("tr");
     }
-    const data = tablaDataMisPedidos.row(filaSeleccionada).data();
-    mostrarModalDetallePedido(data);
+    const data = tablaDataDevoluciones.row(filaSeleccionada).data();
+    mostrarModalDetalleDevolucion(data);
 })
 
 

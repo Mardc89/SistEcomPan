@@ -128,5 +128,10 @@ namespace Negocio.Implementacion
             }
         }
 
+        public async Task<int> ObtenerIdCliente(string Codigo)
+        {
+            Pedidos pedido = await _repositorioPedido.Buscar(Codigo, null,null);
+            return pedido.IdCliente;
+        }
     }
 }

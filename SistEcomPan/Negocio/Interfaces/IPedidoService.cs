@@ -18,6 +18,7 @@ namespace Negocio.Interfaces
         Task<Pedidos> Detalle(string numeroPedido);
         Task<List<DetallePedido>> Reporte(string fechaInicio, string fechaFin);
         Task<List<Pedidos>> Lista();
+        Task<int> ObtenerIdCliente(string Codigo);
         Task<IQueryable<Pedidos>> ObtenerNombre();
 
     }

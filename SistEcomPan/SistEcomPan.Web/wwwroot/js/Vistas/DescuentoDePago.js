@@ -9,12 +9,86 @@ function mostrarModal2() {
 $("#opcion1").click(function () {
     
     let busquedaCodPedido = $("#txtCodigoPedido").val();
-    $("#searchInput").val(busquedaCodPedido);
+    $("#CodPedido").val(busquedaCodPedido);
     let monto = $("#txtMontoPedido").val();
     $("#txtImportePedido").val(monto);
     mostrarModal2();
    
 })
+
+
+function GuardarDevolucion() {
+    debugger;
+    const tablaDevoluciones = document.getElementById('tbDevoluciones');
+    const filas = tablaDevoluciones.getElementsByTagName('tr');
+
+    let detalleDevoluciones = [];
+
+    for (let i = 1; i < filas.length; i++) {
+        const fila = filas[i];
+        const categoria = fila.cells[0].textContent;
+        const descripcion = fila.cells[1].textContent;
+        const precio = fila.cells[2].textContent;
+        const cantidadPedido = fila.cells[3].textContent;
+        const total = fila.cells[4].textContent;
+        const cantidad = fila.cells[5].querySelector('input');
+        let cantidadDevolucion = parseFloat(cantidad.value);
+
+        const producto = {
+            categoria: categoria,
+            descripcion: descripcion,
+            precio: precio,
+            cantidadPedido: cantidadPedido,
+            total: total,
+            cantidadDevolucion: cantidadDevolucion
+        };
+        detalleDevoluciones.push(producto);
+    }
+
+
+    if (detalleDevoluciones.length < 1) {
+        toastr.warning("", "Debes Ingresar Productos")
+        return;
+    }
+
+    const vmDetalleDevolucion = detalleDevoluciones;
+
+    const Devolucion = {
+        codigoPedido: $("#CodPedido").val(),
+        montoPedido: $("#txtImportePedido").val(),
+        descuento: $("#txtDescuentoPedido").val(),
+        montoAPagar: $("#txtImporteFinal").val(),
+        DetalleDevolucion: vmDetalleDevolucion
+
+    }
+
+
+
+    $("#btnGuardarDescuento").LoadingOverlay("show");
+  
+    fetch("/Devolucion/Crear", {
+        method: "POST",
+        headers: { "Content-Type": "application/json;charset=utf-8" },
+        body: JSON.stringify(Devolucion)
+    })
+        .then(response => {
+        /*    $("#btnGuardarDescuento").LoadingOverlay("hide");*/
+            return response.ok ? response.json() : Promise.reject(response);
+        })
+        .then(responseJson => {
+            if (responseJson.estado) {
+                detalleDevoluciones = [];
+              /*  $("#txtDocumentoCliente").val("")*/
+                swal("Registrado", `Codigo de Producto:${responseJson.objeto.codigoPedido}`, "success")
+            }
+            else {
+                swal("Lo sentimos", "No se pudo Registrar la Devolucion ", "error")
+
+            }
+        })
+
+
+}
 
 $("#btnGuardarDescuento").click(function () {
     debugger
@@ -26,39 +100,11 @@ $("#btnGuardarDescuento").click(function () {
         let monto = $("#txtImporteFinal").val();
         $("#txtMontoPago").val(monto);
         $("#txtDeuda").val(monto);
+        GuardarDevolucion();
     }
     $("#modalDataDescuento").modal("hide");
 
 })
-
-
-
-
-//document.getElementById("txtPagoCliente").addEventListener("click", function () {
-
-
-
-//    let pago = document.getElementById("txtPagoCliente").value;yo 17w7byash5aq
-
-//    let descuento = document.getElementById("txtDescuento").value;
-//    let monto = document.getElementById("txtMontoPedido").value;
-
-//    if (!isNaN(pago) && !isNaN(descuento) && !isNaN(monto)) {
-//        if (pago == "") pago = 0, descuento = 0;
-//        Evaluar(pago, descuento, monto);
-//    }
-
-//    else {
-
-//        alert("Ingrese numeros validos");
-//    }
-
-
-
-//});
-
-
-
 
 
 const itemPaginaDes = 3; // Cantidad de productos por página
@@ -66,7 +112,7 @@ let  paginaActual= 1; // Página actual al cargar
 
 
 function buscarProductos(busquedaDetalle = '',pagina = 1) {
-    busquedaDetalle = document.getElementById("searchInput").value;
+    busquedaDetalle = document.getElementById("CodPedido").value;
     fetch(`/Pedido/ObtenerDetalleFinal?searchTerm=${busquedaDetalle}&page=${pagina}&itemsPerPage=${itemPaginaDes}`)
         .then(response => response.json())
         .then(data => {
@@ -363,17 +409,7 @@ function resaltarPaginaActuales() {
     });
 }
 
-// Evento cuando el usuario escribe en la barra de búsqueda
-//document.getElementById('searchInput').addEventListener('input', function (event) {
-//    const busquedaDetallePedido = event.target.value;
-//    paginaActual = 1; // Reiniciar a la primera página al realizar una nueva búsqueda
-//    buscarProductos(busquedaDetallePedido, paginaActual);
-//});
 
-//Llamada inicial para cargar productos al abrir la tabla modal
-//$('#modalData').on('show.bs.modal', function () {
-//    buscarProductos();
-//});
 
 
 

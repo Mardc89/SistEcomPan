@@ -1,6 +1,6 @@
 ﻿
 @{
-    ViewData["Title"] = "MisPedidos";
+    ViewData["Title"] = "Devoluciones";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
@@ -9,30 +9,28 @@
     <link href="~/vendor/datatables/extensiones/css/responsive.dataTables.min.css" rel="stylesheet">
     <link href="~/vendor/datatables/extensiones/css/buttons.dataTables.min.css" rel="stylesheet">
 
-} 
+}
 
 
 <div class="card shadow mb-4">
     <div class="card-header py-3 bg-primary">
-        <h6 class="m-0 font-weight-bold text-white">Lista de Pedidos</h6>
+        <h6 class="m-0 font-weight-bold text-white">Lista de Devoluciones</h6>
     </div>
     <div class="card-body">
-        <div class="row">
-            <div class="col-sm-3">
-                <button class="btn-success" id="btnNuevoPedido"><i class="fas fa-user-plus"></i>Nuevo Pedido</button>
-            </div>
-        </div>
         <hr />
         <div class="row">
             <div class="col-sm-12">
-                <table class="table table-bordered" id="tbDataMisPedidos" width="100%" cellspacing="0" style="width:100%">
+                <table class="table table-bordered" id="tbDataDevoluciones" width="100%" cellspacing="0" style="width:100%">
                     <thead>
                         <tr>
                             <th>N°</th>
-                            <th>Codigo</th>
-                            <th>Monto De Pedido</th>
-                            <th>Fecha De Pago</th>
-                            <th>Estado</th>
+                            <th>Cliente</th>
+                            <th>Codigo Pedido</th>
+                            <th>Codigo Devolucion</th>
+                            <th>Monto de Pedido</th>
+                            <th>Descuento</th>
+                            <th>Monto de Pago</th>
+                            <th>Fecha Devolucion</th>
                             <th>Acciones</th>
                         </tr>
                     </thead>
@@ -49,39 +47,38 @@
 
 
 <!-- Ventana modal -->
-<div class="modal fade" id="modalDataMiDetalle" tabindex="-1" role="dialog" aria-labelledby="searchModalLabel" aria-hidden="true">
+<div class="modal fade" id="modalDataDetalleDevolucion" tabindex="-1" role="dialog" aria-labelledby="searchModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="searchModalLabel">Mis Pedidos</h5>
+                <h5 class="modal-title" id="searchModalLabel">Detalle Devolucion</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div class="modal-body">
                 <!-- Aquí va el contenido del formulario de búsqueda -->
-
-                
                 <!-- Aquí se muestra la tabla de productos -->
                 <table class="table table-striped" id="">
                     <!-- Aquí van las filas de la tabla -->
                     <thead>
                         <tr>
-                            <th>Numero de Pedido</th>
-                            <th>DetallePedido</th>
-                            <th>Producto</th>
+                            <th>N°</th>
+                            <th>Categoria</th>
+                            <th>Descripcion</th>
                             <th>Precio</th>
                             <th>Cantidad</th>
                             <th>Total</th>
+                            <th>N° Devoluciones</th>
                         </tr>
                     </thead>
-                    <tbody id="DetalleBuscado">
+                    <tbody id="DetalleDevolucion">
                     </tbody>
                 </table>
                 <!-- Aquí se muestra la paginación -->
             </div>
             <div class="modal-footer">
-                <nav id="DetallePagination" class="pagination justify-content-center" aria-label="Page navigation example">
+                <nav id="DetalleDevolucionPagination" class="pagination justify-content-center" aria-label="Page navigation example">
 
                 </nav>
             </div>
@@ -105,7 +102,8 @@
     <script src="~/vendor/datatables/extensiones/js/buttons.print.min.js"></script>
 
 
-    <script src="~/js/Vistas/MisPedidos.js"></script>
+    <script src="~/js/Vistas/DevolucionesIndex.js"></script>
 
 
 }
+

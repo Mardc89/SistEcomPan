@@ -260,7 +260,7 @@ function BuscarDetallePedido(idPedido) {
           `;
                 productTable.appendChild(row);
             });
-
+            VerificarEstado(Estado);
             // Generar la paginación
             const totalPages = Math.ceil(totalItems / ProductosPorPagina);
             const pagination = document.getElementById('DetallePedidoPagination');
@@ -399,8 +399,12 @@ function mostrarModalDetallePedido(modelo = MODELO_BASE) {
 /*    suma = 0, total = 0;*/
     BuscarDetallePedido(idPedidos);
     $("#txtInicialDetallePedido").val(modelo.montoTotal);
-    $("#modalDataDetallePedido").modal("show")
-    document.getElementById('txtFinalDetallePedido').value ="";
+    $("#txtInicialDetallePedido").prop('disabled',true);
+    $("#txtFinalDetallePedido").prop('disabled',true);
+    $("#modalDataDetallePedido").modal("show");
+
+    document.getElementById('txtFinalDetallePedido').value = "";
+
 }
 
 
@@ -424,7 +428,7 @@ $("#tbDataAllPedidos tbody").on("click", ".btn-editar", function () {
     NombresCompletos = data.nombresCompletos;
     Codigo = data.codigo;
     Estado = data.estado;
-    VerificarEstado(Estado)
+
     mostrarModalDetallePedido(data);
 })
 

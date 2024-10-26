@@ -3,20 +3,6 @@
 
 $(document).ready(function () {
 
-    //fetch("/Usuario/ListaRoles")
-    //    .then(response => {
-    //        return response.ok ? response.json() : Promise.reject(response);
-    //    })
-    //    .then(responseJson => {
-    //        if (responseJson.length > 0) {
-    //            responseJson.forEach((item) => {
-    //                $("#cboRol").append(
-    //                    $("<option>").val(item.idRol).text(item.nombreRol)
-    //                )
-    //            })
-    //        }
-    //    })
-
     tablaData = $('#tbdataPedido').DataTable({
         responsive: true,
         "ajax": {

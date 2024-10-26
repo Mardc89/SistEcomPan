@@ -119,33 +119,6 @@ namespace SistEcomPan.Web.Controllers
 
             if (usuario != null)
             {
-
-                //List<Claim> claims = new List<Claim>(){
-                //new Claim(ClaimTypes.Name,usuarioEncontrado.NombreUsuario),
-                //new Claim(ClaimTypes.NameIdentifier,usuarioEncontrado.IdUsuario.ToString()),
-                //new Claim("NombreFoto",usuarioEncontrado.NombreFoto),
-                //new Claim("Dni",usuarioEncontrado.Dni),
-                //new Claim("NombreCompleto",usuarioEncontrado.Apellidos+" "+usuarioEncontrado.Nombres)
-                //};
-
-                ////var UsuarioRoles = await _rolServicio.ObtenerNombre();
-                ////var nombreRoles = UsuarioRoles.Where(x => x.IdRol == usuarioEncontrado.IdRol).Select(x => x.NombreRol).First();
-                //var nombreRoles = await _rolServicio.ConsultarRol(usuarioEncontrado.IdRol);
-                //claims.Add(new Claim(ClaimTypes.Role, nombreRoles));
-
-                //ClaimsIdentity claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
-
-                //AuthenticationProperties properties = new AuthenticationProperties()
-                //{
-                //    AllowRefresh = true,
-                //    IsPersistent = modelo.MantenerSesion
-                //};
-
-                //await HttpContext.SignInAsync(
-                //    CookieAuthenticationDefaults.AuthenticationScheme,
-                //    new ClaimsPrincipal(claimsIdentity),
-                //    properties
-                // );
                 await sigInUserAsync(usuario, modelo.MantenerSesion);
                 return RedirectToAction("Index", "DashBoard");
             }
