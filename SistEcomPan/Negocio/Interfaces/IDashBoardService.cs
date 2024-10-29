@@ -13,7 +13,7 @@ namespace Negocio.Interfaces
         Task<int> TotalProductos();
         Task<int> TotalCategorias();
         Task<int> TotalDeLatas();
-        Task<Dictionary<string,int>>PedidosUltimaSemana();
+        Task<Dictionary<string,decimal?>>PedidosUltimaSemana();
         Task<Dictionary<string, int>> ProductosTopUltimaSemana();
     }
 }

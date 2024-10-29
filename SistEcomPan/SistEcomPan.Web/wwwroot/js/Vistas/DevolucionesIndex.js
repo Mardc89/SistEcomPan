@@ -203,7 +203,7 @@ $("#tbDataDevoluciones tbody").on("click", ".btn-editar", function () {
 })
 
 
-$("#tbdataProducto tbody").on("click", ".btn-eliminar", function () {
+$("#tbDataDevoluciones tbody").on("click", ".btn-eliminar", function () {
 
     let fila;
     if ($(this).closest("tr").hasClass("child")) {
@@ -211,11 +211,11 @@ $("#tbdataProducto tbody").on("click", ".btn-eliminar", function () {
     } else {
         fila = $(this).closest("tr");
     }
-    const data = tablaDataProducto.row(fila).data();
+    const data = tablaDataDevoluciones.row(fila).data();
 
     swal({
         title: "¿Estas Seguro?",
-        text: `Eliminar al usuario "${data.nombre}"`,
+        text: `Eliminar al usuario "${data.codigoDevolucion}"`,
         type: "warning",
         showCancelButton: true,
         confirmButtonClass: "btn-danger",
@@ -229,7 +229,7 @@ $("#tbdataProducto tbody").on("click", ".btn-eliminar", function () {
             if (respuesta) {
 
                 $(".showSweetAlert").LoadingOverlay("show");
-                fetch(`/Producto/Eliminar?IdProducto=${data.idProducto}`, {
+                fetch(`/Devolucion/Eliminar?IdDevolucion=${data.idDevolucion}`, {
                     method: "DELETE",
 
                 })
@@ -240,8 +240,8 @@ $("#tbdataProducto tbody").on("click", ".btn-eliminar", function () {
                     .then(responseJson => {
                         if (responseJson.estado) {
 
-                            tablaDataProducto.row(fila).remove().draw();
-                            swal("Listo", "el producto fue eliminado", "success")
+                            tablaDataDevoluciones.row(fila).remove().draw();
+                            swal("Listo", "La Devolucion fue eliminada", "success")
 
                         }
                         else {

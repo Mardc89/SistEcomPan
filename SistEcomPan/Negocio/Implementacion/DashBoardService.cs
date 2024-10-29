@@ -44,7 +44,7 @@ namespace Negocio.Implementacion
             _repositorioPagos = repositorioPagos;
             _repositorioClientes = repositorioClientes;
             _repositorioDetallePedido = repositorioDetallePedido;
-            FechaInicio = FechaInicio;
+            FechaInicio = FechaInicio.AddDays(-7);
 
         }        
         
@@ -176,16 +176,16 @@ namespace Negocio.Implementacion
         }
 
 
-        public async Task<Dictionary<string, int>> PedidosUltimaSemana()
+        public async Task<Dictionary<string, decimal?>> PedidosUltimaSemana()
         {
             try
             {
                 List<Pedidos> query = await _repositorioPedidos
-                    .ConsultarPedido(FechaInicio.Date);
+                    .ConsultarPedido(FechaInicio.Date,null);
 
-                Dictionary<string, int> resultado = query
-                    .GroupBy(v => v.FechaPedido.Value.Date).OrderByDescending(g => g.Key)
-                    .Select(dv => new { fecha = dv.Key.ToString("dd/MM/yyyy"), total = dv.Count() })
+                Dictionary<string, decimal?> resultado = query
+                    .GroupBy(v => v.FechaPedido.Value.Date).OrderBy(g => g.Key)
+                    .Select(dv => new { fecha = dv.Key.ToString("dd/MM/yyyy"), total = dv.Sum(x=>x.MontoTotal) })
                     .ToDictionary(keySelector: r => r.fecha, elementSelector: r => r.total);
 
                 return resultado;

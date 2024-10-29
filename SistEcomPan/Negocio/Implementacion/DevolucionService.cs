@@ -29,9 +29,24 @@ namespace Negocio.Implementacion
             throw new NotImplementedException();
         }
 
-        public Task<bool> Eliminar(int IdDevolucion)
+        public async Task<bool> Eliminar(int IdDevolucion)
         {
-            throw new NotImplementedException();
+            try
+            {
+                Devolucion DevolucionEncontrada = await _repositorioDevolucion.Buscar(null, null, IdDevolucion);
+                if (DevolucionEncontrada == null)
+                    throw new TaskCanceledException("La Devolucion no Existe");
+
+                bool respuesta = await _repositorioDevolucion.Eliminar(DevolucionEncontrada.IdDevolucion);
+
+                return respuesta;
+
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
         }
 
         public async Task<List<Devolucion>> Lista()

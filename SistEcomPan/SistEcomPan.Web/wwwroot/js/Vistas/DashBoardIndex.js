@@ -42,7 +42,7 @@ $(document).ready(function () {
 
                 if (d.pedidosUltimaSemana.length > 0) {
                     barchart_labels = d.pedidosUltimaSemana.map((item) => { return item.fecha })
-                    barchart_data = d.pedidosUltimaSemana.map((item) => { return item.total })
+                    barchart_data = d.pedidosUltimaSemana.map((item) => { return item.montoTotal })
                 }
                 else {
                     barchart_labels = ["Sin resultados"]
@@ -103,7 +103,7 @@ $(document).ready(function () {
                 // Pie Chart Example
                 let controlProducto = document.getElementById("chartProductos");
                 let myPieChart = new Chart(controlProducto, {
-                    type: 'bar',
+                    type: 'doughnut',
                     data: {
                         labels: piechart_labels,
                         datasets: [{

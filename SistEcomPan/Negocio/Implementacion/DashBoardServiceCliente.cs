@@ -34,7 +34,7 @@ namespace Negocio.Implementacion
             _repositorioMensajes = repositorioMensajes;
             _repositorioPagos = repositorioPagos;
             _repositorioClientes = repositorioClientes;
-            FechaInicio = FechaInicio;
+            FechaInicio = FechaInicio.AddDays(-7);
 
         }
 
@@ -154,16 +154,18 @@ namespace Negocio.Implementacion
         }
 
 
-        public async Task<Dictionary<string, int>> PedidosUltimaSemana()
+        public async Task<Dictionary<string, decimal?>> PedidosUltimaSemana(string DniPersonal)
         {
             try
             {
+                var clientelista = await _repositorioClientes.Lista();
+                var idCliente = clientelista.Where(x => x.Dni == DniPersonal).Select(x => x.IdCliente).FirstOrDefault();
                 List<Pedidos> query = await _repositorioPedidos
-                    .ConsultarPedido(FechaInicio.Date);
+                    .ConsultarPedido(FechaInicio.Date,idCliente);
 
-                Dictionary<string, int> resultado = query
-                    .GroupBy(v => v.FechaPedido.Value.Date).OrderByDescending(g => g.Key)
-                    .Select(dv => new { fecha = dv.Key.ToString("dd/MM/yyyy"), total = dv.Count() })
+                Dictionary<string,decimal?> resultado = query
+                    .GroupBy(v => v.FechaPedido.Value.Date).OrderBy(g => g.Key)
+                    .Select(dv => new { fecha = dv.Key.ToString("dd/MM/yyyy"), total = dv.Sum(x=>x.MontoTotal) })
                     .ToDictionary(keySelector: r => r.fecha, elementSelector: r => r.total);
 
                 return resultado;
@@ -176,12 +178,9 @@ namespace Negocio.Implementacion
             }
         }
 
-        public async Task<Dictionary<string, int>> ProductosTopUltimaSemana()
+        public Task<Dictionary<string, int>> ProductosTopUltimaSemana(string dni)
         {
-
-            return await _repositorioProductoTop.ProductosTopUltimaSemana();
-
+            throw new NotImplementedException();
         }
-
     }
 }

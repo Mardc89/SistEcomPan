@@ -7,7 +7,7 @@
     <link href="~/vendor/datatables/dataTables.bootstrap4.min.css" rel="stylesheet">
     <link href="~/vendor/datatables/extensiones/css/responsive.dataTables.min.css" rel="stylesheet">
     <link href="~/vendor/datatables/extensiones/css/buttons.dataTables.min.css" rel="stylesheet">
-
+    <link href="~/vendor/datatables/extensiones/css/estilos.css" rel="stylesheet" />
 }
 
 
@@ -23,7 +23,7 @@
         </div> *@
         <hr />
         <div class="row">
-            <div class="col-sm-12">
+            <div class="table-responsive">
                 <table class="table table-bordered" id="tbDataMisPagos" width="100%" cellspacing="0" style="width:100%">
                     <thead>
                         <tr>
@@ -52,7 +52,7 @@
 
 <!-- Ventana modal -->
 <div class="modal fade" id="modalDataMiDetallePago" tabindex="-1" role="dialog" aria-labelledby="searchModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="searchModalLabel">Detalles de Pagos</h5>

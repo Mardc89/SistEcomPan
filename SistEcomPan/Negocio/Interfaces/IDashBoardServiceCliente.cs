@@ -13,7 +13,7 @@ namespace Negocio.Interfaces
         Task<int> TotalDeMisPagos(string dni);
         Task<int> TotalDeMisPedidos(string correo);
         Task<int> TotalDeMisMensajes(string dni);
-        Task<Dictionary<string, int>> PedidosUltimaSemana();
-        Task<Dictionary<string, int>> ProductosTopUltimaSemana();
+        Task<Dictionary<string, decimal?>> PedidosUltimaSemana(string dni);
+        Task<Dictionary<string, int>> ProductosTopUltimaSemana(string dni);
     }
 }

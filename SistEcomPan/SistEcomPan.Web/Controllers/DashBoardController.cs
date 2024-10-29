@@ -49,12 +49,12 @@ namespace SistEcomPan.Web.Controllers
                 List<VMPedidosSemana> listaVentasSemana = new List<VMPedidosSemana>();
                 List<VMProductosSemana> listaProductosSemana = new List<VMProductosSemana>();
 
-                foreach (KeyValuePair<string, int> item in await _dashBoardServicio.PedidosUltimaSemana())
+                foreach (KeyValuePair<string, decimal?> item in await _dashBoardServicio.PedidosUltimaSemana())
                 {
                     listaVentasSemana.Add(new VMPedidosSemana()
                     {
                         Fecha = item.Key,
-                        Total = item.Value
+                        MontoTotal = item.Value
                     });
 
                 }
@@ -105,17 +105,17 @@ namespace SistEcomPan.Web.Controllers
                 List<VMPedidosSemana> listaVentasSemana = new List<VMPedidosSemana>();
                 List<VMProductosSemana> listaProductosSemana = new List<VMProductosSemana>();
 
-                foreach (KeyValuePair<string, int> item in await _dashBoardServicioCliente.PedidosUltimaSemana())
+                foreach (KeyValuePair<string,decimal?> item in await _dashBoardServicioCliente.PedidosUltimaSemana(dni))
                 {
                     listaVentasSemana.Add(new VMPedidosSemana()
                     {
                         Fecha = item.Key,
-                        Total = item.Value
+                        MontoTotal = item.Value
                     });
 
                 }
 
-                foreach (KeyValuePair<string, int> item in await _dashBoardServicioCliente.ProductosTopUltimaSemana())
+                foreach (KeyValuePair<string, int> item in await _dashBoardServicioCliente.ProductosTopUltimaSemana(dni))
                 {
                     listaProductosSemana.Add(new VMProductosSemana()
                     {

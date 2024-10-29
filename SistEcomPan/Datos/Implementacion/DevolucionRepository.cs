@@ -20,9 +20,36 @@ namespace Datos.Implementacion
             _cadenaSQL = configuration.GetConnectionString("cadenaSQL");
 
         }
-        public Task<Devolucion> Buscar(string? c = null, string? p = null, int? d = null)
+        public async Task<Devolucion> Buscar(string? codigoDevolucion = null, string? codigoPedido = null, int? idDevolucion = null)
         {
-            throw new NotImplementedException();
+            Devolucion lista = null;
+            using (var conexion = new SqlConnection(_cadenaSQL))
+            {
+                conexion.Open();
+                SqlCommand cmd = new SqlCommand("SPConsultarDevoluciones", conexion);
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@CodigoDevolucion", (object)codigoDevolucion ?? DBNull.Value);
+                cmd.Parameters.AddWithValue("@CodigoPedido", (object)codigoPedido ?? DBNull.Value);
+                cmd.Parameters.AddWithValue("@IdDevolucion", (object)idDevolucion ?? DBNull.Value);
+                using (var dr = await cmd.ExecuteReaderAsync())
+                {
+                    while (await dr.ReadAsync())
+                    {
+                        lista = new Devolucion
+                        {
+                            IdDevolucion = Convert.ToInt32(dr["IdDevolucion"]),
+                            CodigoPedido = dr["CodigoPedido"].ToString(),
+                            CodigoDevolucion = dr["CodigoDevolucion"].ToString(),
+                            MontoPedido = Convert.ToDecimal(dr["MontoDePedido"]),
+                            Descuento = Convert.ToDecimal(dr["Descuento"]),
+                            MontoAPagar = Convert.ToDecimal(dr["MontoAPagar"]),
+                            FechaDevolucion = Convert.ToDateTime(dr["FechaDevolucion"])
+                        };
+                    }
+                }
+            }
+
+            return lista;
         }
 
         public Task<List<Devolucion>> Consultar(string? c = null, string? p = null, string? m = null, int? d = null)
@@ -45,9 +72,24 @@ namespace Datos.Implementacion
             throw new NotImplementedException();
         }
 
-        public Task<bool> Eliminar(int d)
+        public async Task<bool> Eliminar(int id)
         {
-            throw new NotImplementedException();
+            using (var conexion = new SqlConnection(_cadenaSQL))
+            {
+                conexion.Open();
+                SqlCommand cmd = new SqlCommand("SPEliminarDevoluciones", conexion);
+                cmd.Parameters.AddWithValue("IdDevolucion", id);
+                cmd.CommandType = CommandType.StoredProcedure;
+
+                int filaAfectada = await cmd.ExecuteNonQueryAsync();
+
+                if (filaAfectada > 0)
+                    return true;
+                else
+                    return false;
+
+
+            }
         }
 
         public Task<bool> Guardar(Devolucion modelo)

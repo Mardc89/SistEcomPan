@@ -13,6 +13,10 @@ const MODELO_BASE = {
 
 }
 
+$("#tbDataMisPedidos").dataTable({
+    responsive: true,
+});
+
 
 
 let tablaDataMisPagos;

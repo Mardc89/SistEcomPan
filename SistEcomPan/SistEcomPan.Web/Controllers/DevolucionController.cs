@@ -157,5 +157,26 @@ namespace SistEcomPan.Web.Controllers
 
             return StatusCode(StatusCodes.Status200OK, new { detalleDevolucion = DetalleDevolucionPaginados, totalItems = vmDetalleDevolucion.Count() });
         }
+
+        [HttpDelete]
+        public async Task<IActionResult> Eliminar(int IdDevolucion)
+        {
+            GenericResponse<string> gResponse = new GenericResponse<string>();
+
+            try
+            {
+                gResponse.Estado = await _devolucionService.Eliminar(IdDevolucion);
+
+            }
+            catch (Exception ex)
+            {
+                gResponse.Estado = false;
+                gResponse.Mensaje = ex.Message;
+
+            }
+
+            return StatusCode(StatusCodes.Status200OK, gResponse);
+
+        }
     }
 }
