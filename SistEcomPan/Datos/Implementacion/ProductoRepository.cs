@@ -223,6 +223,40 @@ namespace Datos.Implementacion
             return resultado;
         }
 
+        public async Task<Dictionary<string, int>> MisProductosTopUltimaSemana(DateTime fechaInicio, int idCliente)
+        {
+            Dictionary<string, int> resultado = new Dictionary<string, int>();
+            try
+            {
+                using (var conexion = new SqlConnection(_cadenaSQL))
+                {
+                    conexion.Open();
+                    using (var cmd = new SqlCommand("SPMisProductosTopUltimaSemana", conexion))
+                    {
+                        cmd.CommandType = CommandType.StoredProcedure;
+                        cmd.Parameters.AddWithValue("@FechaInicio", fechaInicio);
+                        cmd.Parameters.AddWithValue("@IdCliente", idCliente);
+                        using (var reader = await cmd.ExecuteReaderAsync())
+                        {
+                            while (await reader.ReadAsync())
+                            {
+                                string producto = reader["Descripcion"].ToString();
+                                int total = Convert.ToInt32(reader["Total"]);
+                                resultado[producto] = total;
+                            }
+                        }
+                    }
+                }
+            }
+            catch
+            {
+                throw;
+            }
+
+            return resultado;
+        }
+
+
         public Task<IQueryable<Productos>> Obtener(string consulta)
         {
             throw new NotImplementedException();

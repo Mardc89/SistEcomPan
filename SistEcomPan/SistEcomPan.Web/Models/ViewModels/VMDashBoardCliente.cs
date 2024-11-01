@@ -6,7 +6,7 @@
         public int TotalDeMisMensajes { get; set; }
         public int TotalDeMisPagos { get; set; }
 
-        public List<VMPedidosSemana> PedidosUltimaSemana { get; set; }
+        public List<VMPagosSemana> PagosUltimaSemana { get; set; }
         public List<VMProductosSemana> ProductosTopUltimaSemana { get; set; }
     }
 }

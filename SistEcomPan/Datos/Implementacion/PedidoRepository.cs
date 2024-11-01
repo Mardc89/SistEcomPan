@@ -286,7 +286,7 @@ namespace Datos.Implementacion
             throw new NotImplementedException();
         }
 
-        public async Task<List<Pedidos>> BuscarTotal(string? codigo = null, string? estado = null, int? idCliente = null)
+        public async Task<List<Pedidos>> BuscarTotal(string? codigo = null, string? estado = null, int? idPedido = null)
         {
             List<Pedidos> lista = new List<Pedidos>();
             using (var conexion = new SqlConnection(_cadenaSQL))
@@ -296,7 +296,7 @@ namespace Datos.Implementacion
                 cmd.CommandType = CommandType.StoredProcedure;
                 cmd.Parameters.AddWithValue("@Codigo", (object)codigo ?? DBNull.Value);
                 cmd.Parameters.AddWithValue("@Estado", (object)estado ?? DBNull.Value);
-                cmd.Parameters.AddWithValue("@IdCliente", (object)idCliente ?? DBNull.Value);
+                cmd.Parameters.AddWithValue("@IdPedido", (object)idPedido ?? DBNull.Value);
                 using (var dr = await cmd.ExecuteReaderAsync())
                 {
                     while (await dr.ReadAsync())

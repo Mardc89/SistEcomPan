@@ -41,9 +41,9 @@ $(document).ready(function () {
                 let barchart_labels;
                 let barchart_data;
 
-                if (d.pedidosUltimaSemana.length > 0) {
-                    barchart_labels = d.pedidosUltimaSemana.map((item) => { return item.fecha })
-                    barchart_data = d.pedidosUltimaSemana.map((item) => { return item.total })
+                if (d.pagosUltimaSemana.length > 0) {
+                    barchart_labels = d.pagosUltimaSemana.map((item) => { return item.fechaPago })
+                    barchart_data = d.pagosUltimaSemana.map((item) => { return item.montoTotalDePago })
                 }
                 else {
                     barchart_labels = ["Sin resultados"]

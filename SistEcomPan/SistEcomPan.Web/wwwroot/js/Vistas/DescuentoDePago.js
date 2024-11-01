@@ -6,6 +6,54 @@ function mostrarModal2() {
     $("#modalDataDescuento").modal("show");
 }
 
+function Evaluar(pago, descuento, monto) {
+
+    let pagos = parseFloat(pago);
+    let montos = parseFloat(monto);
+    let descuentos = descuento;
+
+    let deuda = 0.00, cambio = 0.00, montofinal = 0.00;
+    let estado = "";
+    if (descuentos < montos) {
+        montofinal = montos - descuentos;
+        alert("monto final:" + montofinal)
+    }
+    else {
+        descuentos = "";
+    }
+    if (pagos > montofinal) {
+        cambio = pagos - montofinal;
+        deuda = 0.00;
+        estado = "Pagado";
+    }
+
+    else if (pagos < montofinal) {
+        cambio = 0.00;
+        deuda = montofinal - pagos;
+        estado = "Existe Deuda";
+
+    }
+    else {
+        cambio = 0.00;
+        deuda = 0.00;
+        estado = "Pagado";
+
+    }
+
+
+    document.getElementById("txtCambio").value = cambio.toFixed(2);
+    document.getElementById("txtDeuda").value = deuda.toFixed(2);
+    document.getElementById("txtEstado").value = estado;
+    document.getElementById("txtDescuento").value = descuentos.toFixed(2);
+
+
+
+
+
+
+
+}
+
 $("#opcion1").click(function () {
     
     let busquedaCodPedido = $("#txtCodigoPedido").val();
@@ -97,10 +145,13 @@ $("#btnGuardarDescuento").click(function () {
     if (idPago>0) {
         let descuentoPedido = $("#txtDescuentoPedido").val();
         $("#txtDescuento").val(descuentoPedido);
+        let descuentoFinal = $("#txtDescuento").val();
         let monto = $("#txtImporteFinal").val();
         $("#txtMontoPago").val(monto);
         $("#txtDeuda").val(monto);
         GuardarDevolucion();
+        $("#modalDataDescuento").modal("hide");
+        Evaluar(0, descuentoFinal, monto);
     }
     $("#modalDataDescuento").modal("hide");
 
@@ -210,22 +261,22 @@ function buscarProductos(busquedaDetalle = '',pagina = 1) {
 let DiccionarioDescuento = {};
 let DiccionarioDevolucion = {};
 
-function Devoluciones(inicial, final, paginaActual,totalPaginas) {
-    alert("devolucion final:" + final + paginaActual);
+function Devoluciones(inicial, final, paginaActual) {
+/*    alert("devolucion final:" + final + paginaActual);*/
   
     const Montofinal = document.getElementById("txtImporteFinal");
     const MontoInicial = document.getElementById("txtImportePedido");
     const Descuentos = document.getElementById("txtDescuentoPedido");
     let DescuentoGeneral = 0;
     for (let i = inicial; i <= final; i++) {
-        alert("finales:" + final);
+     /*   alert("finales:" + final);*/
         const CantidadDescuento = document.getElementById(`cantidadDescuento${i}`);
         const valorDescuento = CantidadDescuento.textContent.trim();
         DevolucionProducto(inicial, final, paginaActual);
             CantidadDescuento.addEventListener("input", function () {
                 let descuentoTotal = 0, subtotal = 0, unidadDePan = 27;
                 for (let j = inicial; j <= final; j++) {
-                        alert("finalmente:" + final);    
+                  /*      alert("finalmente:" + final);    */
                   
                         let categorias = document.getElementById(`categoriaProducto${j}`).textContent;
                         let precio = document.getElementById(`precioProducto${j}`).textContent;
@@ -234,7 +285,7 @@ function Devoluciones(inicial, final, paginaActual,totalPaginas) {
                         let descuento = parseFloat(unidadDescuento.value) || 0;
                         let descripcionNueva = document.getElementById(`descripcionProducto${j}`).textContent;
                         let precioUnitario;
-                        alert(descuento);
+                   /*     alert(descuento);*/
                    
                         const UnidadesPan = descripcionNueva.match(/\d+/);
                         if (UnidadesPan) {
@@ -245,14 +296,14 @@ function Devoluciones(inicial, final, paginaActual,totalPaginas) {
                             precioUnitario = precio / unidadDePan;
                         }
 
-                        alert("unidades:" + unidadDePan + "cantidad:" + cantidad + "precioUni:" + precioUnitario);
+                /*        alert("unidades:" + unidadDePan + "cantidad:" + cantidad + "precioUni:" + precioUnitario);*/
                         if (categorias == "Panes" && descuento > 0 && descuento <= unidadDePan * cantidad) {
                             subtotal = descuento * precioUnitario;
                             DiccionarioDescuento[`descuentos${paginaActual}${j}`] = subtotal;
                             DiccionarioDevolucion[`devoluciones${paginaActual}${j}`] = descuento;
                       
                             descuentoTotal += subtotal;
-                            alert("descuentosubtotal:" + descuentoTotal + "subtotal:" + subtotal);
+                      /*      alert("descuentosubtotal:" + descuentoTotal + "subtotal:" + subtotal);*/
                         }
                         else if (categorias != "Panes" && descuento > 0 && descuento <= cantidad) {
                             subtotal = descuento * precio;
@@ -260,7 +311,7 @@ function Devoluciones(inicial, final, paginaActual,totalPaginas) {
                             DiccionarioDevolucion[`devoluciones${paginaActual}${j}`] = descuento;
                     
                             descuentoTotal += subtotal;
-                            alert("descuentosubtotal:" + descuentoTotal + "subtotal:" + subtotal);
+                         /*   alert("descuentosubtotal:" + descuentoTotal + "subtotal:" + subtotal);*/
                         }
                         else if (valorDescuento !== "" || descuento < 0 || descuento > cantidad || descuento > unidadDePan * cantidad) {                        
                             unidadDescuento.value = 0;
@@ -272,17 +323,17 @@ function Devoluciones(inicial, final, paginaActual,totalPaginas) {
                     
                 }
                 DescuentoGeneral += descuentoTotal;
-                alert("Descuentos finales");
-                Object.keys(DiccionarioDescuento).forEach(clave => {
-                    alert(`Clave:${clave},Valor:${DiccionarioDescuento[clave]}`)
-                });
+                //alert("Descuentos finales");
+                //Object.keys(DiccionarioDescuento).forEach(clave => {
+                //    alert(`Clave:${clave},Valor:${DiccionarioDescuento[clave]}`)
+                //});
 
-                Object.keys(DiccionarioDevolucion).forEach(clave => {
-                    alert(`Clave:${clave},Valor:${DiccionarioDevolucion[clave]}`)
-                });
+                //Object.keys(DiccionarioDevolucion).forEach(clave => {
+                //    alert(`Clave:${clave},Valor:${DiccionarioDevolucion[clave]}`)
+                //});
 
                 let sumaDiccionario = SumarDescuento();
-                alert("suma final:" + sumaDiccionario);
+ /*               alert("suma final:" + sumaDiccionario);*/
                 Descuentos.value = sumaDiccionario.toFixed(2);
                 Montofinal.value = (MontoInicial.value - sumaDiccionario).toFixed(2);
             });

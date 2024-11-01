@@ -202,6 +202,41 @@ namespace Datos.Implementacion
             }
         }
 
+        public async Task<List<Pagos>> ConsultarMisPagos(DateTime FechaInicio, int idCliente)
+        {
+
+            List<Pagos> lista = new List<Pagos>();
+            using (var conexion = new SqlConnection(_cadenaSQL))
+            {
+                conexion.Open();
+                SqlCommand cmd = new SqlCommand("SPHistorialDePagosCliente", conexion);
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@FechaInicio", FechaInicio);
+                cmd.Parameters.AddWithValue("@IdCliente",idCliente);
+
+                using (var dr = await cmd.ExecuteReaderAsync())
+                {
+                    while (await dr.ReadAsync())
+                    {
+                        lista.Add(new Pagos
+                        {
+                            IdPago = Convert.ToInt32(dr["IdPago"]),
+                            IdPedido = Convert.ToInt32(dr["IdPedido"]),
+                            MontoDePedido = Convert.ToDecimal(dr["MontoDePedido"]),
+                            Descuento = Convert.ToDecimal(dr["Descuento"]),
+                            MontoTotalDePago = Convert.ToDecimal(dr["MontoTotalDePago"]),
+                            MontoDeuda = Convert.ToDecimal(dr["MontoDeuda"]),
+                            FechaDePago = Convert.ToDateTime(dr["FechaDePago"]),
+                            Estado = dr["Estado"].ToString()
+                        });
+                    }
+                }
+            }
+
+            return lista;
+        }
+
+
         public Task<IQueryable<Pagos>> Consultar(Expression<Func<Pagos, bool>> filtro = null)
         {
             throw new NotImplementedException();

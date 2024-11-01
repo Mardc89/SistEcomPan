@@ -84,8 +84,10 @@ $(document).ready(function () {
                 "data": "estado", render: function (data) {
                     if (data == "Pagado")
                         return '<span class="badge badge-info">Pagado</span>';
+                    else if (data == "Existe Deuda")
+                        return '<span class="badge badge-danger">Existe Deuda</span>';
                     else
-                        return '<span class="badge badge-danger">Pendiente</span>';
+                        return '<span class="badge badge-success">Sin Efectuar</span>';
 
 
                 }

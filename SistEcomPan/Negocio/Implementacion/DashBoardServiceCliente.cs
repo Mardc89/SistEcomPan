@@ -14,6 +14,7 @@ namespace Negocio.Implementacion
     public class DashBoardServiceCliente : IDashBoardServiceCliente
     {
         private readonly IPedidoNew _repositorioPedidos;
+        private readonly IPagoNew _repositorioPagosCliente;
         private readonly IGenericRepository<Pagos> _repositorioPagos;
         private readonly IGenericRepository<Clientes> _repositorioClientes;
         private readonly IGenericRepository<Mensajes> _repositorioMensajes;
@@ -26,7 +27,9 @@ namespace Negocio.Implementacion
             IPedidoNew repositorioPedidos,
             IGenericRepository<Pagos> repositorioPagos,
             IGenericRepository<Mensajes> repositorioMensajes,
-            IGenericRepository<Clientes> repositorioClientes
+            IGenericRepository<Clientes> repositorioClientes,
+            IPagoNew repositorioPagosCliente
+
         )
         {
             _repositorioProductoTop = repositorioProductoTop;
@@ -35,7 +38,7 @@ namespace Negocio.Implementacion
             _repositorioPagos = repositorioPagos;
             _repositorioClientes = repositorioClientes;
             FechaInicio = FechaInicio.AddDays(-7);
-
+            _repositorioPagosCliente = repositorioPagosCliente;
         }
 
 
@@ -109,7 +112,7 @@ namespace Negocio.Implementacion
                 //var PagosPedidos = PedidosLista.Where(x => x.IdPedido == idPedido[i])
 
                 // Filtro de búsqueda por término de búsqueda (searchTerm)
-                var pedidosFiltrados = Pagolista.Where(p => idPedido.Contains(p.IdPedido)).ToList();
+                var pedidosFiltrados = Pagolista.Where(p => idPedido.Contains(p.IdPedido)&&p.Estado=="Pagado").ToList();
 
                 int total = pedidosFiltrados.Count();
 
@@ -154,18 +157,18 @@ namespace Negocio.Implementacion
         }
 
 
-        public async Task<Dictionary<string, decimal?>> PedidosUltimaSemana(string DniPersonal)
+        public async Task<Dictionary<string, decimal?>> PagosUltimaSemana(string DniPersonal)
         {
             try
             {
                 var clientelista = await _repositorioClientes.Lista();
                 var idCliente = clientelista.Where(x => x.Dni == DniPersonal).Select(x => x.IdCliente).FirstOrDefault();
-                List<Pedidos> query = await _repositorioPedidos
-                    .ConsultarPedido(FechaInicio.Date,idCliente);
+                List<Pagos> query = await _repositorioPagosCliente
+                    .ConsultarMisPagos(FechaInicio.Date,idCliente);
 
                 Dictionary<string,decimal?> resultado = query
-                    .GroupBy(v => v.FechaPedido.Value.Date).OrderBy(g => g.Key)
-                    .Select(dv => new { fecha = dv.Key.ToString("dd/MM/yyyy"), total = dv.Sum(x=>x.MontoTotal) })
+                    .GroupBy(v => v.FechaDePago.Value.Date).OrderBy(g => g.Key)
+                    .Select(dv => new { fecha = dv.Key.ToString("dd/MM/yyyy"), total = dv.Sum(x=>x.MontoTotalDePago) })
                     .ToDictionary(keySelector: r => r.fecha, elementSelector: r => r.total);
 
                 return resultado;
@@ -178,9 +181,11 @@ namespace Negocio.Implementacion
             }
         }
 
-        public Task<Dictionary<string, int>> ProductosTopUltimaSemana(string dni)
+        public async Task<Dictionary<string, int>> MisProductosTopUltimaSemana(string dni)
         {
-            throw new NotImplementedException();
+            var clientelista = await _repositorioClientes.Lista();
+            var idCliente = clientelista.Where(x => x.Dni == dni).Select(x => x.IdCliente).FirstOrDefault();
+            return await _repositorioProductoTop.MisProductosTopUltimaSemana(FechaInicio,idCliente);
         }
     }
 }

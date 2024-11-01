@@ -12,7 +12,7 @@ namespace Entidades
         public int IdPedido { get; set; }
         public decimal MontoDePedido { get; set; }
         public decimal Descuento { get; set; }
-        public decimal MontoTotalDePago { get; set; }
+        public decimal? MontoTotalDePago { get; set; }
         public decimal MontoDeuda{ get; set; }
         public DateTime? FechaDePago { get; set; }
         public string Estado { get; set; }

@@ -13,5 +13,6 @@ namespace Datos.Interfaces
         Task<Pagos> Registrar(Pagos modelo, DataTable DataTable);
         Task<Pagos> Editar(Pagos modelo, DataTable DataTable);
         Task<List<Pagos>> Reporte(DateTime FechaInicio, DateTime FechaFin);
+        Task<List<Pagos>> ConsultarMisPagos(DateTime fechaPago, int idCliente);
     }
 }

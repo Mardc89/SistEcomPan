@@ -102,20 +102,20 @@ namespace SistEcomPan.Web.Controllers
                 vmDashboardCliente.TotalDeMisPagos = await _dashBoardServicioCliente.TotalDeMisPagos(dni);
                 vmDashboardCliente.TotalDeMisMensajes = await _dashBoardServicioCliente.TotalDeMisMensajes(dni);
 
-                List<VMPedidosSemana> listaVentasSemana = new List<VMPedidosSemana>();
+                List<VMPagosSemana> listaVentasSemana = new List<VMPagosSemana>();
                 List<VMProductosSemana> listaProductosSemana = new List<VMProductosSemana>();
 
-                foreach (KeyValuePair<string,decimal?> item in await _dashBoardServicioCliente.PedidosUltimaSemana(dni))
+                foreach (KeyValuePair<string,decimal?> item in await _dashBoardServicioCliente.PagosUltimaSemana(dni))
                 {
-                    listaVentasSemana.Add(new VMPedidosSemana()
+                    listaVentasSemana.Add(new VMPagosSemana()
                     {
-                        Fecha = item.Key,
-                        MontoTotal = item.Value
+                        FechaPago = item.Key,
+                        MontoTotalDePago = item.Value
                     });
 
                 }
 
-                foreach (KeyValuePair<string, int> item in await _dashBoardServicioCliente.ProductosTopUltimaSemana(dni))
+                foreach (KeyValuePair<string, int> item in await _dashBoardServicioCliente.MisProductosTopUltimaSemana(dni))
                 {
                     listaProductosSemana.Add(new VMProductosSemana()
                     {
@@ -125,7 +125,7 @@ namespace SistEcomPan.Web.Controllers
 
                 }
 
-                vmDashboardCliente.PedidosUltimaSemana = listaVentasSemana;
+                vmDashboardCliente.PagosUltimaSemana = listaVentasSemana;
                 vmDashboardCliente.ProductosTopUltimaSemana = listaProductosSemana;
 
                 gResponse.Estado = true;
