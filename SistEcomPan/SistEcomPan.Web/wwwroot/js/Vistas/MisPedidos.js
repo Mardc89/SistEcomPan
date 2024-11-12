@@ -125,7 +125,7 @@ function buscarDetallePedido(idPedido, page = 1) {
             <td>${pedido.idPedido}</td>
             <td>${pedido.idDetallePedido}</td>
             <td>${pedido.descripcionProducto}</td>
-            <td>${pedido.precio}</td>
+            <td>${parseFloat(pedido.precio).toFixed(2)}</td>
             <td>${pedido.cantidad}</td>
             <td>${pedido.total}</td>
           `;

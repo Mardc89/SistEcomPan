@@ -152,17 +152,29 @@ function mostrarModal(modelo = MODELO_BASE) {
     $("#txtDescuento").val(modelo.descuento)
     $("#txtDeuda").val(modelo.montoDeuda)
     $("#txtMontoPago").val(modelo.montoDeuda)
-    $("#txtPagoDelCliente").val("")
-    $("#txtCambio").val("")
+    $("#txtPagoCliente").val("0.00")
+    $("#txtCambio").val("0.00")
     $("#txtEstado").val(modelo.estado)
     $("#txtCodigoPedido").val(modelo.codigoPedido)
 
 
     $("#modalDataPago").modal("show")
+    DesacticarCamposPago();
     VerificarEstado();
 }
 
+function DesacticarCamposPago() {
+    $("#txtMontoPedido").prop("disabled",true)
+    $("#txtNombres").prop("disabled", true)
+    $("#txtFechaPedido").prop("disabled", true)
+    $("#txtFechaPago").prop("disabled", true)
+    $("#txtDeuda").prop("disabled", true)
+    $("#txtMontoPago").prop("disabled", true)
+    $("#txtCambio").prop("disabled", true)
+    $("#txtEstado").prop("disabled", true)
+    $("#txtCodigoPedido").prop("disabled", true)
 
+}
 
 
     $("#btnNuevoPago").click(function () {
@@ -172,6 +184,19 @@ function mostrarModal(modelo = MODELO_BASE) {
 $("#btnClosePago").click(function () {
     $("#txtPagoDelCliente").val("")
 })
+
+document.addEventListener("enviarDatos", (event) => {
+    const datos = event.detail;
+    actualizarModalPrincipal(datos);
+});
+
+let Devolucion;
+
+debugger;
+function actualizarModalPrincipal(datos) {
+    Devolucion = datos;
+}
+
 
 $("#btnGuardarPago").click(function () {
 
@@ -255,9 +280,12 @@ $("#btnGuardarPago").click(function () {
 
                 }
             })
+
+
+
+
     }
     else {
-
         fetch("/Pago/Editar", {
             method: "PUT",
             headers: { "Content-Type": "application/json;charset=utf-8" },
@@ -268,9 +296,8 @@ $("#btnGuardarPago").click(function () {
                 return response.ok ? response.json() : Promise.reject(response);
             })
             .then(responseJson => {
-
                 if (responseJson.estado) {
-
+                    RegistrarDevoluciones();
                     tablaDataPago.row(filaSeleccionada).data(responseJson.objeto).draw(false);
                     filaSeleccionada = null;
                     $("#modalDataPago").modal("hide")
@@ -284,8 +311,36 @@ $("#btnGuardarPago").click(function () {
 
 
 
+
+
     }
 })
+
+
+function RegistrarDevoluciones() {
+
+    fetch("/Devolucion/Crear", {
+        method: "POST",
+        headers: { "Content-Type": "application/json;charset=utf-8" },
+        body: JSON.stringify(Devolucion)
+    })
+        .then(response => {
+            /*    $("#btnGuardarDescuento").LoadingOverlay("hide");*/
+            return response.ok ? response.json() : Promise.reject(response);
+        })
+        .then(responseJson => {
+            if (responseJson.estado) {
+                Devolucion = [];
+                /*  $("#txtDocumentoCliente").val("")*/
+                swal("Registrado", `Codigo de Producto:${responseJson.objeto.codigoPedido}`, "success")
+            }
+            else {
+                swal("Lo sentimos", "No se pudo Registrar la Devolucion ", "error")
+
+            }
+        }) 
+
+}
 
 
 let filaSeleccionada;

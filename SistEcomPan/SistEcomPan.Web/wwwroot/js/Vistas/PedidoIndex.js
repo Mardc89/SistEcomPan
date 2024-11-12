@@ -298,7 +298,7 @@ function MostrarProduct(TerminoBusqueda = '', pagina = 1) {
             <td>${categoria[indice]}</td>
             <td>${producto.stock}</td>
             <td>${producto.precio.toFixed(2)}</td>
-            <td><input type="text" class="form-control form-control-sm" id="txtCantidad" placeholder="Ingrese Cantidad"></td>
+            <td><input type="number" class="form-control form-control-sm" id="txtCantidad" placeholder="Ingrese Cantidad"></td>
             <td><img style = "height:60px" src = ${nombreCarpeta}${producto.nombreImagen} class="rounded mx-auto d-block" /></td>
             <td class="d-flex">
             <button onclick="agregarProducto(this)" class="btn btn-danger btn-sm mr-2" style="display:inline-block;">Add</button>
@@ -311,42 +311,50 @@ function MostrarProduct(TerminoBusqueda = '', pagina = 1) {
 
          });
             SeleccionProductos();
-            // Generar la paginación
-            const totalPag = Math.ceil(totalItems / ElementosDePagina);
-            const PaginaPag = document.getElementById('Paginations');
-            PaginaPag.innerHTML = '';
+            Paginacion(TerminoBusqueda, totalItems);
 
-            for (let i = 1; i <= totalPag; i++) {
-                const liA = document.createElement('li');
-                liA.classList.add('page-item');
-                const linkA = document.createElement('a');
-                linkA.classList.add('page-link');
-                linkA.href = '#';
-                linkA.textContent = i;
-                liA.appendChild(linkA);
-
-                if (i === actualDePagina) {
-                   
-                    liA.classList.add('active');
-                }
-
-                linkA.addEventListener('click', () => {
-                    actualDePagina = i;
-                    indice = actualDePagina * ElementosDePagina - ElementosDePagina;
-                    MostrarProduct(TerminoBusqueda, actualDePagina);
-                    resaltarPagActual();
-                 
-                });
-
-                PaginaPag.appendChild(liA);
-            }
-
-            resaltarPagActual();
 
         })
         .catch(error => {
             console.error('Error al buscar productos:', error);
         });
+}
+
+
+function Paginacion(TerminoBusqueda,totalItems) {
+
+    // Generar la paginación
+    const totalPag = Math.ceil(totalItems / ElementosDePagina);
+    const PaginaPag = document.getElementById('Paginations');
+    PaginaPag.innerHTML = '';
+
+    for (let i = 1; i <= totalPag; i++) {
+        const liA = document.createElement('li');
+        liA.classList.add('page-item');
+        const linkA = document.createElement('a');
+        linkA.classList.add('page-link');
+        linkA.href = '#';
+        linkA.textContent = i;
+        liA.appendChild(linkA);
+
+        if (i === actualDePagina) {
+
+            liA.classList.add('active');
+        }
+
+        linkA.addEventListener('click', () => {
+            actualDePagina = i;
+            indice = actualDePagina * ElementosDePagina - ElementosDePagina;
+            MostrarProduct(TerminoBusqueda, actualDePagina);
+            resaltarPagActual();
+
+        });
+
+        PaginaPag.appendChild(liA);
+    }
+
+    resaltarPagActual();
+
 }
 
 function SeleccionProductos() {
@@ -357,11 +365,14 @@ function SeleccionProductos() {
 
             const stock = parseFloat(fila.cells[3].textContent);
             const cantidadIngresada = parseFloat(fila.cells[5].querySelector('input').value);
+            const imputElement = fila.cells[5].querySelector('input');
 
             if (isNaN(cantidadIngresada) || cantidadIngresada <= 0) {
+                imputElement.value = "0";
                 alert("Ingrese una cantidad valida");
             }
             else if (cantidadIngresada > stock) {
+                imputElement.value = "0";
                 alert("La cantidad supera al stock");
             }
 
@@ -376,6 +387,7 @@ function SeleccionProductos() {
 
 
 function agregarProducto(button) {
+    debugger;
     const row = button.parentNode.parentNode;
     const IdProducto = row.cells[0].textContent;
     const descripcion = row.cells[1].textContent;
@@ -384,7 +396,7 @@ function agregarProducto(button) {
     const precio = parseFloat(row.cells[4].textContent).toFixed(2);
     const cantidadIngresada = row.cells[5].querySelector('input');
 
-    let cantidad = parseFloat(cantidadIngresada.value);
+    let cantidad = parseFloat(cantidadIngresada.value)||0;
 
     if (isNaN(cantidad) || cantidad <= 0) {
         alert("Ingrese una cantidad valida");

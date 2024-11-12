@@ -128,10 +128,10 @@ function buscarDetallePago(idPago, page = 1) {
                 const row = document.createElement('tr');
                 row.innerHTML = `  
             <td>${pago.idDetallePago}</td>
-            <td>${pago.montoAPagar}</td>
-            <td>${pago.pagoDelCliente}</td>
-            <td>${pago.deudaDelCliente}</td>
-            <td>${pago.cambioDelCliente}</td>
+            <td>${parseFloat(pago.montoAPagar).toFixed(2)}</td>
+            <td>${parseFloat(pago.pagoDelCliente).toFixed(2)}</td>
+            <td>${parseFloat(pago.deudaDelCliente).toFixed(2)}</td>
+            <td>${parseFloat(pago.cambioDelCliente).toFixed(2)}</td>
           `;
                 productTable.appendChild(row);
             });

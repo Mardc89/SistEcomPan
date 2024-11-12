@@ -221,7 +221,7 @@ function buscarListPedidos(searchTer = '', page = 1) {
 
 document.getElementById("txtPagoCliente").addEventListener("input", function () {
 
-   
+    debugger;
         let idPago = document.getElementById("txtIdPago");
         let idPagos = parseFloat(idPago.value) || 0
         let monto = document.getElementById("txtMontoPedido");
@@ -229,24 +229,27 @@ document.getElementById("txtPagoCliente").addEventListener("input", function () 
         let descuentofinal = parseFloat(descuento.value) || 0
         if (idPagos > 0) {
             monto = document.getElementById("txtMontoPago");
-            descuentofinal = 0.00;
+           
+        }
+        if (descuento.value=="") {
+            document.getElementById("txtDescuento").value="0.00";
         }
         let montofinal = parseFloat(monto.value) || 0
-        alert(montofinal);
+  /*      alert(montofinal);*/
 
         let pago = document.getElementById("txtPagoCliente");
    
 
       
         let pagofinal = parseFloat(pago.value) || 0
-        if (!isNaN(pagofinal) && !isNaN(descuentofinal) && !isNaN(montofinal)) {
+        if (!isNaN(pagofinal) && !isNaN(descuentofinal) && !isNaN(montofinal) && pago.value>=0) {
 
-            alert("soy desecuento:"+descuentofinal);
+       /*     alert("soy desecuento:"+descuentofinal);*/
             Evaluar(pagofinal, descuentofinal, montofinal);
         }
 
         else {
-
+            document.getElementById("txtPagoCliente").value = "0.00";
             alert("Ingrese numeros validos");
         }
 
@@ -255,35 +258,44 @@ document.getElementById("txtPagoCliente").addEventListener("input", function () 
 });
 
 document.getElementById("txtDescuento").addEventListener("input", function () {
-
+    debugger;
     let idPago = document.getElementById("txtIdPago").value;
     let monto = document.getElementById("txtMontoPedido");
     let deuda = document.getElementById("txtDeuda");
-
-    if (idPago > 0) {
-        monto = document.getElementById("txtMontoPago");
-    }
-
+    let descuento = document.getElementById("txtDescuento");
+    //if (idPago > 0) {
+    //    monto = document.getElementById("txtMontoPago");
+    //}
     let pago = document.getElementById("txtPagoCliente");
     let pagofinal = parseFloat(pago.value) || 0
-    let descuento = document.getElementById("txtDescuento");
-    let descuentofinal = descuento.value
+ 
+    let descuentofinal = parseFloat(descuento.value)||0
     let deudafinal = parseFloat(deuda.value) || 0
     let montofinal = parseFloat(monto.value) || 0
+    let montoPedido = montofinal;
 
-    if (!isNaN(pagofinal) && !isNaN(descuentofinal) && !isNaN(montofinal)) {
-        if (descuentofinal > montofinal || descuentofinal > deudafinal && pagofinal > 0 || idPago>0)
+    if (pago.value == "") {
+        document.getElementById("txtPagoCliente").value = "0.00";
+    }
+
+    if (!isNaN(pagofinal) && !isNaN(descuentofinal) && !isNaN(montofinal) && descuento.value>=0) {
+        if (descuentofinal > montofinal || descuentofinal > deudafinal && pagofinal > 0 || descuento.value <0 || pago.value <0)
         {
-            alert("holas deuda 2025" + deudafinal + ">" + montofinal);
-            descuentofinal =0;
-            
+         /*   alert("deuda:" + deudafinal + "montofinal:" + montofinal);*/
+            descuentofinal = 0.00;
+            document.getElementById("txtDescuento").value ="0.00";
+     /*       document.getElementById("txtPagoCliente").value = "0.00";*/
         }
-        Evaluar(pagofinal, descuentofinal, montofinal);
+        if (descuentofinal % 1 !== 0 || descuentofinal == 0 || descuentofinal % 1 == 0) {
+            montofinal = montofinal - descuentofinal;
+            Evaluar(pagofinal, descuentofinal, montofinal);
+            montofinal = montoPedido;
+        }
     }
 
     else {
-
         alert("Ingrese numeros validos");
+        document.getElementById("txtDescuento").value = "0.00";
     }
 
 
@@ -292,44 +304,38 @@ document.getElementById("txtDescuento").addEventListener("input", function () {
 
 
 function Evaluar(pago, descuento, monto) {
-
+    debugger;
     let pagos = parseFloat(pago);
     let montos = parseFloat(monto);
-    let descuentos = descuento;
-   
-    let deuda = 0.00,cambio=0.00,montofinal=0.00;
+    let descuentos =descuento; 
+    let deuda = 0.00,cambio=0.00;
     let estado = "";
-    if (descuentos < montos) {
-        montofinal = montos - descuentos;
-        alert("monto final:"+montofinal)
+
+    if (descuentos==0) {
+        let montoPedido = document.getElementById("txtMontoPedido").value;
+        montos = montoPedido;
+        //montofinal = montos - descuentos;
+        //alert("monto final:"+montofinal)
     }
-    else {
-        descuentos="";
-    }
-    if (pagos > montofinal) {
-        cambio = pagos- montofinal;
+    if (pagos > montos) {
+        cambio = pagos- montos;
         deuda = 0.00;
         estado = "Pagado";
     }
 
-    else if (pagos < montofinal) {
+    else if (pagos <= montos) {
         cambio = 0.00;
-        deuda = montofinal - pagos;
+        deuda = montos - pagos;
         estado = "Existe Deuda";
 
     }
-    else {
-        cambio = 0.00;
-        deuda = 0.00;
-        estado = "Pagado";
-
-    }
 
 
+    document.getElementById("txtMontoPago").value = monto.toFixed(2);
     document.getElementById("txtCambio").value = cambio.toFixed(2);
     document.getElementById("txtDeuda").value = deuda.toFixed(2);
     document.getElementById("txtEstado").value = estado;
-    document.getElementById("txtDescuento").value = descuentos.toFixed(2);
+ 
 
 
 
