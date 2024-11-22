@@ -326,6 +326,22 @@ namespace Negocio.Implementacion
 
         }
 
+        public async Task<Usuarios> ObtenerUsuario(string correo)
+        {
+
+            try
+            {
+                Usuarios usuarios = await _repositorio.Buscar(correo, null, null);
+
+                return usuarios;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+
+        }
+
         public async Task<Usuarios> ObtenerPorCredenciales(string correo, string clave)
         {
             string ClaveEncriptada = _encriptservice.EncriptarPassword(clave);

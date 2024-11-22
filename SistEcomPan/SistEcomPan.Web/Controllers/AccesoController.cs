@@ -21,14 +21,21 @@ namespace SistEcomPan.Web.Controllers
         private readonly IClienteService _clienteServicio;
         private readonly IRolService _rolServicio;
 
+        private readonly ICorreoService _correoServicio;
+        private readonly ITokenService _tokenServicio;
+        private readonly IEncriptService _encriptServicio;
 
-        public AccesoController(IUsuarioService usuarioServicio,IClienteService clienteServicio,IRolService rolServicio) 
+
+        public AccesoController(IUsuarioService usuarioServicio,IClienteService clienteServicio,IRolService rolServicio,ICorreoService correoServicio,ITokenService tokenServicio,IEncriptService encriptServicio) 
         { 
                                                                                                                                                                                                                                                                                                                                                                                                                                                       
             _usuarioServicio= usuarioServicio;
             _clienteServicio= clienteServicio;
             _rolServicio = rolServicio;
-                
+            _correoServicio=correoServicio;
+            _tokenServicio = tokenServicio;
+            _encriptServicio= encriptServicio;
+
         }
         public IActionResult Login()
         {
@@ -50,6 +57,98 @@ namespace SistEcomPan.Web.Controllers
         {
             return View();
         }
+
+
+        [HttpPost]
+        public async Task<IActionResult> ResetClave(string correo)
+        {
+            var usuario = await _usuarioServicio.ObtenerUsuario(correo);
+            var cliente = await _clienteServicio.ObtenerCliente(correo);
+            if (usuario == null && cliente==null)
+            {
+                ViewData["MensajeError"] = "Correo no encontrado.";
+                return View();
+            }
+
+            if (usuario!= null)
+            {
+                await ResetUsuarioAsync(usuario, correo);
+
+            }
+            else if(cliente!=null)
+            {
+                await ResetClienteAsync(cliente, correo);
+            }
+            ViewData["Mensaje"] = "Se ha enviado un correo con instrucciones para restablecer tu contraseña.";
+            return View();
+        }
+
+        private async Task ResetUsuarioAsync(Usuarios user,string correo)
+        {
+            Tokens tokens = new Tokens();
+            tokens.Token = Guid.NewGuid().ToString();
+            tokens.Perfil = "Usuario";
+            tokens.IdPerfil = user.IdUsuario;
+            tokens.Expiracion = DateTime.UtcNow.AddHours(1);
+            await _tokenServicio.Crear(tokens);
+            string url = Url.Action("ResetPassword", "Acceso", new { token = tokens.Token }, Request.Scheme);
+            await _correoServicio.EnviarCorreo(correo, "Restablecer Contraseña", $"Haga clic en el enlace para restablecer su contraseña: {url}");
+        }
+
+        private async Task ResetClienteAsync(Clientes cliente, string correo)
+        {
+            Tokens tokens = new Tokens();
+            tokens.Token = Guid.NewGuid().ToString();
+            tokens.Perfil = "Cliente";
+            tokens.IdPerfil = cliente.IdCliente;
+            tokens.Expiracion = DateTime.UtcNow.AddHours(1);
+            await _tokenServicio.Crear(tokens);
+            string url = Url.Action("ResetPassword", "Acceso", new { token = tokens.Token }, Request.Scheme);
+            await _correoServicio.EnviarCorreo(correo, "Restablecer Contraseña", $"Haga clic en el enlace para restablecer su contraseña: {url}");
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> ResetPassword(string token)
+        {
+            var TokenCreado = await _tokenServicio.Buscar(token);
+            if (TokenCreado == null || TokenCreado.Expiracion < DateTime.UtcNow)
+            {
+                ViewData["MensajeError"] = "El token es inválido o ha expirado.";
+                return View("Error");
+            }
+
+            ViewData["Token"] = token;
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ResetPassword(string token, string nuevaClave)
+        {
+            var TokenCreado = await _tokenServicio.Buscar(token);
+            if (TokenCreado == null || TokenCreado.Expiracion < DateTime.UtcNow)
+            {
+                ViewData["MensajeError"] = "El token es inválido o ha expirado.";
+                return View("Error");
+            }
+
+            if (TokenCreado.Perfil == "Usuario")
+            {
+                var usuario = await _usuarioServicio.ObtenerPorId(TokenCreado.IdPerfil);
+                usuario.Clave = nuevaClave; 
+                await _usuarioServicio.Editar(usuario);
+
+            }
+            else if (TokenCreado.Perfil=="Cliente")
+            {
+                var cliente = await _clienteServicio.ObtenerPorId(TokenCreado.IdPerfil);
+                cliente.Clave =nuevaClave;
+                await _clienteServicio.Editar(cliente);
+            }
+
+            ViewData["Mensaje"] = "Contraseña actualizada con éxito.";
+            return RedirectToAction("Login", "Acceso");
+        }
+
 
         [HttpPost]
         public async Task<IActionResult> LoginCliente(VMCliente modelo)

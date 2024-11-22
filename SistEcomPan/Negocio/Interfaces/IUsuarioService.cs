@@ -21,6 +21,7 @@ namespace Negocio.Interfaces
         Task<int> ObtenerIdCorreoUsuario(string correo);
         Task<string> ObtenerNombreCompleto(int IdUsuario);
         Task<string> ObtenerCorreo(int IdUsuario);
+        Task<Usuarios> ObtenerUsuario(string correo);
         Task<int> IdDestinatario(string correo);
         Task<int> IdRemitente(string correo);
 

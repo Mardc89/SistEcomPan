@@ -48,6 +48,22 @@ namespace Negocio.Implementacion
             }
 
         }
+
+        public async Task<Clientes> ObtenerCliente(string correo)
+        {
+
+            try
+            {
+                Clientes clientes = await _repositorio.Buscar(correo, null, null);
+                return clientes;
+
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+
+        }
         public async Task<string> ObtenerDni(int IdCliente)
         {
             Clientes clientes = await _repositorio.Buscar(null, null, IdCliente);

@@ -39,6 +39,32 @@ function mostrarModal3() {
     $("#modalDataPedidos").modal("show");
 }
 
+function VerificarEstado() {
+    debugger;
+    let idPago = document.getElementById("txtIdPago").value;
+    let estado = document.getElementById("txtEstado").value;
+    let btnEstado = document.getElementById("btnGuardarPago");
+    let Opcion1 = document.getElementById("opcion1");
+    let Opcion2 = document.getElementById("opcion2");
+    if (estado == "Pagado" && idPago > 0) {
+        btnEstado.disabled = true;
+    }
+    else {
+        btnEstado.disabled = false;
+    }
+
+    if (estado == "Pagado" || estado == "Existe Deuda" || estado == "") {
+        Opcion1.disabled = true;
+        Opcion2.disabled = true;
+    }
+    else {
+        Opcion1.disabled = false;
+        Opcion2.disabled = false;
+    }
+
+
+}
+
 document.addEventListener("DOMContentLoaded", function () {
     document.getElementById('PedidoBuscado').addEventListener('click', function (event) {
 
@@ -66,6 +92,7 @@ document.addEventListener("DOMContentLoaded", function () {
                         document.getElementById('txtMontoPago').value = Pagos.montoDeuda;
                         document.getElementById('txtDeuda').value = Pagos.montoDeuda;
                         document.getElementById('txtIdPago').value = Pagos.idPago;
+                        document.getElementById('txtPagoAPagar').value = Pagos.montoDeuda;
                     } else {
                         console.error("No se encontraron Pagos");
                     }
@@ -81,7 +108,7 @@ document.addEventListener("DOMContentLoaded", function () {
             document.getElementById('txtEstado').value = estado;
             document.getElementById('txtFechaPedido').value = fecha;
       /*      document.getElementById('txtMontoPago').value = montoTotal;*/
-
+            VerificarEstado(); 
             $("#modalDataPedidos").modal("hide");
         }
 
@@ -233,7 +260,8 @@ document.getElementById("txtPagoCliente").addEventListener("input", function () 
         }
         if (descuento.value=="") {
             document.getElementById("txtDescuento").value="0.00";
-        }
+        }  
+        
         let montofinal = parseFloat(monto.value) || 0
   /*      alert(montofinal);*/
 
@@ -242,7 +270,7 @@ document.getElementById("txtPagoCliente").addEventListener("input", function () 
 
       
         let pagofinal = parseFloat(pago.value) || 0
-        if (!isNaN(pagofinal) && !isNaN(descuentofinal) && !isNaN(montofinal) && pago.value>=0) {
+        if (!isNaN(pagofinal) && !isNaN(descuentofinal) && !isNaN(montofinal) && pagofinal>=0) {
 
        /*     alert("soy desecuento:"+descuentofinal);*/
             Evaluar(pagofinal, descuentofinal, montofinal);
@@ -263,23 +291,32 @@ document.getElementById("txtDescuento").addEventListener("input", function () {
     let monto = document.getElementById("txtMontoPedido");
     let deuda = document.getElementById("txtDeuda");
     let descuento = document.getElementById("txtDescuento");
-    //if (idPago > 0) {
-    //    monto = document.getElementById("txtMontoPago");
-    //}
+ 
+    if (idPago > 0) {
+        monto = document.getElementById("txtMontoPago");
+    }
     let pago = document.getElementById("txtPagoCliente");
     let pagofinal = parseFloat(pago.value) || 0
- 
     let descuentofinal = parseFloat(descuento.value)||0
     let deudafinal = parseFloat(deuda.value) || 0
     let montofinal = parseFloat(monto.value) || 0
     let montoPedido = montofinal;
+    //if (descuento.value=="") {
+    //    MontoAPagar = parseFloat(monto.value) || 0 ;
 
+    //}
+    if (descuento.value == "") {
+        let MontoAPagar = document.getElementById("txtPagoAPagar");
+        let MontoDePago = parseFloat(MontoAPagar.value);
+        document.getElementById("txtMontoPago").value = MontoDePago;
+
+    }
     if (pago.value == "") {
         document.getElementById("txtPagoCliente").value = "0.00";
     }
 
-    if (!isNaN(pagofinal) && !isNaN(descuentofinal) && !isNaN(montofinal) && descuento.value>=0) {
-        if (descuentofinal > montofinal || descuentofinal > deudafinal && pagofinal > 0 || descuento.value <0 || pago.value <0)
+    if (!isNaN(pagofinal) && !isNaN(descuentofinal) && !isNaN(montofinal)) {
+        if (descuentofinal > montofinal)
         {
          /*   alert("deuda:" + deudafinal + "montofinal:" + montofinal);*/
             descuentofinal = 0.00;
@@ -289,8 +326,11 @@ document.getElementById("txtDescuento").addEventListener("input", function () {
         if (descuentofinal % 1 !== 0 || descuentofinal == 0 || descuentofinal % 1 == 0) {
             montofinal = montofinal - descuentofinal;
             Evaluar(pagofinal, descuentofinal, montofinal);
-            montofinal = montoPedido;
+            /*     montofinal = montoPedido;*/
+
+
         }
+
     }
 
     else {
@@ -311,13 +351,16 @@ function Evaluar(pago, descuento, monto) {
     let deuda = 0.00,cambio=0.00;
     let estado = "";
 
-    if (descuentos==0) {
-        let montoPedido = document.getElementById("txtMontoPedido").value;
-        montos = montoPedido;
-        //montofinal = montos - descuentos;
-        //alert("monto final:"+montofinal)
+    if (descuentos == 0) {
+        let montoPago = document.getElementById("txtPagoAPagar").value;
+        montos = montoPago;
+        document.getElementById("txtMontoPago").value = montos;
     }
-    if (pagos > montos) {
+    else {
+        document.getElementById("txtMontoPago").value = monto.toFixed(2);
+    }
+
+    if (pagos >= montos) {
         cambio = pagos- montos;
         deuda = 0.00;
         estado = "Pagado";
@@ -329,20 +372,11 @@ function Evaluar(pago, descuento, monto) {
         estado = "Existe Deuda";
 
     }
-
-
-    document.getElementById("txtMontoPago").value = monto.toFixed(2);
+ 
     document.getElementById("txtCambio").value = cambio.toFixed(2);
     document.getElementById("txtDeuda").value = deuda.toFixed(2);
     document.getElementById("txtEstado").value = estado;
  
-
-
-
-
-   
-
-
 }
 
 // Función para resaltar la página actual

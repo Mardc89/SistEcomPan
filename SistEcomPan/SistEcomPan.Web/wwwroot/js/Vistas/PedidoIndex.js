@@ -294,7 +294,7 @@ function MostrarProduct(TerminoBusqueda = '', pagina = 1) {
                 const row =  document.createElement('tr');
                 row.innerHTML = `
             <td>${producto.idProducto}</td>
-            <td>${producto.descripcion}</td>
+            <td>${producto.descripcion}</td>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  
             <td>${categoria[indice]}</td>
             <td>${producto.stock}</td>
             <td>${producto.precio.toFixed(2)}</td>
@@ -312,7 +312,7 @@ function MostrarProduct(TerminoBusqueda = '', pagina = 1) {
          });
             SeleccionProductos();
             Paginacion(TerminoBusqueda, totalItems);
-
+                
 
         })
         .catch(error => {

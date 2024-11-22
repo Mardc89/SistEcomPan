@@ -128,16 +128,29 @@ function formatoFecha(fechaOriginal) {
 }
 
 function VerificarEstado() {
+    debugger;
     let idPago = document.getElementById("txtIdPago").value;
     let estado = document.getElementById("txtEstado").value;
     let btnEstado = document.getElementById("btnGuardarPago");
-
+    let Opcion1 = document.getElementById("opcion1");
+    let Opcion2 = document.getElementById("opcion2");
     if (estado == "Pagado" && idPago > 0) {
         btnEstado.disabled = true;
     }
     else {
         btnEstado.disabled = false;
     }
+
+    if (estado == "Pagado" || estado == "Existe Deuda" || estado=="") {
+        Opcion1.disabled = true;
+        Opcion2.disabled = true;
+    }
+    else {
+        Opcion1.disabled = false;
+        Opcion2.disabled = false;
+    }
+
+
 }
 
 function mostrarModal(modelo = MODELO_BASE) {
@@ -145,6 +158,7 @@ function mostrarModal(modelo = MODELO_BASE) {
 
     $("#txtIdPago").val(modelo.idPago)
     $("#txtIdPedido").val(modelo.idPedido)
+    $("#txtPagoAPagar").val(modelo.montoDeuda)
     $("#txtMontoPedido").val(modelo.montoDePedido)
     $("#txtNombres").val(modelo.nombreCliente)
     $("#txtFechaPedido").val(formatoFecha(modelo.fechaPedido))
@@ -234,6 +248,7 @@ $("#btnGuardarPago").click(function () {
         montoTotalDePago: $("#txtMontoPago").val(),
         montoDeuda: $("#txtDeuda").val(),
         estado: $("#txtEstado").val(),
+        montoAPagar: $("#txtPagoAPagar").val(),
         DetallePago: vmDetallePago
 
     }
@@ -297,7 +312,9 @@ $("#btnGuardarPago").click(function () {
             })
             .then(responseJson => {
                 if (responseJson.estado) {
-                    RegistrarDevoluciones();
+                    if (Devolucion != null) {
+                        RegistrarDevoluciones();
+                    }
                     tablaDataPago.row(filaSeleccionada).data(responseJson.objeto).draw(false);
                     filaSeleccionada = null;
                     $("#modalDataPago").modal("hide")

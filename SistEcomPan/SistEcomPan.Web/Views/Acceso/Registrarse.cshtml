@@ -20,11 +20,10 @@
 
     <!-- Custom fonts for this template-->
     <link href="~/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
-    <link href=""
-          rel="stylesheet">
-
     <!-- Custom styles for this template-->
     <link href="~/css/sb-admin-2.css" rel="stylesheet">
+    <link href="~/vendor/toastr/toastr.min.css" rel="stylesheet">
+    <link href="~/vendor/sweetalert/sweetalert.css" rel="stylesheet">
 
 </head>
 @section Estilos {
@@ -58,19 +57,19 @@
                                 <div class="p-4">
                                 <div>
                                     <div class="form-group">
-                                        <input type="text" class="form-control form-control-user" placeholder="Numero de Documento de Identidad" asp-for="Dni">
+                                        <input type="text" class="form-control form-control-user" id="txtDni" placeholder="Numero de Documento de Identidad" asp-for="Dni">
                                     </div>
                                     <div class="form-group">
-                                        <input type="text" class="form-control form-control-user" placeholder="Nombres" asp-for="Nombres">
+                                                <input type="text" class="form-control form-control-user" id="txtNombres" placeholder="Nombres" asp-for="Nombres">
                                     </div>
                                     <div class="form-group">
-                                            <input type="text" class="form-control form-control-user" placeholder="Apellidos" asp-for="Apellidos">
+                                                <input type="text" class="form-control form-control-user" id="txtApellidos" placeholder="Apellidos" asp-for="Apellidos">
                                      </div>
                                      <div class="form-group">
-                                            <input type="text" class="form-control form-control-user" placeholder="Telefono" asp-for="Telefono">
+                                                <input type="text" class="form-control form-control-user" id="txtTelefono" placeholder="Telefono" asp-for="Telefono">
                                      </div>
                                      <div class="form-group">
-                                            <select class="form-control form-control-sm"  asp-for="TipoCliente">
+                                            <select class="form-control form-control-sm"  asp-for="TipoCliente" id="cboTipoCliente">
                                                 <option value=""disabled selected hidden>Seleccione Tipo de Cliente</option>
                                                     <option value="Individual">Individual</option>
                                                     <option value="Tienda">Tienda</option>
@@ -82,7 +81,7 @@
                             <div class="col-lg-6">
                                 <div class="p-4">                                 
                                   <div class="form-group">
-                                       <input type="text" class="form-control form-control-user" placeholder="Direccion" asp-for="Direccion">
+                                            <input type="text" class="form-control form-control-user" id="txtDireccion" placeholder="Direccion" asp-for="Direccion">
                                   </div>
                                   <div class="form-group">
                                       <select class="form-control form-control-sm"  id="cboDistrito" asp-for="IdDistrito">
@@ -90,13 +89,13 @@
                                       </select>
                                   </div>
                                     <div class="form-group">
-                                        <input type="email" class="form-control form-control-user" placeholder="Correo" asp-for="Correo">
+                                            <input type="email" class="form-control form-control-user" id="txtCorreo" placeholder="Correo" asp-for="Correo">
                                     </div>
                                     <div class="form-group">
-                                        <input type="text" class="form-control form-control-user" placeholder="Nombre de Usuario" asp-for="NombreUsuario">
+                                            <input type="text" class="form-control form-control-user" id="txtNombreUsuario" placeholder="Nombre de Usuario" asp-for="NombreUsuario">
                                     </div>
                                     <div class="form-group">
-                                        <input type="password" class="form-control form-control-user" placeholder="Contraseña" asp-for="Clave">
+                                            <input type="password" class="form-control form-control-user" id="txtPassword" placeholder="Contraseña" asp-for="Clave">
                                     </div>
 
                                         @if (ViewData["Mensaje"] != null)
@@ -108,7 +107,7 @@
                                             </div>
                                         }
 
-                                        <button type="submit" class="btn btn-primary btn-user btn-block">
+                                        <button type="submit" id="btnRegistroCliente" class="btn btn-primary btn-user btn-block">
                                             Registrar
                                         </button>
                                   

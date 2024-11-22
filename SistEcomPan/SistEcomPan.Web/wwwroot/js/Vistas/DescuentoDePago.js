@@ -6,37 +6,35 @@ function mostrarModal2() {
     $("#modalDataDescuento").modal("show");
 }
 
-function EvaluarPago(pago, descuento, monto) {
+//function EvaluarPago(pago, descuento, monto) {
 
-    let pagos = parseFloat(pago);
-    let montos = parseFloat(monto);
-    let descuentos = descuento;
+//    let pagos = parseFloat(pago);
+//    let montos = parseFloat(monto);
+//    let descuentos = descuento;
 
-    let deuda = 0.00, cambio = 0.00;
-    let estado = "";
+//    let deuda = 0.00, cambio = 0.00;
+//    let estado = "";
 
-    if (descuentos == 0) {
-        let montoPedido = document.getElementById("txtMontoPedido").value;
-        montos = montoPedido;
-        //montofinal = montos - descuentos;
-        //alert("monto final:"+montofinal)
-    }
-    if (pagos > montos) {
-        cambio = pagos - montos;
-        deuda = 0.00;
-        estado = "Pagado";
-    }
+//    if (descuentos == 0) {
+//        let montoPago = document.getElementById("txtMontoPago").value;
+//        montos = montoPago;
+//    }
+//    if (pagos > montos) {
+//        cambio = pagos - montos;
+//        deuda = 0.00;
+//        estado = "Pagado";
+//    }
 
-    else if (pagos <= montos) {
-        cambio = 0.00;
-        deuda = montos - pagos;
-        estado = "Existe Deuda";
+//    else if (pagos <= montos) {
+//        cambio = 0.00;
+//        deuda = montos - pagos;
+//        estado = "Existe Deuda";
 
-    }
-    document.getElementById("txtMontoPago").value = montos.toFixed(2);
-    document.getElementById("txtCambio").value = cambio.toFixed(2);
-    document.getElementById("txtDeuda").value = deuda.toFixed(2);
-    document.getElementById("txtEstado").value = estado;
+//    }
+//    document.getElementById("txtMontoPago").value = montos.toFixed(2);
+//    document.getElementById("txtCambio").value = cambio.toFixed(2);
+//    document.getElementById("txtDeuda").value = deuda.toFixed(2);
+//    document.getElementById("txtEstado").value = estado;
 
 
 
@@ -45,7 +43,7 @@ function EvaluarPago(pago, descuento, monto) {
 
 
 
-}
+//}
 
 $("#opcion1").click(function () {
     
@@ -111,28 +109,7 @@ function GuardarDevolucion() {
 
 
 
- /*   $("#btnGuardarDescuento").LoadingOverlay("show");*/
-  
-    //fetch("/Devolucion/Crear", {
-    //    method: "POST",
-    //    headers: { "Content-Type": "application/json;charset=utf-8" },
-    //    body: JSON.stringify(Devolucion)
-    //})
-    //    .then(response => {
-    //    /*    $("#btnGuardarDescuento").LoadingOverlay("hide");*/
-    //        return response.ok ? response.json() : Promise.reject(response);
-    //    })
-    //    .then(responseJson => {
-    //        if (responseJson.estado) {
-    //            detalleDevoluciones = [];
-    //          /*  $("#txtDocumentoCliente").val("")*/
-    //            swal("Registrado", `Codigo de Producto:${responseJson.objeto.codigoPedido}`, "success")
-    //        }
-    //        else {
-    //            swal("Lo sentimos", "No se pudo Registrar la Devolucion ", "error")
 
-    //        }
-    //    })
 
 
 }
@@ -154,18 +131,18 @@ $("#btnGuardarDescuento").click(function () {
 
     if (idPago>0) {
         let descuentoPedido = $("#txtDescuentoPedido").val();
-        let PagoDelCliente = $("#txtPagoCliente").val();
-        let Pago = parseFloat(PagoDelCliente) || 0;
+        //let PagoDelCliente = $("#txtPagoCliente").val();
+        //let Pago = parseFloat(PagoDelCliente) || 0;
         $("#txtDescuento").val(descuentoPedido);
-        let descuentoFinal = $("#txtDescuento").val();
-        let descuentoPago = parseFloat(descuentoFinal) || 0;
+        //let descuentoFinal = $("#txtDescuento").val();
+        //let descuentoPago = parseFloat(descuentoFinal) || 0;
         let monto = $("#txtImporteFinal").val();
         $("#txtMontoPago").val(monto);
         $("#txtDeuda").val(monto);
         GuardarDevolucion();
         enviarDatos();
         $("#modalDataDescuento").modal("hide");
-        EvaluarPago(Pago,descuentoPago, monto);
+/*        EvaluarPago(Pago,descuentoPago, monto);*/
     }
     $("#modalDataDescuento").modal("hide");
 
