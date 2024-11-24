@@ -127,7 +127,8 @@ function mostrarModal(modelo = MODELO_BASE) {
     $("#cboRol").val(modelo.idRol == 0 ? $("#cboRol option:first").val() : modelo.idRol)
     $("#cboEstado").val(modelo.esActivo)
     $("#txtFoto").val("")
-    $("#imgUsuario").attr("src",rutaRelativa)
+    $("#imgUsuario").attr("src", rutaRelativa)
+    ObtenerDatosUsuario();
 
     $("#modalData").modal("show")
 }
@@ -184,7 +185,8 @@ $("#btnGuardar").click(function () {
                 if (responseJson.estado) {
                     tablaData.row.add(responseJson.objeto).draw(false)
                     $("#modalData").modal("hide")
-                    swal("Listo", "el usuario fue creado", "success")
+                    swal("Listo", "el usuario fue creado", "success");
+                  
                 }
                 else {
                     swal("Lo sentimos", responseJson.mensaje, "error")
@@ -213,7 +215,9 @@ $("#btnGuardar").click(function () {
                    
                     $("#modalData").modal("hide")
                    
-                    swal("Listo", "el usuario fue modificado", "success")
+                    swal("Listo", "el usuario fue modificado", "success");
+                 
+
                 }else {
                     swal("Lo sentimos", responseJson.mensaje, "error")
                 }

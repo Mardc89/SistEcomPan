@@ -15,35 +15,35 @@ namespace Negocio.Implementacion
     public class DashBoardService : IDashBoardService
     {
         private readonly IPedidoNew _repositorioPedidos;
+        private readonly IPagoNew _repositorioPagos;
+        private readonly IDetallePagoNew _repositorioDetallePagos;
+        private readonly IProductoNew _repositorioProducto;
         private readonly IGenericRepository<Categorias> _repositorioCategoria;
         private readonly IGenericRepository<DetallePedido> _repositorioDetallePedido;
-        private readonly IGenericRepository<Productos> _repositorioProducto;
-        private readonly IGenericRepository<Pagos> _repositorioPagos;
         private readonly IGenericRepository<Clientes> _repositorioClientes;
         private readonly IGenericRepository<Mensajes> _repositorioMensajes;
-        private readonly ProductoRepository _repositorioProductoTop;
         private DateTime FechaInicio=DateTime.Now;
 
         public DashBoardService
         (
-            ProductoRepository repositorioProductoTop,
             IGenericRepository<Categorias> repositorioCategoria,
             IPedidoNew repositorioPedidos,
-            IGenericRepository<Productos> repositorioProducto,
-            IGenericRepository<Pagos> repositorioPagos,
+            IProductoNew repositorioProducto,
             IGenericRepository<Mensajes> repositorioMensajes,
             IGenericRepository<Clientes> repositorioClientes,
-            IGenericRepository<DetallePedido> repositorioDetallePedido
+            IGenericRepository<DetallePedido> repositorioDetallePedido,
+            IPagoNew repositorioPagos,
+            IDetallePagoNew repositorioDetallePagos
         )
         {
-            _repositorioProductoTop = repositorioProductoTop;
             _repositorioCategoria = repositorioCategoria;
             _repositorioProducto = repositorioProducto;
             _repositorioPedidos=repositorioPedidos;
             _repositorioMensajes = repositorioMensajes;
-            _repositorioPagos = repositorioPagos;
             _repositorioClientes = repositorioClientes;
             _repositorioDetallePedido = repositorioDetallePedido;
+            _repositorioPagos = repositorioPagos;
+            _repositorioDetallePagos = repositorioDetallePagos;
             FechaInicio = FechaInicio.AddDays(-7);
 
         }        
@@ -69,8 +69,8 @@ namespace Negocio.Implementacion
         {
             try
             {
-                List<Pedidos> query = await _repositorioPedidos.ConsultarPedido(FechaInicio.Date);
-                decimal resultado = query.Select(x => x.MontoTotal).Sum(x=>x.Value);
+                List<DetallePago> query = await _repositorioDetallePagos.ConsultarDetallePagos(FechaInicio);
+                decimal resultado = query.Select(x => x.MontoAPagar).Sum(x=>x.Value);
 
                 return Convert.ToString(resultado, new CultureInfo("es-PE"));
 
@@ -181,7 +181,7 @@ namespace Negocio.Implementacion
             try
             {
                 List<Pedidos> query = await _repositorioPedidos
-                    .ConsultarPedido(FechaInicio.Date,null);
+                    .ConsultarPedido(FechaInicio.Date);
 
                 Dictionary<string, decimal?> resultado = query
                     .GroupBy(v => v.FechaPedido.Value.Date).OrderBy(g => g.Key)
@@ -201,7 +201,7 @@ namespace Negocio.Implementacion
         public async Task<Dictionary<string, int>> ProductosTopUltimaSemana()
         {
 
-            return await _repositorioProductoTop.ProductosTopUltimaSemana();
+            return await _repositorioProducto.ProductosTopUltimaSemana();
 
         }
 

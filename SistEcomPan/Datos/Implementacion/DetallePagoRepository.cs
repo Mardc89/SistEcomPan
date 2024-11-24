@@ -12,7 +12,7 @@ using System.Linq.Expressions;
 
 namespace Datos.Implementacion
 {
-    public class DetallePagoRepository : IGenericRepository<DetallePago>
+    public class DetallePagoRepository : IDetallePagoNew
     {
         private readonly string _cadenaSQL = "";
 
@@ -95,6 +95,36 @@ namespace Datos.Implementacion
         public Task<List<DetallePago>> Consultar(string? c = null, string? p = null, string? m = null, int? d = null)
         {
             throw new NotImplementedException();
+        }
+
+        public async Task<List<DetallePago>> ConsultarDetallePagos(DateTime? fechaInicio)
+        {
+            List<DetallePago> lista = new List<DetallePago>();
+            using (var conexion = new SqlConnection(_cadenaSQL))
+            {
+                conexion.Open();
+                SqlCommand cmd = new SqlCommand("SPHistorialDeTallePagos", conexion);
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@FechaInicio", fechaInicio);
+                using (var dr = await cmd.ExecuteReaderAsync())
+                {
+                    while (await dr.ReadAsync())
+                    {
+                        lista.Add(new DetallePago
+                        {
+                            IdDetallePago = Convert.ToInt32(dr["IdDetallePago"]),
+                            IdPago = Convert.ToInt32(dr["IdPago"]),
+                            MontoAPagar = Convert.ToDecimal(dr["MontoAPagar"]),
+                            PagoDelCliente = Convert.ToDecimal(dr["PagoDelCliente"]),
+                            DeudaDelCliente = Convert.ToDecimal(dr["DeudaDelCliente"]),
+                            CambioDelCliente = Convert.ToDecimal(dr["CambioDelCliente"]),
+                            FechaPago = Convert.ToDateTime(dr["FechaDetallePago"])
+                        });
+                    }
+                }
+            }
+
+            return lista;
         }
     }
 }

@@ -18,12 +18,12 @@ namespace Negocio.Implementacion
         private readonly IGenericRepository<Pagos> _repositorioPagos;
         private readonly IGenericRepository<Clientes> _repositorioClientes;
         private readonly IGenericRepository<Mensajes> _repositorioMensajes;
-        private readonly ProductoRepository _repositorioProductoTop;
+        private readonly IProductoNew _repositorioProductoTop;
         private DateTime FechaInicio = DateTime.Now;
 
         public DashBoardServiceCliente
         (
-            ProductoRepository repositorioProductoTop,
+            IProductoNew repositorioProductoTop,
             IPedidoNew repositorioPedidos,
             IGenericRepository<Pagos> repositorioPagos,
             IGenericRepository<Mensajes> repositorioMensajes,

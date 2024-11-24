@@ -12,7 +12,7 @@ using System.Linq.Expressions;
 
 namespace Datos.Implementacion
 {
-    public class ProductoRepository:IGenericRepository<Productos>
+    public class ProductoRepository:IProductoNew
     {
         private readonly string _cadenaSQL = "";
 
@@ -172,7 +172,7 @@ namespace Datos.Implementacion
                             Precio = Convert.ToDecimal(dr["Precio"]),
                             UrlImagen = dr["UrlImagen"].ToString(),
                             NombreImagen = dr["NombreImagen"].ToString(),
-                            Estado =  Convert.ToBoolean(dr["Estado"]),
+                            Estado = Convert.ToBoolean(dr["Estado"]),
                             Stock = Convert.ToInt32(dr["Stock"]),
                             FechaRegistro = Convert.ToDateTime(dr["FechaRegistro"])
                         });

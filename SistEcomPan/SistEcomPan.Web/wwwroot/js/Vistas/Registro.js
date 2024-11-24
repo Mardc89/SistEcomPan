@@ -28,16 +28,50 @@ $(document).ready(function () {
 
 
 document.addEventListener("DOMContentLoaded", function () {
-    const form = document.querySelector("form");
+    debugger;
+    const form = document.getElementById("FormRegistro");
 /*    const btnRegistroCliente = document.getElementById("btnRegistroCliente");*/
 
-    form.addEventListener("submit", function (event) {
-        event.preventDefault();
-        validarFormulario(form);
-    })
+    if (form) {
+        form.addEventListener("submit", function (event) {
+            event.preventDefault();
+            validarFormulario(form);
+        });
+    }
+    const formReset = document.getElementById("formularioReset");
+    /*    const btnRegistroCliente = document.getElementById("btnRegistroCliente");*/
 
+    if (formReset) {
+        formReset.addEventListener("submit", function (event) {
+            event.preventDefault();
+            validarFormularioReset(formReset);
+        });
+    }
 
 });
+
+
+function validarFormularioReset(formReset) {
+
+    const nuevaClave = $("#NuevaClave").val()?.trim();
+    const confirmarClave = $("#ConfirmarClave").val()?.trim();
+
+    if (!nuevaClave || nuevaClave.length < 8) {
+        swal(" ", "La contraseña debe tener al menos 8 caracteres", "error");
+        $("#NuevaClave").focus();
+        return;
+    }
+
+    if (nuevaClave !== confirmarClave) {
+        swal(" ", "Las contraseñas no coinciden", "error");
+        $("#ConfirmarClave").focus();
+        return;
+    }
+
+    formReset.submit();
+
+
+}
 
     function validarFormulario(form) {
 
@@ -97,20 +131,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
         }
 
-        const nuevaClave = $("#NuevaClave").val()?.trim();
-        const confirmarClave = $("#ConfirmarClave").val()?.trim();
-
-        if (!nuevaClave || nuevaClave.length < 8) {
-            toastr.warning("", "La contraseña debe tener al menos 8 caracteres");
-            $("#NuevaClave").focus();
-            return;
-        }
-
-        if (nuevaClave !== confirmarClave) {
-            toastr.warning("", "Las contraseñas no coinciden");
-            $("#ConfirmarClave").focus();
-            return;
-        }
 
         form.submit();
 

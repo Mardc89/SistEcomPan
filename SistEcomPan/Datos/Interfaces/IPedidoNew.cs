@@ -13,7 +13,7 @@ namespace Datos.Interfaces
     {
         Task<Pedidos> Registrar(Pedidos modelo,DataTable DataTable);
         Task<List<Pedidos>> Reporte(DateTime FechaInicio,DateTime FechaFin);
-        Task<List<Pedidos>> ConsultarPedido(DateTime? fechaPedido=null, int? idCliente = null);
+        Task<List<Pedidos>> ConsultarPedido(DateTime? fechaPedido=null);
         Task<List<Pedidos>> ConsultarTotalDePedidos(DateTime fechaPedido);
         Task<List<Pedidos>> BuscarTotal(string? codigo = null, string? estado = null, int? idCliente = null);
 

@@ -356,7 +356,7 @@ namespace Datos.Implementacion
 
 
 
-        public async Task <List<Pedidos>> ConsultarPedido(DateTime? FechaInicio, int? idCliente = null)
+        public async Task <List<Pedidos>> ConsultarPedido(DateTime? FechaInicio)
         {
 
             List<Pedidos> lista = new List<Pedidos>();

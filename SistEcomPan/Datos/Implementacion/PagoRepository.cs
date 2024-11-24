@@ -236,6 +236,40 @@ namespace Datos.Implementacion
             return lista;
         }
 
+        public async Task<List<Pagos>> ConsultarPagos(DateTime? FechaInicio)
+        {
+
+            List<Pagos> lista = new List<Pagos>();
+            using (var conexion = new SqlConnection(_cadenaSQL))
+            {
+                conexion.Open();
+                SqlCommand cmd = new SqlCommand("SPHistorialDePagos", conexion);
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@FechaInicio", FechaInicio);
+             
+
+                using (var dr = await cmd.ExecuteReaderAsync())
+                {
+                    while (await dr.ReadAsync())
+                    {
+                        lista.Add(new Pagos
+                        {
+                            IdPago = Convert.ToInt32(dr["IdPago"]),
+                            IdPedido = Convert.ToInt32(dr["IdPedido"]),
+                            MontoDePedido = Convert.ToDecimal(dr["MontoDePedido"]),
+                            Descuento = Convert.ToDecimal(dr["Descuento"]),
+                            MontoTotalDePago = Convert.ToDecimal(dr["MontoTotalDePago"]),
+                            MontoDeuda = Convert.ToDecimal(dr["MontoDeuda"]),
+                            FechaDePago = Convert.ToDateTime(dr["FechaDePago"]),
+                            Estado = dr["Estado"].ToString()
+                        });
+                    }
+                }
+            }
+
+            return lista;
+        }
+
 
         public Task<IQueryable<Pagos>> Consultar(Expression<Func<Pagos, bool>> filtro = null)
         {
