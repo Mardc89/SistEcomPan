@@ -138,9 +138,16 @@ $("#btnNuevo").click(function () {
     mostrarModal()
 })
 
+function validarDni() {
+    document.getElementById("txtDni").addEventListener("input", function (e) {
+        e.target.value = e.target.value.replace(/\D/g, '');
+
+    });
+}
+
 
 $("#btnGuardar").click(function () {
-
+    debugger;
     const inputs = $("input.input-validar").serializeArray();
     const inputs_sin_valor = inputs.filter((item) => item.value.trim() == "")
 
@@ -150,6 +157,7 @@ $("#btnGuardar").click(function () {
         $(`input[name="${inputs_sin_valor[0].name}"]`).focus()
         return;
     }
+   
 
     const modelo = structuredClone(MODELO_BASE);
     modelo["idUsuario"] = parseInt($("#txtId").val())

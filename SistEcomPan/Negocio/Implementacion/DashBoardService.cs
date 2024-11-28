@@ -180,12 +180,12 @@ namespace Negocio.Implementacion
         {
             try
             {
-                List<Pedidos> query = await _repositorioPedidos
-                    .ConsultarPedido(FechaInicio.Date);
+                List<DetallePago> query = await _repositorioDetallePagos
+                    .ConsultarDetallePagos(FechaInicio.Date);
 
                 Dictionary<string, decimal?> resultado = query
-                    .GroupBy(v => v.FechaPedido.Value.Date).OrderBy(g => g.Key)
-                    .Select(dv => new { fecha = dv.Key.ToString("dd/MM/yyyy"), total = dv.Sum(x=>x.MontoTotal) })
+                    .GroupBy(v => v.FechaPago.Value.Date).OrderBy(g => g.Key)
+                    .Select(dv => new { fecha = dv.Key.ToString("dd/MM/yyyy"), total = dv.Sum(x=>x.MontoAPagar) })
                     .ToDictionary(keySelector: r => r.fecha, elementSelector: r => r.total);
 
                 return resultado;

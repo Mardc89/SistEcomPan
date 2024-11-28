@@ -26,9 +26,6 @@ namespace Negocio.Implementacion
 
         public async Task<Categorias> Crear(Categorias entidad)
         {
-            //IQueryable<Categorias> categorias = await _repositorio.Consultar();
-            //IQueryable<Categorias> categoriaEvaluada = categorias.Where(u => u.TipoDeCategoria == entidad.TipoDeCategoria);
-            //Categorias categoriaExiste = categoriaEvaluada.FirstOrDefault();
             Categorias categoriaExiste = await _repositorio.Buscar(null,entidad.TipoDeCategoria,null);
 
             if (categoriaExiste != null)
@@ -54,9 +51,6 @@ namespace Negocio.Implementacion
         public async Task<Categorias> Editar(Categorias entidad)
         {
 
-            //IQueryable<Categorias> categorias = await _repositorio.Consultar();
-            //IQueryable<Categorias> categoriaEvaluada = categorias.Where(u => u.TipoDeCategoria == entidad.TipoDeCategoria && u.IdCategoria != entidad.IdCategoria);
-            //Categorias categoriaExiste = categoriaEvaluada.FirstOrDefault();
             Categorias categoriaExiste = await _repositorio.Verificar(null, entidad.TipoDeCategoria,entidad.IdCategoria);
 
             if (categoriaExiste != null)
@@ -64,9 +58,6 @@ namespace Negocio.Implementacion
 
             try
             {
-                //IQueryable<Categorias> buscarCategoria = await _repositorio.Consultar();
-                //IQueryable<Categorias> categoriaEncontrada = buscarCategoria.Where(u => u.IdCategoria == entidad.IdCategoria);
-                //Categorias categoriaEditar = categoriaEncontrada.First();
                 Categorias categoriaEditar = await _repositorio.Buscar(null, null, entidad.IdCategoria);
                 categoriaEditar.TipoDeCategoria = entidad.TipoDeCategoria;
                 categoriaEditar.Estado = entidad.Estado;
@@ -91,9 +82,6 @@ namespace Negocio.Implementacion
         {
             try
             {
-                //IQueryable<Categorias> categorias = await _repositorio.Consultar();
-                //IQueryable<Categorias> categoriaEvaluada = categorias.Where(u => u.IdCategoria == IdCategoria);
-                //Categorias categoriaEncontrada = categoriaEvaluada.FirstOrDefault();
                 Categorias categoriaEncontrada = await _repositorio.Buscar(null,null,IdCategoria);
                 if (categoriaEncontrada == null)
                     throw new TaskCanceledException("La Categoria no Existe");

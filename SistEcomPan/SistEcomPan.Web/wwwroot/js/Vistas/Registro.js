@@ -48,7 +48,24 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 
+    const formUsuario = document.getElementById("formularioDeUsuario");
+
+    if (formUsuario) {
+        $("#btnGuardar").click(function () {
+            validarFormularioUsuario();
+        });
+    }
+
 });
+
+
+function validarFormularioUsuario() {
+
+
+
+
+
+}
 
 
 function validarFormularioReset(formReset) {
