@@ -130,7 +130,7 @@ namespace Negocio.Implementacion
 
                 //var PagosPedidos = PedidosLista.Where(x => x.IdPedido == idPedido[i])
 
-                // Filtro de búsqueda por término de búsqueda (searchTerm)
+            
                 var pedidosFiltrados = Pagolista.Where(p => idPedido.Contains(p.IdPedido)).ToList();
 
                 int total =pedidosFiltrados.Count();
