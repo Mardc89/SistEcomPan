@@ -95,11 +95,6 @@ namespace SistEcomPan.Web.Controllers
             string asuntoAbuscar=asunto.Contains(":")?asunto.Substring(asunto.IndexOf(":") + 1).Trim():asunto;
             
             var ListaDeMensajes = await _mensajeService.Lista();
-            //var clientelista = await _clienteService.Lista();
-            //List<Mensajes> mensajes = new List<Mensajes>();
-            //var ListaDestinatarioMensaje = await _destinatarioMensajeService.Lista();
-            //var idCliente = clientelista.Where(x => x.Dni == searchTerm).Select(x => x.IdCliente).FirstOrDefault();
-            //var IndicesClientes = ListaDestinatarioMensaje.Where(x => x.IdDestinatario == idCliente).Select(x => x.IdMensaje).ToList();
             var MisMensajes = ListaDeMensajes.Where(p => p.Asunto == asuntoAbuscar || p.Asunto.Contains(asuntoAbuscar)).ToList();
 
             List<VMMensaje> vmMensajes = new List<VMMensaje>();
@@ -176,22 +171,6 @@ namespace SistEcomPan.Web.Controllers
             }
             return StatusCode(StatusCodes.Status200OK, new { data = vmListaMensajes });
         }
-
-        //[HttpGet]
-        //public async Task<IActionResult> ListDistritos()
-        //{
-        //    var lista = await _distritoService.Lista();
-        //    List<VMDistrito> vmListaDistritos = new List<VMDistrito>();
-        //    foreach (var item in lista)
-        //    {
-        //        vmListaDistritos.Add(new VMDistrito
-        //        {
-        //            IdDistrito = item.IdDistrito,
-        //            NombreDistrito = item.NombreDistrito
-        //        });
-        //    }
-        //    return StatusCode(StatusCodes.Status200OK, vmListaDistritos);
-        //}
 
 
         [HttpPost]

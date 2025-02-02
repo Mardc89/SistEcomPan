@@ -37,9 +37,6 @@ namespace Negocio.Implementacion
 
         public async Task<Distritos> Crear(Distritos entidad)
         {
-            //IQueryable<Categorias> categorias = await _repositorio.Consultar();
-            //IQueryable<Categorias> categoriaEvaluada = categorias.Where(u => u.TipoDeCategoria == entidad.TipoDeCategoria);
-            //Categorias categoriaExiste = categoriaEvaluada.FirstOrDefault();
             Distritos distritoExiste = await _repositorio.Buscar(null, entidad.NombreDistrito, null);
 
             if (distritoExiste != null)
@@ -65,9 +62,6 @@ namespace Negocio.Implementacion
         public async Task<Distritos> Editar(Distritos entidad)
         {
 
-            //IQueryable<Categorias> categorias = await _repositorio.Consultar();
-            //IQueryable<Categorias> categoriaEvaluada = categorias.Where(u => u.TipoDeCategoria == entidad.TipoDeCategoria && u.IdCategoria != entidad.IdCategoria);
-            //Categorias categoriaExiste = categoriaEvaluada.FirstOrDefault();
             Distritos distritoExiste = await _repositorio.Verificar(null, entidad.NombreDistrito, entidad.IdDistrito);
 
             if (distritoExiste != null)
@@ -75,9 +69,6 @@ namespace Negocio.Implementacion
 
             try
             {
-                //IQueryable<Categorias> buscarCategoria = await _repositorio.Consultar();
-                //IQueryable<Categorias> categoriaEncontrada = buscarCategoria.Where(u => u.IdCategoria == entidad.IdCategoria);
-                //Categorias categoriaEditar = categoriaEncontrada.First();
                 Distritos distritoEditar = await _repositorio.Buscar(null, null, entidad.IdDistrito);
                 distritoEditar.NombreDistrito = entidad.NombreDistrito;
 
@@ -101,9 +92,6 @@ namespace Negocio.Implementacion
         {
             try
             {
-                //IQueryable<Categorias> categorias = await _repositorio.Consultar();
-                //IQueryable<Categorias> categoriaEvaluada = categorias.Where(u => u.IdCategoria == IdCategoria);
-                //Categorias categoriaEncontrada = categoriaEvaluada.FirstOrDefault();
                 Distritos distritoEncontrado = await _repositorio.Buscar(null, null, IdCategoria);
                 if (distritoEncontrado == null)
                     throw new TaskCanceledException("La Categoria no Existe");

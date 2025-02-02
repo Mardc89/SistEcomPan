@@ -59,11 +59,11 @@ namespace Datos.Implementacion
                         });
                     }
 
-                    IQueryable<NumeroDocumento> buscarNumeroDocumento = await _repositorioNumDocumento.Consultar();
-                    IQueryable<NumeroDocumento> numerodocumentoEncontrado = buscarNumeroDocumento.Where(u => u.Gestion == "devoluciones");
-                    NumeroDocumento numeroDocumento = numerodocumentoEncontrado.First();
+                    //IQueryable<NumeroDocumento> buscarNumeroDocumento = await _repositorioNumDocumento.Consultar();
+                    //IQueryable<NumeroDocumento> numerodocumentoEncontrado = buscarNumeroDocumento.Where(u => u.Gestion == "devoluciones");
+                    //NumeroDocumento numeroDocumento = numerodocumentoEncontrado.First();
 
-
+                    NumeroDocumento numeroDocumento = await _repositorioNumDocumento.Buscar("devoluciones",null,null);
                     numeroDocumento.UltimoNumero = numeroDocumento.UltimoNumero + 1;
                     await _repositorioNumDocumento.Editar(numeroDocumento);
 

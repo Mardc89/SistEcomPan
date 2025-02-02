@@ -79,11 +79,12 @@ namespace Datos.Implementacion
                         });
                     }
 
-                        IQueryable<NumeroDocumento> buscarNumeroDocumento = await _repositorioNumDocumento.Consultar();
-                        IQueryable<NumeroDocumento> numerodocumentoEncontrado = buscarNumeroDocumento.Where(u => u.Gestion == "pedidos");
-                        NumeroDocumento numeroDocumento = numerodocumentoEncontrado.First();
+                        //IQueryable<NumeroDocumento> buscarNumeroDocumento = await _repositorioNumDocumento.Consultar();
+                        //IQueryable<NumeroDocumento> numerodocumentoEncontrado = buscarNumeroDocumento.Where(u => u.Gestion == "pedidos");
+                        //NumeroDocumento numeroDocumento = numerodocumentoEncontrado.First();
 
-
+                    
+                        NumeroDocumento numeroDocumento = await _repositorioNumDocumento.Buscar("pedidos",null,null);                       
                         numeroDocumento.UltimoNumero = numeroDocumento.UltimoNumero + 1;
                         await _repositorioNumDocumento.Editar(numeroDocumento);
 
@@ -130,24 +131,29 @@ namespace Datos.Implementacion
                     {
 
 
-                        IQueryable<Productos> producto = await _repositorioProducto.Consultar();
-                        IQueryable<Productos> productoEncontrado = producto.Where(u => u.IdProducto == detalle.IdProducto);
-                        var PrecioProducto = productoEncontrado.First().Precio;
+                        //IQueryable<Productos> producto = await _repositorioProducto.Consultar();
+                        //IQueryable<Productos> productoEncontrado = producto.Where(u => u.IdProducto == detalle.IdProducto);
+                        //var PrecioProducto = productoEncontrado.First().Precio;
+
+                        Productos producto = await _repositorioProducto.Buscar(null,null,detalle.IdProducto);
+                        var PrecioProducto = producto.Precio;
 
                         subtotal = Convert.ToDecimal(detalle.Cantidad.ToString()) * PrecioProducto;
                         total += subtotal;
 
-                        IQueryable<Productos> buscarProducto = await _repositorioProducto.Consultar();
-                        IQueryable<Productos> productoStock = buscarProducto.Where(u => u.IdProducto == detalle.IdProducto);
-                        Productos productoEditar = productoStock.First();
-                        if (productoEditar.Stock > 0) {
-                             productoEditar.Stock = productoEditar.Stock - detalle.Cantidad;
+                        //IQueryable<Productos> buscarProducto = await _repositorioProducto.Consultar();
+                        //IQueryable<Productos> productoStock = buscarProducto.Where(u => u.IdProducto == detalle.IdProducto);
+                        //Productos productoEditar = productoStock.First();
+
+
+                        if (producto.Stock > 0) {
+                             producto.Stock = producto.Stock - detalle.Cantidad;
                         }
                         else
                         {
-                            productoEditar.Stock = 0;
+                            producto.Stock = 0;
                         }  
-                        await _repositorioProducto.Editar(productoEditar);
+                        await _repositorioProducto.Editar(producto);
                         detallePedido.Rows.Add(new object[] {
                         detalle.IdProducto,
                         detalle.Cantidad,

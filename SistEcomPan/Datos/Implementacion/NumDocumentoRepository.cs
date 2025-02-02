@@ -22,9 +22,36 @@ namespace Datos.Implementacion
 
         }
 
-        public Task<NumeroDocumento> Buscar(string? c = null, string? p = null, int? d = null)
+        public async Task<NumeroDocumento> Buscar(string? Gestion = null, string? Fecha = null, int? IdNumeroDocumento = null)
         {
-            throw new NotImplementedException();
+            NumeroDocumento lista = null;
+            using (var conexion = new SqlConnection(_cadenaSQL))
+            {
+                conexion.Open();
+                SqlCommand cmd = new SqlCommand("SPConsultarNumeroDocumento", conexion);
+                cmd.CommandType = CommandType.StoredProcedure;
+                DateTime parseDate;
+                cmd.Parameters.AddWithValue("@Gestion", (object)Gestion ?? DBNull.Value);
+                cmd.Parameters.AddWithValue("@IdNumeroDocumento", (object)IdNumeroDocumento ?? DBNull.Value);
+                cmd.Parameters.AddWithValue("@Fecha",!DateTime.TryParse(Fecha ,out parseDate)?DBNull.Value:parseDate);
+
+                using (var dr = await cmd.ExecuteReaderAsync())
+                {
+                    while (await dr.ReadAsync())
+                    {
+                        lista=new NumeroDocumento
+                        {
+                            IdNumeroDocumento = Convert.ToInt32(dr["IdNumeroDocumento"]),
+                            UltimoNumero = Convert.ToInt32(dr["UltimoNumero"]),
+                            CantidadDeDigitos = Convert.ToInt32(dr["CantidadDeDigitos"]),
+                            Gestion = dr["Gestion"].ToString(),
+                            FechaActualizacion = Convert.ToDateTime(dr["FechaActualizacion"])
+                        };
+                    }
+                }
+            }
+
+            return lista;
         }
 
         public async Task<IQueryable<NumeroDocumento>> Consultar()

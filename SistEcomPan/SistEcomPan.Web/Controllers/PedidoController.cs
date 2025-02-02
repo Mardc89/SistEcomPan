@@ -94,7 +94,6 @@ namespace SistEcomPan.Web.Controllers
         {
             var lista = await _pedidoService.Lista();
             List<VMPedido> vmListaPedidos = new List<VMPedido>();
-            //var clientes = await _clienteService.ObtenerNombre();
             foreach (var item in lista)
             {
                 vmListaPedidos.Add(new VMPedido
@@ -104,8 +103,6 @@ namespace SistEcomPan.Web.Controllers
                     Codigo = item.Codigo,
                     MontoTotal = Convert.ToString(item.MontoTotal),
                     Estado = item.Estado,
-                    //NombresCompletos= clientes.Where(x => x.IdCliente == item.IdCliente).First().Nombres +
-                    //clientes.Where(x => x.IdCliente == item.IdCliente).First().Apellidos,
                     NombresCompletos = await _clienteService.ObtenerNombreCompleto(item.IdCliente),
                     FechaPedido =item.FechaPedido
                  
@@ -119,14 +116,11 @@ namespace SistEcomPan.Web.Controllers
         {
             var Clientelista = await _clienteService.Lista();
             List<VMCliente> vmClientelista = new List<VMCliente>();
-            //var clientes = await _clienteService.ObtenerNombre();
             foreach (var item in Clientelista)
             {
                 vmClientelista.Add(new VMCliente
                 {
                     IdCliente=item.IdCliente,
-                    //NombreCompleto = clientes.Where(x => x.IdCliente == item.IdCliente).First().Nombres +" "+
-                    //clientes.Where(x => x.IdCliente == item.IdCliente).First().Apellidos
                     NombreCompleto = await _clienteService.ObtenerNombreCompleto(item.IdCliente)
 
                 });
@@ -177,12 +171,6 @@ namespace SistEcomPan.Web.Controllers
                 .FirstOrDefault();
             }
           
-            // Filtro de búsqueda por término de búsqueda (searchTerm)
-          
-
-            //var pedidosFiltrados = pedidosPendientes.Where(p => p.IdCliente==1).ToList();
-
-
             var pedidosFiltrados = pedidosPendientes.Where(p =>
                 string.IsNullOrWhiteSpace(searchTerm) || p.Codigo.Contains(searchTerm.ToLower()) ||(IDdeCliente!=null && p.IdCliente.Equals(IDdeCliente))
             );
@@ -199,8 +187,6 @@ namespace SistEcomPan.Web.Controllers
                     MontoTotal = Convert.ToString(item.MontoTotal),
                     Estado = item.Estado,
                     FechaPedido = item.FechaPedido,
-                    //NombresCompletos= clientes.Where(x => x.IdCliente ==item.IdCliente).FirstOrDefault().Nombres + "" +
-                    //                  clientes.Where(x => x.IdCliente == item.IdCliente).FirstOrDefault().Apellidos
                     NombresCompletos = await _clienteService.ObtenerNombreCompleto(item.IdCliente)
 
                 });
@@ -221,7 +207,6 @@ namespace SistEcomPan.Web.Controllers
         public async Task<IActionResult> ObtenerListaPedidos()
         {
             var Pedidolista = await _pedidoService.Lista();
-            var clientes = await _clienteService.ObtenerNombre();
             List<VMPedido> vmPedidos = new List<VMPedido>();
 
             foreach (var item in Pedidolista)
@@ -234,8 +219,6 @@ namespace SistEcomPan.Web.Controllers
                     MontoTotal = Convert.ToString(item.MontoTotal),
                     Estado = item.Estado,
                     FechaPedido = item.FechaPedido,
-                    //NombresCompletos= clientes.Where(x => x.IdCliente ==item.IdCliente).FirstOrDefault().Nombres + "" +
-                    //                  clientes.Where(x => x.IdCliente == item.IdCliente).FirstOrDefault().Apellidos
                     NombresCompletos = await _clienteService.ObtenerNombreCompleto(item.IdCliente)
 
                 });

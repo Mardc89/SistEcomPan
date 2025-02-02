@@ -15,9 +15,9 @@ namespace Datos.Interfaces
         Task<T> Crear(T modelo);
         Task<bool> Editar(T modelo);
         Task<bool> Eliminar(int d);
-        Task<IQueryable<T>> Consultar();
+        //Task<IQueryable<T>> Consultar();
         Task<T> Buscar(string?c = null,string?p=null,int?d = null);
         Task<T> Verificar(string?c=null,string?p=null,int?d=null);
-        Task<IQueryable<T>> Obtener(string consulta);
+        //Task<IQueryable<T>> Obtener(string consulta);
     }
 }

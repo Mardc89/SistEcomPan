@@ -24,7 +24,7 @@ namespace Negocio.Implementacion
         {
             try
             {
-                IQueryable<Configuracion> query = await _repositorio.Obtener("ServicioCorreo");
+                List<Configuracion> query = await _repositorio.Consultar("ServicioCorreo");
                 Dictionary<string, string> Config = query.ToDictionary(c => c.Propiedad,c => c.Valor);
 
                 var requiredKeys = new[] { "correo", "clave", "alias", "host", "puerto" };

@@ -52,13 +52,13 @@ namespace Negocio.Implementacion
 
         }
 
-        public async Task<List<Productos>> ObtenerProductos(string busqueda)
-        {
-            IQueryable<Productos> productos = await _repositorioProducto.Consultar();
-            IQueryable<Productos> productosEvaluado = productos.Where(u => u.Estado ==true && string.Concat(u.IdProducto,u.Descripcion).Contains(busqueda));
+        //public async Task<List<Productos>> ObtenerProductos(string busqueda)
+        //{
+        //    IQueryable<Productos> productos = await _repositorioProducto.Consultar();
+        //    IQueryable<Productos> productosEvaluado = productos.Where(u => u.Estado ==true && string.Concat(u.IdProducto,u.Descripcion).Contains(busqueda));
 
-            return productosEvaluado.ToList();
-        }
+        //    return productosEvaluado.ToList();
+        //}
 
         public async Task<Pedidos> Registrar(Pedidos entidad)
         {        

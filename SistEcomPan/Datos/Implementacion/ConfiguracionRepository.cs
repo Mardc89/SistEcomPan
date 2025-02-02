@@ -109,9 +109,33 @@ namespace Datos.Implementacion
             throw new NotImplementedException();
         }
 
-        public Task<List<Configuracion>> Consultar(string? c = null, string? p = null, string? m = null, int? d = null)
+        public async Task<List<Configuracion>> Consultar(string? Recurso = null, string? p = null, string? m = null, int? d = null)
         {
-            throw new NotImplementedException();
+            List<Configuracion> lista = new List<Configuracion>();
+
+            using (var conexion = new SqlConnection(_cadenaSQL))
+            {
+                conexion.Open();
+                SqlCommand cmd = new SqlCommand("SPConsultarConfiguracion", conexion);
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@Recurso", (object)Recurso?? DBNull.Value);
+                using (var dr = await cmd.ExecuteReaderAsync())
+                {
+                        while (await dr.ReadAsync())
+                        {
+                            lista.Add(new Configuracion
+                            {
+                                Recurso = dr["Recurso"].ToString(),
+                                Propiedad = dr["Propiedad"].ToString(),
+                                Valor = dr["Valor"].ToString()
+                            });
+
+                        }
+
+                }
+            }
+
+            return lista;
         }
     }
 }

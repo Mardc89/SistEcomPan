@@ -10,7 +10,7 @@ namespace Negocio.Interfaces
 {
     public interface IPedidoService
     {
-        Task<List<Productos>> ObtenerProductos(string busqueda);
+        //Task<List<Productos>> ObtenerProductos(string busqueda);
         Task<Pedidos> Registrar(Pedidos entidad);
         Task <Pedidos>Actualizar(Pedidos entidad);
         Task<bool> Eliminar(int IdPedido);

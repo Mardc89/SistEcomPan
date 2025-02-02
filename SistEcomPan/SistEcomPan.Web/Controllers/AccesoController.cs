@@ -23,10 +23,9 @@ namespace SistEcomPan.Web.Controllers
 
         private readonly ICorreoService _correoServicio;
         private readonly ITokenService _tokenServicio;
-        private readonly IEncriptService _encriptServicio;
 
 
-        public AccesoController(IUsuarioService usuarioServicio,IClienteService clienteServicio,IRolService rolServicio,ICorreoService correoServicio,ITokenService tokenServicio,IEncriptService encriptServicio) 
+        public AccesoController(IUsuarioService usuarioServicio,IClienteService clienteServicio,IRolService rolServicio,ICorreoService correoServicio,ITokenService tokenServicio) 
         { 
                                                                                                                                                                                                                                                                                                                                                                                                                                                       
             _usuarioServicio= usuarioServicio;
@@ -34,7 +33,6 @@ namespace SistEcomPan.Web.Controllers
             _rolServicio = rolServicio;
             _correoServicio=correoServicio;
             _tokenServicio = tokenServicio;
-            _encriptServicio= encriptServicio;
 
         }
         public IActionResult Login()
@@ -223,28 +221,6 @@ namespace SistEcomPan.Web.Controllers
             }
             else if (cliente != null)
             {
-                //List<Claim> claims = new List<Claim>(){
-                //new Claim(ClaimTypes.Name,clienteEncontrado.NombreUsuario),
-                //new Claim(ClaimTypes.NameIdentifier,clienteEncontrado.IdCliente.ToString()),
-                //new Claim("NombreFoto",clienteEncontrado.NombreFoto),
-                //new Claim("Dni",clienteEncontrado.Dni),
-                //new Claim(ClaimTypes.Role,"Cliente"),
-                //new Claim("NombreCompleto",clienteEncontrado.Apellidos+" "+clienteEncontrado.Nombres )
-                //};
-
-                //ClaimsIdentity claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
-
-                //AuthenticationProperties properties = new AuthenticationProperties()
-                //{
-                //    AllowRefresh = true,
-                //    IsPersistent = modelo.MantenerSesion
-                //};
-
-                //await HttpContext.SignInAsync(
-                //    CookieAuthenticationDefaults.AuthenticationScheme,
-                //    new ClaimsPrincipal(claimsIdentity),
-                //    properties
-                // );
                 await sigInUserAsync(cliente, modelo.MantenerSesion);
                 return RedirectToAction("DashBoardCliente","DashBoard");
             }
@@ -265,11 +241,6 @@ namespace SistEcomPan.Web.Controllers
                 new Claim(ClaimTypes.Role,await _rolServicio.ConsultarRol(user.IdRol)),
                 new Claim("NombreCompleto",user.Apellidos+" "+user.Nombres)
                 };
-
-            //var UsuarioRoles = await _rolServicio.ObtenerNombre();
-            //var nombreRoles = UsuarioRoles.Where(x => x.IdRol == usuarioEncontrado.IdRol).Select(x => x.NombreRol).First();
-            //var nombreRoles = await _rolServicio.ConsultarRol(usuarioEncontrado.IdRol);
-            //claims.Add(new Claim(ClaimTypes.Role, nombreRoles));
 
             ClaimsIdentity claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
 
@@ -298,11 +269,6 @@ namespace SistEcomPan.Web.Controllers
                 new Claim("NombreCompleto",cliente.Apellidos+" "+cliente.Nombres)
               
                 };
-
-            //var UsuarioRoles = await _rolServicio.ObtenerNombre();
-            //var nombreRoles = UsuarioRoles.Where(x => x.IdRol == usuarioEncontrado.IdRol).Select(x => x.NombreRol).First();
-            //var nombreRoles = await _rolServicio.ConsultarRol(usuarioEncontrado.IdRol);
-            //claims.Add(new Claim(ClaimTypes.Role, nombreRoles));
 
             ClaimsIdentity claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
 

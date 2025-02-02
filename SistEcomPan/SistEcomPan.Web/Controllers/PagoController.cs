@@ -234,17 +234,7 @@ namespace SistEcomPan.Web.Controllers
             var Pagolista = await _pagoService.Lista();
             var clientelista = await _clienteService.Lista();
             var PedidosLista = await _pedidoService.Lista();
-
-            //var idCliente = clientelista.Where(x => x.id == searchTerm).Select(x => x.IdCliente).FirstOrDefault();
-            //var estadoCliente = Pedidolista.Where(x => x.IdCliente == idCliente).Select(x => x.Estado).FirstOrDefault();
             var pagosFiltrados = Pagolista.Where(x => x.IdPedido == searchTerm).ToList();
-
-            //var PagosPedidos = PedidosLista.Where(x => x.IdPedido == idPedido[i])
-
-            // Filtro de búsqueda por término de búsqueda (searchTerm)
-
-
-
             var MisPagos = pagosFiltrados;
 
             List<VMPago> vmPagos = new List<VMPago>();
@@ -280,23 +270,13 @@ namespace SistEcomPan.Web.Controllers
             var PedidosLista = await _pedidoService.Lista();
 
             var idCliente = clientelista.Where(x => x.Dni == searchTerm).Select(x => x.IdCliente).FirstOrDefault();
-            //var estadoCliente = Pedidolista.Where(x => x.IdCliente == idCliente).Select(x => x.Estado).FirstOrDefault();
             var idPedido = PedidosLista.Where(x => x.IdCliente == idCliente).Select(x => x.IdPedido).ToList();
-
-            //var PagosPedidos = PedidosLista.Where(x => x.IdPedido == idPedido[i])
-
-            // Filtro de búsqueda por término de búsqueda (searchTerm)
             var pedidosFiltrados = Pagolista.Where(p => idPedido.Contains(p.IdPedido)).ToList();
             
 
             var MisPagos = pedidosFiltrados.Where(p =>
             string.IsNullOrWhiteSpace(busqueda) || p.Estado.ToLower().Contains(busqueda.ToLower())
             );
-
-//            var MisPagos = pedidosFiltrados.Where(p =>
-//string.IsNullOrWhiteSpace(busqueda) || p.Estado.ToLower().Contains(busqueda.ToLower()) ||
-//p.FechaDePago.Date == (DateTime.TryParse(busqueda, out DateTime fechaBusqueda) ? fechaBusqueda.Date : p.FechaDePago.Date)
-//);
 
             List<VMPago> vmPagos = new List<VMPago>();
 
@@ -315,8 +295,6 @@ namespace SistEcomPan.Web.Controllers
                 }); 
             }
 
-
-            // Paginación
             var pagosPaginados = vmPagos.ToList();
 
             return StatusCode(StatusCodes.Status200OK, new { data = pagosPaginados, totalItems = vmPagos.Count()});
