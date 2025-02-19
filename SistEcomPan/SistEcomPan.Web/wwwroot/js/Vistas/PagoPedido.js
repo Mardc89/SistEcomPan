@@ -163,7 +163,7 @@ function mostrarModal(modelo = MODELO_BASE) {
     $("#txtNombres").val(modelo.nombreCliente)
     $("#txtFechaPedido").val(formatoFecha(modelo.fechaPedido))
     $("#txtFechaPago").val(formatoFecha(modelo.fechaPago))
-    $("#txtDescuento").val(modelo.descuento)
+    $("#txtDescuento").val("0.00")
     $("#txtDeuda").val(modelo.montoDeuda)
     $("#txtMontoPago").val(modelo.montoDeuda)
     $("#txtPagoCliente").val("0.00")
@@ -187,6 +187,8 @@ function DesacticarCamposPago() {
     $("#txtCambio").prop("disabled", true)
     $("#txtEstado").prop("disabled", true)
     $("#txtCodigoPedido").prop("disabled", true)
+    $("#txtDescuento").prop("disabled", true)
+    $("#txtPagoCliente").prop("disabled", true)
 
 }
 
@@ -222,6 +224,8 @@ $("#btnGuardarPago").click(function () {
         const deudaDelCliente = document.getElementById("txtDeuda").value;
         const cambioDelCliente = document.getElementById("txtCambio").value;
 
+        const Descuento = document.getElementById("txtDescuento").value;
+
         const detalle = {
             montoAPagar: montoAPagar,
             pagoDelCliente: pagoDelCliente,
@@ -229,41 +233,50 @@ $("#btnGuardarPago").click(function () {
             cambioDelCliente: cambioDelCliente
         };
         detallePagos.push(detalle);
+
+        if (Descuento == "") {
+            toastr.warning("", "Debes Ingresar Descuento")
+            return;
+        }
+        if (pagoDelCliente == "") {
+            toastr.warning("", "Debes Ingresar Pago")
+            return;
+        }
     
 
 
-    if (detallePagos.length < 1) {
-        toastr.warning("", "Debes Ingresar Productos")
-        return;
-    }
+        //if (detallePagos.length < 1) {
+        //    toastr.warning("", "Debes Ingresar Productos")
+        //    return;
+        //}
 
-    const vmDetallePago = detallePagos;
+        const vmDetallePago = detallePagos;
 
-    const pago = {
-        idPago: $("#txtIdPago").val(),
-        idPedido: $("#txtIdPedido").val(),
-        montoDePedido: $("#txtMontoPedido").val(),
-        nombreCliente: $("#txtNombres").val(),
-        descuento: $("#txtDescuento").val(),
-        montoTotalDePago: $("#txtMontoPago").val(),
-        montoDeuda: $("#txtDeuda").val(),
-        estado: $("#txtEstado").val(),
-        montoAPagar: $("#txtPagoAPagar").val(),
-        DetallePago: vmDetallePago
+        const pago = {
+            idPago: $("#txtIdPago").val(),
+            idPedido: $("#txtIdPedido").val(),
+            montoDePedido: $("#txtMontoPedido").val(),
+            nombreCliente: $("#txtNombres").val(),
+            descuento: $("#txtDescuento").val(),
+            montoTotalDePago: $("#txtMontoPago").val(),
+            montoDeuda: $("#txtDeuda").val(),
+            estado: $("#txtEstado").val(),
+            montoAPagar: $("#txtPagoAPagar").val(),
+            DetallePago: vmDetallePago
 
-    }
+        }
 
-    const modelo = structuredClone(MODELO_BASE);
-    modelo["idPago"] = parseInt($("#txtIdPago").val())
-    modelo["idPedido"] = parseInt($("#txIdPedido").val())
-    modelo["montoDePedido"] = $("#txtMontoPedido").val()
-    modelo["montoTotalDePago"] = $("#txtMontoPago").val()
-    modelo["nombreCliente"] = $("#txtNombres").val()
-    modelo["fechaPago"] = $("#txtFechaPago").val()
-    modelo["fechaPedido"] = $("#txtFechaPedido").val()
-    modelo["descuento"] = $("#txtDescuento").val()
-    modelo["montoDeuda"] = $("#txtDeuda").val()
-    modelo["estado"] = $("#txtEstado").val()
+        const modelo = structuredClone(MODELO_BASE);
+        modelo["idPago"] = parseInt($("#txtIdPago").val())
+        modelo["idPedido"] = parseInt($("#txIdPedido").val())
+        modelo["montoDePedido"] = $("#txtMontoPedido").val()
+        modelo["montoTotalDePago"] = $("#txtMontoPago").val()
+        modelo["nombreCliente"] = $("#txtNombres").val()
+        modelo["fechaPago"] = $("#txtFechaPago").val()
+        modelo["fechaPedido"] = $("#txtFechaPedido").val()
+        modelo["descuento"] = $("#txtDescuento").val()
+        modelo["montoDeuda"] = $("#txtDeuda").val()
+        modelo["estado"] = $("#txtEstado").val()
     
 
     

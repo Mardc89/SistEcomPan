@@ -298,10 +298,10 @@ function MostrarProduct(TerminoBusqueda = '', pagina = 1) {
             <td>${categoria[indice]}</td>
             <td>${producto.stock}</td>
             <td>${producto.precio.toFixed(2)}</td>
-            <td><input type="number" class="form-control form-control-sm" id="txtCantidad" placeholder="Ingrese Cantidad"></td>
+            <td><input type="text" class="form-control form-control-sm txtCantidad" id="txtCantidad" placeholder="Ingrese Cantidad"></td>
             <td><img style = "height:60px" src = ${nombreCarpeta}${producto.nombreImagen} class="rounded mx-auto d-block" /></td>
             <td class="d-flex">
-            <button onclick="agregarProducto(this)" class="btn btn-danger btn-sm mr-2" style="display:inline-block;">Add</button>
+            <button onclick="agregarProducto(this)" class="btn btn-danger btn-sm mr-2" style="display:inline-block;"><i class="fa fa-plus"></i></button>
 
             </td>
           `;
@@ -319,6 +319,14 @@ function MostrarProduct(TerminoBusqueda = '', pagina = 1) {
             console.error('Error al buscar productos:', error);
         });
 }
+
+document.addEventListener("input", function (event) {
+    if (event.target.classList.contains("txtCantidad")) { 
+    let cantidad = event.target.value;
+     event.target.value = cantidad.replace(/\D/g,'');
+
+    }
+});
 
 
 function Paginacion(TerminoBusqueda,totalItems) {

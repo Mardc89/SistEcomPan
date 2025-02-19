@@ -6,44 +6,6 @@ function mostrarModal2() {
     $("#modalDataDescuento").modal("show");
 }
 
-//function EvaluarPago(pago, descuento, monto) {
-
-//    let pagos = parseFloat(pago);
-//    let montos = parseFloat(monto);
-//    let descuentos = descuento;
-
-//    let deuda = 0.00, cambio = 0.00;
-//    let estado = "";
-
-//    if (descuentos == 0) {
-//        let montoPago = document.getElementById("txtMontoPago").value;
-//        montos = montoPago;
-//    }
-//    if (pagos > montos) {
-//        cambio = pagos - montos;
-//        deuda = 0.00;
-//        estado = "Pagado";
-//    }
-
-//    else if (pagos <= montos) {
-//        cambio = 0.00;
-//        deuda = montos - pagos;
-//        estado = "Existe Deuda";
-
-//    }
-//    document.getElementById("txtMontoPago").value = montos.toFixed(2);
-//    document.getElementById("txtCambio").value = cambio.toFixed(2);
-//    document.getElementById("txtDeuda").value = deuda.toFixed(2);
-//    document.getElementById("txtEstado").value = estado;
-
-
-
-
-
-
-
-
-//}
 
 $("#opcion1").click(function () {
     
@@ -51,6 +13,8 @@ $("#opcion1").click(function () {
     $("#CodPedido").val(busquedaCodPedido);
     let monto = $("#txtMontoPedido").val();
     $("#txtImportePedido").val(monto);
+    $("#txtDescuentoPedido").val("0.00");
+    $("#txtImporteFinal").val(monto);
     mostrarModal2();
    
 })
@@ -134,11 +98,15 @@ $("#btnGuardarDescuento").click(function () {
         //let PagoDelCliente = $("#txtPagoCliente").val();
         //let Pago = parseFloat(PagoDelCliente) || 0;
         $("#txtDescuento").val(descuentoPedido);
-        //let descuentoFinal = $("#txtDescuento").val();
-        //let descuentoPago = parseFloat(descuentoFinal) || 0;
-        let monto = $("#txtImporteFinal").val();
+        let descuentoFinal = $("#txtDescuento").val();
+        let descuentoPago = parseFloat(descuentoFinal) || 0;
+        let monto = $("#txtImportePedido").val();
+        let montoFinal = $("#txtImporteFinal").val();
         $("#txtMontoPago").val(monto);
-        $("#txtDeuda").val(monto);
+        $("#txtDeuda").val(montoFinal);
+        if (descuentoPago>0) {
+            $("#txtEstado").val("Existe Deuda");
+        }
         GuardarDevolucion();
         enviarDatos();
         $("#modalDataDescuento").modal("hide");
@@ -323,14 +291,14 @@ function Devoluciones(inicial, final, paginaActual) {
                     
                 }
                 DescuentoGeneral += descuentoTotal;
-                alert("Descuentos finales");
-                Object.keys(DiccionarioDescuento).forEach(clave => {
-                    alert(`Clave:${clave},Valor:${DiccionarioDescuento[clave]}`)
-                });
+                //alert("Descuentos finales");
+                //Object.keys(DiccionarioDescuento).forEach(clave => {
+                //    alert(`Clave:${clave},Valor:${DiccionarioDescuento[clave]}`)
+                //});
 
-                Object.keys(DiccionarioDevolucion).forEach(clave => {
-                    alert(`Clave:${clave},Valor:${DiccionarioDevolucion[clave]}`)
-                });
+                //Object.keys(DiccionarioDevolucion).forEach(clave => {
+                //    alert(`Clave:${clave},Valor:${DiccionarioDevolucion[clave]}`)
+                //});
 
                 let sumaDiccionario = SumarDescuento();
                 alert("suma final:" + sumaDiccionario);

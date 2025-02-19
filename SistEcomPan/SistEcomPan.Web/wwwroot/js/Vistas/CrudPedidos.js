@@ -140,9 +140,9 @@ function MostrarProduct(TerminoBusqueda = '', pagina = 1) {
             <td>${categoria[i]}</td>
             <td>${producto.stock}</td>
             <td>${(producto.precio).toFixed(2)}</td>
-            <td><input type="text" class="form-control form-control-sm" id="txtCantidad" placeholder="Ingrese Cantidad"></td>
+            <td><input type="text" class="form-control form-control-sm txtCantidad" id="txtCantidad" placeholder="Ingrese Cantidad"></td>
             <td class="d-flex">
-            <button onclick="agregarProducto(this)" class="btn btn-danger btn-sm mr-2" style="display:inline-block;">Add</button>
+            <button onclick="agregarProducto(this)" class="btn btn-danger btn-sm mr-2" style="display:inline-block;"><i class="fa fa-plus"></i></button>
 
             </td>
           `;
@@ -187,6 +187,22 @@ function MostrarProduct(TerminoBusqueda = '', pagina = 1) {
             console.error('Error al buscar productos:', error);
         });
 }
+
+
+document.addEventListener("input", function (event) {
+    if (event.target.classList.contains("txtCantidad")) {
+        let cantidad = event.target.value;
+        event.target.value = cantidad.replace(/\D/g, '');
+
+    }
+});
+
+//document.addEventListener("input", function (event) {
+//    if (event.target.classList.contains("txtAddCantidad")) {
+//        event.target.disabled = true;
+//    }
+//});
+
 
 
 function resaltarPagActual() {
@@ -252,7 +268,7 @@ function BuscarDetallePedido(idPedido) {
             <td>${pedido.idProducto}</td>
             <td>${pedido.descripcionProducto}</td>
             <td>${precio.toFixed(2)}</td>
-            <td><input type="text" class="form-control form-control-sm" id="txtCantidad" placeholder="Ingrese Cantidad" value=${pedido.cantidad} disabled></td>
+            <td><input type="text" class="form-control form-control-sm txtCantidad" id="" placeholder="Ingrese Cantidad" value=${pedido.cantidad} disabled></td>
             <td>${pedido.total}</td>
             <td class="d-flex">
             <button onclick="EliminarProducto(this)"class="btn btn-primary btn-sm btnEliminarProducto">Eliminar</button>
@@ -356,7 +372,7 @@ function agregarProducto(button) {
         <td>${IdProducto}</td>
         <td>${descripcion}</td>        
         <td>${precio}</td>
-        <td><input type="text" class="form-control form-control-sm" id="txtCantidad" placeholder="Ingrese Cantidad" value=${cantidad}></td>      
+        <td><input type="text" class="form-control form-control-sm txtAddCantidad" id="" placeholder="Ingrese Cantidad" value=${cantidad} disabled></td>      
         <td>${total.toFixed(2)}</td>
         <td><button class="btn btn-primary btn-sm" onclick="EliminarProducto(this)">Eliminar</button></td>
       </tr>
