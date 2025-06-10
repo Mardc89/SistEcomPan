@@ -30,7 +30,7 @@ function ObtenerDatosUsuario() {
 
 $(document).ready(function () {
 
-    obtenerDatosUsuario();
+    ObtenerDatosUsuario();
 
     tablaDataCategoria = $('#tbdataCategoria').DataTable({
         responsive: true,

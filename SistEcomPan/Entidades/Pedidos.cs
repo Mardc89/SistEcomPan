@@ -15,6 +15,7 @@ namespace Entidades
         public decimal? MontoTotal { get; set; }
         public string Estado { get; set; }
         public DateTime? FechaPedido { get; set; }
+        public DateTime? FechaDeEntrega { get; set; }
         public List<DetallePedido> DetallePedido { get; set; }
     }
 }

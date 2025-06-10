@@ -218,7 +218,7 @@ namespace SistEcomPan.Web.Controllers
                     Codigo = item.Codigo,
                     MontoTotal = Convert.ToString(item.MontoTotal),
                     Estado = item.Estado,
-                    FechaPedido = item.FechaPedido,
+                    FechaDeEntrega = item.FechaDeEntrega,
                     NombresCompletos = await _clienteService.ObtenerNombreCompleto(item.IdCliente)
 
                 });
@@ -601,6 +601,7 @@ namespace SistEcomPan.Web.Controllers
                             IdCliente = clientes.Where(x=>x.Dni==modelo.Dni).First().IdCliente,
                             //MontoTotal = Convert.ToDecimal(item.MontoTotal),
                             Estado = modelo.Estado,
+                            FechaDeEntrega=modelo.FechaDeEntrega,
                             DetallePedido = modelo.DetallePedido.Select(detalle => new DetallePedido
                             { 
                               IdProducto=detalle.IdProducto,

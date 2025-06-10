@@ -5,7 +5,7 @@
 const MODELO_BASE = {
     idPedido: "",
     codigo: "",
-    fechaPedido: "",
+    fechaDeEntrega: "",
     estado: "",
     montoTotal: "",
     nombresCompletos: "",
@@ -76,7 +76,7 @@ $(document).ready(function () {
             },
             { "data": "montoTotal" },
             {
-                "data": "fechaPedido", render: function (data) {
+                "data": "fechaDeEntrega", render: function (data) {
                     return cambiarFecha(data);
                 }
             },

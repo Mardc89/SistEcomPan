@@ -187,7 +187,8 @@ namespace SistEcomPan.Web.Controllers
 
                 if (pagoCreado != null)
                 {
-
+                    var pedidoCliente = await _pedidoService.ObtenerNombre();
+                    var fechaPedido = pedidoCliente.Where(x => x.IdPedido == modelo.IdPedido).First().FechaPedido;
                     vmPagolista.Add(new VMPago
                     {
                         IdPago = pagoCreado.IdPago,
@@ -199,6 +200,7 @@ namespace SistEcomPan.Web.Controllers
                         MontoDePedido=modelo.MontoDePedido,
                         Descuento=modelo.Descuento,                           
                         FechaPago= Convert.ToDateTime(pagoCreado.FechaDePago),
+                        FechaPedido=fechaPedido,
                         DetallePago = pagoCreado.DetallePago.Select(detalle => new VMDetallePago
                         {
                             MontoAPagar = Convert.ToString(detalle.MontoAPagar),

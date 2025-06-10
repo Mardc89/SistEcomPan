@@ -44,7 +44,8 @@ namespace Datos.Implementacion
                             Codigo = dr["Codigo"].ToString(),
                             MontoTotal = Convert.ToDecimal(dr["MontoTotal"]),
                             Estado = dr["Estado"].ToString(),                          
-                            FechaPedido = Convert.ToDateTime(dr["FechaPedido"])
+                            FechaPedido = Convert.ToDateTime(dr["FechaPedido"]),
+                            FechaDeEntrega= Convert.ToDateTime(dr["FechaDeEntrega"]),
                         });
                     }
                 }
@@ -114,6 +115,7 @@ namespace Datos.Implementacion
                     cmd.Parameters.AddWithValue("@Codigo", modelo.Codigo);
                     cmd.Parameters.AddWithValue("@MontoTotal", modelo.MontoTotal);
                     cmd.Parameters.AddWithValue("@Estado", modelo.Estado);
+                    cmd.Parameters.AddWithValue("@FechaDeEntrega", modelo.FechaDeEntrega);
                     cmd.Parameters.AddWithValue("@DetallePedido", DetallePedido);
                     cmd.CommandType = CommandType.StoredProcedure;
 
@@ -363,7 +365,7 @@ namespace Datos.Implementacion
             using (var conexion = new SqlConnection(_cadenaSQL))
             {
                 conexion.Open();
-                SqlCommand cmd = new SqlCommand("SPHistorialDePedidos", conexion);
+                SqlCommand cmd = new SqlCommand("SPHistorialDePagos", conexion);
                 cmd.CommandType = CommandType.StoredProcedure;
                 cmd.Parameters.AddWithValue("@FechaInicio",FechaInicio);
 
@@ -379,7 +381,8 @@ namespace Datos.Implementacion
                             Codigo = dr["Codigo"].ToString(),
                             MontoTotal = Convert.ToDecimal(dr["MontoTotal"]),
                             Estado = dr["Estado"].ToString(),
-                            FechaPedido = Convert.ToDateTime(dr["FechaPedido"])
+                            FechaPedido = Convert.ToDateTime(dr["FechaPedido"]),
+                            FechaDeEntrega= Convert.ToDateTime(dr["FechaDeEntrega"])
                         });
                     }
                 }

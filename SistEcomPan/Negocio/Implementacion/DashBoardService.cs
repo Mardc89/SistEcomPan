@@ -23,6 +23,7 @@ namespace Negocio.Implementacion
         private readonly IGenericRepository<Clientes> _repositorioClientes;
         private readonly IGenericRepository<Mensajes> _repositorioMensajes;
         private DateTime FechaInicio=DateTime.Now;
+        private DateTime FechaActual = DateTime.Now;
 
         public DashBoardService
         (
@@ -53,7 +54,7 @@ namespace Negocio.Implementacion
         {
             try
             {
-                List<Pedidos> query = await _repositorioPedidos.ConsultarPedido(FechaInicio);
+                List<Pagos> query = await _repositorioPagos.ConsultarPagos(FechaActual);
                 int total = query.Count();
                 return total;
 
@@ -65,12 +66,12 @@ namespace Negocio.Implementacion
             }
            
         }       
-        public async Task<string> TotalIngresosUltimaSemana()
+        public async Task<string> TotalIngresosDelDia()
         {
             try
             {
-                List<DetallePago> query = await _repositorioDetallePagos.ConsultarDetallePagos(FechaInicio);
-                decimal resultado = query.Select(x => x.MontoAPagar).Sum(x=>x.Value);
+                List<DetallePago> query = await _repositorioDetallePagos.ConsultarDetallePagos(FechaActual);
+                decimal resultado = query.Select(x => x.MontoAPagar>x.PagoDelCliente?x.PagoDelCliente:x.MontoAPagar).Sum(x=>x.Value);
 
                 return Convert.ToString(resultado, new CultureInfo("es-PE"));
 
@@ -185,7 +186,7 @@ namespace Negocio.Implementacion
 
                 Dictionary<string, decimal?> resultado = query
                     .GroupBy(v => v.FechaPago.Value.Date).OrderBy(g => g.Key)
-                    .Select(dv => new { fecha = dv.Key.ToString("dd/MM/yyyy"), total = dv.Sum(x=>x.MontoAPagar) })
+                    .Select(dv => new { fecha = dv.Key.ToString("dd/MM/yyyy"), total = dv.Sum(x=> x.MontoAPagar > x.PagoDelCliente ? x.PagoDelCliente : x.MontoAPagar) })
                     .ToDictionary(keySelector: r => r.fecha, elementSelector: r => r.total);
 
                 return resultado;

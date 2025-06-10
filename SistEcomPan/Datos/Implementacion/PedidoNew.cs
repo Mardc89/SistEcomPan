@@ -51,21 +51,11 @@ namespace Datos.Implementacion
                     foreach (DetallePedido detalle in entidad.DetallePedido)
                     {
 
-
-                        //IQueryable<Productos> producto = await _repositorioProducto.Consultar();
-                        //IQueryable<Productos> productoEncontrado = producto.Where(u => u.IdProducto == detalle.IdProducto);
-                        //var PrecioProducto = productoEncontrado.First().Precio;
-
                         Productos producto = await _repositorioProducto.Buscar(null,null,detalle.IdProducto);
                         var PrecioProducto = producto.Precio;
 
                         subtotal = Convert.ToDecimal(detalle.Cantidad.ToString()) *PrecioProducto;
                         total += subtotal;
-
-                        //IQueryable<Productos> buscarProducto = await _repositorioProducto.Consultar();
-                        //IQueryable<Productos> productoStock = buscarProducto.Where(u => u.IdProducto == detalle.IdProducto);
-                        //Productos productoEditar = productoStock.First();
-                        //productoEditar.Stock = productoEditar.Stock - detalle.Cantidad;
 
                         Productos productoEditar = await _repositorioProducto.Buscar(null,null,detalle.IdProducto);
                         productoEditar.Stock = productoEditar.Stock - detalle.Cantidad;
@@ -78,10 +68,6 @@ namespace Datos.Implementacion
                         subtotal
                         });
                     }
-
-                        //IQueryable<NumeroDocumento> buscarNumeroDocumento = await _repositorioNumDocumento.Consultar();
-                        //IQueryable<NumeroDocumento> numerodocumentoEncontrado = buscarNumeroDocumento.Where(u => u.Gestion == "pedidos");
-                        //NumeroDocumento numeroDocumento = numerodocumentoEncontrado.First();
 
                     
                         NumeroDocumento numeroDocumento = await _repositorioNumDocumento.Buscar("pedidos",null,null);                       
@@ -108,9 +94,6 @@ namespace Datos.Implementacion
 
         public async Task <Pedidos>Actualizando(Pedidos entidad)
         {
-            //List< DetallePedido > ListaDetallePedido= new List<DetallePedido>();
-            //ListaDetallePedido.Add(entidad);
-
             using (SqlConnection conexion = new SqlConnection(_cadenaSQL))
             {
                 conexion.Open();
@@ -130,21 +113,11 @@ namespace Datos.Implementacion
                     foreach (var detalle in entidad.DetallePedido)
                     {
 
-
-                        //IQueryable<Productos> producto = await _repositorioProducto.Consultar();
-                        //IQueryable<Productos> productoEncontrado = producto.Where(u => u.IdProducto == detalle.IdProducto);
-                        //var PrecioProducto = productoEncontrado.First().Precio;
-
                         Productos producto = await _repositorioProducto.Buscar(null,null,detalle.IdProducto);
                         var PrecioProducto = producto.Precio;
 
                         subtotal = Convert.ToDecimal(detalle.Cantidad.ToString()) * PrecioProducto;
                         total += subtotal;
-
-                        //IQueryable<Productos> buscarProducto = await _repositorioProducto.Consultar();
-                        //IQueryable<Productos> productoStock = buscarProducto.Where(u => u.IdProducto == detalle.IdProducto);
-                        //Productos productoEditar = productoStock.First();
-
 
                         if (producto.Stock > 0) {
                              producto.Stock = producto.Stock - detalle.Cantidad;

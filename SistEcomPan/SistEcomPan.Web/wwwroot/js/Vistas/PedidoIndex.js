@@ -44,7 +44,21 @@ else if (userRol === "Cliente") {
 
 
 $(document).ready(function () {
-    obtenerFecha();
+    /*  obtenerFecha();*/
+
+    $.datepicker.setDefaults($.datepicker.regional["es"])
+
+    $("#txtFechaDeEntrega").datepicker({
+        dateFormat: "dd/mm/yy",
+        changeMonth: true,
+        changeYear:true
+    })
+
+    if (!$("#txtFechaEntrega").val()) {
+        $("#txtFechaEntrega").val($.datepicker.formatDate('dd/mm/yy', new Date()));
+    }
+
+
     ObtenerDatosUsuario();
     fetch("/Pedido/ListaNombres")
         .then(response => {
@@ -514,10 +528,26 @@ document.getElementById('BusquedaPedidos').addEventListener('input', function (e
 //    buscarProductos();
 //});
 
-
+function formatoFecha() {
+    const fechaFormateada = $("#txtFechaDeEntrega").val();
+    const partes = fechaFormateada.split("/");
+    const fechaFormato = `${partes[2]}-${partes[1]}-${partes[0]}`;
+    return fechaFormato;
+}
 
 $("#btnEnviarPedido").click(function () {
     debugger;
+
+    const inputs = $("input.input-validar").serializeArray();
+    const inputs_sin_valor = inputs.filter((item) => item.value.trim() == "")
+
+    if (inputs_sin_valor.length > 0) {
+        const mensaje = `Debe completar el campo:"${inputs_sin_valor[0].name}"`;
+        toastr.warning("", mensaje)
+        $(`input[name="${inputs_sin_valor[0].name}"]`).focus()
+        return;
+    }
+
     const tablaProductos = document.getElementById('tbProductosSeleccionados');
     const filas = tablaProductos.getElementsByTagName('tr');
 
@@ -549,6 +579,7 @@ $("#btnEnviarPedido").click(function () {
         dni: $("#txtDocumentoCliente").val(),
         montoTotal: $("#montoTotal").text(),
         estado: "Nuevo",
+        fechaDeEntrega: formatoFecha(),
         DetallePedido: vmDetallePedido
 
     }
@@ -570,7 +601,7 @@ $("#btnEnviarPedido").click(function () {
             if (responseJson.estado) {
                 productosPedidos = [];
                 $("#txtDocumentoCliente").val("")
-                swal("Registrado", `Codigo de Producto:${responseJson.objeto.codigo}`, "success")
+                swal("Registrado", `Nuevo Pedido:${responseJson.objeto.codigo}`, "success")
             }
             else {
                 swal("Lo sentimos", "No se pudo Registrar el Pedido", "error")

@@ -380,8 +380,8 @@ else if (userRol === "Cliente") {
 
 
 $("#btnRespuestaDelMensaje").click(function () {
-
-    const inputs = $("input.input-validar").serializeArray();
+    debugger;
+    const inputs = $("input.input-validarRespuesta,textarea.input-validarRespuesta").serializeArray();
     const inputs_sin_valor = inputs.filter((item) => item.value.trim() == "")
 
     if (inputs_sin_valor.length > 0) {
@@ -469,8 +469,8 @@ $("#btnRespuestaDelMensaje").click(function () {
 
 
 $("#btnGuardarMensaje").click(function () {
-
-    const inputs = $("input.input-validar").serializeArray();
+    debugger;
+    const inputs = $("input.input-validar,textarea.input-validar").serializeArray();
     const inputs_sin_valor = inputs.filter((item) => item.value.trim() == "")
 
     if (inputs_sin_valor.length > 0) {

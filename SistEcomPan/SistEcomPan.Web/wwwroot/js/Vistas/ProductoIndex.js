@@ -106,6 +106,11 @@ $(document).ready(function () {
 function mostrarModal(modelo = MODELO_BASE) {
     const rutaBase = '/ImagenesProducto/';
     let rutaRelativa = rutaBase + modelo.nombreImagen;
+
+    if (modelo.nombreImagen == "") {
+        rutaRelativa = '/ImagenDefault/DefaultProduct.png';
+    }
+
     $("#txtIdProducto").val(modelo.idProducto)
     $("#txtDescripcion").val(modelo.descripcion)
     $("#txtStock").val(modelo.stock)

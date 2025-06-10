@@ -47,8 +47,6 @@
     <None Include="wwwroot\js\demo\datatables-demo.js" />
     <None Include="wwwroot\js\sb-admin-2.js" />
     <None Include="wwwroot\js\sb-admin-2.min.js" />
-    <None Include="wwwroot\js\Vistas\chart-bar-demo.js" />
-    <None Include="wwwroot\js\Vistas\chart-pie-demo.js" />
     <None Include="wwwroot\js\Vistas\DashBoardCliente.js" />
     <None Include="wwwroot\js\Vistas\PerfilUsuario.js" />
     <None Include="wwwroot\js\Vistas\PedidoIndex.js" />

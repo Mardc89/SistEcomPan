@@ -41,7 +41,7 @@ namespace SistEcomPan.Web.Controllers
             {
                 VMDashBoard vmDashboard = new VMDashBoard();
                 vmDashboard.TotalPedidos = await _dashBoardServicio.TotalPedidosUltimaSemana();
-                vmDashboard.TotalIngresos = await _dashBoardServicio.TotalIngresosUltimaSemana();
+                vmDashboard.TotalIngresos = await _dashBoardServicio.TotalIngresosDelDia();
                 vmDashboard.TotalProductos = await _dashBoardServicio.TotalProductos();
                 vmDashboard.TotalCategorias = await _dashBoardServicio.TotalCategorias();
                 vmDashboard.TotalDeLatas = await _dashBoardServicio.TotalDeLatas();

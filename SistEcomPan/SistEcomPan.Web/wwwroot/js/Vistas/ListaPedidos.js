@@ -181,7 +181,7 @@ function buscarPedidos(searchTer = '', page = 1) {
             <td>${pedido.nombresCompletos}</td>
             <td>${pedido.montoTotal}</td>
             <td>${pedido.estado}</td>
-            <td>${cambiarFecha(pedido.fechaPedido)}</td>
+            <td>${pedido.fechaPedido}</td>
           `;
                 productTable.appendChild(row);
             });

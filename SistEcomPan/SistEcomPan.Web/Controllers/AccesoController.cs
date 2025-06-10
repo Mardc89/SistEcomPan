@@ -203,6 +203,7 @@ namespace SistEcomPan.Web.Controllers
 
         [HttpPost]
         public async Task<IActionResult> Login(VMUsuarioLogin modelo)
+        
         {
             Usuarios usuario = await _usuarioServicio.ObtenerPorCredenciales(modelo.Correo, modelo.Clave);
             Clientes cliente = await _clienteServicio.ObtenerPorCredenciales(modelo.Correo, modelo.Clave);

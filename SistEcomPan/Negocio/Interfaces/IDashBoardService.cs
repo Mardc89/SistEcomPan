@@ -9,7 +9,7 @@ namespace Negocio.Interfaces
     public interface IDashBoardService
     {
         Task<int> TotalPedidosUltimaSemana();
-        Task<string> TotalIngresosUltimaSemana();
+        Task<string> TotalIngresosDelDia();
         Task<int> TotalProductos();
         Task<int> TotalCategorias();
         Task<int> TotalDeLatas();
