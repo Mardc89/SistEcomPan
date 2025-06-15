@@ -113,7 +113,7 @@ function validarFormularioReset(formReset) {
                 return;         
             }
 
-            if (campo.longitudMinina && valor.length < campo.longitudMinima) {
+            if (campo.longitudMinima && valor.length < campo.longitudMinima) {
                 toastr.warning("", `El campo debe tener al menos${campo.longitudMinima} caracteres`);
                 $(`#${campo.id}`).focus();
                 return;  

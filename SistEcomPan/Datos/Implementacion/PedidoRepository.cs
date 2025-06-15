@@ -288,7 +288,7 @@ namespace Datos.Implementacion
             throw new NotImplementedException();
         }
 
-        public async Task<List<Pedidos>> BuscarTotal(string? codigo = null, string? estado = null, int? idPedido = null)
+        public async Task<List<Pedidos>> BuscarTotal(string? codigo = null, string? estado = null, int? idCliente = null)
         {
             List<Pedidos> lista = new List<Pedidos>();
             using (var conexion = new SqlConnection(_cadenaSQL))
@@ -298,7 +298,7 @@ namespace Datos.Implementacion
                 cmd.CommandType = CommandType.StoredProcedure;
                 cmd.Parameters.AddWithValue("@Codigo", (object)codigo ?? DBNull.Value);
                 cmd.Parameters.AddWithValue("@Estado", (object)estado ?? DBNull.Value);
-                cmd.Parameters.AddWithValue("@IdPedido", (object)idPedido ?? DBNull.Value);
+                cmd.Parameters.AddWithValue("@IdCliente", (object)idCliente ?? DBNull.Value);
                 using (var dr = await cmd.ExecuteReaderAsync())
                 {
                     while (await dr.ReadAsync())
@@ -310,7 +310,8 @@ namespace Datos.Implementacion
                             Codigo = dr["Codigo"].ToString(),
                             MontoTotal = Convert.ToDecimal(dr["MontoTotal"]),
                             Estado = dr["Estado"].ToString(),
-                            FechaPedido = Convert.ToDateTime(dr["FechaPedido"])
+                            FechaPedido = Convert.ToDateTime(dr["FechaPedido"]),
+                            FechaDeEntrega = Convert.ToDateTime(dr["FechaDeEntrega"])
                         });
                     }
                 }

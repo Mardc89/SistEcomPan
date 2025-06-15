@@ -7,7 +7,7 @@
         <span class="mr-2 d-none d-lg-inline text-gray-600 small" style="display:none!important;">@ViewData["nombreUsuario"]</span>
         <span id="DniPersonal" class="mr-2 d-none d-lg-inline text-gray-600 small"style="display:none!important;">@ViewData["dniUsuario"]</span>
         <span id="NombreCompleto" class="mr-2 d-none d-lg-inline text-gray-600 small">@ViewData["nombreCompleto"]</span>
-        @if (User.IsInRole("Administrador")){
+        @if (!User.IsInRole("Cliente")){
             <img class="img-profile rounded-circle"
         
              src="/ImagenesPerfil/@ViewData["nombreFotoUsuario"]">
@@ -22,7 +22,7 @@
     <!-- Dropdown - User Information -->
     <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
          aria-labelledby="userDropdown">
-        @if (User.IsInRole("Administrador"))
+        @if (!User.IsInRole("Cliente"))
         {
             <a class="dropdown-item" href="@Url.Action("PerfilUsuario","Home")">
                 <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>

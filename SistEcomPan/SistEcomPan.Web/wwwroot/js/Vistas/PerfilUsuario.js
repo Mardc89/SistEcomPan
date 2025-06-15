@@ -1,7 +1,7 @@
 ﻿
 
 function ObtenerDatosUsuario() {
-
+    debugger
     fetch("/Home/ObtenerUsuario")
         .then(response => {
             $(".container-fluid").LoadingOverlay("hide");
@@ -13,13 +13,15 @@ function ObtenerDatosUsuario() {
 
                 $("#ImgFoto").attr("src", `/ImagenesPerfil/${d.nombreFoto}`)
                 $("#txtDni").val(d.dni)
-                $("#txtIdRol").val(d.idRol)
+/*                $("#txtIdRol").val(d.idRol)*/
                 $("#txtNombres").val(d.nombres)
                 $("#txtApellidos").val(d.apellidos)
                 $("#txtCorreo").val(d.correo)
                 $("#txtNombreUsuario").val(d.nombreUsuario)
                 $("#txtClave").val(d.clave)
-                $("#txtRol").val(d.nombreRol)
+                $("#txtIdRol").empty();
+                $("#txtIdRol").append(`<option value="${d.idRol}">${d.nombreRol}</option>`)
+                $("#txtIdRol").val(d.idRol)
                 let ImagenPerfil = $("#ImgFoto").attr("src");
                 const NuevaImagen = `${ImagenPerfil}`;
                 $("#userDropdown img.img-profile").attr("src", NuevaImagen);

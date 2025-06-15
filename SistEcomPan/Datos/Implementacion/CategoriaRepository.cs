@@ -120,49 +120,49 @@ namespace Datos.Implementacion
             }
         }
 
-        public async Task<IQueryable<Categorias>> Obtener(string consulta)
-        {
-            List<Categorias> lista = new List<Categorias>();
+        //public async Task<IQueryable<Categorias>> Obtener(string consulta)
+        //{
+        //    List<Categorias> lista = new List<Categorias>();
 
-            using (var connection = new SqlConnection(_cadenaSQL))
-            {
-                using (var command = new SqlCommand("BuscarCategoria", connection))
-                {
-                    command.CommandType = CommandType.StoredProcedure;
+        //    using (var connection = new SqlConnection(_cadenaSQL))
+        //    {
+        //        using (var command = new SqlCommand("BuscarCategoria", connection))
+        //        {
+        //            command.CommandType = CommandType.StoredProcedure;
 
-                    command.Parameters.Add("@Texto", SqlDbType.NVarChar, 100).Value =consulta;
+        //            command.Parameters.Add("@Texto", SqlDbType.NVarChar, 100).Value =consulta;
 
-                    try
-                    {
-                        connection.Open();
-                        SqlDataReader dr = command.ExecuteReader();
+        //            try
+        //            {
+        //                connection.Open();
+        //                SqlDataReader dr = command.ExecuteReader();
 
-                        while (dr.Read())
-                        {
-                            lista.Add(new Categorias
-                            {
-                                IdCategoria = Convert.ToInt32(dr["IdCategoria"]),
-                                TipoDeCategoria = dr["TipoDeCategoria"].ToString(),
-                                FechaRegistro = Convert.ToDateTime(dr["FechaRegistro"]),
-                                Estado = dr.GetBoolean(dr.GetOrdinal("Estado"))
+        //                while (dr.Read())
+        //                {
+        //                    lista.Add(new Categorias
+        //                    {
+        //                        IdCategoria = Convert.ToInt32(dr["IdCategoria"]),
+        //                        TipoDeCategoria = dr["TipoDeCategoria"].ToString(),
+        //                        FechaRegistro = Convert.ToDateTime(dr["FechaRegistro"]),
+        //                        Estado = dr.GetBoolean(dr.GetOrdinal("Estado"))
 
-                            });
+        //                    });
 
-                        }
+        //                }
 
-                        dr.Close();
-                    }
-                    catch (Exception ex)
-                    {
-                        // Manejo de excepciones
-                        Console.WriteLine("Error al ejecutar el procedimiento almacenado: " + ex.Message);
-                    }
-                }
-            }
+        //                dr.Close();
+        //            }
+        //            catch (Exception ex)
+        //            {
+        //                // Manejo de excepciones
+        //                Console.WriteLine("Error al ejecutar el procedimiento almacenado: " + ex.Message);
+        //            }
+        //        }
+        //    }
 
-            return lista.AsQueryable();
+        //    return lista.AsQueryable();
 
-        }
+        //}
 
         public async Task<Categorias> Crear(Categorias modelo)
         {
@@ -198,32 +198,32 @@ namespace Datos.Implementacion
         }
 
 
-        public async Task<IQueryable<Categorias>> Consultar()
-        {
-            List<Categorias> lista = new List<Categorias>();
-            using (var conexion = new SqlConnection(_cadenaSQL))
-            {
-                conexion.Open();
-                SqlCommand cmd = new SqlCommand("SPListaCategorias", conexion);
-                cmd.CommandType = CommandType.StoredProcedure;
+        //public async Task<IQueryable<Categorias>> Consultar()
+        //{
+        //    List<Categorias> lista = new List<Categorias>();
+        //    using (var conexion = new SqlConnection(_cadenaSQL))
+        //    {
+        //        conexion.Open();
+        //        SqlCommand cmd = new SqlCommand("SPListaCategorias", conexion);
+        //        cmd.CommandType = CommandType.StoredProcedure;
 
-                using (var dr = await cmd.ExecuteReaderAsync())
-                {
-                    while (await dr.ReadAsync())
-                    {
-                        lista.Add(new Categorias
-                        {
-                            IdCategoria = Convert.ToInt32(dr["IdCategoria"]),
-                            TipoDeCategoria = dr["TipoDeCategoria"].ToString(),
-                            FechaRegistro = Convert.ToDateTime(dr["FechaRegistro"]),
-                            Estado = Convert.ToBoolean(dr["Estado"])                      
-                        });
-                    }
-                }
-            }
+        //        using (var dr = await cmd.ExecuteReaderAsync())
+        //        {
+        //            while (await dr.ReadAsync())
+        //            {
+        //                lista.Add(new Categorias
+        //                {
+        //                    IdCategoria = Convert.ToInt32(dr["IdCategoria"]),
+        //                    TipoDeCategoria = dr["TipoDeCategoria"].ToString(),
+        //                    FechaRegistro = Convert.ToDateTime(dr["FechaRegistro"]),
+        //                    Estado = Convert.ToBoolean(dr["Estado"])                      
+        //                });
+        //            }
+        //        }
+        //    }
 
-            return lista.AsQueryable();
-        }
+        //    return lista.AsQueryable();
+        //}
 
         public async Task<Categorias> Buscar(string? Estado = null, string?TipoDeCategoria = null, int? IdCategoria = null)
         {

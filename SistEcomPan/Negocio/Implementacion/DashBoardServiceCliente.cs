@@ -18,6 +18,7 @@ namespace Negocio.Implementacion
         private readonly IGenericRepository<Pagos> _repositorioPagos;
         private readonly IGenericRepository<Clientes> _repositorioClientes;
         private readonly IGenericRepository<Mensajes> _repositorioMensajes;
+        private readonly IGenericRepository<DestinatarioMensaje> _repositorioDestinoMensajes;
         private readonly IProductoNew _repositorioProductoTop;
         private DateTime FechaInicio = DateTime.Now;
 
@@ -27,6 +28,7 @@ namespace Negocio.Implementacion
             IPedidoNew repositorioPedidos,
             IGenericRepository<Pagos> repositorioPagos,
             IGenericRepository<Mensajes> repositorioMensajes,
+            IGenericRepository<DestinatarioMensaje> repositorioDestinoMensajes,
             IGenericRepository<Clientes> repositorioClientes,
             IPagoNew repositorioPagosCliente
 
@@ -35,6 +37,7 @@ namespace Negocio.Implementacion
             _repositorioProductoTop = repositorioProductoTop;
             _repositorioPedidos = repositorioPedidos;
             _repositorioMensajes = repositorioMensajes;
+            _repositorioDestinoMensajes = repositorioDestinoMensajes;
             _repositorioPagos = repositorioPagos;
             _repositorioClientes = repositorioClientes;
             FechaInicio = FechaInicio.AddDays(-7);
@@ -126,6 +129,35 @@ namespace Negocio.Implementacion
             }
         }
 
+        public async Task<int> TotalDeMisPagosPendientes(string DniPersonal)
+        {
+            try
+            {
+                var Pagolista = await _repositorioPagos.Lista();
+                var clientelista = await _repositorioClientes.Lista();
+                var PedidosLista = await _repositorioPedidos.Lista();
+                var idCliente = clientelista.Where(x => x.Dni == DniPersonal).Select(x => x.IdCliente).FirstOrDefault();
+
+                //var estadoCliente = Pedidolista.Where(x => x.IdCliente == idCliente).Select(x => x.Estado).FirstOrDefault();
+                var idPedido = PedidosLista.Where(x => x.IdCliente == idCliente).Select(x => x.IdPedido).ToList();
+
+                //var PagosPedidos = PedidosLista.Where(x => x.IdPedido == idPedido[i])
+
+                // Filtro de búsqueda por término de búsqueda (searchTerm)
+                var pedidosFiltrados = Pagolista.Where(p => idPedido.Contains(p.IdPedido) && p.Estado == "Existe Deuda").ToList();
+
+                int total = pedidosFiltrados.Count();
+
+                return total;
+
+            }
+            catch
+            {
+
+                throw;
+            }
+        }
+
 
         public async Task<int> TotalDeMisMensajes(string DniPersonal)
         {
@@ -143,6 +175,35 @@ namespace Negocio.Implementacion
 
                 // Filtro de búsqueda por término de búsqueda (searchTerm)
                 var mensajesFiltrados = MensajesLista.Where(p => idCliente.Contains(p.IdRemitente)).ToList();
+
+                int total = mensajesFiltrados.Count();
+
+                return total;
+
+            }
+            catch
+            {
+
+                throw;
+            }
+        }
+
+        public async Task<int> TotalDeMisMensajesRecibidos(string DniPersonal)
+        {
+            try
+            {
+                var MensajesLista = await _repositorioDestinoMensajes.Lista();
+                var clientelista = await _repositorioClientes.Lista();
+                //var PedidosLista = await _repositorioPedidos.Lista();
+                var idCliente = clientelista.Where(x => x.Dni == DniPersonal).Select(x => x.IdCliente).ToList();
+
+                //var estadoCliente = Pedidolista.Where(x => x.IdCliente == idCliente).Select(x => x.Estado).FirstOrDefault();
+                //var ClienteID = PedidosLista.Where(x => x.IdCliente == idCliente).Select(x => x.IdCliente).ToList();
+
+                //var PagosPedidos = PedidosLista.Where(x => x.IdPedido == idPedido[i])
+
+                // Filtro de búsqueda por término de búsqueda (searchTerm)
+                var mensajesFiltrados = MensajesLista.Where(p => idCliente.Contains(p.IdDestinatario)).ToList();
 
                 int total = mensajesFiltrados.Count();
 

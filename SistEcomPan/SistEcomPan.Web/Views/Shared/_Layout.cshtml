@@ -21,7 +21,7 @@
     <link href="~/css/sb-admin-2.css" rel="stylesheet">
     <link href="~/vendor/toastr/toastr.min.css" rel="stylesheet">
     <link href="~/vendor/sweetalert/sweetalert.css" rel="stylesheet">
-     @await RenderSectionAsync("Estilos", required: false)
+    @await RenderSectionAsync("Estilos", required: false)
 </head>
 
 <body id="page-top">
@@ -48,12 +48,12 @@
                 <!-- Nav Item - Dashboard -->
                 <li class="nav-item">
                     <a class="nav-link" href="@Url.Action("DashBoardCliente","DashBoard")">
-                    <i class="fas fa-fw fa-tachometer-alt"></i>
-                    <span>Panel de Control</span>
-                </a>
-            </li>
+                        <i class="fas fa-fw fa-tachometer-alt"></i>
+                        <span>Panel de Control</span>
+                    </a>
+                </li>
             }
-            @if (User.IsInRole("Administrador"))
+            @if (!User.IsInRole("Cliente"))
             {
                 <li class="nav-item">
                     <a class="nav-link" href="@Url.Action("Index","DashBoard")">
@@ -76,50 +76,56 @@
                     </div>
                 </li>
 
+            }
+            @if (!User.IsInRole("Cliente"))
+            {
                 <!-- Nav Item - Inventario Collapse Menu -->
                 <li class="nav-item">
                     <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseInventario">
-                    <i class="fas fa-fw fa-clipboard-list"></i>
-                    <span>Inventario</span>
-                </a>
-                <div id="collapseInventario" class="collapse" data-parent="#accordionSidebar">
-                    <div class="bg-white py-2 collapse-inner rounded">
-                        <a class="collapse-item" href="@Url.Action("Index","Categoria")">Categorias</a>
-                        <a class="collapse-item" href="@Url.Action("Index","Producto")">Productos</a>
-                        <a class="collapse-item" href="@Url.Action("Index","Distrito")">Distritos</a>                   
+                        <i class="fas fa-fw fa-clipboard-list"></i>
+                        <span>Inventario</span>
+                    </a>
+                    <div id="collapseInventario" class="collapse" data-parent="#accordionSidebar">
+                        <div class="bg-white py-2 collapse-inner rounded">
+                            <a class="collapse-item" href="@Url.Action("Index","Categoria")">Categorias</a>
+                            <a class="collapse-item" href="@Url.Action("Index","Producto")">Productos</a>
+                            <a class="collapse-item" href="@Url.Action("Index","Distrito")">Distritos</a>
+                        </div>
                     </div>
-                </div>
-            </li>
+                </li>
             }
-            <li class="nav-item">
-                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePago">
-                    <i class="fas fa-fw fa-tags"></i>
-                    <span>Pagos</span>
-                </a>
-                <div id="collapsePago" class="collapse" data-parent="#accordionSidebar">
-                    <div class="bg-white py-2 collapse-inner rounded">
-                        @if (User.IsInRole("Administrador"))
-                        {
-                            <a class="collapse-item" href="@Url.Action("NuevoPago","Pago")">Nuevo Pago</a>
-                        }
-                        @if (User.IsInRole("Cliente"))
-                        {
-                            <a class="collapse-item" href="@Url.Action("MisPagos","Pago")">Mis Pagos</a>
-                        }
-                      
+            @if (User.IsInRole("Administrador") || User.IsInRole("Cliente"))
+            {
+                <li class="nav-item">
+                    <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePago">
+                        <i class="fas fa-fw fa-tags"></i>
+                        <span>Pagos</span>
+                    </a>
+                    <div id="collapsePago" class="collapse" data-parent="#accordionSidebar">
+                        <div class="bg-white py-2 collapse-inner rounded">
+                            @if (User.IsInRole("Administrador"))
+                            {
+                                <a class="collapse-item" href="@Url.Action("NuevoPago","Pago")">Nuevo Pago</a>
+                            }
+                            @if (User.IsInRole("Cliente"))
+                            {
+                                <a class="collapse-item" href="@Url.Action("MisPagos","Pago")">Mis Pagos</a>
+                            }
+
+                        </div>
                     </div>
-                </div>
-            </li>
+                </li>
+            }
 
             <!-- Nav Item - Venta Collapse Menu -->
-          <li class="nav-item">
+            <li class="nav-item">
                 <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePedido">
                     <i class="fas fa-fw fa-tags"></i>
                     <span>Pedidos</span>
                 </a>
                 <div id="collapsePedido" class="collapse" data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
-                        @if (User.IsInRole("Administrador"))
+                        @if (!User.IsInRole("Cliente"))
                         {
                             <a class="collapse-item" href="@Url.Action("NuevoPedido","Pedido")">Nuevo Pedido</a>
                             <a class="collapse-item" href="@Url.Action("Index","Pedido")">Pedidos</a> 
@@ -130,28 +136,31 @@
                             <a class="collapse-item" href="@Url.Action("NuevoPedido","Pedido")">Nuevo Pedido</a>
                             <a class="collapse-item" href="@Url.Action("MisPedidos","Pedido")">Mis Pedidos</a>
                         }
-                       
+
                     </div>
                 </div>
             </li>
-
-            <li class="nav-item">
-                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseMensaje">
-                    <i class="fas fa-fw fa-tags"></i>
-                    <span>Mensajes</span>
-                </a>
-                <div id="collapseMensaje" class="collapse" data-parent="#accordionSidebar">
-                    <div class="bg-white py-2 collapse-inner rounded">
-                        @if (User.IsInRole("Administrador")) {
-                        <a class="collapse-item" href="@Url.Action("Index","Mensaje")">Nuevo Mensaje</a>
-                        }
-                        @if (User.IsInRole("Cliente")) {
-                        <a class="collapse-item" href="@Url.Action("MisMensajes","Mensaje")">Mis Mensajes</a>
-                        }
-                    </div>
+            @if (User.IsInRole("Administrador") || User.IsInRole("Cliente"))
+            {
+                <li class="nav-item">
+                    <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseMensaje">
+                        <i class="fas fa-fw fa-tags"></i>
+                        <span>Mensajes</span>
+                    </a>
+                    <div id="collapseMensaje" class="collapse" data-parent="#accordionSidebar">
+                        <div class="bg-white py-2 collapse-inner rounded">
+                            @if (User.IsInRole("Administrador"))
+                            {
+                                <a class="collapse-item" href="@Url.Action("Index","Mensaje")">Nuevo Mensaje</a>
+                            }
+                            @if (User.IsInRole("Cliente"))
+                            {
+                                <a class="collapse-item" href="@Url.Action("MisMensajes","Mensaje")">Mis Mensajes</a>
+                            }
+                        </div>
                 </div>
             </li>
-
+            }
             <!-- Nav Item - Reportes Collapse Menu -->
 @*            <li class="nav-item">
                 <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseReportes">

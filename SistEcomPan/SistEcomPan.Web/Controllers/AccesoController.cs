@@ -39,8 +39,12 @@ namespace SistEcomPan.Web.Controllers
         {
             ClaimsPrincipal claimUser = HttpContext.User;
 
-            if (claimUser.Identity.IsAuthenticated){
-                return RedirectToAction("Index", "Home");
+            if (claimUser.Identity.IsAuthenticated)
+            {
+                if(User.IsInRole("Administrador"))
+                    return RedirectToAction("Index", "DashBoard");
+                if (User.IsInRole("Cliente"))
+                    return RedirectToAction("DashBoardCliente", "DashBoard");
             }
 
             return View();

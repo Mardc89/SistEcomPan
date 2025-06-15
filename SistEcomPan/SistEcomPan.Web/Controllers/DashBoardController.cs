@@ -101,6 +101,8 @@ namespace SistEcomPan.Web.Controllers
                 //vmDashboard.TotalIngresos = await _dashBoardServicio.TotalIngresosUltimaSemana();
                 vmDashboardCliente.TotalDeMisPagos = await _dashBoardServicioCliente.TotalDeMisPagos(dni);
                 vmDashboardCliente.TotalDeMisMensajes = await _dashBoardServicioCliente.TotalDeMisMensajes(dni);
+                vmDashboardCliente.TotalDeMisPagosPendientes = await _dashBoardServicioCliente.TotalDeMisPagosPendientes(dni);
+                vmDashboardCliente.TotalDeMisMensajesRecibidos = await _dashBoardServicioCliente.TotalDeMisMensajesRecibidos(dni);
 
                 List<VMPagosSemana> listaVentasSemana = new List<VMPagosSemana>();
                 List<VMProductosSemana> listaProductosSemana = new List<VMProductosSemana>();

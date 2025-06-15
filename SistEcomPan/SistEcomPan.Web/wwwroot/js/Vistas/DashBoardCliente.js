@@ -35,6 +35,8 @@ $(document).ready(function () {
                 let d = responseJson.objeto
                 $("#TotalDeMisPagos").text(d.totalDeMisPagos)
                 $("#TotalDeMisMensajes").text(d.totalDeMisMensajes)
+                $("#TotalDeMisPagosPendientes").text(d.totalDeMisPagosPendientes)
+                $("#TotalDeMisMensajesRecibidos").text(d.totalDeMisMensajesRecibidos)
                 $("#TotalDeMisPedidos").text(d.totalDeMisPedidos)
 
 
