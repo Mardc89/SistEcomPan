@@ -33,7 +33,9 @@ $(document).ready(function () {
     ObtenerDatosUsuario();
 
     tablaDataCategoria = $('#tbdataCategoria').DataTable({
-        responsive: true,
+        responsive: {
+            details: false
+        },
         "ajax": {
             "url": '/Categoria/Lista',
             "type": "GET",

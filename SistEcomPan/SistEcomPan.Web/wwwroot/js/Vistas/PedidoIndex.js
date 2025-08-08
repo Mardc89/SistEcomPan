@@ -123,11 +123,11 @@ function buscarClientes(searchTer = '', page = 1) {
             clientes.forEach(cliente => {
                 const row = document.createElement('tr');
                 row.innerHTML = `
-            <td>${cliente.idCliente}</td>
+            <td class="text-nowrap d-none d-sm-table-cell">${cliente.idCliente}</td>
             <td>${cliente.dni}</td>
             <td class="nombres">${cliente.nombreCompleto}</td>
-            <td>${cliente.correo}</td>
-            <td>${cliente.direccion}</td>
+            <td class="text-nowrap d-none d-sm-table-cell">${cliente.correo}</td>
+            <td class="text-nowrap d-none d-sm-table-cell">${cliente.direccion}</td>
             <td>${cliente.telefono}</td>
           `;
                 clientTable.appendChild(row);
@@ -307,10 +307,10 @@ function MostrarProduct(TerminoBusqueda = '', pagina = 1) {
             productos.forEach(producto => {
                 const row =  document.createElement('tr');
                 row.innerHTML = `
-            <td>${producto.idProducto}</td>
+            <td class="d-none d-md-table-cell">${producto.idProducto}</td>
             <td>${producto.descripcion}</td>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  
-            <td>${categoria[indice]}</td>
-            <td>${producto.stock}</td>
+            <td class="d-none d-md-table-cell">${categoria[indice]} </td>
+            <td class="d-none d-md-table-cell">${producto.stock} </td>
             <td>${producto.precio.toFixed(2)}</td>
             <td><input type="text" class="form-control form-control-sm txtCantidad" id="txtCantidad" placeholder="Ingrese Cantidad"></td>
             <td><img style = "height:60px" src = ${nombreCarpeta}${producto.nombreImagen} class="rounded mx-auto d-block" /></td>
@@ -456,13 +456,13 @@ function agregarProducto(button) {
         total = precio * cantidad;
         const nuevaFila = `
       <tr>
-        <td>${IdProducto}</td>
+        <td class="d-none d-sm-table-cell">${IdProducto}</td>
         <td>${descripcion}</td>
-        <td>${categoria}</td>
+        <td class="d-none d-sm-table-cell">${categoria}</td>
         <td>${cantidad}</td>
         <td>${precio}</td>
         <td>${total.toFixed(2)}</td>
-        <td><button class="btn btn-primary btn-sm" onclick="eliminarProducto(this)">Eliminar</button></td>
+        <td><button class="btn btn-primary btn-sm" onclick="eliminarProducto(this)"><i class="fas fa-trash-alt" aria-hidden="true"></i></button></td>
       </tr>
     `;
 
@@ -472,6 +472,19 @@ function agregarProducto(button) {
     }
 }
 
+function ajustarColspan() {
+    const anchoPantalla = window.innerWidth;
+    const tdTotal = document.getElementById("textoTotal");
+
+    if (anchoPantalla < 576) {
+        tdTotal.colSpan = 3;
+    } else {
+        tdTotal.colSpan = 5;
+    }
+}
+
+window.addEventListener("resize", ajustarColspan);
+window.addEventListener("DOMContentLoaded", ajustarColspan);
 
 function eliminarProducto(button) {
     const row = button.parentNode.parentNode;

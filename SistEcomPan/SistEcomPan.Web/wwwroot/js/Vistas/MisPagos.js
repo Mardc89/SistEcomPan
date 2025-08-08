@@ -62,26 +62,28 @@ $(document).ready(function () {
     let busquedaPago = "";
     let busquedaDetallePago = document.getElementById("DniPersonal").textContent;
     tablaDataMisPagos = $('#tbDataMisPagos').DataTable({
-        responsive: true,
+        responsive: {
+            details: false
+        },
         "ajax": {
             "url": `/Pago/ObtenerMisPagos?searchTerm=${busquedaDetallePago}&busqueda=${busquedaPago}`,
             "type": "GET",
             "dataType": "json"
         },
         "columns": [
-            { "data": "idPago", "searchable": false },
-            { "data": "codigoPedido" },
-            { "data": "montoDePedido" },
-            { "data": "descuento" },
-            { "data": "montoTotalDePago" },
-            { "data": "montoDeuda" },
+            { "data": "idPago", "searchable": false,responsivePriority: 100},
+            { "data": "codigoPedido", responsivePriority: 100 },
+            { "data": "montoDePedido", responsivePriority: 100 },
+            { "data": "descuento", responsivePriority: 100 },
+            { "data": "montoTotalDePago", responsivePriority: 100 },
+            { "data": "montoDeuda", responsivePriority: 100 },
             {
-                "data": "fechaPago", render: function (data) {
+                "data": "fechaPago", responsivePriority: 100, render: function (data) {
                     return cambiarFecha(data);
                 }
             },
             {
-                "data": "estado", render: function (data) {
+                "data": "estado",responsivePriority: 1,  render: function (data) {
                     if (data == "Pagado")
                         return '<span class="badge badge-info">Pagado</span>';
                     else if (data == "Existe Deuda")
@@ -94,12 +96,11 @@ $(document).ready(function () {
 
             },
             {
-                "defaultContent": '<button class="btn btn-primary btn-editar btn-sm mr-2"><i class="fas fa-pencil-alt"></i></button>' +
-                    '<button class= "btn btn-danger btn-eliminar btn-sm"><i class= "fas fa-trash-alt"></i></button>',
+                "defaultContent": '<button class="btn btn-primary btn-editar btn-sm mr-2"><i class="fas fa-pencil-alt"></i></button>',
                 "orderable": false,
                 "searchable": true,
-                "width": "80px"
-
+                "width": "80px",
+                responsivePriority: 2
             }
         ],
         order: [[0, "desc"]],
@@ -127,7 +128,7 @@ function buscarDetallePago(idPago, page = 1) {
             DetallePagos.forEach(pago => {
                 const row = document.createElement('tr');
                 row.innerHTML = `  
-            <td>${pago.idDetallePago}</td>
+            <td class="d-none d-md-table-cell">${pago.idDetallePago}</td>
             <td>${parseFloat(pago.montoAPagar).toFixed(2)}</td>
             <td>${parseFloat(pago.pagoDelCliente).toFixed(2)}</td>
             <td>${parseFloat(pago.deudaDelCliente).toFixed(2)}</td>

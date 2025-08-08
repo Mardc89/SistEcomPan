@@ -31,28 +31,28 @@
     <div class="container">
 
         <!-- Outer Row -->
-        <div class="row justify-content-center">
+        <div class="row justify-content-center align-items-center min-vh-100">
 
             <div class="col-xl-10 col-lg-12 col-md-9">
 
                 <div class="card o-hidden border-0 shadow-lg my-5">
                     <div class="card-body p-0">
                         <!-- Nested Row within Card Body -->
-                        <div class="row">
+                        <div class="row g-0">
                             <div class="col-lg-6 d-none d-lg-block bg-login-image"></div>
-                            <div class="col-lg-6">
-                                <div class="p-5">
-                                    <div class="text-center">
+                            <div class="col-lg-6 col-md-12">
+                                <div class="p-4 p-md-5">
+                                    <div class="text-center mb-4">
                                         <h1 class="h4 text-gray-900 mb-4">Bienvenido</h1>
                                     </div>
                                     <form class="user" asp-controller="Acceso" asp-action="Login" method="post">
-                                        <div class="form-group">
+                                        <div class="form-group mb-3">
                                             <input type="email" class="form-control form-control-user" placeholder="Correo" asp-for="Correo">
                                         </div>
-                                        <div class="form-group">
+                                        <div class="form-group mb-3">
                                             <input type="password" class="form-control form-control-user" placeholder="Contraseña" asp-for="Clave">
                                         </div>
-                                        <div class="form-group">
+                                        <div class="form-group mb-3">
                                             <div class="custom-control custom-checkbox small">
                                                 <input type="checkbox" class="custom-control-input" id="chkMantenerSesion" asp-for="MantenerSesion">
                                                 <label class="custom-control-label" for="chkMantenerSesion">Mantener Sesión</label>
@@ -74,8 +74,8 @@
                                     </form>
                                     <hr>
                                     <div class="text-center">
-                                        <a class="small" href="@Url.Action("RestablecerClave","Acceso")">¿Olvidó su contraseña?</a>
-                                        <a class="small" href="@Url.Action("Registrarse","Acceso")">Registrarse</a>
+                                        <a class="small d-block" href="@Url.Action("RestablecerClave","Acceso")">¿Olvidó su contraseña?</a>
+                                        <a class="small d-block mt-2" href="@Url.Action("Registrarse","Acceso")">Registrarse</a>
                                     </div>
                                 </div>
                             </div>

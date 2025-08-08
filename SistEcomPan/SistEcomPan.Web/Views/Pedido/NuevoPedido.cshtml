@@ -30,22 +30,19 @@
 
 
 
-<div class="container-fluid">
-
-    <div class="row">
-        <div class="col-sm-12">
+<div class="container-fluid p-0 m-0">
             <div class="row">
-                <div class="col-sm-12">
-                    <div class="card shadow mb-12">
+                <div class="col-12">
+                    <div class="card shadow mb-4">
                         <div class="card-header py-3 bg-primary">
                             <h6 class="m-0 font-weight-bold text-white">Pedidos</h6>
                         </div>
                         <div class="card-body">
                             <div class="form-row">
-                                <div class="form-group col-sm-4">
+                                <div class="form-group col-12 col-md-4">
                                     <input type="text" class="form-control form-control-sm" id="txtDocumentoCliente" placeholder="numero documento">
                                 </div>
-                                <div class="form-group col-sm-8">
+                                <div class="form-group col-12 col-md-8">
                                         <div class="input-group">
                                             <input type="text" class="form-control form-control-sm input-validar" placeholder="Ingrese nombre del cliente" id="txtNombreCliente" name="NombreCliente" aria-describedby="btnCliente" />
                                             <div class="input-group-append">
@@ -59,32 +56,33 @@
                                 </div>
                             </div>
                             <div class="form-row">
-                                <div class="form-group col-sm-4">
+                                <div class="form-group col-12 col-md-4">
                                     <input type="text" class="form-control form-control-sm input-validar" id="txtFechaDeEntrega" placeholder="Fecha De Entrega" name="Fecha de Entrega">
                                 </div>
-                                <div class="form-group col-sm-4">
+                                <div class="form-group col-12 col-md-4">
                                     <input type="text" class="form-control form-control-sm input-validar" id="txtDireccionCliente" placeholder="Direccion" disabled name="Direccion">
                                 </div>
-                                <div class="form-group col-sm-4">
+                                <div class="form-group col-12 col-md-4">
                                     <input type="text" class="form-control form-control-sm input-validar" id="txtTelefonoCliente" placeholder="Telefono" disabled name="Telefono">
                                 </div>
                             </div>                                
-                            <div class="modal-footer">
+                            <div class="text-right mb-3">
                                 <button class="btn btn-danger btn-sm" type="button" id="btnGuardar">Agregar Productos</button>
                                 <button class="btn btn-primary  btn-sm" type="button" id="btnEnviarPedido">Realizar Pedido</button>
                             </div>
                         </div>                       
                         <div class="col-sm-12">
                             <div class="table-responsive">
-                            <table class="table table-sm" id="tbProductosSeleccionados">
+                                <table class="table table-sm table-hover" id="tbProductosSeleccionados">
                                 <thead>
                                     <tr>
-                                        <th>N° Pedido</th>
-                                        <th>Descripcion</th>
-                                        <th>Categoria</th>
-                                        <th>Cantidad</th>
-                                        <th>Precio Unitario</th>
-                                        <th>Precio Total</th>
+                                        <th class="text-nowrap d-none d-sm-table-cell">N° Pedido</th>
+                                        <th class="text-nowrap">Producto</th>
+                                        <th class="text-nowrap d-none d-sm-table-cell">Categoria</th>
+                                        <th class="text-nowrap">Cantidad</th>
+                                        <th class="text-nowrap">Precio</th>
+                                        <th class="text-nowrap">Importe</th>
+                                        <th></th>
                                     </tr>
                                 </thead>
                                 <tbody id="tablaProductos">
@@ -92,9 +90,9 @@
                                 </tbody>
                                 <tfoot>
                                     <tr>
-                                        <td colspan="5">Monto Total S/:</td>
-                                        <td id="montoTotal">0</td>
-                                        <td></td>
+                                    <td colspan="5" id="textoTotal">Monto Total S/:</td>
+                                    <td id="montoTotal"></td>
+                                    <td></td>
                                     </tr>
                                 </tfoot>
 
@@ -108,9 +106,7 @@
 
 
         </div>
-    </div>
 
-</div>
 
 <div class="modal fade" id="modalDataPedidoCliente" tabindex="-1" role="dialog" aria-labelledby="searchModalLabel3" aria-hidden="true">
     <div class="modal-dialog modal-lg" role="document">
@@ -139,11 +135,11 @@
                     <!-- Aquí van las filas de la tabla -->
                     <thead>
                         <tr>
-                            <th>N°</th>
+                            <th class="text-nowrap d-none d-sm-table-cell">N°</th>
                             <th>Dni</th>
                             <th>Cliente</th>
-                            <th>Correo</th>       
-                            <th>Direccion</th>
+                            <th class="text-nowrap d-none d-sm-table-cell">Correo</th>
+                            <th class="text-nowrap d-none d-sm-table-cell">Direccion</th>
                             <th>Telefono</th>
                         </tr>
                     </thead>
@@ -185,24 +181,26 @@
                 </div>
                 <br>
                 <!-- Aquí se muestra la tabla de productos -->
-                <table class="table table-striped" id="DataProducto">
+                <div class="table-responsive">
+                <table class="table table-striped table-sm align-middle" id="DataProducto">
                     <!-- Aquí van las filas de la tabla -->
                     <thead>
                     <tr>
-                        <th>Codigo</th>
-                        <th>Descripcion</th>
-                        <th>Categoria</th>
-                        <th>Stock</th>
-                        <th>Precio</th>
-                        <th>Cantidad</th>
-                        <th>Imagen</th>
-                        <th>Acciones</th>
+                        <th scope="col" class="d-none d-md-table-cell">Codigo</th>
+                        <th scope="col">Producto</th>
+                        <th scope="col" class="d-none d-md-table-cell">Categoria</th>
+                        <th scope="col" class="d-none d-md-table-cell">Stock</th>
+                        <th scope="col">Precio</th>
+                        <th scope="col">Cantidad</th>
+                        <th scope="col">Imagen</th>
+                        <th scope="col">Acciones</th>
                      </tr>
                     </thead>
                     <tbody id="ProductoBuscado">
 
                     </tbody>
                 </table>
+                </div>
                 <!-- Aquí se muestra la paginación -->      
             </div>
             <div class="modal-footer">

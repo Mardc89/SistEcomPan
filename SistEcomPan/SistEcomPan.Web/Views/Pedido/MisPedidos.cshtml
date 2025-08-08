@@ -19,7 +19,7 @@
     <div class="card-body">
         <div class="row">
             <div class="col-sm-3">
-                <button class="btn btn-success" id="btnNuevoPedido"><i class="fas fa-plus-circle"></i> Nuevo Pedido</button>
+                <button class="btn btn-success" id="btnNuevoPedido"><i class="fas fa-shopping-cart"></i>  Nuevo Pedido</button>
             </div>
         </div>
         <hr />
@@ -30,8 +30,8 @@
                         <tr>
                             <th>N°</th>
                             <th>Codigo</th>
-                            <th>Monto De Pedido</th>
-                            <th>Fecha De Pago</th>
+                            <th>Monto</th>
+                            <th>Fecha</th>
                             <th>Estado</th>
                             <th>Acciones</th>
                         </tr>
@@ -63,23 +63,34 @@
 
                 
                 <!-- Aquí se muestra la tabla de productos -->
-                <table class="table table-striped" id="">
+                <div class="col-sm-12">
+                <div class="table-responsive">
+                <table class="table table-sm table-hover" id="tbProductosDetalle">
                     <!-- Aquí van las filas de la tabla -->
                     <thead>
                         <tr>
-                            <th>Numero de Pedido</th>
-                            <th>DetallePedido</th>
-                            <th>Producto</th>
-                            <th>Precio</th>
-                            <th>Cantidad</th>
-                            <th>Total</th>
+                            <th class="text-nowrap d-none d-sm-table-cell">Numero de Pedido</th>
+                            <th class="text-nowrap d-none d-sm-table-cell">DetallePedido</th>
+                            <th class="text-nowrap">Producto</th>
+                            <th class ="text-nowrap">Precio</th>
+                            <th class ="text-nowrap">Cantidad</th>
+                            <th class="text-nowrap">Total</th>
                         </tr>
                     </thead>
                     <tbody id="DetalleBuscado">
                     </tbody>
+                    <tfoot>
+                        <tr>
+                            <td colspan="5" id="textoTotalDetalle">Monto Total S/:</td>
+                            <td id="montoTotalDetalle"></td>
+                            <td></td>
+                        </tr>
+                    </tfoot>
                 </table>
+               </div>
                 <!-- Aquí se muestra la paginación -->
             </div>
+           </div>
             <div class="modal-footer">
                 <nav id="DetallePagination" class="pagination justify-content-center" aria-label="Page navigation example">
 

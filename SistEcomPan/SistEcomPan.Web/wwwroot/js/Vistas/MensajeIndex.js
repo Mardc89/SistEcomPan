@@ -53,17 +53,19 @@ let IdRespuesta,NombreDelDestinatario,nombresDelUsuario;
 $(document).ready(function () {
     ObtenerDatosUsuario();
     tablaDataMensaje = $('#tbDataMensajes').DataTable({
-        responsive: true,
+        responsive: {
+            details: false
+        },
         "ajax": {
             "url": '/Mensaje/ListaMensajes',
             "type": "GET",
             "datatype": "json"
         },
         "columns": [
-            { "data": "idMensaje", "searchable": false },
-            { "data": "asunto"},
-            { "data": "cuerpo" },
-            { "data": "nombreRemitente" },
+            { "data": "idMensaje", responsivePriority: 100, "searchable": false },
+            { "data": "asunto", responsivePriority: 1 },
+            { "data": "cuerpo", responsivePriority: 100 },
+            { "data": "nombreRemitente", responsivePriority: 1 },
             {
                 "data": "nombreDestinatario", render: function (data) {
                     if (data!=null) 
@@ -71,9 +73,9 @@ $(document).ready(function () {
                         return NombreDelDestinatario;
                 }
             },
-            { "data": "correoRemitente", "visible": false },
-            { "data": "correoDestinatario", "visible": false },
-            { "data": "idRespuestaMensaje", "visible": false },
+            { "data": "correoRemitente", "visible": false, responsivePriority: 100 },
+            { "data": "correoDestinatario", "visible": false, responsivePriority: 100 },
+            { "data": "idRespuestaMensaje", "visible": false, responsivePriority: 100 },
 
             //{
             //    "data": "IdRespuesta", render: function (data) {
@@ -91,7 +93,7 @@ $(document).ready(function () {
             //    }
             //},
             {
-                "data": "fechaDeMensaje", render: function (data) {
+                "data": "fechaDeMensaje", responsivePriority: 100 , render: function (data) {
                     return cambiarFecha(data);
                 }
             },
@@ -105,7 +107,8 @@ $(document).ready(function () {
 
                 "orderable": false,
                 "searchable": false,
-                "width": "80px"
+                "width": "80px",
+                responsivePriority: 1
 
             }
         ],

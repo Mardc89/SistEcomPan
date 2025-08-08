@@ -51,16 +51,18 @@ $(document).ready(function () {
         })
 
     tablaDataProducto = $('#tbdataProducto').DataTable({
-        responsive: true,
+        responsive: {
+            details: false
+        },
         "ajax": {
             "url": '/Producto/Lista',
             "type": "GET",
             "datatype": "json"
         },
         "columns": [
-            { "data": "idProducto", "searchable": false },
+            { "data": "idProducto", "searchable": false, responsivePriority: 100 },
             {
-                "data": "nombreImagen", render: function (data) {
+                "data": "nombreImagen",responsivePriority: 1 ,render: function (data) {
                     let ruta = data;
                     let nombreCarpeta = /ImagenesProducto/;
                     let rutaRelativa = `${nombreCarpeta}${ruta}`;
@@ -68,12 +70,12 @@ $(document).ready(function () {
                 }
 
             },
-            { "data": "descripcion" },
-            { "data": "nombreCategoria" },
-            { "data": "precio" },
-            { "data": "stock" },
+            { "data": "descripcion", responsivePriority: 1 },
+            { "data": "nombreCategoria", responsivePriority: 100},
+            { "data": "precio", responsivePriority: 100 },
+            { "data": "stock", responsivePriority: 100 },
             {
-                "data": "estado", render: function (data) {
+                "data": "estado",responsivePriority: 1 ,render: function (data) {
                     if (data == 1)
                         return '<span class="badge badge-info">Activo</span>';
                     else
@@ -88,7 +90,8 @@ $(document).ready(function () {
                     '<button class= "btn btn-danger btn-eliminar btn-sm"><i class= "fas fa-trash-alt"></i></button>',
                 "orderable": false,
                 "searchable": false,
-                "width": "80px"
+                "width": "80px",
+                responsivePriority: 1
 
             }
         ],

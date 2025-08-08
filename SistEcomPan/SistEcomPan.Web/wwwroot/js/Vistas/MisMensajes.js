@@ -62,17 +62,19 @@ $(document).ready(function () {
     let busquedaMensaje = "";
     let busquedaDetalleMensaje = document.getElementById("DniPersonal").textContent;
     tablaDataMisMensajes = $('#tbDataMisMensajes').DataTable({
-        responsive: true,
+        responsive: {
+            details: false
+        },
         "ajax": {
             "url": `/Mensaje/ObtenerMisMensajes?searchTerm=${busquedaDetalleMensaje}&busqueda=${busquedaMensaje}`,
             "type": "GET",
             "dataType": "json"
         },
         "columns": [
-            { "data": "idMensaje", "searchable": false },
-            { "data": "asunto" },
-            { "data": "cuerpo" },
-            { "data": "nombreRemitente" },
+            { "data": "idMensaje", "searchable": false, responsivePriority: 100 },
+            { "data": "asunto", responsivePriority: 100 },
+            { "data": "cuerpo", responsivePriority: 100 },
+            { "data": "nombreRemitente", responsivePriority: 1 },
             {
                 "data": "nombreDestinatario", render: function (data) {
                     if (data != null)
@@ -80,11 +82,11 @@ $(document).ready(function () {
                     return NombreDelDestinatario;
                 }
             },
-            { "data": "correoRemitente","visible": false },
-            { "data": "correoDestinatario", "visible": false },
-            { "data": "idRespuestaMensaje", "visible": false },
+            { "data": "correoRemitente", "visible": false, responsivePriority: 100 },
+            { "data": "correoDestinatario", "visible": false, responsivePriority: 100 },
+            { "data": "idRespuestaMensaje", "visible": false, responsivePriority: 100 },
             {
-                "data": "fechaDeMensaje", render: function (data) {
+                "data": "fechaDeMensaje", responsivePriority: 100 , render: function (data) {
                     return cambiarFecha(data);
                 }
             },
@@ -98,8 +100,8 @@ $(document).ready(function () {
 
                 "orderable": false,
                 "searchable": true,
-                "width": "80px"
-
+                "width": "80px",
+                responsivePriority: 1
             }
         ],
         "createdRow": function (row, data, dataIndex) {

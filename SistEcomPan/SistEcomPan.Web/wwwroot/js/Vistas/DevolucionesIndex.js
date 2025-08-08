@@ -58,7 +58,9 @@ $(document).ready(function () {
     ObtenerDatosUsuario();
 
     tablaDataDevoluciones = $('#tbDataDevoluciones').DataTable({
-        responsive: true,
+        responsive: {
+            details: false
+        },
         "ajax": {
             "url": `/Devolucion/ListaDevoluciones`,
             "type": "GET",

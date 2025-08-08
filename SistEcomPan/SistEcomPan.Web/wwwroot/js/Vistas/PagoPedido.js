@@ -71,12 +71,12 @@ $(document).ready(function () {
             "datatype": "json"
         },
         "columns": [
-            { "data": "idPago", "searchable": false },
-            { "data": "montoDePedido" },
-            { "data": "descuento" },
-            { "data": "montoTotalDePago" },
-            { "data": "montoDeuda" },
-            { "data": "nombreCliente" },
+            { "data": "idPago", "searchable": false, responsivePriority: 100 },
+            { "data": "montoDePedido", responsivePriority: 100 },
+            { "data": "descuento", responsivePriority: 100 },
+            { "data": "montoTotalDePago", responsivePriority: 100 },
+            { "data": "montoDeuda", responsivePriority: 100 },
+            { "data": "nombreCliente", responsivePriority: 1 },
             {
                 "data": "fechaPago", render: function (data) {
                     return cambiarFecha(data);
@@ -98,7 +98,8 @@ $(document).ready(function () {
                     '<button class= "btn btn-danger btn-eliminar btn-sm"><i class= "fas fa-trash-alt"></i></button>',
                 "orderable": false,
                 "searchable": false,
-                "width": "80px"
+                "width": "80px",
+                responsivePriority: 1
 
             }
         ],

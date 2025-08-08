@@ -53,16 +53,18 @@ $(document).ready(function () {
         })
 
     tablaData = $('#tbdata').DataTable({
-        responsive: true,
+        responsive: {
+            details: false
+        },
         "ajax": {
             "url": '/Usuario/Lista',
             "type": "GET",
             "datatype": "json"
         },
         "columns": [
-            { "data": "idUsuario","searchable": false},
+            { "data": "idUsuario", "searchable": false},
             {
-                "data": "nombreFoto", render: function (data) {
+                "data": "nombreFoto" ,responsivePriority: 100, render: function (data) {
                     let ruta = data;
                     let nombreCarpeta = /ImagenesPerfil/;
                     let rutaRelativa = `${nombreCarpeta}${ruta}`;
@@ -72,14 +74,14 @@ $(document).ready(function () {
                 }
 
             },
-            { "data": "dni"},
-            { "data": "nombres" },
-            { "data": "apellidos" },
-            { "data": "correo" },
-            { "data": "nombreUsuario" },
-            { "data": "nombreRol" },
+            { "data": "dni", responsivePriority: 100 },
+            { "data": "nombres", responsivePriority: 100 },
+            { "data": "apellidos", responsivePriority: 1 },
+            { "data": "correo", responsivePriority: 100 },
+            { "data": "nombreUsuario", responsivePriority: 100 },
+            { "data": "nombreRol", responsivePriority: 100 },
             {
-                "data": "esActivo", render: function (data) {
+                "data": "esActivo", responsivePriority: 100, render: function (data) {
                     if (data == 1)
                         return '<span class="badge badge-info">Activo</span>';
                     else
@@ -94,8 +96,9 @@ $(document).ready(function () {
                     '<button class= "btn btn-danger btn-eliminar btn-sm"><i class= "fas fa-trash-alt"></i></button>',
                 "orderable": false,
                 "searchable": false,
-                "width": "80px"
-
+                "width": "80px",
+               
+              
             }
         ],
         order: [[0, "desc"]],

@@ -54,7 +54,9 @@ let NombresCompletos,Codigo,Estado;
 $(document).ready(function () {
    
     tablaAllPedidos = $('#tbDataAllPedidos').DataTable({
-        responsive: true,
+        responsive: {
+            details: false
+        },
         "ajax": {
             "url": `/Pedido/ObtenerListaPedidos`,
             "type": "GET",

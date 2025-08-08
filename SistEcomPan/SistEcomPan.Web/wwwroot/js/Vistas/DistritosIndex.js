@@ -30,7 +30,9 @@ function ObtenerDatosUsuario() {
 $(document).ready(function () {
     ObtenerDatosUsuario();
     tablaDataDistrito = $('#tbdataDistrito').DataTable({
-        responsive: true,
+        responsive: {
+            details: false
+        },
         "ajax": {
             "url": '/Distrito/ListaDistritos',
             "type": "GET",

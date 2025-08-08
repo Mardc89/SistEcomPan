@@ -58,23 +58,25 @@ $(document).ready(function () {
     let busqueda = "";
     let busquedaDetalle = document.getElementById("DniPersonal").textContent;
     tablaDataMisPedidos = $('#tbDataMisPedidos').DataTable({
-        responsive: true,
+        responsive: {
+            details: false
+        },
         "ajax": {
             "url": `/Pedido/ObtenerMisPedidos?searchTerm=${busquedaDetalle}&busqueda=${busqueda}`,
             "type": "GET",
             "dataType": "json"
         },
         "columns": [
-            { "data": "idPedido", "searchable": false },
-            { "data": "codigo" },
-            { "data": "montoTotal" },
+            { "data": "idPedido", "searchable": false, responsivePriority: 100 },
+            { "data": "codigo", responsivePriority: 100 },
+            { "data": "montoTotal", responsivePriority: 100 },
             {
-                "data": "fechaPedido", render: function (data) {
+                "data": "fechaPedido",responsivePriority: 1 ,render: function (data) {
                     return cambiarFecha(data);
                 }
             },
             {
-                "data": "estado", render: function (data) {
+                "data": "estado",responsivePriority: 2,  render: function (data) {
                     if (data == "Pagado")
                         return '<span class="badge badge-info">Pagado</span>';
                     else if (data == "Existe Deuda")
@@ -91,8 +93,8 @@ $(document).ready(function () {
                     '<button class= "btn btn-danger btn-eliminar btn-sm"><i class= "fas fa-trash-alt"></i></button>',
                 "orderable": false,
                 "searchable": true,
-                "width": "80px"
-
+                "width": "80px",
+                responsivePriority: 3
             }
         ],
         order: [[0, "desc"]],
@@ -122,8 +124,8 @@ function buscarDetallePedido(idPedido, page = 1) {
             DetallePedidos.forEach(pedido => {
                 const row = document.createElement('tr');
                 row.innerHTML = `  
-            <td>${pedido.idPedido}</td>
-            <td>${pedido.idDetallePedido}</td>
+            <td class="d-none d-md-table-cell">${pedido.idPedido}</td>
+            <td class="d-none d-md-table-cell">${pedido.idDetallePedido}</td>
             <td>${pedido.descripcionProducto}</td>
             <td>${parseFloat(pedido.precio).toFixed(2)}</td>
             <td>${pedido.cantidad}</td>
@@ -131,7 +133,7 @@ function buscarDetallePedido(idPedido, page = 1) {
           `;
                 productTable.appendChild(row);
             });
-
+            calcularTotal();
             // Generar la paginación
             const totalPages = Math.ceil(totalItems / ProductosPorPagina);
             const pagination = document.getElementById('DetallePagination');
@@ -164,6 +166,23 @@ function buscarDetallePedido(idPedido, page = 1) {
         .catch(error => {
             console.error('Error al buscar productos:', error);
         });
+}
+
+function calcularTotal() {
+    let total = 0;
+    const tabla = document.getElementById('tbProductosDetalle').getElementsByTagName('tbody')[0];
+    const filas = tabla.getElementsByTagName('tr');
+
+
+    for (let i = 0; i < filas.length; i++) {
+        const fila = filas[i];
+        const totalFila = parseFloat(fila.cells[5].textContent);
+        total += totalFila;
+
+
+    }
+
+    document.getElementById('montoTotalDetalle').textContent = total.toFixed(2);
 }
 
 

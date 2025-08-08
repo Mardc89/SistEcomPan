@@ -31,7 +31,9 @@ function ObtenerDatosUsuario() {
 $(document).ready(function () {
     ObtenerDatosUsuario();
     tablaDataRol = $('#tbdataRol').DataTable({
-        responsive: true,
+        responsive: {
+            details: false
+        },
         "ajax": {
             "url": '/Rol/Lista',
             "type": "GET",
