@@ -70,12 +70,12 @@ $(document).ready(function () {
                 }
 
             },
-            { "data": "descripcion", responsivePriority: 1 },
+            { "data": "descripcion", responsivePriority: 2 },
             { "data": "nombreCategoria", responsivePriority: 100},
             { "data": "precio", responsivePriority: 100 },
             { "data": "stock", responsivePriority: 100 },
             {
-                "data": "estado",responsivePriority: 1 ,render: function (data) {
+                "data": "estado",responsivePriority: 100 ,render: function (data) {
                     if (data == 1)
                         return '<span class="badge badge-info">Activo</span>';
                     else
@@ -91,7 +91,7 @@ $(document).ready(function () {
                 "orderable": false,
                 "searchable": false,
                 "width": "80px",
-                responsivePriority: 1
+                responsivePriority: 3
 
             }
         ],

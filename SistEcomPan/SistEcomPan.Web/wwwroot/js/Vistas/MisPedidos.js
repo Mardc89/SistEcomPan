@@ -35,6 +35,21 @@ function cambiarFecha(fecha) {
 
 }
 
+function ajustarDimension() {
+    let celda = document.getElementById("textoTotalDetalle");
+    if (window.innerWidth < 768) {
+        celda.colSpan = 3;
+    }
+    else {
+
+        celda.colSpan = 5;
+    }
+    
+}
+
+
+ajustarDimension();
+window.addEventListener("resize", ajustarDimension);
 function ObtenerDatosCliente() {
     fetch("/Home/ObtenerCliente")
         .then(response => {

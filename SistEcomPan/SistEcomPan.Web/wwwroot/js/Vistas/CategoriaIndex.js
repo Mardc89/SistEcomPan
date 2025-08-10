@@ -42,10 +42,10 @@ $(document).ready(function () {
             "datatype": "json"
         },
         "columns": [
-            { "data": "idCategoria", "searchable": false },
-            { "data": "tipoDeCategoria" },
+            { "data": "idCategoria", "searchable": false, responsivePriority: 100 },
+            { "data": "tipoDeCategoria", responsivePriority: 1 },
             {
-                "data": "estado", render: function (data) {
+                "data": "estado", responsivePriority: 100 , render: function (data) {
                     if (data == 1)
                         return '<span class="badge badge-info">Activo</span>';
                     else
@@ -60,8 +60,8 @@ $(document).ready(function () {
                     '<button class= "btn btn-danger btn-eliminar btn-sm"><i class= "fas fa-trash-alt"></i></button>',
                 "orderable": false,
                 "searchable": false,
-                "width": "80px"
-
+                "width": "80px",
+                responsivePriority: 2
             }
         ],
         order: [[0, "desc"]],

@@ -1,0 +1,20 @@
+﻿
+#modalDataPedidos,#modalDataDescuento{
+
+    z-index:1062 !important;
+}
+
+.modal-backdrop.second-backdrop {
+    z-index:1061 !important;
+}
+
+#modalDataPedidos .modal-dialog, #modalDataDescuento .modal-dialog {
+    max-width: 100% !important;
+    margin: 0 !important;
+}
+
+#modalDataPedidos .modal-content, #modalDataDescuento .modal-content {
+    height: 100vh !important;
+    border-radius: 0 !important;
+}
+

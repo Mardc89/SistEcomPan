@@ -62,7 +62,7 @@ $(document).ready(function () {
             "datatype": "json"
         },
         "columns": [
-            { "data": "idUsuario", "searchable": false},
+            { "data": "idUsuario", "searchable": false, responsivePriority: 100 },
             {
                 "data": "nombreFoto" ,responsivePriority: 100, render: function (data) {
                     let ruta = data;
@@ -97,6 +97,7 @@ $(document).ready(function () {
                 "orderable": false,
                 "searchable": false,
                 "width": "80px",
+                responsivePriority: 2
                
               
             }

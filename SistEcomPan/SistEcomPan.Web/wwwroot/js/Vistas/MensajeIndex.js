@@ -63,7 +63,7 @@ $(document).ready(function () {
         },
         "columns": [
             { "data": "idMensaje", responsivePriority: 100, "searchable": false },
-            { "data": "asunto", responsivePriority: 1 },
+            { "data": "asunto", responsivePriority: 100 },
             { "data": "cuerpo", responsivePriority: 100 },
             { "data": "nombreRemitente", responsivePriority: 1 },
             {
@@ -108,7 +108,7 @@ $(document).ready(function () {
                 "orderable": false,
                 "searchable": false,
                 "width": "80px",
-                responsivePriority: 1
+                responsivePriority: 2
 
             }
         ],

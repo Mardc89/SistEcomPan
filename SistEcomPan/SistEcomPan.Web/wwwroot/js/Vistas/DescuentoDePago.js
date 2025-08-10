@@ -158,7 +158,7 @@ function buscarProductos(busquedaDetalle = '', pagina = 1) {
                 row.innerHTML = `
                 
             
-            <td id="categoriaProducto${i}">${detallePedido.categoriaProducto}</td>
+            <td class="text-nowrap d-none d-sm-table-cell"id="categoriaProducto${i}">${detallePedido.categoriaProducto}</td>
             <td id="descripcionProducto${i}">${descripcionfinal}</td>
             <td id="precioProducto${i}">${parseFloat(detallePedido.precio).toFixed(2)}</td>
             <td id="cantidadProducto${i}">${detallePedido.cantidad}</td>

@@ -421,10 +421,10 @@ function agregarProducto(button) {
     let cantidad = parseFloat(cantidadIngresada.value)||0;
 
     if (isNaN(cantidad) || cantidad <= 0) {
-        alert("Ingrese una cantidad valida");
+        swal("Lo sentimos", "Ingrese una cantidad valida", "error")
     }
     else if (cantidad > stock) {
-        alert("La cantidad supera al stock");
+        swal("Lo sentimos", "La cantidad supera al stock", "error")
     }
     else if (cantidad <= stock) {
 

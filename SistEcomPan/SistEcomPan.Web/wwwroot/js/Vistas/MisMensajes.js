@@ -101,7 +101,7 @@ $(document).ready(function () {
                 "orderable": false,
                 "searchable": true,
                 "width": "80px",
-                responsivePriority: 1
+                responsivePriority: 2
             }
         ],
         "createdRow": function (row, data, dataIndex) {

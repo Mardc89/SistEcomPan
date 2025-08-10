@@ -10,6 +10,7 @@
     <link href="~/vendor/datatables/dataTables.bootstrap4.min.css" rel="stylesheet">
     <link href="~/vendor/datatables/extensiones/css/responsive.dataTables.min.css" rel="stylesheet">
     <link href="~/vendor/datatables/extensiones/css/buttons.dataTables.min.css" rel="stylesheet">
+    <link href="~/css/modales.css" rel="stylesheet" />
 
 @*    <link href="~/vendor/select2/select2.min.css" rel="stylesheet">
 
@@ -190,22 +191,25 @@
                 </div>
                 <br>
                 <!-- Aquí se muestra la tabla de productos -->
-
-                <table class="table table-striped" id="tbDevoluciones">
+                <div class="col-sm-12">
+                    <div class="table-responsive">
+                        <table class="table table-sm table-hover" id="tbDevoluciones">
                     <!-- Aquí van las filas de la tabla -->
-                    <thead>
-                        <tr>
-                            <th>Categoria</th>
-                            <th>Descripcion</th>
-                            <th>Precio</th>
-                            <th>Cantidad</th>
-                            <th>Total</th>
-                            <th>Descuento</th>
-                        </tr>
-                    </thead>
-                    <tbody id="ProductoDevuelto">
-                    </tbody>
-                </table>
+                            <thead>
+                                <tr>
+                                    <th class="text-nowrap d-none d-sm-table-cell">Categoria</th>
+                                    <th class="text-nowrap">Item</th>
+                                    <th class="text-nowrap">Precio</th>
+                                    <th class="text-nowrap">Cant.</th>
+                                    <th class="text-nowrap">Total</th>
+                                    <th class="text-nowrap">Retorno</th>
+                                </tr>
+                            </thead>
+                            <tbody id="ProductoDevuelto">
+                            </tbody>
+                            </table>
+                    </div>
+                </div>
                 <div class="modal-footer">
 
                     <button class="btn btn-primary btn-sm" type="button" id="btnGuardarDescuento">Guardar</button>
@@ -226,7 +230,7 @@
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="searchModalLabel3">Buscar Productos</h5>
+                <h5 class="modal-title" id="searchModalLabel3">Buscar Pedidos</h5>
                 @*                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
                 </button>*@
@@ -245,21 +249,25 @@
                 </div>
                 <br>
                 <!-- Aquí se muestra la tabla de productos -->
-                <table class="table table-striped" id="">
+                <div class="col-sm-12">
+                    <div class="table-responsive">
+                        <table class="table table-sm table-hover" id="">
                     <!-- Aquí van las filas de la tabla -->
-                    <thead>
-                        <tr>
-                            <th>N°</th>
-                            <th>Codigo</th>
-                            <th>Nombre</th>
-                            <th>Monto Total</th>
-                            <th>Estado</th>
-                            <th>Fecha De Pedido</th>
-                        </tr>
-                    </thead>
-                    <tbody id="PedidoBuscado">
-                    </tbody>
-                </table>
+                            <thead>
+                                <tr>
+                                    <th class="text-nowrap d-none d-sm-table-cell">N°</th>
+                                    <th class="text-nowrap d-none d-sm-table-cell">Codigo</th>
+                                    <th>Nombre</th>
+                                    <th>Monto</th>
+                                    <th>Estado</th>
+                                    <th>Fecha</th>
+                                </tr>
+                            </thead>
+                            <tbody id="PedidoBuscado">
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
                 <!-- Aquí se muestra la paginación -->
             </div>
             <div class="modal-footer">

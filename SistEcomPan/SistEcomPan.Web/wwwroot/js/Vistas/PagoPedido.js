@@ -64,7 +64,9 @@ $(document).ready(function () {
         })
 
     tablaDataPago = $('#tbdataPago').DataTable({
-        responsive: true,
+        responsive: {
+            details: false
+        },
         "ajax": {
             "url": '/Pago/Lista',
             "type": "GET",
@@ -99,7 +101,7 @@ $(document).ready(function () {
                 "orderable": false,
                 "searchable": false,
                 "width": "80px",
-                responsivePriority: 1
+                responsivePriority: 2
 
             }
         ],

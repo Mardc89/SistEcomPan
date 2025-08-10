@@ -104,7 +104,7 @@ $(document).ready(function () {
                 "orderable": false,
                 "searchable": false,
                 "width": "80px",
-                responsivePriority: 1
+                responsivePriority: 2
             }
         ],
         order: [[0, "desc"]],

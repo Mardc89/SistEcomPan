@@ -176,12 +176,12 @@ function buscarPedidos(searchTer = '', page = 1) {
             pedidos.forEach(pedido => {
                 const row = document.createElement('tr');
                 row.innerHTML = `
-            <td>${pedido.idPedido}</td>
-            <td>${pedido.codigo}</td>
+            <td class="d-none d-md-table-cell">${pedido.idPedido}</td>
+            <td class="d-none d-md-table-cell">${pedido.codigo}</td>
             <td>${pedido.nombresCompletos}</td>
             <td>${pedido.montoTotal}</td>
             <td>${pedido.estado}</td>
-            <td>${pedido.fechaPedido}</td>
+            <td>${cambiarFecha(pedido.fechaPedido)}</td>
           `;
                 productTable.appendChild(row);
             });
@@ -243,8 +243,8 @@ function buscarListPedidos(searchTer = '', page = 1) {
             pedidos.forEach(pedido => {
                 const row = document.createElement('tr');
                 row.innerHTML = `
-            <td>${pedido.idPedido}</td>
-            <td>${pedido.codigo}</td>
+            <td class="text-nowrap d-none d-sm-table-cell">${pedido.idPedido}</td>
+            <td class="text-nowrap d-none d-sm-table-cell">${pedido.codigo}</td>
             <td>${pedido.nombresCompletos}</td>
             <td>${pedido.montoTotal}</td>
             <td>${pedido.estado}</td>
@@ -450,6 +450,26 @@ document.getElementById('searchInputs').addEventListener('input', function (even
     const searchTer = event.target.value;
     PaginaInicial = 1; // Reiniciar a la primera página al realizar una nueva búsqueda
     buscarPedidos(searchTer, PaginaInicial);
+});
+
+
+
+$('#btnCodPedido').on('click', function () {
+
+    $('<div class="modal-backdrop fade show second-backdrop"></div>')
+        .appendTo(document.body);
+
+    $('#modalDataPedidos').modal({
+        backdrop: false,
+        keyboard: false
+    });
+});
+
+
+$('#modalDataPedidos').on('hidden.bs.modal', function () {
+
+    $('.second-backdrop').remove()
+
 });
 
 

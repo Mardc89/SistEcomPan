@@ -39,14 +39,15 @@ $(document).ready(function () {
             "datatype": "json"
         },
         "columns": [
-            { "data": "idDistrito", "searchable": false },
-            { "data": "nombreDistrito" },
+            { "data": "idDistrito", responsivePriority: 100, "searchable": false },
+            { "data": "nombreDistrito" ,responsivePriority: 1 },
             {
                 "defaultContent": '<button class="btn btn-primary btn-editar btn-sm mr-2"><i class="fas fa-pencil-alt"></i></button>' +
                     '<button class= "btn btn-danger btn-eliminar btn-sm"><i class= "fas fa-trash-alt"></i></button>',
                 "orderable": false,
                 "searchable": false,
-                "width": "80px"
+                "width": "80px",
+                responsivePriority: 2
 
             }
         ],
