@@ -19,7 +19,7 @@ namespace Negocio.Implementacion
         private readonly IDetallePagoNew _repositorioDetallePagos;
         private readonly IProductoNew _repositorioProducto;
         private readonly IGenericRepository<Categorias> _repositorioCategoria;
-        private readonly IGenericRepository<DetallePedido> _repositorioDetallePedido;
+        private readonly IDetallePedidoRepository _repositorioDetallePedido;
         private readonly IGenericRepository<Clientes> _repositorioClientes;
         private readonly IGenericRepository<Mensajes> _repositorioMensajes;
         private DateTime FechaInicio=DateTime.Now;
@@ -32,7 +32,7 @@ namespace Negocio.Implementacion
             IProductoNew repositorioProducto,
             IGenericRepository<Mensajes> repositorioMensajes,
             IGenericRepository<Clientes> repositorioClientes,
-            IGenericRepository<DetallePedido> repositorioDetallePedido,
+            IDetallePedidoRepository repositorioDetallePedido,
             IPagoNew repositorioPagos,
             IDetallePagoNew repositorioDetallePagos
         )

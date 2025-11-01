@@ -9,8 +9,9 @@ using System.Threading.Tasks;
 
 namespace Datos.Interfaces
 {
-    public interface IPedidoNew:IGenericRepository<Pedidos>
+    public interface IPedidoNew
     {
+        Task<List<Pedidos>> Lista();
         Task<Pedidos> Registrar(Pedidos modelo,DataTable DataTable);
         Task<List<Pedidos>> Reporte(DateTime FechaInicio,DateTime FechaFin);
         Task<List<Pedidos>> ConsultarPedido(DateTime? fechaPedido=null);

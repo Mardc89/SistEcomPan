@@ -16,11 +16,11 @@ namespace Datos.Implementacion
     {
         private readonly string _cadenaSQL = "";
         private readonly IDevolucionNew _repositorioDevolucion;
-        private readonly IGenericRepository<NumeroDocumento> _repositorioNumDocumento;
+        private readonly INumeroDocumento _repositorioNumDocumento;
 
         public DevolucionNew(
             IDevolucionNew repositorioDevolucion,
-            IGenericRepository<NumeroDocumento> repositorioNumDocumento,
+            INumeroDocumento repositorioNumDocumento,
             IConfiguration configuration) : base(configuration)
         {
 

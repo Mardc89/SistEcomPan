@@ -15,16 +15,15 @@ using System.Linq.Expressions;
 
 namespace Datos.Implementacion
 {
-    public class UsuarioRepository:IGenericRepository<Usuarios>
+    public class UsuarioRepository:IUsuarioRepository
     {
         private readonly string _cadenaSQL = "";
-        private readonly IHostEnvironment _environment;
+   
         
 
-        public UsuarioRepository(IConfiguration configuration, IHostEnvironment environment)
+        public UsuarioRepository(IConfiguration configuration)
         {
             _cadenaSQL = configuration.GetConnectionString("cadenaSQL");
-            _environment = environment;
         }
 
         public async Task<List<Usuarios>> Lista()
@@ -177,10 +176,7 @@ namespace Datos.Implementacion
 
         }
 
-        public Task<Usuarios> Editar(Usuarios entidad, Stream foto)
-        {
-            throw new NotImplementedException();
-        }
+
 
 
 
@@ -226,10 +222,7 @@ namespace Datos.Implementacion
             throw new NotImplementedException();
         }
 
-        public Task<IQueryable<Usuarios>> Obtener(string consulta)
-        {
-            throw new NotImplementedException();
-        }
+
 
         public async Task<Usuarios> Buscar(string? Correo = null, string? Clave = null, int? IdUsuario = null)
             {
@@ -306,9 +299,7 @@ namespace Datos.Implementacion
         }
 
 
-        public Task<List<Usuarios>> Consultar(string? c = null, string? p = null, string? m = null, int? d = null)
-        {
-            throw new NotImplementedException();
-        }
+
+
     }
 }

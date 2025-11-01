@@ -12,17 +12,15 @@ using System.Threading.Tasks;
 
 namespace Datos.Implementacion
 {
-    public class PedidoNew : PedidoRepository, IPedidoEnvio
+    public class PedidoNew :  IPedidoEnvio
     {
         private readonly string _cadenaSQL = "";
-        private readonly IGenericRepository<Productos> _repositorioProducto;
+        private readonly IProductoNew _repositorioProducto;
         private readonly IPedidoNew _repositorioPedido;
-        private readonly IGenericRepository<NumeroDocumento> _repositorioNumDocumento;
+        private readonly INumeroDocumento _repositorioNumDocumento;
 
         public PedidoNew(
-            IGenericRepository<Productos> repositorioProducto, IPedidoNew repositorioPedido,
-            IGenericRepository<NumeroDocumento> repositorioNumDocumento,
-            IConfiguration configuration): base(configuration){
+            IProductoNew repositorioProducto, IPedidoNew repositorioPedido,INumeroDocumento repositorioNumDocumento,IConfiguration configuration){
 
             _repositorioProducto = repositorioProducto;
             _repositorioPedido = repositorioPedido;

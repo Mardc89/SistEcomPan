@@ -12,10 +12,10 @@ namespace Negocio.Implementacion
 {
     public class DestinatarioMensajeService : IDestinatarioMensajeService
     {
-        private readonly IGenericRepository<DestinatarioMensaje> _repositorio;
-        private readonly IGenericRepository<Clientes> _repositorioCliente;
-        private readonly IGenericRepository<Usuarios> _repositorioUsuario;
-        public DestinatarioMensajeService(IGenericRepository<DestinatarioMensaje> repositorio, IGenericRepository<Clientes> repositorioCliente, IGenericRepository<Usuarios> repositorioUsuario)
+        private readonly IDestinatarioMensajeRepository _repositorio;
+        private readonly IClienteRepository _repositorioCliente;
+        private readonly IUsuarioRepository _repositorioUsuario;
+        public DestinatarioMensajeService(IDestinatarioMensajeRepository repositorio, IClienteRepository repositorioCliente, IUsuarioRepository repositorioUsuario)
         {
             _repositorio= repositorio;
             _repositorioCliente = repositorioCliente;

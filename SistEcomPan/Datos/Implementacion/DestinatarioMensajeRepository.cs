@@ -12,7 +12,7 @@ using Datos.Interfaces;
 
 namespace Datos.Implementacion
 {
-    public class DestinatarioMensajeRepository:IGenericRepository<DestinatarioMensaje>
+    public class DestinatarioMensajeRepository:IDestinatarioMensajeRepository
     {
         private readonly string _cadenaSQL = "";
 
@@ -117,10 +117,7 @@ namespace Datos.Implementacion
             }
         }
 
-        public Task<IQueryable<DestinatarioMensaje>> Consultar(Expression<Func<DestinatarioMensaje, bool>> filtro = null)
-        {
-            throw new NotImplementedException();
-        }
+
 
         public async Task<DestinatarioMensaje> Crear(DestinatarioMensaje modelo)
         {
@@ -155,15 +152,7 @@ namespace Datos.Implementacion
         }
 
 
-        public Task<IQueryable<DestinatarioMensaje>> Consultar()
-        {
-            throw new NotImplementedException();
-        }
 
-        public Task<IQueryable<DestinatarioMensaje>> Obtener(string consulta)
-        {
-            throw new NotImplementedException();
-        }
 
         public async Task<DestinatarioMensaje> Buscar(string? Destinatario = null, string? Asunto = null, int? IdMensaje = null)
         {
@@ -219,9 +208,6 @@ namespace Datos.Implementacion
             return lista;
         }
 
-        public Task<List<DestinatarioMensaje>> Consultar(string? c = null, string? p = null, string? m = null, int? d = null)
-        {
-            throw new NotImplementedException();
-        }
+
     }
 }

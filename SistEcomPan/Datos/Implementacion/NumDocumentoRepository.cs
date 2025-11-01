@@ -12,7 +12,7 @@ using System.Linq.Expressions;
 
 namespace Datos.Implementacion
 {
-    public class NumDocumentoRepository : IGenericRepository<NumeroDocumento>
+    public class NumDocumentoRepository : INumeroDocumento
     {
         private readonly string _cadenaSQL = "";
 
@@ -54,49 +54,7 @@ namespace Datos.Implementacion
             return lista;
         }
 
-        public async Task<IQueryable<NumeroDocumento>> Consultar()
-        {
-            List<NumeroDocumento> lista = new List<NumeroDocumento>();
-            using (var conexion = new SqlConnection(_cadenaSQL))
-            {
-                conexion.Open();
-                SqlCommand cmd = new SqlCommand("SPListaNumeroDocumento", conexion);
-                cmd.CommandType = CommandType.StoredProcedure;
 
-                using (var dr = await cmd.ExecuteReaderAsync())
-                {
-                    while (await dr.ReadAsync())
-                    {
-                        lista.Add(new NumeroDocumento
-                        {
-                            IdNumeroDocumento = Convert.ToInt32(dr["IdNumeroDocumento"]),
-                            UltimoNumero = Convert.ToInt32(dr["UltimoNumero"]),
-                            CantidadDeDigitos = Convert.ToInt32(dr["CantidadDeDigitos"]),
-                            Gestion = dr["Gestion"].ToString(),
-                            FechaActualizacion = Convert.ToDateTime(dr["FechaActualizacion"])
-                        });
-                    }
-                }
-            }
-
-            return lista.AsQueryable();
-
-        }
-
-        public Task<List<NumeroDocumento>> Consultar(string? c = null, string? p = null, string? m = null, int? d = null)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<List<NumeroDocumento>> ConsultarLista()
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<NumeroDocumento> Crear(NumeroDocumento modelo)
-        {
-            throw new NotImplementedException();
-        }
 
         public async Task<bool> Editar(NumeroDocumento modelo)
         {
@@ -119,29 +77,9 @@ namespace Datos.Implementacion
             }
         }
 
-        public Task<bool> Eliminar(int d)
-        {
-            throw new NotImplementedException();
-        }
 
-        public Task<bool> Guardar(NumeroDocumento modelo)
-        {
-            throw new NotImplementedException();
-        }
 
-        public Task<List<NumeroDocumento>> Lista()
-        {
-            throw new NotImplementedException();
-        }
 
-        public Task<IQueryable<NumeroDocumento>> Obtener(string consulta)
-        {
-            throw new NotImplementedException();
-        }
 
-        public Task<NumeroDocumento> Verificar(string? c = null, string? p = null, int? d = null)
-        {
-            throw new NotImplementedException();
-        }
     }
 }

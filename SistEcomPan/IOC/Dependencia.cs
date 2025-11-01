@@ -28,26 +28,26 @@ namespace IOC
             services.AddScoped<IDestinatarioNew, MensajeRepository>();
             services.AddScoped<IPagoContado, PagoNew>();
             services.AddScoped<IGenericRepository<Distritos>, DistritoRepository>();
-            services.AddScoped<IGenericRepository<Tokens>, TokenRepository>();
+            services.AddScoped<ITokenRepository<Tokens>, TokenRepository>();
             services.AddScoped<IGenericRepository<DestinatarioMensaje>, DestinatarioMensajeRepository>();
             services.AddScoped<IGenericRepository<Mensajes>,MensajeRepository>();
             services.AddScoped<IGenericRepository<Categorias>, CategoriaRepository>();
-            services.AddScoped<IGenericRepository<Productos>, ProductoRepository>();
+            services.AddScoped<IProductoRepository, ProductoRepository>();
             services.AddScoped<IGenericRepository<Pedidos>, PedidoRepository>();
             services.AddScoped<IGenericRepository<Devolucion>, DevolucionRepository>();
             services.AddScoped<IGenericRepository<Pagos>, PagoRepository>();
             services.AddScoped<IGenericRepository<DetallePedido>, DetallePedidoRepository>();
             services.AddScoped<IGenericRepository<DetalleDevolucion>, DetalleDevolucionRepository>();
             services.AddScoped<IGenericRepository<DetallePago>, DetallePagoRepository>();
-            services.AddScoped<IGenericRepository<NumeroDocumento>, NumDocumentoRepository>();
+            services.AddScoped<INumeroDocumento, NumDocumentoRepository>();
 
             services.AddScoped<IGenericRepository<Usuarios>, UsuarioRepository>();
-            services.AddScoped<IGenericRepository<Configuracion>, ConfiguracionRepository>();        
+            services.AddScoped<IConfiguracionRepository<Configuracion>, ConfiguracionRepository>();        
             services.AddScoped<ICorreoService, CorreoService>();
             services.AddScoped<IEncriptService, EncriptService>();
 
             services.AddScoped<IGenericRepository<Roles>, RolRepository>();
-            services.AddScoped<IGenericRepository<Clientes>, ClienteRepository>();
+            services.AddScoped<IClienteRepository, ClienteRepository>();
             services.AddScoped<IRolService, RolService>();
             services.AddScoped<IDistritoService, DistritoService>();
             services.AddScoped<ITokenService, TokenService>();

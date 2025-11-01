@@ -12,10 +12,10 @@ namespace Negocio.Implementacion
 {
     public class ClienteService:IClienteService
     {
-        private readonly IGenericRepository<Clientes> _repositorio;
+        private readonly IClienteRepository _repositorio;
         private readonly IEncriptService _encriptservice;
         private readonly ICorreoService _correoService;
-        public ClienteService(IEncriptService encriptservice, ICorreoService correoService, IGenericRepository<Clientes> repositorio)
+        public ClienteService(IEncriptService encriptservice, ICorreoService correoService, IClienteRepository repositorio)
         {
             _encriptservice = encriptservice;
             _correoService = correoService;

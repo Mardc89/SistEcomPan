@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace Datos.Implementacion
 {
-    public class TokenRepository:IGenericRepository<Tokens>
+    public class TokenRepository:ITokenRepository<Tokens>
     {
         private readonly string _cadenaSQL = "";
         public TokenRepository(IConfiguration configuration)
@@ -49,20 +49,7 @@ namespace Datos.Implementacion
             return lista;
         }
 
-        public Task<List<Tokens>> Consultar(string? c = null, string? p = null, string? m = null, int? d = null)
-        {
-            throw new NotImplementedException();
-        }
 
-        public Task<IQueryable<Tokens>> Consultar()
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<Tokens> Crear(Tokens modelo)
-        {
-            throw new NotImplementedException();
-        }
 
         public async Task<bool> Editar(Tokens modelo)
         {
@@ -88,10 +75,7 @@ namespace Datos.Implementacion
             }
         }
 
-        public Task<bool> Eliminar(int d)
-        {
-            throw new NotImplementedException();
-        }
+
 
         public async Task<bool> Guardar(Tokens modelo)
         {
@@ -116,19 +100,10 @@ namespace Datos.Implementacion
             }
         }
 
-        public Task<List<Tokens>> Lista()
-        {
-            throw new NotImplementedException();
-        }
 
-        public Task<IQueryable<Tokens>> Obtener(string consulta)
-        {
-            throw new NotImplementedException();
-        }
 
-        public Task<Tokens> Verificar(string? c = null, string? p = null, int? d = null)
-        {
-            throw new NotImplementedException();
-        }
+
+
+
     }
 }

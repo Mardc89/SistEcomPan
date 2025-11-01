@@ -12,7 +12,7 @@ using System.Linq.Expressions;
 namespace Datos.Implementacion
 
 {
-    public class ClienteRepository:IGenericRepository<Clientes>
+    public class ClienteRepository:IClienteRepository
     {
         private readonly string _cadenaSQL = "";
 
@@ -154,12 +154,6 @@ namespace Datos.Implementacion
 
             }
         }
-
-        public Task<bool> Guardar(Clientes modelo)
-        {
-            throw new NotImplementedException();
-        }
-
 
         public async Task<Clientes> ConsultarCliente(string? Correo = null,string? Clave=null,int? IdCliente = null)
         {
@@ -321,10 +315,7 @@ namespace Datos.Implementacion
             return lista;
         }
 
-        public Task<List<Clientes>> Consultar(string? c = null, string? p = null, string? m = null, int? d = null)
-        {
-            throw new NotImplementedException();
-        }
+
     }
 
 }

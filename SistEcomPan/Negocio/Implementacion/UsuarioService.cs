@@ -14,12 +14,12 @@ namespace Negocio.Implementacion
 {
     public class UsuarioService : IUsuarioService
     {
-        private readonly IGenericRepository<Usuarios> _repositorio;
-        private readonly IGenericRepository<Clientes> _repositorioCliente;
+        private readonly IUsuarioRepository _repositorio;
+        private readonly IClienteRepository _repositorioCliente;
         private readonly IEncriptService _encriptservice;
         private readonly ICorreoService _correoService;
       
-        public UsuarioService(IEncriptService encriptservice, ICorreoService correoService, IGenericRepository<Usuarios> repositorio,IGenericRepository<Clientes> repositorioCliente)
+        public UsuarioService(IEncriptService encriptservice, ICorreoService correoService, IUsuarioRepository repositorio,IClienteRepository repositorioCliente)
         {
             _encriptservice = encriptservice;
             _correoService = correoService;

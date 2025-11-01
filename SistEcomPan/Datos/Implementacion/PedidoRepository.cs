@@ -202,16 +202,10 @@ namespace Datos.Implementacion
             
         }
 
-        public Task<bool> Guardar(Pedidos modelo)
-        {
-            throw new NotImplementedException();
-        }
 
 
-        public Task<Pedidos> Crear(Pedidos modelo)
-        {
-            throw new NotImplementedException();
-        }
+
+
 
         public async Task<List<Pedidos>> Consultar(string? Codigo=null,string? FechaInicio=null,string? FechaFin = null,int?IdPedido=null)
         {
@@ -247,10 +241,7 @@ namespace Datos.Implementacion
             return lista;           
         }
 
-        public Task<IQueryable<Pedidos>> Obtener(string consulta)
-        {
-            throw new NotImplementedException();
-        }
+
 
         public async Task<IQueryable<Pedidos>> Consultar()
         {
@@ -352,10 +343,7 @@ namespace Datos.Implementacion
             return lista;
         }
 
-        public Task<Pedidos> Verificar(string? c = null, string? p = null, int? d = null)
-        {
-            throw new NotImplementedException();
-        }
+
 
 
 

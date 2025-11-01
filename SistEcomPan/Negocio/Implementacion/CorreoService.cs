@@ -14,9 +14,9 @@ namespace Negocio.Implementacion
 {
     public class CorreoService : ICorreoService
     {
-        private readonly IGenericRepository<Configuracion> _repositorio;
+        private readonly IConfiguracionRepository<Configuracion> _repositorio;
 
-        public CorreoService(IGenericRepository<Configuracion> repositorio)
+        public CorreoService(IConfiguracionRepository<Configuracion> repositorio)
         {
             _repositorio = repositorio;
         }

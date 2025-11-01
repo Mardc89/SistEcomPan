@@ -11,9 +11,9 @@ namespace Negocio.Implementacion
 {
     public class TokenService : ITokenService
     {
-        private readonly IGenericRepository<Tokens> _repositorio;
+        private readonly ITokenRepository<Tokens> _repositorio;
 
-        public TokenService(IGenericRepository<Tokens> repositorio)
+        public TokenService(ITokenRepository<Tokens> repositorio)
         {
             _repositorio = repositorio;
         }
@@ -79,9 +79,6 @@ namespace Negocio.Implementacion
             }
         }
 
-        public Task<List<Tokens>> Lista()
-        {
-            throw new NotImplementedException();
-        }
+
     }
 }

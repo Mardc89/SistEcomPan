@@ -16,7 +16,7 @@ namespace Negocio.Implementacion
         private readonly IPedidoNew _repositorioPedidos;
         private readonly IPagoNew _repositorioPagosCliente;
         private readonly IGenericRepository<Pagos> _repositorioPagos;
-        private readonly IGenericRepository<Clientes> _repositorioClientes;
+        private readonly IClienteRepository _repositorioClientes;
         private readonly IGenericRepository<Mensajes> _repositorioMensajes;
         private readonly IGenericRepository<DestinatarioMensaje> _repositorioDestinoMensajes;
         private readonly IProductoNew _repositorioProductoTop;
@@ -29,7 +29,7 @@ namespace Negocio.Implementacion
             IGenericRepository<Pagos> repositorioPagos,
             IGenericRepository<Mensajes> repositorioMensajes,
             IGenericRepository<DestinatarioMensaje> repositorioDestinoMensajes,
-            IGenericRepository<Clientes> repositorioClientes,
+            IClienteRepository repositorioClientes,
             IPagoNew repositorioPagosCliente
 
         )

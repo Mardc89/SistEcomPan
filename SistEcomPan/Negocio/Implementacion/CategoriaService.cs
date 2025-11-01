@@ -11,9 +11,9 @@ namespace Negocio.Implementacion
 {
     public class CategoriaService:ICategoriaService
     {
-        private readonly IGenericRepository<Categorias> _repositorio;
+        private readonly ICategoriaRepository _repositorio;
 
-        public CategoriaService(IGenericRepository<Categorias> repositorio)
+        public CategoriaService(ICategoriaRepository repositorio)
         {
             _repositorio = repositorio;
         }

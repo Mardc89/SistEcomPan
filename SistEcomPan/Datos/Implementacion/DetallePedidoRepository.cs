@@ -12,7 +12,7 @@ using System.Linq.Expressions;
 
 namespace Datos.Implementacion
 {
-    public class DetallePedidoRepository : IGenericRepository<DetallePedido>
+    public class DetallePedidoRepository : IDetallePedidoRepository
     {
         private readonly string _cadenaSQL = "";
 
@@ -49,36 +49,6 @@ namespace Datos.Implementacion
             return lista;
         }
 
-        public Task<IQueryable<DetallePedido>> Consultar()
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<DetallePedido> Crear(DetallePedido modelo)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<bool> Editar(DetallePedido modelo)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<bool> Eliminar(int d)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<bool> Guardar(DetallePedido modelo)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<IQueryable<DetallePedido>> Obtener(string consulta)
-        {
-            throw new NotImplementedException();
-        }
-
         public async Task<DetallePedido> Buscar(string? codigo = null, string? estado = null, int? idPedido = null)
         {
             DetallePedido lista = null;
@@ -107,10 +77,7 @@ namespace Datos.Implementacion
             return lista;
         }
 
-        public Task<DetallePedido> Verificar(string? c = null, string? p = null, int? d = null)
-        {
-            throw new NotImplementedException();
-        }
+
 
         public async Task<List<DetallePedido>> ConsultarDetallePedido(int IdPedido)
         {
