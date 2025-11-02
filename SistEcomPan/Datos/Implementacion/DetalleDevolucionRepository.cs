@@ -11,48 +11,13 @@ using Datos.Interfaces;
 
 namespace Datos.Implementacion
 {
-    public class DetalleDevolucionRepository : IGenericRepository<DetalleDevolucion>
+    public class DetalleDevolucionRepository : IDetalleDevolucion
     {
         private readonly string _cadenaSQL = "";
 
         public DetalleDevolucionRepository(IConfiguration configuration)
         {
             _cadenaSQL = configuration.GetConnectionString("cadenaSQL");
-        }
-
-        public Task<DetalleDevolucion> Buscar(string? c = null, string? p = null, int? d = null)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<List<DetalleDevolucion>> Consultar(string? c = null, string? p = null, string? m = null, int? d = null)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<IQueryable<DetalleDevolucion>> Consultar()
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<DetalleDevolucion> Crear(DetalleDevolucion modelo)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<bool> Editar(DetalleDevolucion modelo)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<bool> Eliminar(int d)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<bool> Guardar(DetalleDevolucion modelo)
-        {
-            throw new NotImplementedException();
         }
 
         public async Task<List<DetalleDevolucion>> Lista()
@@ -94,14 +59,6 @@ namespace Datos.Implementacion
             }
         }
 
-        public Task<IQueryable<DetalleDevolucion>> Obtener(string consulta)
-        {
-            throw new NotImplementedException();
-        }
 
-        public Task<DetalleDevolucion> Verificar(string? c = null, string? p = null, int? d = null)
-        {
-            throw new NotImplementedException();
-        }
     }
 }

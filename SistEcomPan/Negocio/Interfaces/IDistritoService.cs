@@ -13,7 +13,6 @@ namespace Negocio.Interfaces
         Task<Distritos> Crear(Distritos entidad);
         Task<Distritos> Editar(Distritos entidad);
         Task<bool> Eliminar(int IdCategoria);
-        Task<IQueryable<Distritos>> ObtenerNombre();
         Task<string> ConsultarDistrito(int? IdDistrito);
     }
 }

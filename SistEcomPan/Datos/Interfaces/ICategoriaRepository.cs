@@ -9,6 +9,7 @@ namespace Datos.Interfaces
 {
     public interface ICategoriaRepository:IGenericRepository<Categorias>
     {
+        Task<Categorias> Crear(Categorias modelo);
         Task<Categorias> Buscar(string? c = null, string? p = null, int? d = null);
         Task<Categorias> Verificar(string? c = null, string? p = null, int? d = null);
 

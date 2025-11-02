@@ -12,7 +12,7 @@ using System.Linq.Expressions;
 
 namespace Datos.Implementacion
 {
-    public class RolRepository:IGenericRepository<Roles>
+    public class RolRepository:IRolRepository
     {
         private readonly string _cadenaSQL = "";
 
@@ -125,15 +125,6 @@ namespace Datos.Implementacion
             }
         }
 
-        public Task<IQueryable<Roles>> Consultar(Expression<Func<Roles, bool>> filtro = null)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<Roles> Obtener(Roles modelo)
-        {
-            throw new NotImplementedException();
-        }
 
         public async Task<Roles> Crear(Roles modelo)
         {
@@ -167,15 +158,6 @@ namespace Datos.Implementacion
             }
         }
 
-        public Task<IQueryable<Roles>> Consultar()
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<IQueryable<Roles>> Obtener(string consulta)
-        {
-            throw new NotImplementedException();
-        }
 
         public async Task<Roles> Buscar(string? NombreRol = null, string? Estado = null, int? IdRol = null)
         {
@@ -233,9 +215,6 @@ namespace Datos.Implementacion
         }
 
 
-        public Task<List<Roles>> Consultar(string? c = null, string? p = null, string? m = null, int? d = null)
-        {
-            throw new NotImplementedException();
-        }
+
     }
 }

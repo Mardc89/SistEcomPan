@@ -1,4 +1,5 @@
-﻿using Datos.Interfaces;
+﻿using Datos.Implementacion;
+using Datos.Interfaces;
 using Entidades;
 using Negocio.Interfaces;
 using System;
@@ -12,22 +13,14 @@ namespace Negocio.Implementacion
     public class DevolucionService : IDevolucionService
     {
         private readonly IDevolucionProducto _repositorioDevolucionProducto;
-        private readonly IGenericRepository<Devolucion> _repositorioDevolucion;
+        private readonly IDevolucionNew _repositorioDevolucion;
 
-        public DevolucionService(IDevolucionProducto repositorioDevolucionProducto, IGenericRepository<Devolucion> repositorioDevolucion)
+        public DevolucionService(IDevolucionProducto repositorioDevolucionProducto, IDevolucionNew repositorioDevolucion)
         {
             _repositorioDevolucionProducto = repositorioDevolucionProducto;
             _repositorioDevolucion = repositorioDevolucion;
         }
-        public Task<Devolucion> Actualizar(Devolucion entidad)
-        {
-            throw new NotImplementedException();
-        }
 
-        public Task<Pedidos> Detalle(string numeroDevolucion)
-        {
-            throw new NotImplementedException();
-        }
 
         public async Task<bool> Eliminar(int IdDevolucion)
         {

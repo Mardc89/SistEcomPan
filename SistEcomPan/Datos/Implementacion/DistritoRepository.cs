@@ -12,7 +12,7 @@ using System.Linq.Expressions;
 
 namespace Datos.Implementacion
 {
-    public class DistritoRepository:IGenericRepository<Distritos>
+    public class DistritoRepository:IDistritoRepository
     {
         private readonly string _cadenaSQL = "";
 
@@ -112,10 +112,6 @@ namespace Datos.Implementacion
             }
         }
 
-        public Task<IQueryable<Distritos>> Consultar(Expression<Func<Distritos, bool>> filtro = null)
-        {
-            throw new NotImplementedException();
-        }
 
         public async Task<Distritos> Crear(Distritos modelo)
         {
@@ -150,15 +146,6 @@ namespace Datos.Implementacion
         }
 
 
-        public Task<IQueryable<Distritos>> Consultar()
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<IQueryable<Distritos>> Obtener(string consulta)
-        {
-            throw new NotImplementedException();
-        }
 
         public async Task<Distritos> Buscar(string? Descripcion = null, string? NombreDistrito = null, int? IdDistrito = null)
         {
@@ -212,14 +199,7 @@ namespace Datos.Implementacion
             return lista;
         }
 
-        public Task<List<Distritos>> ConsultarLista()
-        {
-            throw new NotImplementedException();
-        }
 
-        public Task<List<Distritos>> Consultar(string? c = null, string? p = null, string? m = null, int? d = null)
-        {
-            throw new NotImplementedException();
-        }
+
     }
 }

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Datos.Interfaces
 {
-    internal interface IProductoRepository:IGenericRepository<Productos>
+    public interface IProductoRepository:IGenericRepository<Productos>
     {
         Task<Productos> Buscar(string? c = null, string? p = null, int? d = null);
         Task<Productos> Verificar(string? c = null, string? p = null, int? d = null);

@@ -10,9 +10,7 @@ namespace Negocio.Interfaces
     public interface IDevolucionService
     {
         Task<Devolucion> Registrar(Devolucion entidad);
-        Task<Devolucion> Actualizar(Devolucion entidad);
         Task<bool> Eliminar(int IdDevolucion);
-        Task<Pedidos> Detalle(string numeroDevolucion);
         Task<List<Devolucion>> Lista();
     }
 }

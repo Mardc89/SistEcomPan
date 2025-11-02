@@ -16,11 +16,11 @@ namespace Negocio.Implementacion
     {
         private readonly IGenericRepository<Productos> _repositorioProducto;
         private readonly IPedidoEnvio _repositorioPedidoEnvio;
-        private readonly IGenericRepository<Pedidos> _repositorioPedido;
-        private readonly IGenericRepository<Pagos> _repositorioPago;
+        private readonly IPedidoNew _repositorioPedido;
+        private readonly IPagoNew _repositorioPago;
 
         public PedidoService(IGenericRepository<Productos> repositorioProducto,IPedidoEnvio repositorioPedidoEnvio,
-            IGenericRepository<Pedidos> repositorioPedido, IGenericRepository<Pagos> repositorioPago)
+            IPedidoNew repositorioPedido, IPagoNew repositorioPago)
         {
             _repositorioProducto = repositorioProducto;
             _repositorioPedidoEnvio = repositorioPedidoEnvio;

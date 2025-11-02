@@ -32,12 +32,12 @@ namespace IOC
             services.AddScoped<IGenericRepository<DestinatarioMensaje>, DestinatarioMensajeRepository>();
             services.AddScoped<IGenericRepository<Mensajes>,MensajeRepository>();
             services.AddScoped<IGenericRepository<Categorias>, CategoriaRepository>();
-            services.AddScoped<IProductoRepository, ProductoRepository>();
+            services.AddScoped<IProductoNew, ProductoRepository>();
             services.AddScoped<IGenericRepository<Pedidos>, PedidoRepository>();
-            services.AddScoped<IGenericRepository<Devolucion>, DevolucionRepository>();
+            services.AddScoped<IDevolucionNew, DevolucionRepository>();
             services.AddScoped<IGenericRepository<Pagos>, PagoRepository>();
-            services.AddScoped<IGenericRepository<DetallePedido>, DetallePedidoRepository>();
-            services.AddScoped<IGenericRepository<DetalleDevolucion>, DetalleDevolucionRepository>();
+            services.AddScoped<IDetallePedidoRepository, DetallePedidoRepository>();
+            services.AddScoped<IDetalleDevolucion, DetalleDevolucionRepository>();
             services.AddScoped<IGenericRepository<DetallePago>, DetallePagoRepository>();
             services.AddScoped<INumeroDocumento, NumDocumentoRepository>();
 

@@ -11,5 +11,8 @@ namespace Datos.Interfaces
     {
         Task<Mensajes> Crear(Mensajes modelo, DestinatarioMensaje destino);
         Task<Mensajes> CrearRespuestaMensaje(Mensajes modelo, DestinatarioMensaje destino);
+        Task<Mensajes> Buscar(string? c = null, string? p = null, int? d = null);
+        Task<Mensajes> Verificar(string? c = null, string? p = null, int? d = null);
+
     }
 }

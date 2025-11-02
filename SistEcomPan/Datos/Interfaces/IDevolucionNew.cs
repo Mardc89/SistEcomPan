@@ -8,8 +8,12 @@ using System.Threading.Tasks;
 
 namespace Datos.Interfaces
 { 
-    public interface IDevolucionNew: IGenericRepository<Devolucion>
+    public interface IDevolucionNew
     {
         Task<Devolucion> Registrar(Devolucion modelo, DataTable DataTable);
+        Task<Devolucion> Buscar(string? c = null, string? p = null, int? d = null);
+        Task<List<Devolucion>> Lista();
+        Task<bool> Eliminar(int d);
+
     }
 }

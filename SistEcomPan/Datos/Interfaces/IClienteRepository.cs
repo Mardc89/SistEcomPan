@@ -7,13 +7,9 @@ using System.Threading.Tasks;
 
 namespace Datos.Interfaces
 {
-    public interface IClienteRepository
+    public interface IClienteRepository:IGenericRepository<Clientes>
     {
-        Task<List<Clientes>> Lista();
         Task<Clientes> Crear(Clientes modelo);
-        Task<bool> Editar(Clientes modelo);
-        Task<bool> Eliminar(int d);
-
         Task<Clientes> Buscar(string? c = null, string? p = null, int? d = null);
         Task<Clientes> Verificar(string? c = null, string? p = null, int? d = null);
   

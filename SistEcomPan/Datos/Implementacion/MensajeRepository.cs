@@ -121,10 +121,7 @@ namespace Datos.Implementacion
             }
         }
 
-        public Task<IQueryable<Mensajes>> Consultar(Expression<Func<Mensajes, bool>> filtro = null)
-        {
-            throw new NotImplementedException();
-        }
+
 
         public async Task<Mensajes> Crear(Mensajes modelo,DestinatarioMensaje destino)
         {
@@ -201,15 +198,9 @@ namespace Datos.Implementacion
         }
 
 
-        public Task<IQueryable<Mensajes>> Consultar()
-        {
-            throw new NotImplementedException();
-        }
 
-        public Task<IQueryable<Mensajes>> Obtener(string consulta)
-        {
-            throw new NotImplementedException();
-        }
+
+
 
         public async Task<Mensajes> Buscar(string? Cuerpo = null, string? Asunto = null, int? IdMensaje = null)
         {
@@ -272,14 +263,6 @@ namespace Datos.Implementacion
             return lista;
         }
 
-        public Task<List<Mensajes>> Consultar(string? c = null, string? p = null, string? m = null, int? d = null)
-        {
-            throw new NotImplementedException();
-        }
 
-        public Task<Mensajes> Crear(Mensajes modelo)
-        {
-            throw new NotImplementedException();
-        }
     }
 }

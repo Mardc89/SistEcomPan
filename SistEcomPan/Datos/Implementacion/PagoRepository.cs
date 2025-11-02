@@ -271,36 +271,6 @@ namespace Datos.Implementacion
         }
 
 
-        public Task<IQueryable<Pagos>> Consultar(Expression<Func<Pagos, bool>> filtro = null)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<Pagos> Crear(Pagos modelo)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<IQueryable<Pagos>> Consultar()
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<IQueryable<Pagos>> Obtener(string consulta)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<List<Pagos>> Reporte(DateTime FechaInicio, DateTime FechaFin)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<bool> Editar(Pagos modelo)
-        {
-            throw new NotImplementedException();
-        }
-
         public async Task<Pagos> Buscar(string? estado = null, string? fecha = null, int? idPedido = null)
         {
             Pagos lista = null;
@@ -334,17 +304,7 @@ namespace Datos.Implementacion
             return lista;
         }
 
-        public Task<Pagos> Verificar(string? c = null, string? p = null, int? d = null)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<List<Pagos>> ConsultarLista()
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<List<Pagos>> Consultar(string? c = null, string? p = null, string? m = null,int ? d = null)
+        public Task<bool> Editar(Pagos modelo)
         {
             throw new NotImplementedException();
         }

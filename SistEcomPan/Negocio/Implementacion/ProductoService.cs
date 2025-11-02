@@ -13,9 +13,9 @@ namespace Negocio.Implementacion
 {
     public class ProductoService:IProductoService
     {
-        private readonly IGenericRepository<Productos> _repositorio;
+        private readonly IProductoNew _repositorio;
         
-        public ProductoService(IGenericRepository<Productos> repositorio, IHostEnvironment environment)
+        public ProductoService(IProductoNew repositorio, IHostEnvironment environment)
         {
             _repositorio = repositorio;
         }

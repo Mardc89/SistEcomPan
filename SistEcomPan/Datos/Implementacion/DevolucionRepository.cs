@@ -52,25 +52,8 @@ namespace Datos.Implementacion
             return lista;
         }
 
-        public Task<List<Devolucion>> Consultar(string? c = null, string? p = null, string? m = null, int? d = null)
-        {
-            throw new NotImplementedException();
-        }
 
-        public Task<IQueryable<Devolucion>> Consultar()
-        {
-            throw new NotImplementedException();
-        }
 
-        public Task<Devolucion> Crear(Devolucion modelo)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<bool> Editar(Devolucion modelo)
-        {
-            throw new NotImplementedException();
-        }
 
         public async Task<bool> Eliminar(int id)
         {
@@ -92,10 +75,7 @@ namespace Datos.Implementacion
             }
         }
 
-        public Task<bool> Guardar(Devolucion modelo)
-        {
-            throw new NotImplementedException();
-        }
+
 
         public async Task<List<Devolucion>> Lista()
         {
@@ -135,10 +115,6 @@ namespace Datos.Implementacion
             }
         }
 
-        public Task<IQueryable<Devolucion>> Obtener(string consulta)
-        {
-            throw new NotImplementedException();
-        }
 
         public async Task<Devolucion> Registrar(Devolucion modelo, DataTable detalleDevolucion)
         {
@@ -187,9 +163,6 @@ namespace Datos.Implementacion
             return modelo;
         }
 
-        public Task<Devolucion> Verificar(string? c = null, string? p = null, int? d = null)
-        {
-            throw new NotImplementedException();
-        }
+
     }
 }

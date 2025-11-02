@@ -11,9 +11,9 @@ namespace Negocio.Implementacion
 {
     public class DistritoService:IDistritoService
     {
-        private readonly IGenericRepository<Distritos> _repositorio;
+        private readonly IDistritoRepository _repositorio;
 
-        public DistritoService(IGenericRepository<Distritos> repositorio)
+        public DistritoService(IDistritoRepository repositorio)
         {
             _repositorio = repositorio;
         }
@@ -23,11 +23,6 @@ namespace Negocio.Implementacion
             return query;
         }
 
-        public async Task<IQueryable<Distritos>> ObtenerNombre()
-        {
-            List<Distritos> lista = await _repositorio.Lista();
-            return lista.AsQueryable();
-        }
 
         public async Task<string> ConsultarDistrito(int? IdDistrito)
         {

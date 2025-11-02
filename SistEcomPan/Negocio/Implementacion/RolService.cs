@@ -15,9 +15,9 @@ namespace Negocio.Implementacion
 {
     public class RolService : IRolService
     {
-        private readonly IGenericRepository<Roles> _repositorio;
+        private readonly IRolRepository _repositorio;
 
-        public RolService(IGenericRepository<Roles> repositorio)
+        public RolService(IRolRepository repositorio)
         {
             _repositorio = repositorio;
         }

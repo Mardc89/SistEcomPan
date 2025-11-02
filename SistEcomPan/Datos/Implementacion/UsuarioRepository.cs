@@ -19,8 +19,6 @@ namespace Datos.Implementacion
     {
         private readonly string _cadenaSQL = "";
    
-        
-
         public UsuarioRepository(IConfiguration configuration)
         {
             _cadenaSQL = configuration.GetConnectionString("cadenaSQL");
@@ -175,53 +173,6 @@ namespace Datos.Implementacion
             }
 
         }
-
-
-
-
-
-
-
-        public async Task<IQueryable<Usuarios>> Consultar()
-        {
-            List<Usuarios> lista = new List<Usuarios>();
-            using (var conexion = new SqlConnection(_cadenaSQL))
-            {
-                conexion.Open();
-                SqlCommand cmd = new SqlCommand("SPListaUsuarios", conexion);
-                cmd.CommandType = CommandType.StoredProcedure;
-
-                using (var dr = await cmd.ExecuteReaderAsync())
-                {
-                    while (await dr.ReadAsync())
-                    {
-                        lista.Add(new Usuarios
-                        {
-                            IdUsuario = Convert.ToInt32(dr["Idusuario"]),
-                            Dni = dr["Dni"].ToString(),
-                            Nombres = dr["Nombres"].ToString(),
-                            Apellidos = dr["Apellidos"].ToString(),
-                            Correo = dr["Correo"].ToString(),
-                            NombreUsuario = dr["NombreUsuario"].ToString(),
-                            Clave = dr["Clave"].ToString(),
-                            IdRol = Convert.ToInt32(dr["IdRol"]),
-                            FechaRegistro = Convert.ToDateTime(dr["FechaRegistro"]),
-                            Estado = Convert.ToBoolean(dr["Estado"]),
-                            UrlFoto = dr["UrlFoto"].ToString(),
-                            NombreFoto = dr["NombreFoto"].ToString()
-                        });
-                    }
-                }
-            }
-
-            return lista.AsQueryable();
-        }
-
-        public Task<bool> Guardar(Usuarios modelo)
-        {
-            throw new NotImplementedException();
-        }
-
 
 
         public async Task<Usuarios> Buscar(string? Correo = null, string? Clave = null, int? IdUsuario = null)

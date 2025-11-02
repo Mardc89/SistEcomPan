@@ -11,6 +11,7 @@ namespace Datos.Interfaces
     {
         Task<Usuarios> Buscar(string?c = null,string?p=null,int?d = null);
         Task<Usuarios> Verificar(string?c=null,string?p=null,int?d=null);
+        Task<Usuarios> Crear(Usuarios modelo);
 
     }
 }
