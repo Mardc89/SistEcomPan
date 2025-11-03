@@ -11,6 +11,7 @@ using SistEcomPan.Web.Tools.Response;
 using Negocio.Interfaces;
 using Entidades;
 using Newtonsoft.Json;
+using Negocio.Implementacion;
 
 namespace SistEcomPan.Web.Controllers
 {
@@ -198,7 +199,7 @@ namespace SistEcomPan.Web.Controllers
 
                 List<VMCliente> vmCliente = new List<VMCliente>();
                 var RolesUsuarios = await _rolServicio.ObtenerNombre();
-                var NombresDistritos = await _distritoServicio.ObtenerNombre();
+                //var NombresDistritos = await _distritoServicio.ObtenerNombre();
 
                 vmCliente.Add(new VMCliente
                 {
@@ -213,7 +214,8 @@ namespace SistEcomPan.Web.Controllers
                     NombreUsuario = usuarioEncontrado.NombreUsuario,
                     Clave = _EncriptarServicio.DesencriptarPassword(usuarioEncontrado.Clave),
                     Telefono = usuarioEncontrado.Telefono,
-                    NombreDistrito = NombresDistritos.Where(x => x.IdDistrito == usuarioEncontrado.IdDistrito).Select(x => x.NombreDistrito).First(),
+                    NombreDistrito = await _distritoServicio.ConsultarDistrito(usuarioEncontrado.IdDistrito),
+                    //NombreDistrito = NombresDistritos.Where(x => x.IdDistrito == usuarioEncontrado.IdDistrito).Select(x => x.NombreDistrito).First(),
                     UrlFoto = usuarioEncontrado.UrlFoto,
                     NombreFoto=usuarioEncontrado.NombreFoto
                     

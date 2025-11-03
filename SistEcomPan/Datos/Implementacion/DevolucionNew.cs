@@ -18,10 +18,7 @@ namespace Datos.Implementacion
         private readonly IDevolucionNew _repositorioDevolucion;
         private readonly INumeroDocumento _repositorioNumDocumento;
 
-        public DevolucionNew(
-            IDevolucionNew repositorioDevolucion,
-            INumeroDocumento repositorioNumDocumento,
-            IConfiguration configuration) : base(configuration)
+        public DevolucionNew(IDevolucionNew repositorioDevolucion,INumeroDocumento repositorioNumDocumento,IConfiguration configuration) : base(configuration)
         {
 
             _repositorioDevolucion = repositorioDevolucion;

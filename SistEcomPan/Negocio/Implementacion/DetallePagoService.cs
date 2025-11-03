@@ -11,9 +11,9 @@ namespace Negocio.Implementacion
 {
     public class DetallePagoService:IDetallePagoService
     {
-        private readonly IGenericRepository<DetallePago> _repositorioDetallePago;
+        private readonly IDetallePagoNew _repositorioDetallePago;
 
-        public DetallePagoService(IGenericRepository<DetallePago> repositorioDetallePago)
+        public DetallePagoService(IDetallePagoNew repositorioDetallePago)
         {
             _repositorioDetallePago = repositorioDetallePago;
 

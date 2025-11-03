@@ -13,29 +13,14 @@ namespace Negocio.Implementacion
     {
 
         private readonly IPagoContado _repositorioPagoContado;
-        private readonly IGenericRepository<Pagos> _repositorioPago;
+        private readonly IPagoNew _repositorioPago;
 
-        public PagoService(IPagoContado repositorioPagoContado,
-            IGenericRepository<Pagos> repositorioPago)
+        public PagoService(IPagoContado repositorioPagoContado,IPagoNew repositorioPago)
         {
             _repositorioPagoContado = repositorioPagoContado;
             _repositorioPago = repositorioPago;
         }
 
-        public Task<Pagos> Detalle(string numeroPago)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<bool> Eliminar(int IdPedido)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<List<Pagos>> Historial(string numeroPago, string fechaInicio, string fechaFin)
-        {
-            throw new NotImplementedException();
-        }
 
 
         public async Task<Pagos> Registrar(Pagos entidad)
@@ -78,16 +63,10 @@ namespace Negocio.Implementacion
         }
 
 
-        public Task<List<Productos>> ObtenerProductos(string busqueda)
-        {
-            throw new NotImplementedException();
-        }
 
 
 
-        public Task<List<DetallePago>> Reporte(string fechaInicio, string fechaFin)
-        {
-            throw new NotImplementedException();
-        }
+
+
     }
 }

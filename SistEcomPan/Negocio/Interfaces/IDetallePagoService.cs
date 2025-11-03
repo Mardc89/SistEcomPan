@@ -10,7 +10,5 @@ namespace Negocio.Interfaces
     public interface IDetallePagoService
     {
         Task<List<DetallePago>> Lista();
-
-        Task<IQueryable<DetallePago>> ObtenerNombre();
     }
 }

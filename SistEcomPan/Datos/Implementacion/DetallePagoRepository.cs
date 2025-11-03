@@ -20,10 +20,7 @@ namespace Datos.Implementacion
         {
             _cadenaSQL = configuration.GetConnectionString("cadenaSQL");
         }
-        public Task<IQueryable<DetallePago>> Consultar()
-        {
-            throw new NotImplementedException();
-        }
+
 
         public async Task<List<DetallePago>> Lista()
         {
@@ -54,48 +51,9 @@ namespace Datos.Implementacion
             return lista;
         }
 
-        public Task<DetallePago> Crear(DetallePago modelo)
-        {
-            throw new NotImplementedException();
-        }
 
-        public Task<bool> Editar(DetallePago modelo)
-        {
-            throw new NotImplementedException();
-        }
+        
 
-        public Task<bool> Eliminar(int d)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<bool> Guardar(DetallePago modelo)
-        {
-            throw new NotImplementedException();
-        }
-
-
-        public Task<IQueryable<DetallePago>> Obtener(string consulta)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<DetallePago> Buscar(string? c = null, string? p = null, int? d = null)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<DetallePago> Verificar(string? c = null, string? p = null, int? d = null)
-        {
-            throw new NotImplementedException();
-        }
-
-
-
-        public Task<List<DetallePago>> Consultar(string? c = null, string? p = null, string? m = null, int? d = null)
-        {
-            throw new NotImplementedException();
-        }
 
         public async Task<List<DetallePago>> ConsultarDetallePagos(DateTime? fechaInicio)
         {

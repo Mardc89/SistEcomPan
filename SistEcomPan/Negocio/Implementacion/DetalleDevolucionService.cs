@@ -11,9 +11,9 @@ namespace Negocio.Implementacion
 {
     public class DetalleDevolucionService : IDetalleDevolucionService
     {
-        private readonly IGenericRepository<DetalleDevolucion> _repositorioDetalleDevolucion;
+        private readonly IDetalleDevolucion _repositorioDetalleDevolucion;
 
-        public DetalleDevolucionService(IGenericRepository<DetalleDevolucion> repositorioDetalleDevolucion)
+        public DetalleDevolucionService(IDetalleDevolucion repositorioDetalleDevolucion)
         {
             _repositorioDetalleDevolucion = repositorioDetalleDevolucion;
 

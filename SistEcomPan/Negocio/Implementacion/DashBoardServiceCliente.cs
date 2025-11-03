@@ -14,11 +14,10 @@ namespace Negocio.Implementacion
     public class DashBoardServiceCliente : IDashBoardServiceCliente
     {
         private readonly IPedidoNew _repositorioPedidos;
-        private readonly IPagoNew _repositorioPagosCliente;
-        private readonly IGenericRepository<Pagos> _repositorioPagos;
+        private readonly IPagoNew _repositorioPagos;
         private readonly IClienteRepository _repositorioClientes;
-        private readonly IGenericRepository<Mensajes> _repositorioMensajes;
-        private readonly IGenericRepository<DestinatarioMensaje> _repositorioDestinoMensajes;
+        private readonly IDestinatarioNew _repositorioMensajes;
+        private readonly IDestinatarioMensajeRepository _repositorioDestinoMensajes;
         private readonly IProductoNew _repositorioProductoTop;
         private DateTime FechaInicio = DateTime.Now;
 
@@ -26,11 +25,10 @@ namespace Negocio.Implementacion
         (
             IProductoNew repositorioProductoTop,
             IPedidoNew repositorioPedidos,
-            IGenericRepository<Pagos> repositorioPagos,
-            IGenericRepository<Mensajes> repositorioMensajes,
-            IGenericRepository<DestinatarioMensaje> repositorioDestinoMensajes,
-            IClienteRepository repositorioClientes,
-            IPagoNew repositorioPagosCliente
+            IPagoNew repositorioPagos,
+            IDestinatarioNew repositorioMensajes,
+            IDestinatarioMensajeRepository repositorioDestinoMensajes,
+            IClienteRepository repositorioClientes
 
         )
         {
@@ -41,7 +39,6 @@ namespace Negocio.Implementacion
             _repositorioPagos = repositorioPagos;
             _repositorioClientes = repositorioClientes;
             FechaInicio = FechaInicio.AddDays(-7);
-            _repositorioPagosCliente = repositorioPagosCliente;
         }
 
 
@@ -224,7 +221,7 @@ namespace Negocio.Implementacion
             {
                 var clientelista = await _repositorioClientes.Lista();
                 var idCliente = clientelista.Where(x => x.Dni == DniPersonal).Select(x => x.IdCliente).FirstOrDefault();
-                List<Pagos> query = await _repositorioPagosCliente
+                List<Pagos> query = await _repositorioPagos
                     .ConsultarMisPagos(FechaInicio.Date,idCliente);
 
                 Dictionary<string,decimal?> resultado = query

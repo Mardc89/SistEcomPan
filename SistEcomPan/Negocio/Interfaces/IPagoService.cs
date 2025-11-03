@@ -9,14 +9,10 @@ namespace Negocio.Interfaces
 {
     public interface IPagoService
     {
-        Task<List<Productos>> ObtenerProductos(string busqueda);
         Task<Pagos> Registrar(Pagos entidad);
         Task<Pagos> Editar(Pagos entidad);
-        Task<bool> Eliminar(int IdPago);
-        Task<List<Pagos>> Historial(string numeroPago, string fechaInicio, string fechaFin);
-        Task<Pagos> Detalle(string numeroPago);
-        Task<List<DetallePago>> Reporte(string fechaInicio, string fechaFin);
         Task<List<Pagos>> Lista();
-        Task<IQueryable<Pagos>> ObtenerNombre();
+
+        //Task<IQueryable<Pagos>> ObtenerNombre();
     }
 }

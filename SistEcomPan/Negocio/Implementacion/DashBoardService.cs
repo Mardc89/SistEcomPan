@@ -18,20 +18,20 @@ namespace Negocio.Implementacion
         private readonly IPagoNew _repositorioPagos;
         private readonly IDetallePagoNew _repositorioDetallePagos;
         private readonly IProductoNew _repositorioProducto;
-        private readonly IGenericRepository<Categorias> _repositorioCategoria;
+        private readonly ICategoriaRepository _repositorioCategoria;
         private readonly IDetallePedidoRepository _repositorioDetallePedido;
-        private readonly IGenericRepository<Clientes> _repositorioClientes;
-        private readonly IGenericRepository<Mensajes> _repositorioMensajes;
+        private readonly IClienteRepository _repositorioClientes;
+        private readonly IDestinatarioNew _repositorioMensajes;
         private DateTime FechaInicio=DateTime.Now;
         private DateTime FechaActual = DateTime.Now;
 
         public DashBoardService
         (
-            IGenericRepository<Categorias> repositorioCategoria,
+            ICategoriaRepository repositorioCategoria,
             IPedidoNew repositorioPedidos,
             IProductoNew repositorioProducto,
-            IGenericRepository<Mensajes> repositorioMensajes,
-            IGenericRepository<Clientes> repositorioClientes,
+            IDestinatarioNew repositorioMensajes,
+            IClienteRepository repositorioClientes,
             IDetallePedidoRepository repositorioDetallePedido,
             IPagoNew repositorioPagos,
             IDetallePagoNew repositorioDetallePagos

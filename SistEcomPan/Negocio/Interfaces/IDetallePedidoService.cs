@@ -11,7 +11,5 @@ namespace Negocio.Interfaces
     {
         Task<List<DetallePedido>> Lista();
 
-        Task<IQueryable<DetallePedido>> ObtenerNombre();
-
     }
 }

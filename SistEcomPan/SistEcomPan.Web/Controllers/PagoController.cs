@@ -14,15 +14,13 @@ namespace SistEcomPan.Web.Controllers
         private readonly IPagoService _pagoService;
         private readonly IClienteService _clienteService;
         private readonly IPedidoService _pedidoService;
-        private readonly ICategoriaService _categoriaService;
         private readonly IDetallePagoService _detallePagoService;
 
-        public PagoController(IPagoService pagoService, IClienteService clienteService, IPedidoService pedidoService, ICategoriaService categoriaService, IDetallePagoService detallePagoService)
+        public PagoController(IPagoService pagoService, IClienteService clienteService, IPedidoService pedidoService, IDetallePagoService detallePagoService)
         {
             _pagoService = pagoService;
             _clienteService = clienteService;
             _pedidoService = pedidoService;
-            _categoriaService = categoriaService;
             _detallePagoService = detallePagoService;
         }
         public IActionResult Index()
@@ -48,7 +46,7 @@ namespace SistEcomPan.Web.Controllers
             var Pagolista = await _pagoService.Lista();
             List<VMPago> vmPagolista = new List<VMPago>();
             var pedidoCliente = await _pedidoService.ObtenerNombre();
-            var clientes = await _clienteService.ObtenerNombre();
+            var clientes = await _clienteService.Lista();
             foreach (var item in Pagolista)
             {
                 var clientePedido = pedidoCliente.Where(x => x.IdPedido == item.IdPedido).First().IdCliente;          

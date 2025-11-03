@@ -85,14 +85,9 @@ namespace SistEcomPan.Web.Controllers
         [HttpGet]
         public async Task<IActionResult> ObtenerClientes(string searchTerm = "", int page = 1, int itemsPerPage = 4)
        {
-            var clienteLista = await _clienteService.Lista();                       
-            var pedidosFiltrados = clienteLista.Where(p =>
-                string.IsNullOrWhiteSpace(searchTerm) || p.Apellidos.ToLower().EndsWith(searchTerm.ToLower())||
-                p.Apellidos.ToLower().StartsWith(searchTerm.ToLower())|| 
-                p.Nombres.ToLower().StartsWith(searchTerm.ToLower())||
-                p.Nombres.ToLower().EndsWith(searchTerm.ToLower())||
-                p.Dni.ToLower().Contains(searchTerm.ToLower())
-            );
+            //var clienteLista = await _clienteService.Lista();                       
+            var pedidosFiltrados = await _clienteService.ClienteFiltrado(searchTerm);
+
             List<VMCliente> vmClienteLista = new List<VMCliente>();
             //var nombreDistrito = await _distritoService.ObtenerNombre();
             foreach (var item in pedidosFiltrados)
@@ -172,7 +167,7 @@ namespace SistEcomPan.Web.Controllers
 
                 List<VMCliente> vmClientelista = new List<VMCliente>();
                 List<Clientes> listClientes = new List<Clientes>();
-                var nombreDistrito = await _distritoService.ObtenerNombre();
+                //var nombreDistrito = await _distritoService.ObtenerNombre();
                 if (usuarioCreado != null)
                 {
                     listClientes.Add(usuarioCreado);
@@ -275,7 +270,7 @@ namespace SistEcomPan.Web.Controllers
                     listClientes.Add(clienteEditado);
 
 
-                    var nombreDistrito = await _distritoService.ObtenerNombre();
+                    //var nombreDistrito = await _distritoService.ObtenerNombre();
                     foreach (var item in listClientes)
                     {
                         vmClientelista.Add(new VMCliente

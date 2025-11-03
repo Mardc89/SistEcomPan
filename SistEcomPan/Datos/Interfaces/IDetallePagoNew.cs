@@ -7,8 +7,9 @@ using System.Threading.Tasks;
 
 namespace Datos.Interfaces
 {
-    public interface IDetallePagoNew:IGenericRepository<DetallePago>
+    public interface IDetallePagoNew
     {
         Task<List<DetallePago>> ConsultarDetallePagos(DateTime? fechaPago);
+        Task<List<DetallePago>> Lista();
     }
 }

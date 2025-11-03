@@ -14,15 +14,12 @@ namespace Negocio.Implementacion
 {
     public class PedidoService :IPedidoService
     {
-        private readonly IGenericRepository<Productos> _repositorioProducto;
         private readonly IPedidoEnvio _repositorioPedidoEnvio;
         private readonly IPedidoNew _repositorioPedido;
         private readonly IPagoNew _repositorioPago;
 
-        public PedidoService(IGenericRepository<Productos> repositorioProducto,IPedidoEnvio repositorioPedidoEnvio,
-            IPedidoNew repositorioPedido, IPagoNew repositorioPago)
+        public PedidoService(IPedidoEnvio repositorioPedidoEnvio,IPedidoNew repositorioPedido, IPagoNew repositorioPago)
         {
-            _repositorioProducto = repositorioProducto;
             _repositorioPedidoEnvio = repositorioPedidoEnvio;
             _repositorioPedido = repositorioPedido;
             _repositorioPago = repositorioPago;

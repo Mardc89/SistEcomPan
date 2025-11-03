@@ -411,6 +411,20 @@ namespace Negocio.Implementacion
             }
         }
 
+        public async Task<List<Clientes>> ClienteFiltrado(string busqueda)
+        {
+            List<Clientes> query = await _repositorio.Lista();
 
+            var ClienteFiltrado = query.Where(p =>
+            string.IsNullOrWhiteSpace(busqueda) || p.Apellidos.ToLower().EndsWith(busqueda.ToLower()) ||
+            p.Apellidos.ToLower().StartsWith(busqueda.ToLower()) ||
+            p.Nombres.ToLower().StartsWith(busqueda.ToLower()) ||
+            p.Nombres.ToLower().EndsWith(busqueda.ToLower()) ||
+            p.Dni.ToLower().Contains(busqueda.ToLower())
+            );
+
+            return ClienteFiltrado.ToList();
+
+        }
     }
 }
