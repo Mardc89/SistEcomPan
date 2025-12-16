@@ -19,7 +19,7 @@ namespace Negocio.Implementacion
         private readonly IDestinatarioNew _repositorioMensajes;
         private readonly IDestinatarioMensajeRepository _repositorioDestinoMensajes;
         private readonly IProductoNew _repositorioProductoTop;
-        private DateTime FechaInicio = DateTime.Now;
+        private DateTime FechaInicio = DateTime.UtcNow;
 
         public DashBoardServiceCliente
         (

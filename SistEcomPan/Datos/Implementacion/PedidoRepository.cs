@@ -302,7 +302,7 @@ namespace Datos.Implementacion
                             MontoTotal = Convert.ToDecimal(dr["MontoTotal"]),
                             Estado = dr["Estado"].ToString(),
                             FechaPedido = Convert.ToDateTime(dr["FechaPedido"]),
-                            FechaDeEntrega = Convert.ToDateTime(dr["FechaDeEntrega"])
+                            FechaDeEntrega = Convert.ToDateTime(dr["FechaEntrega"])
                         });
                     }
                 }
@@ -370,8 +370,10 @@ namespace Datos.Implementacion
                             Codigo = dr["Codigo"].ToString(),
                             MontoTotal = Convert.ToDecimal(dr["MontoTotal"]),
                             Estado = dr["Estado"].ToString(),
-                            FechaPedido = Convert.ToDateTime(dr["FechaPedido"]),
-                            FechaDeEntrega= Convert.ToDateTime(dr["FechaDeEntrega"])
+                            FechaPedido = DateTime.SpecifyKind(dr.GetDateTime(dr.GetOrdinal("FechaPedido")),DateTimeKind.Utc),
+                            FechaDeEntrega = DateTime.SpecifyKind(dr.GetDateTime(dr.GetOrdinal("FechaDeEntrega")),
+                            DateTimeKind.Utc
+            )
                         });
                     }
                 }

@@ -22,8 +22,8 @@ namespace Negocio.Implementacion
         private readonly IDetallePedidoRepository _repositorioDetallePedido;
         private readonly IClienteRepository _repositorioClientes;
         private readonly IDestinatarioNew _repositorioMensajes;
-        private DateTime FechaInicio=DateTime.Now;
-        private DateTime FechaActual = DateTime.Now;
+        private DateTime FechaInicio=DateTime.UtcNow;
+        private DateTime FechaActual = DateTime.UtcNow;
 
         public DashBoardService
         (

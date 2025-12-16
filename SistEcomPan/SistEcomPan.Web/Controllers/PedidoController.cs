@@ -94,6 +94,8 @@ namespace SistEcomPan.Web.Controllers
         {
             var lista = await _pedidoService.Lista();
             List<VMPedido> vmListaPedidos = new List<VMPedido>();
+            var tz = TimeZoneInfo.FindSystemTimeZoneById("America/Lima");
+
             foreach (var item in lista)
             {
                 vmListaPedidos.Add(new VMPedido
@@ -104,8 +106,8 @@ namespace SistEcomPan.Web.Controllers
                     MontoTotal = Convert.ToString(item.MontoTotal),
                     Estado = item.Estado,
                     NombresCompletos = await _clienteService.ObtenerNombreCompleto(item.IdCliente),
-                    FechaPedido =item.FechaPedido
-                 
+                    FechaPedido = item.FechaPedido.HasValue?TimeZoneInfo.ConvertTimeFromUtc(item.FechaPedido.Value,tz):null
+
                 }) ;
             }
             return StatusCode(StatusCodes.Status200OK, new { data = vmListaPedidos });
@@ -176,7 +178,7 @@ namespace SistEcomPan.Web.Controllers
             );
 
             List<VMPedido> vmPedidos = new List<VMPedido>();
-
+            var tz = TimeZoneInfo.FindSystemTimeZoneById("America/Lima");
             foreach (var item in pedidosFiltrados)
             {
                 vmPedidos.Add(new VMPedido
@@ -186,7 +188,7 @@ namespace SistEcomPan.Web.Controllers
                     Codigo = item.Codigo,
                     MontoTotal = Convert.ToString(item.MontoTotal),
                     Estado = item.Estado,
-                    FechaPedido = item.FechaPedido,
+                    FechaPedido = item.FechaPedido.HasValue ? TimeZoneInfo.ConvertTimeFromUtc(item.FechaPedido.Value, tz) : null,
                     NombresCompletos = await _clienteService.ObtenerNombreCompleto(item.IdCliente)
 
                 });
@@ -208,7 +210,7 @@ namespace SistEcomPan.Web.Controllers
         {
             var Pedidolista = await _pedidoService.Lista();
             List<VMPedido> vmPedidos = new List<VMPedido>();
-
+            var tz = TimeZoneInfo.FindSystemTimeZoneById("America/Lima");
             foreach (var item in Pedidolista)
             {
                 vmPedidos.Add(new VMPedido
@@ -218,7 +220,7 @@ namespace SistEcomPan.Web.Controllers
                     Codigo = item.Codigo,
                     MontoTotal = Convert.ToString(item.MontoTotal),
                     Estado = item.Estado,
-                    FechaDeEntrega = item.FechaDeEntrega,
+                    FechaDeEntrega = item.FechaDeEntrega.HasValue ? TimeZoneInfo.ConvertTimeFromUtc(item.FechaDeEntrega.Value, tz) : null,
                     NombresCompletos = await _clienteService.ObtenerNombreCompleto(item.IdCliente)
 
                 });
@@ -268,6 +270,12 @@ namespace SistEcomPan.Web.Controllers
         [HttpGet]
         public async Task<IActionResult> ObtenerMisPedidos(string searchTerm,string busqueda="")
         {
+            var timeZoneId = Request.Headers["X-TimeZone"].ToString();
+            if (string.IsNullOrWhiteSpace(timeZoneId))
+                timeZoneId = "UTC";
+
+            var tz = TimeZoneInfo.FindSystemTimeZoneById(timeZoneId);
+
             var Pedidolista = await _pedidoService.Lista();
             var clientelista = await _clienteService.Lista();
 
@@ -277,6 +285,14 @@ namespace SistEcomPan.Web.Controllers
             // Filtro de búsqueda por término de búsqueda (searchTerm)
             var pedidosFiltrados = Pedidolista.Where(p =>p.IdCliente.Equals(idCliente) 
             );
+
+            var pedidosCliente = Pedidolista
+                                  .Where(p => p.IdCliente == idCliente)
+                                    .Select(p => new
+                                    { Pedido = p,FechaLocal = p.FechaPedido.HasValue
+                                    ? TimeZoneInfo.ConvertTimeFromUtc(p.FechaPedido.Value, tz)
+                                    : (DateTime?)null}).ToList();
+
 
             var MisPedidos = pedidosFiltrados.Where(p =>
             string.IsNullOrWhiteSpace(busqueda) || p.Estado.ToLower().Contains(busqueda.ToLower()) ||
@@ -584,7 +600,7 @@ namespace SistEcomPan.Web.Controllers
         public async Task<IActionResult> Crear([FromBody] VMPedido modelo)
         {
             GenericResponse<VMPedido> gResponse = new GenericResponse<VMPedido>();
-
+            var tz = TimeZoneInfo.FindSystemTimeZoneById("America/Lima");
             try
             {
                 List<Pedidos> listaPedidos = new List<Pedidos>();
@@ -601,7 +617,7 @@ namespace SistEcomPan.Web.Controllers
                             IdCliente = clientes.Where(x=>x.Dni==modelo.Dni).First().IdCliente,
                             //MontoTotal = Convert.ToDecimal(item.MontoTotal),
                             Estado = modelo.Estado,
-                            FechaDeEntrega=modelo.FechaDeEntrega,
+                            FechaDeEntrega = modelo.FechaDeEntrega?.ToUniversalTime(),
                             DetallePedido = modelo.DetallePedido.Select(detalle => new DetallePedido
                             { 
                               IdProducto=detalle.IdProducto,
@@ -628,7 +644,7 @@ namespace SistEcomPan.Web.Controllers
                             IdCliente = pedidoCreado.IdCliente,
                             Codigo = pedidoCreado.Codigo,
                             MontoTotal = Convert.ToString(pedidoCreado.MontoTotal),
-                            FechaPedido = pedidoCreado.FechaPedido,
+                            FechaPedido = pedidoCreado.FechaPedido.HasValue ? TimeZoneInfo.ConvertTimeFromUtc(pedidoCreado.FechaPedido.Value, tz) : null,
                             Estado = pedidoCreado.Estado,
                             DetallePedido = pedidoCreado.DetallePedido.Select(detalle => new VMDetallePedido
                             {
@@ -659,13 +675,13 @@ namespace SistEcomPan.Web.Controllers
         public async Task<IActionResult> ActualizarPedido([FromBody] VMPedido modelo)
         {
             GenericResponse<VMPedido> gResponse = new GenericResponse<VMPedido>();
-
+            var tz = TimeZoneInfo.FindSystemTimeZoneById("America/Lima");
             try
             {
                 List<Pedidos> listaPedidos = new List<Pedidos>();
                 List<VMPedido> listaVMPedidos = new List<VMPedido>();
                 List<DetallePedido> detallePedido = new List<DetallePedido>();
-                var clientes = await _clienteService.ObtenerNombre();
+            
                 if (modelo != null)
                 {
                     //listaVMPedidos.Add(modelo);
@@ -704,8 +720,8 @@ namespace SistEcomPan.Web.Controllers
                         MontoTotal = Convert.ToString(pedidoCreado.MontoTotal),
                         Codigo=modelo.Codigo,
                         NombresCompletos=modelo.NombresCompletos,
-                        FechaPedido= Convert.ToDateTime(pedidoCreado.FechaPedido),
-                        Estado=modelo.Estado,
+                        FechaPedido = pedidoCreado.FechaPedido.HasValue ? TimeZoneInfo.ConvertTimeFromUtc(pedidoCreado.FechaPedido.Value, tz) : null,
+                        Estado =modelo.Estado,
                         DetallePedido = pedidoCreado.DetallePedido.Select(detalle => new VMDetallePedido
                         {
                             IdPedido=detalle.IdPedido,

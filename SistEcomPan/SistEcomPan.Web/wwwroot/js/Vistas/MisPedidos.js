@@ -68,7 +68,7 @@ function ObtenerDatosCliente() {
 
 $(document).ready(function () {
 
-
+    const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
     ObtenerDatosCliente();
     let busqueda = "";
     let busquedaDetalle = document.getElementById("DniPersonal").textContent;
@@ -79,6 +79,9 @@ $(document).ready(function () {
         "ajax": {
             "url": `/Pedido/ObtenerMisPedidos?searchTerm=${busquedaDetalle}&busqueda=${busqueda}`,
             "type": "GET",
+            "headers":{
+                "X-TimeZone": Intl.DateTimeFormat().resolvedOptions().timeZone
+            },
             "dataType": "json"
         },
         "columns": [

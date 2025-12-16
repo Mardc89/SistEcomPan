@@ -45,7 +45,7 @@ namespace SistEcomPan.Web.Controllers
         {
             var Pagolista = await _pagoService.Lista();
             List<VMPago> vmPagolista = new List<VMPago>();
-            var pedidoCliente = await _pedidoService.ObtenerNombre();
+            var pedidoCliente = await _pedidoService.Lista();
             var clientes = await _clienteService.Lista();
             foreach (var item in Pagolista)
             {
