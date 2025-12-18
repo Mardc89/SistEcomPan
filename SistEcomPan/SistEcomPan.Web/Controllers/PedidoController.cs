@@ -9,6 +9,7 @@ using Newtonsoft.Json;
 using SistEcomPan.Web.Tools.Response;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Authorization;
+using System;
 
 namespace SistEcomPan.Web.Controllers
 {
@@ -70,6 +71,10 @@ namespace SistEcomPan.Web.Controllers
 
             List <VMPedido> vmListaPedidos = new List<VMPedido>();
 
+            var timeZoneId = Request.Headers["X-TimeZone"].ToString();
+
+            var tz = TimeZoneInfo.FindSystemTimeZoneById(string.IsNullOrEmpty(timeZoneId)? "UTC" : timeZoneId);
+
             foreach (var item in HistorialPedido)
             {
                 vmListaPedidos.Add(new VMPedido
@@ -81,7 +86,7 @@ namespace SistEcomPan.Web.Controllers
                     MontoTotal = Convert.ToString(item.MontoTotal),
                     Estado = item.Estado,
                     NombresCompletos = await _clienteService.ObtenerNombreCompleto(item.IdCliente),
-                    FechaPedido = item.FechaPedido
+                    FechaPedido = item.FechaPedido.HasValue ? TimeZoneInfo.ConvertTimeFromUtc(item.FechaPedido.Value, tz) : null,
 
                 });
             }
@@ -94,7 +99,10 @@ namespace SistEcomPan.Web.Controllers
         {
             var lista = await _pedidoService.Lista();
             List<VMPedido> vmListaPedidos = new List<VMPedido>();
-            var tz = TimeZoneInfo.FindSystemTimeZoneById("America/Lima");
+
+            var timeZoneId = Request.Headers["X-TimeZone"].ToString();
+
+            var tz = TimeZoneInfo.FindSystemTimeZoneById(string.IsNullOrEmpty(timeZoneId)? "UTC" : timeZoneId);
 
             foreach (var item in lista)
             {
@@ -270,33 +278,51 @@ namespace SistEcomPan.Web.Controllers
         [HttpGet]
         public async Task<IActionResult> ObtenerMisPedidos(string searchTerm,string busqueda="")
         {
-            var timeZoneId = Request.Headers["X-TimeZone"].ToString();
-            if (string.IsNullOrWhiteSpace(timeZoneId))
-                timeZoneId = "UTC";
+            var timeZoneId = Request.Headers["X-TimeZone"].FirstOrDefault();
+            TimeZoneInfo userTimeZone;
 
-            var tz = TimeZoneInfo.FindSystemTimeZoneById(timeZoneId);
+            try
+            {
+                userTimeZone = !string.IsNullOrEmpty(timeZoneId)
+                    ? TimeZoneInfo.FindSystemTimeZoneById(timeZoneId)
+                    : TimeZoneInfo.Utc;
+            }
+            catch
+            {
+                userTimeZone = TimeZoneInfo.Utc;
+            }
+
+            DateTime? fechaBusquedaUtc = null;
+
+            if (DateTime.TryParse(busqueda, out DateTime fechaLocal))
+            {
+                fechaLocal = DateTime.SpecifyKind(fechaLocal, DateTimeKind.Unspecified);
+                fechaBusquedaUtc = TimeZoneInfo.ConvertTimeToUtc(fechaLocal, userTimeZone);
+            }
 
             var Pedidolista = await _pedidoService.Lista();
             var clientelista = await _clienteService.Lista();
 
-            var idCliente = clientelista.Where(x => x.Dni == searchTerm).Select(x => x.IdCliente).FirstOrDefault();
-            var estadoCliente =Pedidolista.Where(x => x.IdCliente ==idCliente).Select(x => x.Estado).FirstOrDefault();
-
+            var idCliente = clientelista
+                .Where(x => x.Dni == searchTerm)
+                .Select(x => x.IdCliente)
+                .FirstOrDefault();
             // Filtro de búsqueda por término de búsqueda (searchTerm)
-            var pedidosFiltrados = Pedidolista.Where(p =>p.IdCliente.Equals(idCliente) 
-            );
+            var pedidosFiltrados = Pedidolista.
+                Where(p =>p.IdCliente.Equals(idCliente));
 
-            var pedidosCliente = Pedidolista
-                                  .Where(p => p.IdCliente == idCliente)
-                                    .Select(p => new
-                                    { Pedido = p,FechaLocal = p.FechaPedido.HasValue
-                                    ? TimeZoneInfo.ConvertTimeFromUtc(p.FechaPedido.Value, tz)
-                                    : (DateTime?)null}).ToList();
-
+            //var MisPedidos = pedidosFiltrados.Where(p =>
+            //string.IsNullOrWhiteSpace(busqueda) || p.Estado.ToLower().Contains(busqueda.ToLower()) 
+            //||
+            //p.FechaPedido.Value.Date==(DateTime.TryParse(busqueda,out DateTime fechaBusqueda)?fechaBusqueda.Date:p.FechaPedido.Value.Date)
+            //);
 
             var MisPedidos = pedidosFiltrados.Where(p =>
-            string.IsNullOrWhiteSpace(busqueda) || p.Estado.ToLower().Contains(busqueda.ToLower()) ||
-            p.FechaPedido.Value.Date==(DateTime.TryParse(busqueda,out DateTime fechaBusqueda)?fechaBusqueda.Date:p.FechaPedido.Value.Date)
+            string.IsNullOrWhiteSpace(busqueda)|| p.Estado.ToLower().Contains(busqueda.ToLower())|| (
+                    fechaBusquedaUtc.HasValue&& p.FechaPedido.HasValue
+                    && p.FechaPedido.Value >= fechaBusquedaUtc.Value.Date
+                    && p.FechaPedido.Value < fechaBusquedaUtc.Value.Date.AddDays(1)
+            )
             );
 
             List<VMPedido> vmPedidos = new List<VMPedido>();
@@ -600,7 +626,8 @@ namespace SistEcomPan.Web.Controllers
         public async Task<IActionResult> Crear([FromBody] VMPedido modelo)
         {
             GenericResponse<VMPedido> gResponse = new GenericResponse<VMPedido>();
-            var tz = TimeZoneInfo.FindSystemTimeZoneById("America/Lima");
+            var timeZoneId = Request.Headers["X-TimeZone"].ToString();
+
             try
             {
                 List<Pedidos> listaPedidos = new List<Pedidos>();
@@ -630,6 +657,9 @@ namespace SistEcomPan.Web.Controllers
                 }              
 
                 Pedidos pedidoCreado = await _pedidoService.Registrar(listaPedidos.First());
+
+                var tz = TimeZoneInfo.FindSystemTimeZoneById(string.IsNullOrEmpty(timeZoneId) 
+                        ? "UTC" : timeZoneId);
 
                 List<VMPedido> vmPedidolista = new List<VMPedido>();
                 List<Pedidos> listPedidos = new List<Pedidos>();

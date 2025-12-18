@@ -43,9 +43,11 @@ namespace Datos.Implementacion
                             IdCliente = Convert.ToInt32(dr["IdCliente"]),
                             Codigo = dr["Codigo"].ToString(),
                             MontoTotal = Convert.ToDecimal(dr["MontoTotal"]),
-                            Estado = dr["Estado"].ToString(),                          
-                            FechaPedido = Convert.ToDateTime(dr["FechaPedido"]),
-                            FechaDeEntrega= Convert.ToDateTime(dr["FechaDeEntrega"]),
+                            Estado = dr["Estado"].ToString(),
+                            FechaDeEntrega = dr.IsDBNull(dr.GetOrdinal("FechaDeEntrega")) ? null : DateTime.SpecifyKind(
+                            dr.GetDateTime(dr.GetOrdinal("FechaDeEntrega")), DateTimeKind.Utc),
+                            FechaPedido = dr.IsDBNull(dr.GetOrdinal("FechaPedido")) ? null : DateTime.SpecifyKind(
+                            dr.GetDateTime(dr.GetOrdinal("FechaPedido")), DateTimeKind.Utc),
                         });
                     }
                 }
@@ -232,7 +234,8 @@ namespace Datos.Implementacion
                             Codigo = dr["Codigo"].ToString(),
                             MontoTotal =Convert.ToDecimal(dr["MontoTotal"]),                  
                             Estado = dr["Estado"].ToString(),
-                            FechaPedido = Convert.ToDateTime(dr["FechaPedido"])
+                            FechaPedido = dr.IsDBNull(dr.GetOrdinal("FechaPedido")) ? null : DateTime.SpecifyKind(
+                            dr.GetDateTime(dr.GetOrdinal("FechaPedido")), DateTimeKind.Utc),
                         });
                     }
                 }
@@ -265,7 +268,8 @@ namespace Datos.Implementacion
                             Codigo = dr["Codigo"].ToString(),
                             MontoTotal = Convert.ToDecimal(dr["MontoTotal"]),
                             Estado = dr["Estado"].ToString(),
-                            FechaPedido = Convert.ToDateTime(dr["FechaPedido"])
+                            FechaPedido = dr.IsDBNull(dr.GetOrdinal("FechaPedido")) ? null : DateTime.SpecifyKind(
+                            dr.GetDateTime(dr.GetOrdinal("FechaPedido")), DateTimeKind.Utc),
                         });
                     }
                 }
@@ -301,8 +305,11 @@ namespace Datos.Implementacion
                             Codigo = dr["Codigo"].ToString(),
                             MontoTotal = Convert.ToDecimal(dr["MontoTotal"]),
                             Estado = dr["Estado"].ToString(),
-                            FechaPedido = Convert.ToDateTime(dr["FechaPedido"]),
-                            FechaDeEntrega = Convert.ToDateTime(dr["FechaEntrega"])
+                            FechaDeEntrega = dr.IsDBNull(dr.GetOrdinal("FechaDeEntrega")) ? null : DateTime.SpecifyKind(
+                            dr.GetDateTime(dr.GetOrdinal("FechaDeEntrega")), DateTimeKind.Utc),
+                            FechaPedido = dr.IsDBNull(dr.GetOrdinal("FechaPedido")) ? null : DateTime.SpecifyKind(
+                            dr.GetDateTime(dr.GetOrdinal("FechaPedido")), DateTimeKind.Utc),
+
                         });
                     }
                 }
@@ -334,7 +341,8 @@ namespace Datos.Implementacion
                             Codigo = dr["Codigo"].ToString(),
                             MontoTotal = Convert.ToDecimal(dr["MontoTotal"]),
                             Estado = dr["Estado"].ToString(),
-                            FechaPedido = Convert.ToDateTime(dr["FechaPedido"])
+                            FechaPedido = dr.IsDBNull(dr.GetOrdinal("FechaPedido")) ? null : DateTime.SpecifyKind(
+                            dr.GetDateTime(dr.GetOrdinal("FechaPedido")), DateTimeKind.Utc),
                         };
                     }
                 }
@@ -405,7 +413,8 @@ namespace Datos.Implementacion
                             Codigo = dr["Codigo"].ToString(),
                             MontoTotal = Convert.ToDecimal(dr["MontoTotal"]),
                             Estado = dr["Estado"].ToString(),
-                            FechaPedido = Convert.ToDateTime(dr["FechaPedido"])
+                            FechaPedido = dr.IsDBNull(dr.GetOrdinal("FechaPedido")) ? null : DateTime.SpecifyKind(
+                            dr.GetDateTime(dr.GetOrdinal("FechaPedido")), DateTimeKind.Utc),
                         });
                     }
                 }

@@ -48,7 +48,8 @@ namespace Datos.Implementacion
                             IdDistrito =Convert.ToInt32(dr["IdDistrito"]),
                             NombreUsuario = dr["NombreUsuario"].ToString(),
                             Clave = dr["Clave"].ToString(),
-                            FechaRegistro = Convert.ToDateTime(dr["FechaRegistro"]),
+                            FechaRegistro = dr.IsDBNull(dr.GetOrdinal("FechaRegistro"))? null: DateTime.SpecifyKind(
+                            dr.GetDateTime(dr.GetOrdinal("FechaRegistro")),DateTimeKind.Utc),
                             Estado = Convert.ToBoolean(dr["Estado"]),
                             UrlFoto= dr["UrlFoto"].ToString(),
                             NombreFoto= dr["NombreFoto"].ToString()
@@ -183,7 +184,8 @@ namespace Datos.Implementacion
                             IdDistrito = Convert.ToInt32(dr["IdDistrito"]),
                             NombreUsuario = dr["NombreUsuario"].ToString(),
                             Clave = dr["Clave"].ToString(),
-                            FechaRegistro = Convert.ToDateTime(dr["FechaRegistro"]),
+                            FechaRegistro = dr.IsDBNull(dr.GetOrdinal("FechaRegistro")) ? null : DateTime.SpecifyKind(
+                            dr.GetDateTime(dr.GetOrdinal("FechaRegistro")), DateTimeKind.Utc),
                             Estado = Convert.ToBoolean(dr["Estado"]),
                             UrlFoto = dr["UrlFoto"].ToString(),
                             NombreFoto = dr["NombreFoto"].ToString()
@@ -223,7 +225,8 @@ namespace Datos.Implementacion
                             IdDistrito = Convert.ToInt32(dr["IdDistrito"]),
                             NombreUsuario = dr["NombreUsuario"].ToString(),
                             Clave = dr["Clave"].ToString(),
-                            FechaRegistro = Convert.ToDateTime(dr["FechaRegistro"]),
+                            FechaRegistro = dr.IsDBNull(dr.GetOrdinal("FechaRegistro")) ? null : DateTime.SpecifyKind(
+                            dr.GetDateTime(dr.GetOrdinal("FechaRegistro")), DateTimeKind.Utc),
                             Estado = Convert.ToBoolean(dr["Estado"]),
                             UrlFoto = dr["UrlFoto"].ToString(),
                             NombreFoto = dr["NombreFoto"].ToString()
@@ -263,7 +266,8 @@ namespace Datos.Implementacion
                             IdDistrito = Convert.ToInt32(dr["IdDistrito"]),
                             NombreUsuario = dr["NombreUsuario"].ToString(),
                             Clave = dr["Clave"].ToString(),
-                            FechaRegistro = Convert.ToDateTime(dr["FechaRegistro"]),
+                            FechaRegistro = dr.IsDBNull(dr.GetOrdinal("FechaRegistro")) ? null : DateTime.SpecifyKind(
+                            dr.GetDateTime(dr.GetOrdinal("FechaRegistro")), DateTimeKind.Utc),
                             Estado = Convert.ToBoolean(dr["Estado"]),
                             UrlFoto = dr["UrlFoto"].ToString(),
                             NombreFoto = dr["NombreFoto"].ToString()
@@ -303,7 +307,8 @@ namespace Datos.Implementacion
                             IdDistrito = Convert.ToInt32(dr["IdDistrito"]),
                             NombreUsuario = dr["NombreUsuario"].ToString(),
                             Clave = dr["Clave"].ToString(),
-                            FechaRegistro = Convert.ToDateTime(dr["FechaRegistro"]),
+                            FechaRegistro = dr.IsDBNull(dr.GetOrdinal("FechaRegistro")) ? null : DateTime.SpecifyKind(
+                            dr.GetDateTime(dr.GetOrdinal("FechaRegistro")), DateTimeKind.Utc),
                             Estado = Convert.ToBoolean(dr["Estado"]),
                             UrlFoto = dr["UrlFoto"].ToString(),
                             NombreFoto = dr["NombreFoto"].ToString()

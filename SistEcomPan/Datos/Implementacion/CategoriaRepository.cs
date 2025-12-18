@@ -41,7 +41,8 @@ namespace Datos.Implementacion
                         {
                             IdCategoria = Convert.ToInt32(dr["IdCategoria"]),
                             TipoDeCategoria = dr["TipoDeCategoria"].ToString(),
-                            FechaRegistro = Convert.ToDateTime(dr["FechaRegistro"]),
+                            FechaRegistro = dr.IsDBNull(dr.GetOrdinal("FechaRegistro")) ? null : DateTime.SpecifyKind(
+                            dr.GetDateTime(dr.GetOrdinal("FechaRegistro")), DateTimeKind.Utc),
                             Estado = Convert.ToBoolean(dr["Estado"])
 
                         });
@@ -176,7 +177,8 @@ namespace Datos.Implementacion
                         {
                             IdCategoria = Convert.ToInt32(dr["IdCategoria"]),
                             TipoDeCategoria = dr["TipoDeCategoria"].ToString(),
-                            FechaRegistro = Convert.ToDateTime(dr["FechaRegistro"]),
+                            FechaRegistro = dr.IsDBNull(dr.GetOrdinal("FechaRegistro")) ? null : DateTime.SpecifyKind(
+                            dr.GetDateTime(dr.GetOrdinal("FechaRegistro")), DateTimeKind.Utc),
                             Estado = Convert.ToBoolean(dr["Estado"])
                         };
                     }
@@ -205,7 +207,8 @@ namespace Datos.Implementacion
                         {
                             IdCategoria = Convert.ToInt32(dr["IdCategoria"]),
                             TipoDeCategoria = dr["TipoDeCategoria"].ToString(),
-                            FechaRegistro = Convert.ToDateTime(dr["FechaRegistro"]),
+                            FechaRegistro = dr.IsDBNull(dr.GetOrdinal("FechaRegistro")) ? null : DateTime.SpecifyKind(
+                            dr.GetDateTime(dr.GetOrdinal("FechaRegistro")), DateTimeKind.Utc),
                             Estado = Convert.ToBoolean(dr["Estado"])
                         };
                     }

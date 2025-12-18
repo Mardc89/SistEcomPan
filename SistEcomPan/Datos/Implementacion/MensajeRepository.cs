@@ -42,7 +42,9 @@ namespace Datos.Implementacion
                             Asunto = dr["Asunto"].ToString(),
                             Cuerpo = dr["Cuerpo"].ToString(),
                             Remitente = dr["Remitente"].ToString(),
-                            FechaDeMensaje = Convert.ToDateTime(dr["FechaDeMensaje"])
+                            FechaDeMensaje = dr.IsDBNull(dr.GetOrdinal("FechaDeMensaje")) ? null : DateTime.SpecifyKind(
+                            dr.GetDateTime(dr.GetOrdinal("FechaDeMensaje")), DateTimeKind.Utc),
+
 
                         });
                     }
@@ -225,7 +227,9 @@ namespace Datos.Implementacion
                             Asunto = dr["Asunto"].ToString(),
                             Cuerpo = dr["Cuerpo"].ToString(),
                             IdRespuestaMensaje = dr["IdRespuestaMensaje"] as int?,
-                            FechaDeMensaje = Convert.ToDateTime(dr["FechaDeMensaje"])
+                            FechaDeMensaje = dr.IsDBNull(dr.GetOrdinal("FechaDeMensaje")) ? null : DateTime.SpecifyKind(
+                            dr.GetDateTime(dr.GetOrdinal("FechaDeMensaje")), DateTimeKind.Utc),
+                          
                         };
                     }
                 }
@@ -254,7 +258,8 @@ namespace Datos.Implementacion
                             IdRemitente = Convert.ToInt32(dr["IdCliente"]),
                             Asunto = dr["Asunto"].ToString(),
                             Cuerpo = dr["Cuerpo"].ToString(),
-                            FechaDeMensaje = Convert.ToDateTime(dr["Fecha"])
+                            FechaDeMensaje = dr.IsDBNull(dr.GetOrdinal("FechaDeMensaje")) ? null : DateTime.SpecifyKind(
+                            dr.GetDateTime(dr.GetOrdinal("FechaDeMensaje")), DateTimeKind.Utc),
                         };
                     }
                 }

@@ -45,7 +45,8 @@ namespace Datos.Implementacion
                             NombreImagen= dr["NombreImagen"].ToString(), 
                             Estado = Convert.ToBoolean(dr["Estado"]),
                             Stock = Convert.ToInt32(dr["Stock"]),
-                            FechaRegistro = Convert.ToDateTime(dr["FechaRegistro"])
+                            FechaRegistro = dr.IsDBNull(dr.GetOrdinal("FechaRegistro")) ? null : DateTime.SpecifyKind(
+                            dr.GetDateTime(dr.GetOrdinal("FechaRegistro")), DateTimeKind.Utc),
                         });
                     }
                 }

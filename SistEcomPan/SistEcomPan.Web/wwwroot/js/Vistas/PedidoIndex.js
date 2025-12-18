@@ -597,13 +597,14 @@ $("#btnEnviarPedido").click(function () {
 
     }
 
-
+    const timeZone =
+        Intl?.DateTimeFormat()?.resolvedOptions()?.timeZone || "UTC";
 
     $("#btnEnviarPedido").LoadingOverlay("show");
     debugger;
     fetch("/Pedido/Crear", {
         method: "POST",
-        headers: { "Content-Type": "application/json;charset=utf-8" },
+        headers: { "Content-Type": "application/json;charset=utf-8", "X-TimeZone":timeZone },
         body: JSON.stringify(pedido)
     })
         .then(response => {

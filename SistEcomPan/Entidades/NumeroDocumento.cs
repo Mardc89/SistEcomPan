@@ -12,6 +12,6 @@ namespace Entidades
         public int UltimoNumero { get; set; }
         public int CantidadDeDigitos { get; set; }
         public string Gestion { get; set; }
-        public DateTime FechaActualizacion { get; set; }
+        public DateTime? FechaActualizacion { get; set; }
     }
 }

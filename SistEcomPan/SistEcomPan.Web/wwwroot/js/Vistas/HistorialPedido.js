@@ -82,11 +82,14 @@ $("#btnBuscar").click(function () {
     let codigo = $("#txtCodigo").val()
     let fechaInicio = $("#txtFechaInicio").val()
     let fechaFin = $("#txtFechaFin").val()
-
+    const timeZone =
+        Intl?.DateTimeFormat()?.resolvedOptions()?.timeZone || "UTC";
 
     $(".card-body").find("div.row").LoadingOverlay("show");
 
-    fetch(`/Pedido/Historial?codigo=${codigo}&fechaInicio=${fechaInicio}&fechaFin=${fechaFin}`)
+    fetch(`/Pedido/Historial?codigo=${codigo}&fechaInicio=${fechaInicio}&fechaFin=${fechaFin}`, {
+        headers: { "Content-Type": "application/json;charset=utf-8", "X-TimeZone": timeZone },
+    })
         .then(response => {
             $(".card-body").find("div.row").LoadingOverlay("hide");
             return response.ok ? response.json() : Promise.reject(response);

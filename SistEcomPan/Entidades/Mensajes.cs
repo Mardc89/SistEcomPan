@@ -14,7 +14,7 @@ namespace Entidades
         public string? Cuerpo { get; set; }
         public string Remitente { get; set; }
         public int? IdRespuestaMensaje{ get; set; } 
-        public DateTime FechaDeMensaje { get; set; }
+        public DateTime? FechaDeMensaje { get; set; }
         public Clientes Clientes { get; set; }
         public Usuarios Usuarios { get; set; }
 

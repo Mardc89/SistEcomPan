@@ -43,7 +43,8 @@ namespace Datos.Implementacion
                             Descuento = Convert.ToDecimal(dr["Descuento"]),
                             MontoTotalDePago = Convert.ToDecimal(dr["MontoTotalDePago"]),
                             MontoDeuda = Convert.ToDecimal(dr["MontoDeuda"]),
-                            FechaDePago= Convert.ToDateTime(dr["FechaDePago"]),
+                            FechaDePago = dr.IsDBNull(dr.GetOrdinal("FechaDePago")) ? null : DateTime.SpecifyKind(
+                            dr.GetDateTime(dr.GetOrdinal("FechaDePago")), DateTimeKind.Utc),
                             Estado = dr["Estado"].ToString()
                         }); 
                     }
@@ -226,7 +227,8 @@ namespace Datos.Implementacion
                             Descuento = Convert.ToDecimal(dr["Descuento"]),
                             MontoTotalDePago = Convert.ToDecimal(dr["MontoTotalDePago"]),
                             MontoDeuda = Convert.ToDecimal(dr["MontoDeuda"]),
-                            FechaDePago = Convert.ToDateTime(dr["FechaDePago"]),
+                            FechaDePago = dr.IsDBNull(dr.GetOrdinal("FechaDePago")) ? null : DateTime.SpecifyKind(
+                            dr.GetDateTime(dr.GetOrdinal("FechaDePago")), DateTimeKind.Utc),
                             Estado = dr["Estado"].ToString()
                         });
                     }
@@ -260,7 +262,8 @@ namespace Datos.Implementacion
                             Descuento = Convert.ToDecimal(dr["Descuento"]),
                             MontoTotalDePago = Convert.ToDecimal(dr["MontoTotalDePago"]),
                             MontoDeuda = Convert.ToDecimal(dr["MontoDeuda"]),
-                            FechaDePago = Convert.ToDateTime(dr["FechaDePago"]),
+                            FechaDePago = dr.IsDBNull(dr.GetOrdinal("FechaDePago")) ? null : DateTime.SpecifyKind(
+                            dr.GetDateTime(dr.GetOrdinal("FechaDePago")), DateTimeKind.Utc),
                             Estado = dr["Estado"].ToString()
                         });
                     }
@@ -294,7 +297,8 @@ namespace Datos.Implementacion
                             Descuento = Convert.ToDecimal(dr["Descuento"]),
                             MontoTotalDePago = Convert.ToDecimal(dr["MontoTotalDePago"]),
                             MontoDeuda = Convert.ToDecimal(dr["MontoDeuda"]),
-                            FechaDePago = dr["FechaDePago"]!=DBNull.Value?Convert.ToDateTime(dr["FechaDePago"]):(DateTime?)null,
+                            FechaDePago = dr.IsDBNull(dr.GetOrdinal("FechaDePago")) ? null : DateTime.SpecifyKind(
+                            dr.GetDateTime(dr.GetOrdinal("FechaDePago")), DateTimeKind.Utc),
                             Estado = dr["Estado"].ToString()
                         };
                     }

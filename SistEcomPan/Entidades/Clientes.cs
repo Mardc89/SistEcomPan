@@ -20,7 +20,7 @@ namespace Entidades
         public Distritos? Distrito { get; set; }
         public string? NombreUsuario { get; set; }
         public string? Clave { get; set; }
-        public DateTime FechaRegistro { get; set; }
+        public DateTime? FechaRegistro { get; set; }
         public bool Estado { get; set; }
         public string? UrlFoto  { get; set; }
         public string? NombreFoto{ get; set; }

@@ -43,7 +43,8 @@ namespace Datos.Implementacion
                             MontoPedido = Convert.ToDecimal(dr["MontoDePedido"]),
                             Descuento = Convert.ToDecimal(dr["Descuento"]),
                             MontoAPagar = Convert.ToDecimal(dr["MontoAPagar"]),
-                            FechaDevolucion = Convert.ToDateTime(dr["FechaDevolucion"])
+                            FechaDevolucion = dr.IsDBNull(dr.GetOrdinal("FechaDevolucion")) ? null : DateTime.SpecifyKind(
+                            dr.GetDateTime(dr.GetOrdinal("FechaDevolucion")), DateTimeKind.Utc),
                         };
                     }
                 }
@@ -100,7 +101,8 @@ namespace Datos.Implementacion
                                 MontoPedido = Convert.ToDecimal(dr["MontoDePedido"]),
                                 Descuento = Convert.ToDecimal(dr["Descuento"]),
                                 MontoAPagar = Convert.ToDecimal(dr["MontoAPagar"]),
-                                FechaDevolucion = Convert.ToDateTime(dr["FechaDevolucion"])
+                                FechaDevolucion = dr.IsDBNull(dr.GetOrdinal("FechaDevolucion")) ? null : DateTime.SpecifyKind(
+                                dr.GetDateTime(dr.GetOrdinal("FechaDevolucion")), DateTimeKind.Utc),
                             });
                         }
                     }

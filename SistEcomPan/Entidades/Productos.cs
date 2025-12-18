@@ -17,7 +17,7 @@ namespace Entidades
         public string NombreImagen { get; set; }
         public bool Estado { get; set; }
         public int Stock { get; set; }
-        public DateTime FechaRegistro { get; set; }
+        public DateTime? FechaRegistro { get; set; }
 
 
     }

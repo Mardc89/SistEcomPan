@@ -45,7 +45,8 @@ namespace Datos.Implementacion
                             UltimoNumero = Convert.ToInt32(dr["UltimoNumero"]),
                             CantidadDeDigitos = Convert.ToInt32(dr["CantidadDeDigitos"]),
                             Gestion = dr["Gestion"].ToString(),
-                            FechaActualizacion = Convert.ToDateTime(dr["FechaActualizacion"])
+                            FechaActualizacion = dr.IsDBNull(dr.GetOrdinal("FechaActualizacion")) ? null : DateTime.SpecifyKind(
+                            dr.GetDateTime(dr.GetOrdinal("FechaActualizacion")), DateTimeKind.Utc),
                         };
                     }
                 }
