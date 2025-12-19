@@ -130,5 +130,30 @@ namespace Negocio.Implementacion
             Pedidos pedido = await _repositorioPedido.Buscar(Codigo, null,null);
             return pedido.IdCliente;
         }
+
+        public Task<List<Pedidos>> MisPedidos(string searchTerm, DateTime? fechaBusquedaUtc, string busqueda = "")
+        {
+            var Pedidolista = await _pedidoService.Lista();
+            var clientelista = await _clienteService.Lista();
+
+            var idCliente = clientelista
+                .Where(x => x.Dni == searchTerm)
+                .Select(x => x.IdCliente)
+                .FirstOrDefault();
+            // Filtro de búsqueda por término de búsqueda (searchTerm)
+            var pedidosFiltrados = Pedidolista.
+                Where(p => p.IdCliente.Equals(idCliente));
+
+
+            var MisPedidos = pedidosFiltrados.Where(p =>
+            string.IsNullOrWhiteSpace(busqueda) || p.Estado.ToLower().Contains(busqueda.ToLower()) || (
+                fechaBusquedaUtc.HasValue && p.FechaPedido.HasValue
+                    && p.FechaPedido.Value >= fechaBusquedaUtc.Value.Date
+                    && p.FechaPedido.Value < fechaBusquedaUtc.Value.Date.AddDays(1)
+            )
+            );
+
+            return MisPedidos;
+        }
     }
 }

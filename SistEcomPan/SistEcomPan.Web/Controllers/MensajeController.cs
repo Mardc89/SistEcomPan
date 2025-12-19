@@ -7,6 +7,7 @@ using NuGet.ContentModel;
 using SistEcomPan.Web.Models.ViewModels;
 using SistEcomPan.Web.Tools.Handler;
 using SistEcomPan.Web.Tools.Response;
+using System;
 using System.Text.Json;
 
 namespace SistEcomPan.Web.Controllers
@@ -15,13 +16,13 @@ namespace SistEcomPan.Web.Controllers
     public class MensajeController : Controller
     {
         private readonly IMensajeService _mensajeService;
-        private readonly IClienteService _clienteService;
         private readonly IDestinatarioMensajeService _destinatarioMensajeService;
-        public MensajeController(IMensajeService mensajeService, IClienteService clienteService, IDestinatarioMensajeService destinatarioMensajeService)
+        private readonly ITimeZoneService _timeZoneService;
+        public MensajeController(IMensajeService mensajeService, IDestinatarioMensajeService destinatarioMensajeService, ITimeZoneService timeZoneService)
         {
             _mensajeService = mensajeService;
-            _clienteService = clienteService;
             _destinatarioMensajeService = destinatarioMensajeService;
+            _timeZoneService = timeZoneService;
         }
         public IActionResult Index()
         {
@@ -40,29 +41,14 @@ namespace SistEcomPan.Web.Controllers
         [HttpGet]
         public async Task<IActionResult> ObtenerMisMensajes(string searchTerm, string busqueda = "")
         {
-            var ListaDeMensajes = await _mensajeService.Lista();
-            var clientelista = await _clienteService.Lista();
-            List<Mensajes> mensajes = new List<Mensajes>();
-            var ListaDestinatarioMensaje = await _destinatarioMensajeService.Lista();
-            var idCliente = clientelista.Where(x => x.Dni == searchTerm).Select(x => x.IdCliente).FirstOrDefault();
-            var IndiceDestinatario = ListaDestinatarioMensaje.Where(x => x.IdDestinatario == idCliente).Select(x => x.IdMensaje).ToList();
-            var mensajesRemitentes = ListaDeMensajes.Where(p => p.IdRemitente == idCliente  && p.IdRespuestaMensaje == null).ToList();
-            if (IndiceDestinatario.Count>0)
-            {
-                var mensajesDestinatario = ListaDeMensajes.Where(p =>IndiceDestinatario.Contains(p.IdMensaje)).ToList();
-                mensajes.AddRange(mensajesDestinatario);
-            }
-
-            if (mensajesRemitentes.Count>0)
-            {
-                mensajes.AddRange(mensajesRemitentes);
-            }
-            
-
-            var MisMensajes = mensajes.Where(p =>
-            string.IsNullOrWhiteSpace(busqueda) || p.Asunto.ToLower().Contains(busqueda.ToLower()) ||
-            p.FechaDeMensaje.Date == (DateTime.TryParse(busqueda, out DateTime fechaBusqueda) ? fechaBusqueda.Date : p.FechaDeMensaje.Date)
-            );
+    
+            TimeZoneInfo userTimeZone=_timeZoneService.GetTimeZone(Request);
+            DateTime? fechaBusquedaUtc =_timeZoneService.ConvertirFecha(busqueda,userTimeZone);
+            //var MisMensajes = mensajes.Where(p =>
+            //string.IsNullOrWhiteSpace(busqueda) || p.Asunto.ToLower().Contains(busqueda.ToLower()) ||
+            //p.FechaDeMensaje.Date == (DateTime.TryParse(busqueda, out DateTime fechaBusqueda) ? fechaBusqueda.Date : p.FechaDeMensaje.Date)
+            //);
+            var MisMensajes = await _mensajeService.BuscarFechas(searchTerm, fechaBusquedaUtc, busqueda);
 
             List<VMMensaje> vmMensajes = new List<VMMensaje>();
 

@@ -21,14 +21,17 @@ namespace SistEcomPan.Web.Controllers
         private readonly IProductoService _productoService;
         private readonly ICategoriaService _categoriaService;
         private readonly IDetallePedidoService _detallePedidoService;
-        
-        public PedidoController(IPedidoService pedidoService,IClienteService clienteService, IProductoService productoService,ICategoriaService categoriaService,IDetallePedidoService detallePedidoService )
+        private readonly ITimeZoneService _timeZoneService;
+
+
+        public PedidoController(IPedidoService pedidoService,IClienteService clienteService, IProductoService productoService,ICategoriaService categoriaService,IDetallePedidoService detallePedidoService,ITimeZoneService timeZoneService )
         {
             _pedidoService = pedidoService;
             _clienteService = clienteService;
             _productoService = productoService;
             _categoriaService = categoriaService;
             _detallePedidoService = detallePedidoService;
+            _timeZoneService = timeZoneService;
         }
 
      
@@ -278,38 +281,12 @@ namespace SistEcomPan.Web.Controllers
         [HttpGet]
         public async Task<IActionResult> ObtenerMisPedidos(string searchTerm,string busqueda="")
         {
-            var timeZoneId = Request.Headers["X-TimeZone"].FirstOrDefault();
-            TimeZoneInfo userTimeZone;
 
-            try
-            {
-                userTimeZone = !string.IsNullOrEmpty(timeZoneId)
-                    ? TimeZoneInfo.FindSystemTimeZoneById(timeZoneId)
-                    : TimeZoneInfo.Utc;
-            }
-            catch
-            {
-                userTimeZone = TimeZoneInfo.Utc;
-            }
+            TimeZoneInfo userTimeZone = _timeZoneService.GetTimeZone(Request);
+            DateTime? fechaBusquedaUtc = _timeZoneService.ConvertirFecha(busqueda, userTimeZone);
 
-            DateTime? fechaBusquedaUtc = null;
 
-            if (DateTime.TryParse(busqueda, out DateTime fechaLocal))
-            {
-                fechaLocal = DateTime.SpecifyKind(fechaLocal, DateTimeKind.Unspecified);
-                fechaBusquedaUtc = TimeZoneInfo.ConvertTimeToUtc(fechaLocal, userTimeZone);
-            }
 
-            var Pedidolista = await _pedidoService.Lista();
-            var clientelista = await _clienteService.Lista();
-
-            var idCliente = clientelista
-                .Where(x => x.Dni == searchTerm)
-                .Select(x => x.IdCliente)
-                .FirstOrDefault();
-            // Filtro de búsqueda por término de búsqueda (searchTerm)
-            var pedidosFiltrados = Pedidolista.
-                Where(p =>p.IdCliente.Equals(idCliente));
 
             //var MisPedidos = pedidosFiltrados.Where(p =>
             //string.IsNullOrWhiteSpace(busqueda) || p.Estado.ToLower().Contains(busqueda.ToLower()) 
@@ -317,13 +294,8 @@ namespace SistEcomPan.Web.Controllers
             //p.FechaPedido.Value.Date==(DateTime.TryParse(busqueda,out DateTime fechaBusqueda)?fechaBusqueda.Date:p.FechaPedido.Value.Date)
             //);
 
-            var MisPedidos = pedidosFiltrados.Where(p =>
-            string.IsNullOrWhiteSpace(busqueda)|| p.Estado.ToLower().Contains(busqueda.ToLower())|| (
-                    fechaBusquedaUtc.HasValue&& p.FechaPedido.HasValue
-                    && p.FechaPedido.Value >= fechaBusquedaUtc.Value.Date
-                    && p.FechaPedido.Value < fechaBusquedaUtc.Value.Date.AddDays(1)
-            )
-            );
+            var MisPedidos = await _pedidoService.MisPedidos(searchTerm,fechaBusquedaUtc,busqueda);
+
 
             List<VMPedido> vmPedidos = new List<VMPedido>();
 
@@ -336,7 +308,7 @@ namespace SistEcomPan.Web.Controllers
                     Codigo = item.Codigo,
                     MontoTotal = Convert.ToString(item.MontoTotal),
                     Estado = item.Estado,
-                    FechaPedido = item.FechaPedido
+                    FechaPedido = item.FechaPedido.HasValue ? TimeZoneInfo.ConvertTimeFromUtc(item.FechaPedido.Value, userTimeZone) : null,
 
                 });
             }

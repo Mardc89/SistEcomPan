@@ -14,12 +14,14 @@ namespace Negocio.Implementacion
         private readonly IDestinatarioNew _repositorio;
         private readonly IClienteService _repositorioCliente;
         private readonly IUsuarioService _repositorioUsuario;
+        private readonly IDestinatarioMensajeService _destinatarioMensajeService;
 
-        public MensajeService(IDestinatarioNew repositorio, IClienteService repositorioCliente, IUsuarioService repositorioUsuario)
+        public MensajeService(IDestinatarioNew repositorio, IClienteService repositorioCliente, IUsuarioService repositorioUsuario, IDestinatarioMensajeService destinatarioMensajeService)
         {
             _repositorio = repositorio;
             _repositorioCliente = repositorioCliente;
             _repositorioUsuario = repositorioUsuario;
+            _destinatarioMensajeService = destinatarioMensajeService;
         }
 
         public async Task<string> Destinatario(string correo)
@@ -261,6 +263,41 @@ namespace Negocio.Implementacion
                                                       }
 
             return nombreCorreo;
+        }
+
+        public async Task<List<Mensajes>> BuscarFechas(string searchTerm,DateTime? fechaBusquedaUtc, string busqueda = "")
+        {
+
+            var ListaDeMensajes = await _repositorio.Lista();
+            var clientelista = await _repositorioCliente.Lista();
+            List<Mensajes> mensajes = new List<Mensajes>();
+            var ListaDestinatarioMensaje = await _destinatarioMensajeService.Lista();
+
+            var idCliente = clientelista.Where(x => x.Dni == searchTerm).Select(x => x.IdCliente).FirstOrDefault();
+            var IndiceDestinatario = ListaDestinatarioMensaje.Where(x => x.IdDestinatario == idCliente).Select(x => x.IdMensaje).ToList();
+            var mensajesRemitentes = ListaDeMensajes.Where(p => p.IdRemitente == idCliente && p.IdRespuestaMensaje == null).ToList();
+
+            if (IndiceDestinatario.Count > 0)
+            {
+                var mensajesDestinatario = ListaDeMensajes.Where(p => IndiceDestinatario.Contains(p.IdMensaje)).ToList();
+                mensajes.AddRange(mensajesDestinatario);
+            }
+
+            if (mensajesRemitentes.Count > 0)
+            {
+                mensajes.AddRange(mensajesRemitentes);
+            }
+
+            var MisMensajes = mensajes.Where(p =>string.IsNullOrWhiteSpace(busqueda) 
+                || p.Asunto.ToLower().Contains(busqueda.ToLower()) || (
+                fechaBusquedaUtc.HasValue && p.FechaDeMensaje.HasValue
+                && p.FechaDeMensaje.Value >= fechaBusquedaUtc.Value.Date
+                && p.FechaDeMensaje.Value < fechaBusquedaUtc.Value.Date.AddDays(1)));
+
+
+            return MisMensajes.ToList();
+
+
         }
     }
 }

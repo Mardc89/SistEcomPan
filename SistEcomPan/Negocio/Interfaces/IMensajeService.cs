@@ -9,6 +9,9 @@ namespace Negocio.Interfaces
 {
     public interface IMensajeService
     {
+
+    
+        Task<List<Mensajes>> BuscarFechas(string searchTerm,DateTime? fechaBusquedaUtc,string busqueda = "");
         Task<Mensajes> Registrar(Mensajes entidad,DestinatarioMensaje destino);
         Task<Mensajes> RegistrarMensaje(Mensajes entidad, DestinatarioMensaje destino);
         Task<Mensajes> Editar(Mensajes entidad);

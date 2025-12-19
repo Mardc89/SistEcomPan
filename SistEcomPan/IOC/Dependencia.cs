@@ -62,6 +62,7 @@ namespace IOC
             services.AddScoped<ICategoriaService, CategoriaService>();
             services.AddScoped<IDetallePedidoService, DetallePedidoService>();
             services.AddScoped<IDetallePagoService, DetallePagoService>();
+            services.AddScoped<ITimeZoneService, TimeZoneService>();
             //services.AddScoped<ProductoRepository>();
 
 
