@@ -285,9 +285,6 @@ namespace SistEcomPan.Web.Controllers
             TimeZoneInfo userTimeZone = _timeZoneService.GetTimeZone(Request);
             DateTime? fechaBusquedaUtc = _timeZoneService.ConvertirFecha(busqueda, userTimeZone);
 
-
-
-
             //var MisPedidos = pedidosFiltrados.Where(p =>
             //string.IsNullOrWhiteSpace(busqueda) || p.Estado.ToLower().Contains(busqueda.ToLower()) 
             //||
@@ -313,10 +310,8 @@ namespace SistEcomPan.Web.Controllers
                 });
             }
 
-            var clientePedido = pedidosFiltrados.FirstOrDefault().IdCliente;
-
             //var clientes = await _clienteService.ObtenerNombre();
-            var clienteEncontrado = await _clienteService.ObtenerNombreCompleto(clientePedido);
+            var clienteEncontrado = await _pedidoService.NombreDelCliente(searchTerm);
             // Paginación
             var pedidosPaginados = vmPedidos.ToList();
 
@@ -439,12 +434,12 @@ namespace SistEcomPan.Web.Controllers
         [HttpGet]
         public async Task<IActionResult> ObtenerDetalleFinal(string searchTerm, int page = 1, int itemsPerPage = 3)
         {
+
             var Pedidolista = await _pedidoService.Lista();
             var DetallePedidoLista = await _detallePedidoService.Lista();
-            int idPedido = 0,cantidadTotal = 0;
+            int idPedido = 0, cantidadTotal = 0;
             string codigo = "";
             decimal precioTotal = 0;
-            int[] product;
             List<VMDetallePedido> vmDetallePedido = new List<VMDetallePedido>();
 
             if (searchTerm != null && searchTerm != "")
@@ -461,11 +456,11 @@ namespace SistEcomPan.Web.Controllers
 
                 var productoPedido = DetallePedidoLista.Where(x => x.IdPedido == idPedido).ToList();
                 var productos = await _productoService.ObtenerNombre();
-                product = productos.Select(x => x.IdProducto).ToArray();
+                int[] product = productos.Select(x => x.IdProducto).ToArray();
                 var categorias = await _categoriaService.ObtenerNombre();
-                
-              
-                var productoID = DetallePedidoLista.Where(x => x.IdPedido == idPedido).Select(x=>x.IdProducto).ToArray();
+
+
+                var productoID = DetallePedidoLista.Where(x => x.IdPedido == idPedido).Select(x => x.IdProducto).ToArray();
                 List<int> categoriasID = new List<int>();
                 List<int> ProductosIdAgredados = new List<int>();
                 List<decimal> precios = new List<decimal>();
@@ -474,16 +469,17 @@ namespace SistEcomPan.Web.Controllers
 
 
 
-                for (int i = 0; i < productoID.Length; i++) {
+                for (int i = 0; i < productoID.Length; i++)
+                {
                     var categoriasFinales = productos.Where(x => x.IdProducto == productoID[i]).Select(x => x.IdCategoria).FirstOrDefault();
                     categoriasID.Add(categoriasFinales);
-                   
+
                 }
                 categoriasProduct = categoriasID.ToArray();
 
                 for (int i = 0; i < productoID.Length; i++)
                 {
-                    var preciosFinales = productos.Where(x => x.IdProducto == productoID[i]).Select(x=>x.Precio).FirstOrDefault();
+                    var preciosFinales = productos.Where(x => x.IdProducto == productoID[i]).Select(x => x.Precio).FirstOrDefault();
                     precios.Add(preciosFinales);
 
                 }
@@ -498,7 +494,7 @@ namespace SistEcomPan.Web.Controllers
                     {
 
                         bool ProductoAgregado = ProductosIdAgredados.Any(x => x == productoID[i]);
-                        if (ProductoAgregado==false)
+                        if (ProductoAgregado == false)
                         {
                             categoriaInicial = categoriasProduct[j];
                             var categoriasProductos = productos.Where(x => x.IdProducto == productoID[i] && x.Precio == preciosProduct[j]).Select(x => x.IdCategoria).FirstOrDefault();
@@ -513,19 +509,19 @@ namespace SistEcomPan.Web.Controllers
                                 precioTotal = precioTotal + Convert.ToDecimal(total);
                                 cantidadTotal = cantidadTotal + Convert.ToInt32(cantidad);
                                 ProductosIdAgredados.Add(productoID[i]);
-                                
-                                                           
+
+
                             }
 
                         }
 
-                        if (i == productoID.Length - 1 && precioTotal>0 && cantidadTotal>0)
+                        if (i == productoID.Length - 1 && precioTotal > 0 && cantidadTotal > 0)
                         {
                             vmDetallePedido.Add(new VMDetallePedido
                             {
                                 DescripcionProducto = productos.Where(x => x.IdProducto == productoID[j]).Select(x => x.Descripcion).FirstOrDefault(),
                                 CategoriaProducto = categorias.Where(x => x.IdCategoria == categoriaInicial).Select(x => x.TipoDeCategoria).FirstOrDefault(),
-                                Precio =Convert.ToString(productos.Where(x => x.IdProducto == productoID[j]).Select(x => x.Precio).FirstOrDefault()),
+                                Precio = Convert.ToString(productos.Where(x => x.IdProducto == productoID[j]).Select(x => x.Precio).FirstOrDefault()),
                                 Total = Convert.ToString(precioTotal),
                                 Cantidad = cantidadTotal,
                             });
@@ -536,17 +532,17 @@ namespace SistEcomPan.Web.Controllers
                         }
 
                     }
-                    
-                    
-                    }
 
-                
+
+                }
+
+
             }
 
             // Paginación
             var pedidosPaginados = vmDetallePedido.Skip((page - 1) * itemsPerPage).Take(itemsPerPage).ToList();
 
-            return StatusCode(StatusCodes.Status200OK, new { pedidos = pedidosPaginados, totalItems = vmDetallePedido.Count(), codigos = codigo});
+            return StatusCode(StatusCodes.Status200OK, new { pedidos = pedidosPaginados, totalItems = vmDetallePedido.Count(), codigos = codigo });
         }
 
         [HttpGet]
