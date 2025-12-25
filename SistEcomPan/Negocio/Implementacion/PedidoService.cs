@@ -139,6 +139,18 @@ namespace Negocio.Implementacion
             return pedido.IdCliente;
         }
 
+        public async Task<Pedidos> ObtenerPedido(string Codigo)
+        {
+            Pedidos pedido = await _repositorioPedido.Buscar(Codigo, null, null);
+            return pedido;
+        }
+
+        public async Task<int> ObtenerDetallePedido(int idPedido)
+        {
+            var detallePedido = await _detallePedidoService.Buscar(idPedido);
+            return detallePedido;
+        }
+
         public async Task<List<Pedidos>> MisPedidos(string searchTerm, DateTime? fechaBusquedaUtc, string busqueda = "")
         {
             var Pedidolista = await _repositorioPedido.Lista();
@@ -189,8 +201,7 @@ namespace Negocio.Implementacion
             if (string.IsNullOrWhiteSpace(codigo))
                 return (new(), 0);
 
-            var pedido = (await Lista())
-                .FirstOrDefault(p => p.Codigo == codigo);
+            var pedido = await ObtenerPedido(codigo);
 
             if (pedido == null)
                 return (new(), 0);

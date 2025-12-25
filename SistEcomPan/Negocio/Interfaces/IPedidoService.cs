@@ -25,5 +25,7 @@ namespace Negocio.Interfaces
         Task<string> NombreDelCliente(string Codigo);
         Task<IQueryable<Pedidos>> ObtenerNombre();
 
+        Task<Pedidos> ObtenerPedido(string Codigo);
+
     }
 }
