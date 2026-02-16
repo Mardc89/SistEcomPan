@@ -494,22 +494,53 @@ namespace SistEcomPan.Web.Controllers
         [HttpGet]
         public async Task<IActionResult> ListaNumeroDocumento(string nombreCompleto)
         {
-            var Clientelista = await _clienteService.Lista();
-            List<VMCliente> vmClientelista = new List<VMCliente>();
-            var clientes = await _clienteService.ObtenerNombre();           
-            var apellidos = clientes.FirstOrDefault(x => nombreCompleto.StartsWith(x.Apellidos)).Apellidos;
-            var nombres = clientes.FirstOrDefault(x => nombreCompleto.EndsWith(x.Nombres)).Nombres;
-             
-             vmClientelista.Add(new VMCliente
-             {
-                 IdCliente = clientes.Where(x => x.Apellidos == apellidos && x.Nombres == nombres).First().IdCliente,
-                 Dni = clientes.Where(x => x.Apellidos==apellidos && x.Nombres==nombres).First().Dni,
-                 Direccion= clientes.Where(x => x.Apellidos == apellidos && x.Nombres == nombres).First().Direccion,
-                 Telefono= clientes.Where(x => x.Apellidos == apellidos && x.Nombres == nombres).First().Telefono
-             }) ;
-            
-            return StatusCode(StatusCodes.Status200OK, vmClientelista);
+            if (string.IsNullOrWhiteSpace(nombreCompleto))
+                return BadRequest("El nombre completo es requerido.");
+
+            var partes = nombreCompleto.Split(' ', 2, StringSplitOptions.RemoveEmptyEntries);
+
+            if (partes.Length < 2)
+                return BadRequest("Formato inválido. Use: Apellidos Nombres");
+
+            var apellidos = partes[0];
+            var nombres = partes[1];
+
+            var cliente = await _clienteService.SepararApellidosNombres(apellidos, nombres);
+
+            if (cliente == null)
+                return NotFound("Cliente no encontrado.");
+
+            var vmCliente = new VMCliente
+            {
+                IdCliente = cliente.IdCliente,
+                Dni = cliente.Dni,
+                Direccion = cliente.Direccion,
+                Telefono = cliente.Telefono
+            };
+
+            return Ok(vmCliente);
         }
+
+        //[HttpGet]
+        //public async Task<IActionResult> ListaNumeroDocumentoP(string nombreCompleto)
+        //{
+        //    //var Clientelista = await _clienteService.Lista();
+        //    List<VMCliente> vmClientelista = new List<VMCliente>();
+        //    var clientes = await _clienteService.ObtenerNombre();
+        //    var apellidos = clientes.FirstOrDefault(x => nombreCompleto.StartsWith(x.Apellidos)).Apellidos;
+        //    var nombres = clientes.FirstOrDefault(x => nombreCompleto.EndsWith(x.Nombres)).Nombres;
+
+        //    vmClientelista.Add(new VMCliente
+        //    {
+        //        IdCliente = clientes.Where(x => x.Apellidos == apellidos && x.Nombres == nombres).First().IdCliente,
+        //        Dni = clientes.Where(x => x.Apellidos == apellidos && x.Nombres == nombres).First().Dni,
+        //        Direccion = clientes.Where(x => x.Apellidos == apellidos && x.Nombres == nombres).First().Direccion,
+        //        Telefono = clientes.Where(x => x.Apellidos == apellidos && x.Nombres == nombres).First().Telefono
+        //    });
+
+
+        //    return StatusCode(StatusCodes.Status200OK, vmClientelista);
+        //}
 
 
 
@@ -596,7 +627,13 @@ namespace SistEcomPan.Web.Controllers
         public async Task<IActionResult> ActualizarPedido([FromBody] VMPedido modelo)
         {
             GenericResponse<VMPedido> gResponse = new GenericResponse<VMPedido>();
-            var tz = TimeZoneInfo.FindSystemTimeZoneById("America/Lima");
+            //var tz = TimeZoneInfo.FindSystemTimeZoneById("America/Lima");
+
+            TimeZoneInfo userTimeZone = _timeZoneService.GetTimeZone(Request);
+         
+
+
+
             try
             {
                 List<Pedidos> listaPedidos = new List<Pedidos>();
@@ -641,8 +678,8 @@ namespace SistEcomPan.Web.Controllers
                         MontoTotal = Convert.ToString(pedidoCreado.MontoTotal),
                         Codigo=modelo.Codigo,
                         NombresCompletos=modelo.NombresCompletos,
-                        FechaPedido = pedidoCreado.FechaPedido.HasValue ? TimeZoneInfo.ConvertTimeFromUtc(pedidoCreado.FechaPedido.Value, tz) : null,
-                        Estado =modelo.Estado,
+                        FechaPedido = pedidoCreado.FechaPedido.HasValue ? TimeZoneInfo.ConvertTimeFromUtc(pedidoCreado.FechaPedido.Value, userTimeZone) : null,
+                        Estado = modelo.Estado,
                         DetallePedido = pedidoCreado.DetallePedido.Select(detalle => new VMDetallePedido
                         {
                             IdPedido=detalle.IdPedido,

@@ -10,8 +10,8 @@ namespace Datos.Interfaces
     public interface IClienteRepository:IGenericRepository<Clientes>
     {
         Task<Clientes> Crear(Clientes modelo);
-        Task<Clientes> Buscar(string? c = null, string? p = null, int? d = null);
+        Task<Clientes> Buscar(string? c = null, string? p = null, int? d = null, string? a = null, string? n = null);
         Task<Clientes> Verificar(string? c = null, string? p = null, int? d = null);
-  
+
     }
 }

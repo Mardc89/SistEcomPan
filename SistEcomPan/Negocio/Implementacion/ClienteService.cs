@@ -426,5 +426,13 @@ namespace Negocio.Implementacion
             return ClienteFiltrado.ToList();
 
         }
+
+
+        public async Task<Clientes?> SepararApellidosNombres(string apellidos, string nombres)
+        {
+            return await _repositorio.Buscar(null,null,null,apellidos,nombres);
+
+
+        }
     }
 }

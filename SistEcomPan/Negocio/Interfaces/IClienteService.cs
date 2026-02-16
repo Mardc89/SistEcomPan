@@ -24,7 +24,7 @@ namespace Negocio.Interfaces
         Task<int> ObtenerIdCorreoCliente(string correo);
         Task<Clientes> ObtenerCliente(string correo);
         Task<string> ObtenerDni(int IdCliente);
-
         Task<List<Clientes>> ClienteFiltrado(string busqueda);
+        Task<Clientes?> SepararApellidosNombres(string apellidos,string nombres);
     }
 }
