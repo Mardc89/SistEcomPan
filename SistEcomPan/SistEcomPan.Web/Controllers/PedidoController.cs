@@ -552,8 +552,8 @@ namespace SistEcomPan.Web.Controllers
             var clientes = await _clienteService.ObtenerNombre();
 
 
-            var cliente = clientes.FirstOrDefault(x => nombreCompleto.StartsWith(x.Apellidos) && 
-                                                        nombreCompleto.EndsWith(x.Nombres));
+            var cliente = clientes.
+                FirstOrDefault(x => nombreCompleto.StartsWith(x.Apellidos) && nombreCompleto.EndsWith(x.Nombres));
 
             vmClientelista.Add(new VMCliente
             {

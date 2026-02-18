@@ -75,10 +75,10 @@ namespace Negocio.Implementacion
             return query;
         }
 
-        public async Task<IQueryable<Clientes>> ObtenerNombre()
+        public async Task<List<Clientes>> ObtenerNombre()
         {
             List<Clientes> lista = await _repositorio.Lista();
-            return lista.AsQueryable();
+            return lista;
         }
 
         public async Task<Clientes> Crear(Clientes entidad, Stream Foto = null, string NombreFoto = "", string UrlPlantillaCorreo = "")

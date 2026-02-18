@@ -18,7 +18,7 @@ namespace Negocio.Interfaces
         Task<bool> GuardarPerfil(Clientes entidad, Stream foto = null, string Nombrefoto = "");
         Task<bool> CambiarClave(int IdCliente, string ClaveActual, string ClaveNueva);
         Task<bool> RestablecerClave(string ClaveNueva, string Correo, string UrlPlantillaCorreo);
-        Task<IQueryable<Clientes>> ObtenerNombre();
+        Task<List<Clientes>> ObtenerNombre();
         Task<string> ObtenerNombreCompleto(int IdCliente);
         Task<string> ObtenerCorreo(int IdCliente);
         Task<int> ObtenerIdCorreoCliente(string correo);
