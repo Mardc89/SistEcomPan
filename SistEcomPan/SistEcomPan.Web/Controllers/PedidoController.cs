@@ -491,44 +491,46 @@ namespace SistEcomPan.Web.Controllers
             return StatusCode(StatusCodes.Status200OK, vmClientelista);
         }
 
-        [HttpGet]
-        public async Task<IActionResult> ListaNumeroDocumento(string nombreCompleto)
-        {
-            if (string.IsNullOrWhiteSpace(nombreCompleto))
-                return BadRequest("El nombre completo es requerido.");
+        //[HttpGet]
+        //public async Task<IActionResult> ListaNumeroDocumento(string nombreCompleto)
+        //{
+        //    if (string.IsNullOrWhiteSpace(nombreCompleto))
+        //        return BadRequest("El nombre completo es requerido.");
 
-            var partes = nombreCompleto.Split(' ', 2, StringSplitOptions.RemoveEmptyEntries);
+        //    var partes = nombreCompleto.Split(' ', 2, StringSplitOptions.RemoveEmptyEntries);
 
-            if (partes.Length < 2)
-                return BadRequest("Formato inválido. Use: Apellidos Nombres");
+        //    if (partes.Length < 2)
+        //        return BadRequest("Formato inválido. Use: Apellidos Nombres");
 
-            var apellidos = partes[0];
-            var nombres = partes[1];
+        //    var apellidos = partes[0];
+        //    var nombres = partes[1];
 
-            var cliente = await _clienteService.SepararApellidosNombres(apellidos, nombres);
+        //    var cliente = await _clienteService.SepararApellidosNombres(apellidos, nombres);
 
-            if (cliente == null)
-                return NotFound("Cliente no encontrado.");
+        //    if (cliente == null)
+        //        return NotFound("Cliente no encontrado.");
 
-            var vmCliente = new VMCliente
-            {
-                IdCliente = cliente.IdCliente,
-                Dni = cliente.Dni,
-                Direccion = cliente.Direccion,
-                Telefono = cliente.Telefono
-            };
+        //    var vmCliente = new VMCliente
+        //    {
+        //        IdCliente = cliente.IdCliente,
+        //        Dni = cliente.Dni,
+        //        Direccion = cliente.Direccion,
+        //        Telefono = cliente.Telefono
+        //    };
 
-            return Ok(vmCliente);
-        }
+        //    return Ok(vmCliente);
+        //}
 
         //[HttpGet]
-        //public async Task<IActionResult> ListaNumeroDocumentoP(string nombreCompleto)
+        //public async Task<IActionResult> ListaNumeroDocumento(string nombreCompleto)
         //{
-        //    //var Clientelista = await _clienteService.Lista();
+        //    var Clientelista = await _clienteService.Lista();
         //    List<VMCliente> vmClientelista = new List<VMCliente>();
         //    var clientes = await _clienteService.ObtenerNombre();
         //    var apellidos = clientes.FirstOrDefault(x => nombreCompleto.StartsWith(x.Apellidos)).Apellidos;
         //    var nombres = clientes.FirstOrDefault(x => nombreCompleto.EndsWith(x.Nombres)).Nombres;
+
+        //    var cliente = clientes.FirstOrDefault(x => nombreCompleto.StartsWith(x.Apellidos) && nombreCompleto.EndsWith(x.Nombres));
 
         //    vmClientelista.Add(new VMCliente
         //    {
@@ -542,6 +544,28 @@ namespace SistEcomPan.Web.Controllers
         //    return StatusCode(StatusCodes.Status200OK, vmClientelista);
         //}
 
+
+        [HttpGet]
+        public async Task<IActionResult> ListaNumeroDocumento(string nombreCompleto)
+        {
+            List<VMCliente> vmClientelista = new List<VMCliente>();
+            var clientes = await _clienteService.ObtenerNombre();
+
+
+            var cliente = clientes.FirstOrDefault(x => nombreCompleto.StartsWith(x.Apellidos) && 
+                                                        nombreCompleto.EndsWith(x.Nombres));
+
+            vmClientelista.Add(new VMCliente
+            {
+                IdCliente = cliente.IdCliente,
+                Dni = cliente.Dni,
+                Direccion = cliente.Direccion,
+                Telefono = cliente.Telefono
+            });
+
+
+            return StatusCode(StatusCodes.Status200OK, vmClientelista);
+        }
 
 
         [HttpPost]
