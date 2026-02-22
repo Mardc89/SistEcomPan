@@ -241,7 +241,7 @@ namespace Datos.Implementacion
 
 
 
-        public async Task<Clientes> Buscar(string? Correo = null, string? Clave = null, int? IdCliente = null,string? Apellidos=null,string? Nombres=null)
+        public async Task<Clientes> Buscar(string? Correo = null, string? Clave = null, int? IdCliente = null,string? Apellidos=null,string? Nombres=null,string? Dni=null)
         {
             Clientes lista = null;
             using (var conexion = new SqlConnection(_cadenaSQL))
@@ -254,6 +254,7 @@ namespace Datos.Implementacion
                 cmd.Parameters.AddWithValue("@Clave", (object)Clave ?? DBNull.Value);
                 cmd.Parameters.AddWithValue("@Apellidos", (object)Apellidos ?? DBNull.Value);
                 cmd.Parameters.AddWithValue("@Nombres", (object)Nombres ?? DBNull.Value);
+                cmd.Parameters.AddWithValue("@Dni", (object)Dni ?? DBNull.Value);
                 using (var dr = await cmd.ExecuteReaderAsync())
                 {
                     while (await dr.ReadAsync())

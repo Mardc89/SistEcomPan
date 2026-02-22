@@ -434,5 +434,10 @@ namespace Negocio.Implementacion
 
 
         }
+
+        public async Task<Clientes> ObtenerPorDni(string dni)
+        {
+            return await _repositorio.Buscar(null, null, null,null,null,dni);
+        }
     }
 }

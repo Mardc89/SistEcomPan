@@ -468,28 +468,48 @@ namespace SistEcomPan.Web.Controllers
             //return StatusCode(StatusCodes.Status200OK, new { pedidos = pedidosPaginados, totalItems = vmDetallePedido.Count(), codigos = codigo });
         }
 
+
         [HttpGet]
         public async Task<IActionResult> ListaClientes(string numeroDocumento)
         {
             var Clientelista = await _clienteService.Lista();
             List<VMCliente> vmClientelista = new List<VMCliente>();
-            var clientes = await _clienteService.ObtenerNombre();
-            var nombreCompletos = clientes.Where(x => x.Dni == numeroDocumento).First().Nombres + " " +
-            clientes.Where(x => x.Dni == numeroDocumento).First().Apellidos;
-            var idcliente = clientes.Where(x => x.Dni == numeroDocumento).First().IdCliente;
-            var direccion = clientes.Where(x => x.Dni == numeroDocumento).First().Direccion;
-            var telefono = clientes.Where(x => x.Dni == numeroDocumento).First().Telefono;
+            var cliente = await _clienteService.ObtenerPorDni(numeroDocumento);
+
             vmClientelista.Add(new VMCliente
             {
-               IdCliente =idcliente,
-               NombreCompleto=nombreCompletos,
-               Direccion=direccion,
-               Telefono=telefono
-               
+                IdCliente = cliente.IdCliente,
+                NombreCompleto = cliente.Apellidos +" "+cliente.Nombres,
+                Direccion = cliente.Direccion,
+                Telefono = cliente.Telefono
+
             });
-            
+
             return StatusCode(StatusCodes.Status200OK, vmClientelista);
         }
+
+        //[HttpGet]
+        //public async Task<IActionResult> ListaClientes(string numeroDocumento)
+        //{
+        //    var Clientelista = await _clienteService.Lista();
+        //    List<VMCliente> vmClientelista = new List<VMCliente>();
+        //    var clientes = await _clienteService.ObtenerNombre();
+        //    var nombreCompletos = clientes.Where(x => x.Dni == numeroDocumento).First().Nombres + " " +
+        //    clientes.Where(x => x.Dni == numeroDocumento).First().Apellidos;
+        //    var idcliente = clientes.Where(x => x.Dni == numeroDocumento).First().IdCliente;
+        //    var direccion = clientes.Where(x => x.Dni == numeroDocumento).First().Direccion;
+        //    var telefono = clientes.Where(x => x.Dni == numeroDocumento).First().Telefono;
+        //    vmClientelista.Add(new VMCliente
+        //    {
+        //       IdCliente =idcliente,
+        //       NombreCompleto=nombreCompletos,
+        //       Direccion=direccion,
+        //       Telefono=telefono
+               
+        //    });
+            
+        //    return StatusCode(StatusCodes.Status200OK, vmClientelista);
+        //}
 
         //[HttpGet]
         //public async Task<IActionResult> ListaNumeroDocumento(string nombreCompleto)
