@@ -208,6 +208,31 @@ function obtenerFecha() {
 }
 
 
+function ObtenerClientePorDni(numeroDocumento) {
+
+    if (!/^\d{8}$/.test(numeroDocumento)) return;
+
+    if ($("#txtDocumentoCliente").val().length == 8) {
+        var numeroDocumento = $("#txtDocumentoCliente").val();
+        fetch(`/Pedido/ListaClientes?numeroDocumento=${numeroDocumento}`)
+            .then(response => {
+                return response.ok ? response.json() : Promise.reject(response);
+            })
+            .then(responseJson => {
+                if (responseJson.length > 0) {
+                    responseJson.forEach((item) => {
+                        $("#txtNombreCliente").val(item.nombreCompleto);
+                        $("#txtDireccionCliente").val(item.direccion);
+                        $("#txtTelefonoCliente").val(item.telefono);
+                    })
+                }
+            })
+            .catch(error => console.error("Error:", error));
+    }
+
+}
+
+
 if (userRol==="Administrador") {
     /* let DniCliente = document.getElementById("DniPersonal").textContent;*/
     document.getElementById("btnCliente").disabled = false;
@@ -231,23 +256,15 @@ if (userRol==="Administrador") {
 
     })
 
-    $("#txtDocumentoCliente").click(function () {
-        if ($("#txtDocumentoCliente").val().length == 8) {
-            var numeroDocumento = $("#txtDocumentoCliente").val();
-            fetch(`/Pedido/ListaClientes?numeroDocumento=${numeroDocumento}`)
-                .then(response => {
-                    return response.ok ? response.json() : Promise.reject(response);
-                })
-                .then(responseJson => {
-                    if (responseJson.length > 0) {
-                        responseJson.forEach((item) => {
-                            $("#txtNombreCliente").val(item.nombreCompleto);
-                            $("#txtDireccionCliente").val(item.direccion);
-                            $("#txtTelefonoCliente").val(item.telefono);
-                        })
-                    }
-                })
-        }
+    $("#txtDocumentoCliente").on("input", function () {
+
+        const numeroDocumento = $(this).val().trim();
+        $("#txtNombreCliente").val("");
+        $("#txtDireccionCliente").val("");
+        $("#txtTelefonoCliente").val("");
+
+        ObtenerClientePorDni(numeroDocumento)
+
 
     })
 
