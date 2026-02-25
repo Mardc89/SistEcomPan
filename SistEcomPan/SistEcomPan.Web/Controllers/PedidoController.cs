@@ -471,7 +471,7 @@ namespace SistEcomPan.Web.Controllers
 
         [HttpGet]
         public async Task<IActionResult> ListaClientes(string numeroDocumento)
-        {
+   {
             var Clientelista = await _clienteService.Lista();
             List<VMCliente> vmClientelista = new List<VMCliente>();
             var cliente = await _clienteService.ObtenerPorDni(numeroDocumento);

@@ -208,28 +208,44 @@ function obtenerFecha() {
 }
 
 
+function limpiarCampos() {
+    $("#txtNombreCliente").val("");
+    $("#txtDireccionCliente").val("");
+    $("#txtTelefonoCliente").val("");
+}
+
 function ObtenerClientePorDni(numeroDocumento) {
 
     if (!/^\d{8}$/.test(numeroDocumento)) return;
 
-    if ($("#txtDocumentoCliente").val().length == 8) {
-        var numeroDocumento = $("#txtDocumentoCliente").val();
-        fetch(`/Pedido/ListaClientes?numeroDocumento=${numeroDocumento}`)
+        return fetch(`/Pedido/ListaClientes?numeroDocumento=${numeroDocumento}`)
             .then(response => {
-                return response.ok ? response.json() : Promise.reject(response);
+
+                if (response.status === 404) {
+                    limpiarCampos();
+                    return null;
+                }
+               
+                if (!response.ok)
+                    throw new Error("Error del servidor");
+
+
+                return response.json();
+               
             })
             .then(responseJson => {
-                if (responseJson.length > 0) {
-                    responseJson.forEach((item) => {
-                        $("#txtNombreCliente").val(item.nombreCompleto);
-                        $("#txtDireccionCliente").val(item.direccion);
-                        $("#txtTelefonoCliente").val(item.telefono);
-                    })
+                if (!responseJson || !responseJson.nombreCompleto) {
+                    limpiarCampos();
+                    return;
                 }
+                $("#txtNombreCliente").val(responseJson.nombreCompleto);
+                $("#txtDireccionCliente").val(responseJson.direccion);
+                $("#txtTelefonoCliente").val(responseJson.telefono);
+                    
+                
             })
             .catch(error => console.error("Error:", error));
-    }
-
+    
 }
 
 
@@ -258,12 +274,17 @@ if (userRol==="Administrador") {
 
     $("#txtDocumentoCliente").on("input", function () {
 
-        const numeroDocumento = $(this).val().trim();
+        this.value = this.value.replace(/\D/g,'');
+
+        const numeroDocumento = this.value.trim();
         $("#txtNombreCliente").val("");
         $("#txtDireccionCliente").val("");
         $("#txtTelefonoCliente").val("");
 
-        ObtenerClientePorDni(numeroDocumento)
+        if (numeroDocumento.length == 8) {
+
+            ObtenerClientePorDni(numeroDocumento);
+        }
 
 
     })
