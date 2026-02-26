@@ -428,11 +428,9 @@ namespace Negocio.Implementacion
         }
 
 
-        public async Task<Clientes?> SepararApellidosNombres(string apellidos, string nombres)
+        public async Task<Clientes?> BuscarCliente(string nombreCompleto)
         {
-            return await _repositorio.Buscar(null,null,null,apellidos,nombres);
-
-
+            return await _repositorio.BuscarCliente(nombreCompleto);
         }
 
         public async Task<Clientes> ObtenerPorDni(string dni)

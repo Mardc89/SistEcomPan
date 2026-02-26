@@ -234,13 +234,14 @@ function ObtenerClientePorDni(numeroDocumento) {
                
             })
             .then(responseJson => {
-                if (!responseJson || !responseJson.nombreCompleto) {
+                if (!responseJson || !responseJson[0].nombreCompleto) {
                     limpiarCampos();
                     return;
                 }
-                $("#txtNombreCliente").val(responseJson.nombreCompleto);
-                $("#txtDireccionCliente").val(responseJson.direccion);
-                $("#txtTelefonoCliente").val(responseJson.telefono);
+                console.log("Datos del cliente",responseJson);
+                $("#txtNombreCliente").val(responseJson[0].nombreCompleto);
+                $("#txtDireccionCliente").val(responseJson[0].direccion);
+                $("#txtTelefonoCliente").val(responseJson[0].telefono);
                     
                 
             })

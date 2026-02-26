@@ -26,6 +26,6 @@ namespace Negocio.Interfaces
         Task<Clientes> ObtenerPorDni(string dni);
         Task<string> ObtenerDni(int IdCliente);
         Task<List<Clientes>> ClienteFiltrado(string busqueda);
-        Task<Clientes?> SepararApellidosNombres(string apellidos,string nombres);
+        Task<Clientes?> BuscarCliente(string nombreCompleto);
     }
 }

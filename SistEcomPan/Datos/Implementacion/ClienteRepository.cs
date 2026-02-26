@@ -1,18 +1,19 @@
-﻿using Entidades;
+﻿using Datos.Interfaces;
+using Entidades;
 using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
-using System.Data.SqlClient;
 using System.Data;
+using System.Data.SqlClient;
 using System.Linq;
+using System.Linq.Expressions;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
-using Datos.Interfaces;
-using System.Linq.Expressions;
 namespace Datos.Implementacion
 
 {
-    public class ClienteRepository:IClienteRepository
+    public class ClienteRepository : IClienteRepository
     {
         private readonly string _cadenaSQL = "";
 
@@ -45,15 +46,15 @@ namespace Datos.Implementacion
                             Correo = dr["Correo"].ToString(),
                             Direccion = dr["Direccion"].ToString(),
                             Telefono = dr["Telefono"].ToString(),
-                            IdDistrito =Convert.ToInt32(dr["IdDistrito"]),
+                            IdDistrito = Convert.ToInt32(dr["IdDistrito"]),
                             NombreUsuario = dr["NombreUsuario"].ToString(),
                             Clave = dr["Clave"].ToString(),
-                            FechaRegistro = dr.IsDBNull(dr.GetOrdinal("FechaRegistro"))? null: DateTime.SpecifyKind(
-                            dr.GetDateTime(dr.GetOrdinal("FechaRegistro")),DateTimeKind.Utc),
+                            FechaRegistro = dr.IsDBNull(dr.GetOrdinal("FechaRegistro")) ? null : DateTime.SpecifyKind(
+                            dr.GetDateTime(dr.GetOrdinal("FechaRegistro")), DateTimeKind.Utc),
                             Estado = Convert.ToBoolean(dr["Estado"]),
-                            UrlFoto= dr["UrlFoto"].ToString(),
-                            NombreFoto= dr["NombreFoto"].ToString()
-                        }); 
+                            UrlFoto = dr["UrlFoto"].ToString(),
+                            NombreFoto = dr["NombreFoto"].ToString()
+                        });
                     }
                 }
             }
@@ -156,9 +157,9 @@ namespace Datos.Implementacion
             }
         }
 
-        public async Task<Clientes> ConsultarCliente(string? Correo = null,string? Clave=null,int? IdCliente = null)
+        public async Task<Clientes> ConsultarCliente(string? Correo = null, string? Clave = null, int? IdCliente = null)
         {
-            Clientes lista=null;
+            Clientes lista = null;
             using (var conexion = new SqlConnection(_cadenaSQL))
             {
                 conexion.Open();
@@ -171,7 +172,7 @@ namespace Datos.Implementacion
                 {
                     while (await dr.ReadAsync())
                     {
-                        lista=new Clientes
+                        lista = new Clientes
                         {
                             IdCliente = Convert.ToInt32(dr["IdCliente"]),
                             TipoCliente = dr["TipoCliente"].ToString(),
@@ -241,7 +242,7 @@ namespace Datos.Implementacion
 
 
 
-        public async Task<Clientes> Buscar(string? Correo = null, string? Clave = null, int? IdCliente = null,string? Apellidos=null,string? Nombres=null,string? Dni=null)
+        public async Task<Clientes> Buscar(string? Correo = null, string? Clave = null, int? IdCliente = null, string? Apellidos = null, string? Nombres = null, string? Dni = null)
         {
             Clientes lista = null;
             using (var conexion = new SqlConnection(_cadenaSQL))
@@ -326,7 +327,49 @@ namespace Datos.Implementacion
             return lista;
         }
 
+        public async Task<Clientes> BuscarCliente(string? nombreCompleto = null)
+        {
+            Clientes? lista = null;
+            await using var conexion = new SqlConnection(_cadenaSQL);
+            await conexion.OpenAsync();
 
+            await using var cmd = new SqlCommand("SPBuscarCliente", conexion);
+            cmd.CommandType = CommandType.StoredProcedure;
+
+            cmd.Parameters.Add("@Nombre", SqlDbType.NVarChar, 200)
+                          .Value = (object?)nombreCompleto ?? DBNull.Value;
+
+            await using var dr = await cmd.ExecuteReaderAsync();
+
+
+            if (await dr.ReadAsync())
+            {
+                lista = new Clientes
+                {
+                    IdCliente = Convert.ToInt32(dr["IdCliente"]),
+                    TipoCliente = dr["TipoCliente"].ToString(),
+                    Dni = dr["Dni"].ToString(),
+                    Nombres = dr["Nombres"].ToString(),
+                    Apellidos = dr["Apellidos"].ToString(),
+                    Correo = dr["Correo"].ToString(),
+                    Direccion = dr["Direccion"].ToString(),
+                    Telefono = dr["Telefono"].ToString(),
+                    IdDistrito = Convert.ToInt32(dr["IdDistrito"]),
+                    NombreUsuario = dr["NombreUsuario"].ToString(),
+                    Clave = dr["Clave"].ToString(),
+                    FechaRegistro = dr.IsDBNull(dr.GetOrdinal("FechaRegistro")) ? null : DateTime.SpecifyKind(
+                    dr.GetDateTime(dr.GetOrdinal("FechaRegistro")), DateTimeKind.Utc),
+                    Estado = Convert.ToBoolean(dr["Estado"]),
+                    UrlFoto = dr["UrlFoto"].ToString(),
+                    NombreFoto = dr["NombreFoto"].ToString()
+                };
+            }
+
+            return lista;
+        }
     }
-
 }
+        
+    
+
+

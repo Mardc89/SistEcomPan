@@ -569,11 +569,7 @@ namespace SistEcomPan.Web.Controllers
         public async Task<IActionResult> ListaNumeroDocumento(string nombreCompleto)
         {
             List<VMCliente> vmClientelista = new List<VMCliente>();
-            var clientes = await _clienteService.ObtenerNombre();
-
-
-            var cliente = clientes.
-                FirstOrDefault(x => nombreCompleto.StartsWith(x.Apellidos) && nombreCompleto.EndsWith(x.Nombres));
+            var cliente = await _clienteService.BuscarCliente(nombreCompleto);
 
             vmClientelista.Add(new VMCliente
             {
