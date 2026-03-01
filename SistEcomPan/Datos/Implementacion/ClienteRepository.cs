@@ -189,7 +189,8 @@ namespace Datos.Implementacion
                             dr.GetDateTime(dr.GetOrdinal("FechaRegistro")), DateTimeKind.Utc),
                             Estado = Convert.ToBoolean(dr["Estado"]),
                             UrlFoto = dr["UrlFoto"].ToString(),
-                            NombreFoto = dr["NombreFoto"].ToString()
+                            NombreFoto = dr["NombreFoto"].ToString(),
+                            NombreCompleto = dr["NombreCompleto"].ToString()
                         };
                     }
                 }
@@ -230,7 +231,8 @@ namespace Datos.Implementacion
                             dr.GetDateTime(dr.GetOrdinal("FechaRegistro")), DateTimeKind.Utc),
                             Estado = Convert.ToBoolean(dr["Estado"]),
                             UrlFoto = dr["UrlFoto"].ToString(),
-                            NombreFoto = dr["NombreFoto"].ToString()
+                            NombreFoto = dr["NombreFoto"].ToString(),
+                            NombreCompleto = dr["NombreCompleto"].ToString()
                         };
                     }
                 }
@@ -277,7 +279,8 @@ namespace Datos.Implementacion
                             dr.GetDateTime(dr.GetOrdinal("FechaRegistro")), DateTimeKind.Utc),
                             Estado = Convert.ToBoolean(dr["Estado"]),
                             UrlFoto = dr["UrlFoto"].ToString(),
-                            NombreFoto = dr["NombreFoto"].ToString()
+                            NombreFoto = dr["NombreFoto"].ToString(),
+                            NombreCompleto = dr["NombreCompleto"].ToString()
                         };
                     }
                 }
@@ -318,7 +321,8 @@ namespace Datos.Implementacion
                             dr.GetDateTime(dr.GetOrdinal("FechaRegistro")), DateTimeKind.Utc),
                             Estado = Convert.ToBoolean(dr["Estado"]),
                             UrlFoto = dr["UrlFoto"].ToString(),
-                            NombreFoto = dr["NombreFoto"].ToString()
+                            NombreFoto = dr["NombreFoto"].ToString(),
+                            NombreCompleto = dr["NombreCompleto"].ToString()
                         };
                     }
                 }
@@ -347,21 +351,12 @@ namespace Datos.Implementacion
                 lista = new Clientes
                 {
                     IdCliente = Convert.ToInt32(dr["IdCliente"]),
-                    TipoCliente = dr["TipoCliente"].ToString(),
                     Dni = dr["Dni"].ToString(),
                     Nombres = dr["Nombres"].ToString(),
                     Apellidos = dr["Apellidos"].ToString(),
-                    Correo = dr["Correo"].ToString(),
                     Direccion = dr["Direccion"].ToString(),
                     Telefono = dr["Telefono"].ToString(),
-                    IdDistrito = Convert.ToInt32(dr["IdDistrito"]),
-                    NombreUsuario = dr["NombreUsuario"].ToString(),
-                    Clave = dr["Clave"].ToString(),
-                    FechaRegistro = dr.IsDBNull(dr.GetOrdinal("FechaRegistro")) ? null : DateTime.SpecifyKind(
-                    dr.GetDateTime(dr.GetOrdinal("FechaRegistro")), DateTimeKind.Utc),
-                    Estado = Convert.ToBoolean(dr["Estado"]),
-                    UrlFoto = dr["UrlFoto"].ToString(),
-                    NombreFoto = dr["NombreFoto"].ToString()
+                    NombreCompleto = dr["NombreCompleto"].ToString()
                 };
             }
 

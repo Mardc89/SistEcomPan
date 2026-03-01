@@ -351,85 +351,85 @@ namespace SistEcomPan.Web.Controllers
             return StatusCode(StatusCodes.Status200OK, new { detallePedido = pedidosPaginados, totalItems = vmDetallePedidos.Count()});
         }
 
-        [HttpGet]
-        public async Task<IActionResult> ObtenerDetallePedido(string searchTerm = "", int page = 1, int itemsPerPage = 5)
-        {
-            var Pedidolista = await _pedidoService.Lista();
-            var DetallePedidoLista = await _detallePedidoService.Lista();
-            var Productos = await _productoService.Lista();
-            var detallePedidosFiltrados = new List<DetallePedido>();
-            int idPedido = 0 ;
-            string codigo = "";
-            List<string> nombresProductos = new List<string>();
-            List<string> preciosProductos = new List<string>();
+        //[HttpGet]
+        //public async Task<IActionResult> ObtenerDetallePedido(string searchTerm = "", int page = 1, int itemsPerPage = 5)
+        //{
+        //    var Pedidolista = await _pedidoService.Lista();
+        //    var DetallePedidoLista = await _detallePedidoService.Lista();
+        //    var Productos = await _productoService.Lista();
+        //    var detallePedidosFiltrados = new List<DetallePedido>();
+        //    int idPedido = 0 ;
+        //    string codigo = "";
+        //    List<string> nombresProductos = new List<string>();
+        //    List<string> preciosProductos = new List<string>();
 
-            // Filtro de búsqueda por término de búsqueda (searchTerm)
-            if (searchTerm != null && searchTerm!="")
-            {
-                var pedidosFiltrados = Pedidolista.Where(p =>
-                    string.IsNullOrWhiteSpace(searchTerm) || p.Codigo.ToLower().Contains(searchTerm.ToLower()
-                    )
-                );
+        //    // Filtro de búsqueda por término de búsqueda (searchTerm)
+        //    if (searchTerm != null && searchTerm!="")
+        //    {
+        //        var pedidosFiltrados = Pedidolista.Where(p =>
+        //            string.IsNullOrWhiteSpace(searchTerm) || p.Codigo.ToLower().Contains(searchTerm.ToLower()
+        //            )
+        //        );
 
-                idPedido = pedidosFiltrados.First().IdPedido;
-                codigo = pedidosFiltrados.First().Codigo;
+        //        idPedido = pedidosFiltrados.First().IdPedido;
+        //        codigo = pedidosFiltrados.First().Codigo;
 
-                detallePedidosFiltrados = DetallePedidoLista.Where(p => p.IdPedido == idPedido).ToList();
-
-
-                var clientePedido = pedidosFiltrados.First().IdCliente;
-                var clientes = await _clienteService.ObtenerNombre();
-                var clienteEncontrado = clientes.Where(x => x.IdCliente == clientePedido).First().Nombres + "" +
-                                        clientes.Where(x => x.IdCliente == clientePedido).First().Apellidos;
-
-                var productoPedido = detallePedidosFiltrados.Where(x => x.IdPedido == idPedido).Select(x => x.IdProducto).ToArray();
-                var productos = await _productoService.ObtenerNombre();
+        //        detallePedidosFiltrados = DetallePedidoLista.Where(p => p.IdPedido == idPedido).ToList();
 
 
-                foreach (var item in productoPedido)
-                {
-                    var productoEncontrado = productos.Where(x => x.IdProducto == item).Select(x => x.Descripcion).FirstOrDefault();
-                    if (productoEncontrado != null)
-                    {
-                        nombresProductos.Add(productoEncontrado);
-                    }
-                }
+        //        var clientePedido = pedidosFiltrados.First().IdCliente;
+        //        var clientes = await _clienteService.ObtenerNombre();
+        //        var clienteEncontrado = clientes.Where(x => x.IdCliente == clientePedido).First().Nombres + "" +
+        //                                clientes.Where(x => x.IdCliente == clientePedido).First().Apellidos;
 
-                foreach (var item in productoPedido)
-                {
-                    var productoEncontrado = productos.Where(x => x.IdProducto == item).Select(x => x.Precio).FirstOrDefault();
-                    preciosProductos.Add(productoEncontrado.ToString());
+        //        var productoPedido = detallePedidosFiltrados.Where(x => x.IdPedido == idPedido).Select(x => x.IdProducto).ToArray();
+        //        var productos = await _productoService.ObtenerNombre();
 
-                }
-            }
-            else
-            {
-                detallePedidosFiltrados = DetallePedidoLista;
-                var productoPedido = detallePedidosFiltrados.Select(x => x.IdProducto).ToArray();
-                var productos = await _productoService.ObtenerNombre();
 
-                foreach (var item in productoPedido)
-                {
-                    var productoEncontrado = productos.Where(x => x.IdProducto == item).Select(x => x.Descripcion).FirstOrDefault();
-                    if (productoEncontrado != null)
-                    {
-                        nombresProductos.Add(productoEncontrado);
-                    }
-                }
+        //        foreach (var item in productoPedido)
+        //        {
+        //            var productoEncontrado = productos.Where(x => x.IdProducto == item).Select(x => x.Descripcion).FirstOrDefault();
+        //            if (productoEncontrado != null)
+        //            {
+        //                nombresProductos.Add(productoEncontrado);
+        //            }
+        //        }
 
-                foreach (var item in productoPedido)
-                {
-                    var productoEncontrado = productos.Where(x => x.IdProducto == item).Select(x => x.Precio).FirstOrDefault();
-                    preciosProductos.Add(productoEncontrado.ToString());
+        //        foreach (var item in productoPedido)
+        //        {
+        //            var productoEncontrado = productos.Where(x => x.IdProducto == item).Select(x => x.Precio).FirstOrDefault();
+        //            preciosProductos.Add(productoEncontrado.ToString());
 
-                }
-            }
+        //        }
+        //    }
+        //    else
+        //    {
+        //        detallePedidosFiltrados = DetallePedidoLista;
+        //        var productoPedido = detallePedidosFiltrados.Select(x => x.IdProducto).ToArray();
+        //        var productos = await _productoService.ObtenerNombre();
 
-            // Paginación
-            var pedidosPaginados = detallePedidosFiltrados.Skip((page - 1) * itemsPerPage).Take(itemsPerPage).ToList();
+        //        foreach (var item in productoPedido)
+        //        {
+        //            var productoEncontrado = productos.Where(x => x.IdProducto == item).Select(x => x.Descripcion).FirstOrDefault();
+        //            if (productoEncontrado != null)
+        //            {
+        //                nombresProductos.Add(productoEncontrado);
+        //            }
+        //        }
 
-            return StatusCode(StatusCodes.Status200OK, new { pedidos = pedidosPaginados, totalItems = detallePedidosFiltrados.Count(),codigos=codigo,precios=preciosProductos,nombresProducto=nombresProductos});
-        }
+        //        foreach (var item in productoPedido)
+        //        {
+        //            var productoEncontrado = productos.Where(x => x.IdProducto == item).Select(x => x.Precio).FirstOrDefault();
+        //            preciosProductos.Add(productoEncontrado.ToString());
+
+        //        }
+        //    }
+
+        //    // Paginación
+        //    var pedidosPaginados = detallePedidosFiltrados.Skip((page - 1) * itemsPerPage).Take(itemsPerPage).ToList();
+
+        //    return StatusCode(StatusCodes.Status200OK, new { pedidos = pedidosPaginados, totalItems = detallePedidosFiltrados.Count(),codigos=codigo,precios=preciosProductos,nombresProducto=nombresProductos});
+        //}
 
         [HttpGet]
         public async Task<IActionResult> ObtenerDetalleFinal(string searchTerm, int page = 1, int itemsPerPage = 3)
@@ -487,83 +487,6 @@ namespace SistEcomPan.Web.Controllers
 
             return StatusCode(StatusCodes.Status200OK, vmClientelista);
         }
-
-        //[HttpGet]
-        //public async Task<IActionResult> ListaClientes(string numeroDocumento)
-        //{
-        //    var Clientelista = await _clienteService.Lista();
-        //    List<VMCliente> vmClientelista = new List<VMCliente>();
-        //    var clientes = await _clienteService.ObtenerNombre();
-        //    var nombreCompletos = clientes.Where(x => x.Dni == numeroDocumento).First().Nombres + " " +
-        //    clientes.Where(x => x.Dni == numeroDocumento).First().Apellidos;
-        //    var idcliente = clientes.Where(x => x.Dni == numeroDocumento).First().IdCliente;
-        //    var direccion = clientes.Where(x => x.Dni == numeroDocumento).First().Direccion;
-        //    var telefono = clientes.Where(x => x.Dni == numeroDocumento).First().Telefono;
-        //    vmClientelista.Add(new VMCliente
-        //    {
-        //       IdCliente =idcliente,
-        //       NombreCompleto=nombreCompletos,
-        //       Direccion=direccion,
-        //       Telefono=telefono
-               
-        //    });
-            
-        //    return StatusCode(StatusCodes.Status200OK, vmClientelista);
-        //}
-
-        //[HttpGet]
-        //public async Task<IActionResult> ListaNumeroDocumento(string nombreCompleto)
-        //{
-        //    if (string.IsNullOrWhiteSpace(nombreCompleto))
-        //        return BadRequest("El nombre completo es requerido.");
-
-        //    var partes = nombreCompleto.Split(' ', 2, StringSplitOptions.RemoveEmptyEntries);
-
-        //    if (partes.Length < 2)
-        //        return BadRequest("Formato inválido. Use: Apellidos Nombres");
-
-        //    var apellidos = partes[0];
-        //    var nombres = partes[1];
-
-        //    var cliente = await _clienteService.SepararApellidosNombres(apellidos, nombres);
-
-        //    if (cliente == null)
-        //        return NotFound("Cliente no encontrado.");
-
-        //    var vmCliente = new VMCliente
-        //    {
-        //        IdCliente = cliente.IdCliente,
-        //        Dni = cliente.Dni,
-        //        Direccion = cliente.Direccion,
-        //        Telefono = cliente.Telefono
-        //    };
-
-        //    return Ok(vmCliente);
-        //}
-
-        //[HttpGet]
-        //public async Task<IActionResult> ListaNumeroDocumento(string nombreCompleto)
-        //{
-        //    var Clientelista = await _clienteService.Lista();
-        //    List<VMCliente> vmClientelista = new List<VMCliente>();
-        //    var clientes = await _clienteService.ObtenerNombre();
-        //    var apellidos = clientes.FirstOrDefault(x => nombreCompleto.StartsWith(x.Apellidos)).Apellidos;
-        //    var nombres = clientes.FirstOrDefault(x => nombreCompleto.EndsWith(x.Nombres)).Nombres;
-
-        //    var cliente = clientes.FirstOrDefault(x => nombreCompleto.StartsWith(x.Apellidos) && nombreCompleto.EndsWith(x.Nombres));
-
-        //    vmClientelista.Add(new VMCliente
-        //    {
-        //        IdCliente = clientes.Where(x => x.Apellidos == apellidos && x.Nombres == nombres).First().IdCliente,
-        //        Dni = clientes.Where(x => x.Apellidos == apellidos && x.Nombres == nombres).First().Dni,
-        //        Direccion = clientes.Where(x => x.Apellidos == apellidos && x.Nombres == nombres).First().Direccion,
-        //        Telefono = clientes.Where(x => x.Apellidos == apellidos && x.Nombres == nombres).First().Telefono
-        //    });
-
-
-        //    return StatusCode(StatusCodes.Status200OK, vmClientelista);
-        //}
-
 
         [HttpGet]
         public async Task<IActionResult> ListaNumeroDocumento(string nombreCompleto)

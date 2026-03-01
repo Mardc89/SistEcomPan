@@ -94,8 +94,8 @@ function validarFormularioReset(formReset) {
 
         const campos = [
             { id: "txtDni", mensaje: "Debe Completar el campo Dni" ,longitudMaxima:8,tipo:"numerico"},
-            { id: "txtNombres", mensaje: "Debe Ingresar sus Nombres", longitudMinima: 20, longitudMaxima: 50, tipo: "texto" },
-            { id: "txtApellidos", mensaje: "Debe Ingresar sus Apellidos", longitudMinima: 20, longitudMaxima: 50, tipo: "texto" },
+            { id: "txtNombres", mensaje: "Debe Ingresar sus Nombres", longitudMinima: 10, longitudMaxima: 30, tipo: "texto" },
+            { id: "txtApellidos", mensaje: "Debe Ingresar sus Apellidos", longitudMinima: 10, longitudMaxima: 30, tipo: "texto" },
             { id: "txtTelefono", mensaje: "Debe Ingresar su Telefono", longitudMaxima: 9, tipo: "numerico" },
             { id: "cboTipoCliente", mensaje: "Debes Seleccionar un Tipo de Cliente"},
             { id: "txtDireccion", mensaje: "Debe Ingresar su Direccion", longitudMinima: 10, longitudMaxima: 50 },
