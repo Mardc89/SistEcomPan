@@ -54,7 +54,7 @@ namespace Negocio.Implementacion
 
             try
             {
-                Clientes clientes = await _repositorio.Buscar(correo, null, null);
+                Clientes clientes = await _repositorio.Buscar(correo, null, null,null,null,null);
                 return clientes;
 
             }

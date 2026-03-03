@@ -64,22 +64,20 @@ namespace SistEcomPan.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> ResetClave(string correo)
         {
-            var usuario = await _usuarioServicio.ObtenerUsuario(correo);
-            var cliente = await _clienteServicio.ObtenerCliente(correo);
-            if (usuario == null && cliente==null)
+            if (!string.IsNullOrEmpty(correo))
             {
-                ViewData["MensajeError"] = "Correo no encontrado.";
-                return View();
-            }
+                var usuario = await _usuarioServicio.ObtenerUsuario(correo);
+                var cliente = await _clienteServicio.ObtenerCliente(correo);
 
-            if (usuario!= null)
-            {
-                await ResetUsuarioAsync(usuario, correo);
+                if (usuario != null)
+                {
+                    await ResetUsuarioAsync(usuario, correo);
 
-            }
-            else if(cliente!=null)
-            {
-                await ResetClienteAsync(cliente, correo);
+                }
+                else if (cliente != null)
+                {
+                    await ResetClienteAsync(cliente, correo);
+                }
             }
             ViewData["Mensaje"] = "Se ha enviado un correo con instrucciones para restablecer tu contraseña.";
             return View();
