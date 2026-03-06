@@ -173,53 +173,66 @@ namespace SistEcomPan.Web.Controllers
             return StatusCode(StatusCodes.Status200OK,new { productos = productosPaginados, totalItems = productosFiltrados.Count(), categoria = categoriaEncontrada});
         }
 
+        //[HttpGet]
+        //public async Task<IActionResult> ObtenerPedidos(string searchTerm = "", int page = 1, int itemsPerPage = 4)
+        //{
+        //    var Pedidolista = await _pedidoService.Lista();
+        //    var clientes = await _clienteService.Lista();  
+        //    var pedidosPendientes = Pedidolista.Where(p => p.Estado.Equals("Nuevo")||p.Estado.Equals("Existe Deuda")).ToList();
+        //    int?IDdeCliente=null;
+        //    if (!string.IsNullOrEmpty(searchTerm))
+        //    {
+        //        IDdeCliente = clientes
+
+        //        .Where(p => p.Apellidos.ToLower().Contains(searchTerm.ToLower()) || p.Nombres.ToLower().Contains(searchTerm.ToLower()))
+        //        .Select(p => (int?)p.IdCliente)
+        //        .FirstOrDefault();
+        //    }
+
+        //    var pedidosFiltrados = pedidosPendientes.Where(p =>
+        //        string.IsNullOrWhiteSpace(searchTerm) || p.Codigo.Contains(searchTerm.ToLower()) ||(IDdeCliente!=null && p.IdCliente.Equals(IDdeCliente))
+        //    );
+
+        //    List<VMPedido> vmPedidos = new List<VMPedido>();
+        //    TimeZoneInfo userTimeZone = _timeZoneService.GetTimeZone(Request);
+        //    foreach (var item in pedidosFiltrados)
+        //    {
+        //        vmPedidos.Add(new VMPedido
+        //        {
+        //            IdPedido = item.IdPedido,
+        //            IdCliente = item.IdCliente,
+        //            Codigo = item.Codigo,
+        //            MontoTotal = Convert.ToString(item.MontoTotal),
+        //            Estado = item.Estado,
+        //            FechaPedido = item.FechaPedido.HasValue ? TimeZoneInfo.ConvertTimeFromUtc(item.FechaPedido.Value,userTimeZone) : null,
+        //            NombresCompletos = await _clienteService.ObtenerNombreCompleto(item.IdCliente)
+
+        //        });
+        //    }
+
+
+        //    // Paginación
+        //    var pedidosPaginados = vmPedidos.Skip((page - 1) * itemsPerPage).Take(itemsPerPage).ToList();
+
+        //    return StatusCode(StatusCodes.Status200OK, new { pedidos = pedidosPaginados, totalItems = vmPedidos.Count() });
+
+
+
+
+        //}
+
         [HttpGet]
         public async Task<IActionResult> ObtenerPedidos(string searchTerm = "", int page = 1, int itemsPerPage = 4)
         {
-            var Pedidolista = await _pedidoService.Lista();
-            var clientes = await _clienteService.Lista();  
-            var pedidosPendientes = Pedidolista.Where(p => p.Estado.Equals("Nuevo")||p.Estado.Equals("Existe Deuda")).ToList();
-            int?IDdeCliente=null;
-            if (!string.IsNullOrEmpty(searchTerm))
+            var resultado = await _pedidoService.ObtenerPedidos(searchTerm, page, itemsPerPage);
+
+            return Ok(new
             {
-                IDdeCliente = clientes
-
-                .Where(p => p.Apellidos.ToLower().Contains(searchTerm.ToLower()) || p.Nombres.ToLower().Contains(searchTerm.ToLower()))
-                .Select(p => (int?)p.IdCliente)
-                .FirstOrDefault();
-            }
-          
-            var pedidosFiltrados = pedidosPendientes.Where(p =>
-                string.IsNullOrWhiteSpace(searchTerm) || p.Codigo.Contains(searchTerm.ToLower()) ||(IDdeCliente!=null && p.IdCliente.Equals(IDdeCliente))
-            );
-
-            List<VMPedido> vmPedidos = new List<VMPedido>();
-            TimeZoneInfo userTimeZone = _timeZoneService.GetTimeZone(Request);
-            foreach (var item in pedidosFiltrados)
-            {
-                vmPedidos.Add(new VMPedido
-                {
-                    IdPedido = item.IdPedido,
-                    IdCliente = item.IdCliente,
-                    Codigo = item.Codigo,
-                    MontoTotal = Convert.ToString(item.MontoTotal),
-                    Estado = item.Estado,
-                    FechaPedido = item.FechaPedido.HasValue ? TimeZoneInfo.ConvertTimeFromUtc(item.FechaPedido.Value,userTimeZone) : null,
-                    NombresCompletos = await _clienteService.ObtenerNombreCompleto(item.IdCliente)
-
-                });
-            }
-
-
-            // Paginación
-            var pedidosPaginados = vmPedidos.Skip((page - 1) * itemsPerPage).Take(itemsPerPage).ToList();
-
-            return StatusCode(StatusCodes.Status200OK, new { pedidos = pedidosPaginados, totalItems = vmPedidos.Count() });
-
-
-
-
+                pedidos = resultado.Item1,
+                totalItems = resultado.totalItems
+            });
         }
+
 
         [HttpGet]
         public async Task<IActionResult> ObtenerListaPedidos()

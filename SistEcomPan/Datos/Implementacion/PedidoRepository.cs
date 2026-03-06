@@ -1,4 +1,5 @@
 ﻿using Datos.Interfaces;
+using Datos.Models;
 using Entidades;
 using Microsoft.Extensions.Configuration;
 using System;
@@ -421,6 +422,59 @@ namespace Datos.Implementacion
             }
 
             return lista;
+        }
+
+
+        public async Task<(List<VMPedido>, int totalItems)> ObtenerPedidos(string searchTerm,int page, int itemsPerPage)
+        {
+            List<VMPedido> lista = new List<VMPedido>();
+            int totalItems = 0;
+
+            using (SqlConnection conexion = new SqlConnection(_cadenaSQL))
+            {
+                await conexion.OpenAsync();
+
+                using (SqlCommand cmd = new SqlCommand("SPObtenerPedidos", conexion))
+                {
+                    cmd.CommandType = CommandType.StoredProcedure;
+
+                    cmd.Parameters.Add("@searchTerm", SqlDbType.NVarChar, 100)
+                        .Value = string.IsNullOrWhiteSpace(searchTerm)
+                            ? DBNull.Value
+                            : searchTerm;
+
+                    cmd.Parameters.Add("@page", SqlDbType.Int).Value = page;
+                    cmd.Parameters.Add("@itemsPerPage", SqlDbType.Int).Value = itemsPerPage;
+
+                    using (SqlDataReader reader = await cmd.ExecuteReaderAsync())
+                    {
+                        // 🔹 Primer ResultSet (datos)
+                        while (await reader.ReadAsync())
+                        {
+                            lista.Add(new VMPedido
+                            {
+                                IdPedido = reader.GetInt32(reader.GetOrdinal("IdPedido")),
+                                IdCliente = reader.GetInt32(reader.GetOrdinal("IdCliente")),
+                                Codigo = reader["Codigo"]?.ToString(),
+                                MontoTotal = reader["MontoTotal"]?.ToString(),
+                                Estado = reader["Estado"]?.ToString(),
+                                FechaPedido = reader["FechaPedido"] as DateTime?,
+                                NombresCompletos = reader["NombreCompleto"]?.ToString()
+                            });
+                        }
+
+                        // 🔹 Segundo ResultSet (total)
+                        await reader.NextResultAsync();
+
+                        if (await reader.ReadAsync())
+                        {
+                            totalItems = reader.GetInt32(0);
+                        }
+                    }
+                }
+            }
+
+            return (lista, totalItems);
         }
 
 

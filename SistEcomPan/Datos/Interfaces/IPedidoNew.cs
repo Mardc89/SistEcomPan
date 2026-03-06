@@ -1,4 +1,5 @@
-﻿using Entidades;
+﻿using Datos.Models;
+using Entidades;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -11,6 +12,7 @@ namespace Datos.Interfaces
 {
     public interface IPedidoNew:IGenericRepository<Pedidos>
     {
+        public Task<(List<VMPedido>, int totalItems)> ObtenerPedidos(string searchTerm, int page, int itemsPerPage);
         Task<Pedidos> Registrar(Pedidos modelo,DataTable DataTable);
         Task<List<Pedidos>> Reporte(DateTime FechaInicio,DateTime FechaFin);
         Task<List<Pedidos>> ConsultarPedido(DateTime? fechaPedido=null);

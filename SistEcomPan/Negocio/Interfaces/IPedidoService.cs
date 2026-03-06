@@ -27,5 +27,7 @@ namespace Negocio.Interfaces
 
         Task<Pedidos> ObtenerPedido(string Codigo);
 
+        Task<List<Pedidos>> ObtenerPedidos(string searchTerm, int page, int itemsPerPage);
+
     }
 }
