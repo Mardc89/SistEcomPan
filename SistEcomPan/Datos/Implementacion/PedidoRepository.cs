@@ -1,5 +1,6 @@
 ﻿using Datos.Interfaces;
 using Datos.Models;
+using DTO;
 using Entidades;
 using Microsoft.Extensions.Configuration;
 using System;
@@ -425,9 +426,9 @@ namespace Datos.Implementacion
         }
 
 
-        public async Task<(List<VMPedido>, int totalItems)> ObtenerPedidos(string searchTerm,int page, int itemsPerPage)
+        public async Task<(List<PedidoDTO>, int totalItems)> ObtenerPedidos(string searchTerm,int page, int itemsPerPage)
         {
-            List<VMPedido> lista = new List<VMPedido>();
+            List<PedidoDTO> lista = new List<PedidoDTO>();
             int totalItems = 0;
 
             using (SqlConnection conexion = new SqlConnection(_cadenaSQL))
@@ -451,7 +452,7 @@ namespace Datos.Implementacion
                         // 🔹 Primer ResultSet (datos)
                         while (await reader.ReadAsync())
                         {
-                            lista.Add(new VMPedido
+                            lista.Add(new PedidoDTO
                             {
                                 IdPedido = reader.GetInt32(reader.GetOrdinal("IdPedido")),
                                 IdCliente = reader.GetInt32(reader.GetOrdinal("IdCliente")),

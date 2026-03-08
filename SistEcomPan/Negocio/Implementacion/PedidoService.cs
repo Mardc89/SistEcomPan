@@ -1,4 +1,5 @@
 ﻿using Datos.Interfaces;
+using DTO;
 using Entidades;
 using Microsoft.Extensions.Configuration;
 using Negocio.Interfaces;
@@ -233,7 +234,7 @@ namespace Negocio.Implementacion
             return (resultado, resultado.Count);
         }
 
-        public async Task<(List<VMPedido>, int totalItems)> ObtenerPedidos(string searchTerm = "", int page = 1, int itemsPerPage = 4)
+        public async Task<(List<PedidoDTO>, int totalItems)> ObtenerPedidos(string searchTerm = "", int page = 1, int itemsPerPage = 4)
         {
             return await _repositorioPedido.ObtenerPedidos(searchTerm, page, itemsPerPage);
         }

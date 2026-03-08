@@ -6,13 +6,14 @@ using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using DTO;
 
 
 namespace Datos.Interfaces
 {
     public interface IPedidoNew:IGenericRepository<Pedidos>
     {
-        public Task<(List<VMPedido>, int totalItems)> ObtenerPedidos(string searchTerm, int page, int itemsPerPage);
+        public Task<(List<PedidoDTO>, int totalItems)> ObtenerPedidos(string searchTerm, int page, int itemsPerPage);
         Task<Pedidos> Registrar(Pedidos modelo,DataTable DataTable);
         Task<List<Pedidos>> Reporte(DateTime FechaInicio,DateTime FechaFin);
         Task<List<Pedidos>> ConsultarPedido(DateTime? fechaPedido=null);

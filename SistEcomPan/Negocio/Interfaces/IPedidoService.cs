@@ -1,4 +1,6 @@
-﻿using Entidades;
+﻿using Datos.Models;
+using DTO;
+using Entidades;
 using Negocio.Models;
 using System;
 using System.Collections.Generic;
@@ -27,7 +29,7 @@ namespace Negocio.Interfaces
 
         Task<Pedidos> ObtenerPedido(string Codigo);
 
-        Task<List<Pedidos>> ObtenerPedidos(string searchTerm, int page, int itemsPerPage);
+        Task<List<PedidoDTO>> ObtenerPedidos(string searchTerm, int page, int itemsPerPage);
 
     }
 }
