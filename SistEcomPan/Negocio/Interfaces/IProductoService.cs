@@ -1,4 +1,5 @@
-﻿using Entidades;
+﻿using DTO;
+using Entidades;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,7 +15,8 @@ namespace Negocio.Interfaces
         Task<Productos> Editar(Productos entidad, Stream Imagen= null, string NombreImagen = "");
         Task<bool> Eliminar(int IdProducto);
         Task<IQueryable<Productos>> ObtenerNombre();
-        Task<string> ConsultarProducto(); 
+        Task<string> ConsultarProducto();
+        Task<(List<PedidoDTO>, int totalItems)> ObtenerProductos(string searchTerm, int page, int itemsPerPage);
 
     }
 }

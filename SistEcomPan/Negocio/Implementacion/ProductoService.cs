@@ -1,4 +1,5 @@
 ﻿using Datos.Interfaces;
+using DTO;
 using Entidades;
 using Microsoft.Extensions.Hosting;
 using Negocio.Interfaces;
@@ -173,10 +174,9 @@ namespace Negocio.Implementacion
             return lista.AsQueryable();
         }
 
-
-
-
-
-
+        public async Task<(List<PedidoDTO>, int totalItems)> ObtenerProductos(string searchTerm, int page, int itemsPerPage)
+        {
+            return await _repositorio.ObtenerProductos(searchTerm, page, itemsPerPage);
+        }
     }
 }

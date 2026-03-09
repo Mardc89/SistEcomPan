@@ -287,5 +287,51 @@ namespace Datos.Implementacion
         }
 
 
+        public async Task<(List<VMProducto> productos, int totalItems)> ObtenerProductos(string searchTerm, int page, int itemsPerPage)
+        {
+            List<VMProducto> lista = new List<VMProducto>();
+            int totalItems = 0;
+
+            using (SqlConnection con = new SqlConnection(_connectionString))
+            {
+                using (SqlCommand cmd = new SqlCommand("sp_ObtenerProductos", con))
+                {
+                    cmd.CommandType = CommandType.StoredProcedure;
+
+                    cmd.Parameters.Add("@searchTerm", SqlDbType.VarChar, 100).Value = (object?)searchTerm ?? DBNull.Value;
+                    cmd.Parameters.Add("@page", SqlDbType.Int).Value = page;
+                    cmd.Parameters.Add("@itemsPerPage", SqlDbType.Int).Value = itemsPerPage;
+
+                    await con.OpenAsync();
+
+                    using (SqlDataReader reader = await cmd.ExecuteReaderAsync())
+                    {
+                        while (await reader.ReadAsync())
+                        {
+                            lista.Add(new VMProducto
+                            {
+                                IdProducto = Convert.ToInt32(reader["IdProducto"]),
+                                Descripcion = reader["Descripcion"].ToString(),
+                                IdCategoria = Convert.ToInt32(reader["IdCategoria"]),
+                                TipoDeCategoria = reader["TipoDeCategoria"].ToString()
+                            });
+                        }
+
+                        // segundo resultset
+                        if (await reader.NextResultAsync())
+                        {
+                            if (await reader.ReadAsync())
+                            {
+                                totalItems = Convert.ToInt32(reader["TotalItems"]);
+                            }
+                        }
+                    }
+                }
+            }
+
+            return (lista, totalItems);
+        }
+
+
     }
 }

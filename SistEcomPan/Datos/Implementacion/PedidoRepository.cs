@@ -1,5 +1,4 @@
 ﻿using Datos.Interfaces;
-using Datos.Models;
 using DTO;
 using Entidades;
 using Microsoft.Extensions.Configuration;

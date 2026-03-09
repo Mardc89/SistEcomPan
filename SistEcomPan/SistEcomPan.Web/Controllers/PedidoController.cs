@@ -146,32 +146,48 @@ namespace SistEcomPan.Web.Controllers
             return StatusCode(StatusCodes.Status200OK, vmClientelista);
         }
 
+
+
         [HttpGet]
         public async Task<IActionResult> ObtenerProductos(string searchTerm = "", int page = 1, int itemsPerPage = 3)
-       {
+        {
+            var resultado = await _productoService.ObtenerProductos(searchTerm, page, itemsPerPage);
 
-            var Productolista = await _productoService.Lista();
-
-            List<string> categoriaEncontrada = new List<string>();
-
-
-            // Filtro de búsqueda por término de búsqueda (searchTerm)
-            var productosFiltrados = Productolista.Where(p =>
-                string.IsNullOrWhiteSpace(searchTerm) || p.Descripcion.ToLower().Contains(searchTerm.ToLower())
-            ) ;
-
-            var categoriaProducto = productosFiltrados.Select(x => x.IdCategoria).ToArray();
-            var categorias = await _categoriaService.ObtenerNombre();
-            
-            for (int i=0;i<categoriaProducto.Count();i++) {
-                var categoriasDeProductos=categorias.Where(x => x.IdCategoria == categoriaProducto[i]).First().TipoDeCategoria;
-                categoriaEncontrada.Add(categoriasDeProductos);
-            }
-            // Paginación
-            var productosPaginados = productosFiltrados.Skip((page - 1) * itemsPerPage).Take(itemsPerPage).ToList();
-
-            return StatusCode(StatusCodes.Status200OK,new { productos = productosPaginados, totalItems = productosFiltrados.Count(), categoria = categoriaEncontrada});
+            return StatusCode(StatusCodes.Status200OK, new
+            {
+                productos = resultado.productos,
+                totalItems = resultado.totalItems
+            });
         }
+
+
+
+       // [HttpGet]
+       // public async Task<IActionResult> ObtenerProductos(string searchTerm = "", int page = 1, int itemsPerPage = 3)
+       //{
+
+       //     var Productolista = await _productoService.Lista();
+
+       //     List<string> categoriaEncontrada = new List<string>();
+
+
+       //     // Filtro de búsqueda por término de búsqueda (searchTerm)
+       //     var productosFiltrados = Productolista.Where(p =>
+       //         string.IsNullOrWhiteSpace(searchTerm) || p.Descripcion.ToLower().Contains(searchTerm.ToLower())
+       //     ) ;
+
+       //     var categoriaProducto = productosFiltrados.Select(x => x.IdCategoria).ToArray();
+       //     var categorias = await _categoriaService.ObtenerNombre();
+            
+       //     for (int i=0;i<categoriaProducto.Count();i++) {
+       //         var categoriasDeProductos=categorias.Where(x => x.IdCategoria == categoriaProducto[i]).First().TipoDeCategoria;
+       //         categoriaEncontrada.Add(categoriasDeProductos);
+       //     }
+       //     // Paginación
+       //     var productosPaginados = productosFiltrados.Skip((page - 1) * itemsPerPage).Take(itemsPerPage).ToList();
+
+       //     return StatusCode(StatusCodes.Status200OK,new { productos = productosPaginados, totalItems = productosFiltrados.Count(), categoria = categoriaEncontrada});
+       // }
 
         //[HttpGet]
         //public async Task<IActionResult> ObtenerPedidos(string searchTerm = "", int page = 1, int itemsPerPage = 4)

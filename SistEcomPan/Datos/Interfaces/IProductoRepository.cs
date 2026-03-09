@@ -12,5 +12,6 @@ namespace Datos.Interfaces
         Task<Productos> Buscar(string? c = null, string? p = null, int? d = null);
         Task<Productos> Verificar(string? c = null, string? p = null, int? d = null);
         Task<List<Productos>> Consultar(string? c = null, string? p = null, string? m = null, int? d = null);
+        Task<(List<ProductoDTO> productos, int totalItems)> ObtenerProductos(string searchTerm, int page, int itemsPerPage);
     }
 }
