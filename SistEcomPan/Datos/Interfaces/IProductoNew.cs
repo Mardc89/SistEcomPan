@@ -1,4 +1,5 @@
-﻿using Entidades;
+﻿using DTO;
+using Entidades;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,5 +15,6 @@ namespace Datos.Interfaces
         Task<Dictionary<string, int>> MisProductosTopUltimaSemana(DateTime fechaInicio, int idCliente);
         Task<Productos> Buscar(string? c = null, string? p = null, int? d = null);
         Task<Productos> Verificar(string? c = null, string? p = null, int? d = null);
+        Task<(List<ProductoDTO> productos, int totalItems)> ObtenerProductos(string searchTerm, int page, int itemsPerPage);
     }
 }

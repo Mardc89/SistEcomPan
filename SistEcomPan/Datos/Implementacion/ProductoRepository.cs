@@ -9,6 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Datos.Interfaces;
 using System.Linq.Expressions;
+using DTO;
 
 namespace Datos.Implementacion
 {
@@ -287,14 +288,14 @@ namespace Datos.Implementacion
         }
 
 
-        public async Task<(List<VMProducto> productos, int totalItems)> ObtenerProductos(string searchTerm, int page, int itemsPerPage)
+        public async Task<(List<ProductoDTO> productos, int totalItems)> ObtenerProductos(string searchTerm, int page, int itemsPerPage)
         {
-            List<VMProducto> lista = new List<VMProducto>();
+            List<ProductoDTO> lista = new List<ProductoDTO>();
             int totalItems = 0;
 
-            using (SqlConnection con = new SqlConnection(_connectionString))
+            using (SqlConnection con = new SqlConnection(_cadenaSQL))
             {
-                using (SqlCommand cmd = new SqlCommand("sp_ObtenerProductos", con))
+                using (SqlCommand cmd = new SqlCommand("SPObtenerProductos", con))
                 {
                     cmd.CommandType = CommandType.StoredProcedure;
 
@@ -308,7 +309,7 @@ namespace Datos.Implementacion
                     {
                         while (await reader.ReadAsync())
                         {
-                            lista.Add(new VMProducto
+                            lista.Add(new ProductoDTO
                             {
                                 IdProducto = Convert.ToInt32(reader["IdProducto"]),
                                 Descripcion = reader["Descripcion"].ToString(),

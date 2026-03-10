@@ -155,7 +155,7 @@ namespace SistEcomPan.Web.Controllers
 
             return StatusCode(StatusCodes.Status200OK, new
             {
-                productos = resultado.productos,
+                productos = resultado,
                 totalItems = resultado.totalItems
             });
         }

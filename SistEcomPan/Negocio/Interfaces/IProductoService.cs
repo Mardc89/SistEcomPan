@@ -16,7 +16,7 @@ namespace Negocio.Interfaces
         Task<bool> Eliminar(int IdProducto);
         Task<IQueryable<Productos>> ObtenerNombre();
         Task<string> ConsultarProducto();
-        Task<(List<PedidoDTO>, int totalItems)> ObtenerProductos(string searchTerm, int page, int itemsPerPage);
+        Task<(List<ProductoDTO>, int totalItems)> ObtenerProductos(string searchTerm, int page, int itemsPerPage);
 
     }
 }
