@@ -312,9 +312,13 @@ namespace Datos.Implementacion
                             lista.Add(new ProductoDTO
                             {
                                 IdProducto = Convert.ToInt32(reader["IdProducto"]),
-                                Descripcion = reader["Descripcion"].ToString(),
+                                Descripcion = reader["Descripcion"]?.ToString(),
                                 IdCategoria = Convert.ToInt32(reader["IdCategoria"]),
-                                TipoDeCategoria = reader["TipoDeCategoria"].ToString()
+                                TipoDeCategoria = reader["TipoDeCategoria"]?.ToString(),
+                                Precio = Convert.ToDecimal(reader["Precio"]),
+                                NombreImagen = reader["NombreImagen"]?.ToString(),
+                                Stock = Convert.ToInt32(reader["Stock"]),
+
                             });
                         }
 

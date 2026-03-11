@@ -174,7 +174,7 @@ namespace Negocio.Implementacion
             return lista.AsQueryable();
         }
 
-        public async Task<(List<ProductoDTO>, int totalItems)> ObtenerProductos(string searchTerm, int page, int itemsPerPage)
+        public async Task<(List<ProductoDTO> listaProductos, int totalItems)> ObtenerProductos(string searchTerm, int page, int itemsPerPage)
         {
             return await _repositorio.ObtenerProductos(searchTerm, page, itemsPerPage);
         }

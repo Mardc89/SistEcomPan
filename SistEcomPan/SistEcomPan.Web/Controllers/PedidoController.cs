@@ -155,87 +155,12 @@ namespace SistEcomPan.Web.Controllers
 
             return StatusCode(StatusCodes.Status200OK, new
             {
-                productos = resultado,
+                productos = resultado.listaProductos,
                 totalItems = resultado.totalItems
             });
         }
 
 
-
-       // [HttpGet]
-       // public async Task<IActionResult> ObtenerProductos(string searchTerm = "", int page = 1, int itemsPerPage = 3)
-       //{
-
-       //     var Productolista = await _productoService.Lista();
-
-       //     List<string> categoriaEncontrada = new List<string>();
-
-
-       //     // Filtro de búsqueda por término de búsqueda (searchTerm)
-       //     var productosFiltrados = Productolista.Where(p =>
-       //         string.IsNullOrWhiteSpace(searchTerm) || p.Descripcion.ToLower().Contains(searchTerm.ToLower())
-       //     ) ;
-
-       //     var categoriaProducto = productosFiltrados.Select(x => x.IdCategoria).ToArray();
-       //     var categorias = await _categoriaService.ObtenerNombre();
-            
-       //     for (int i=0;i<categoriaProducto.Count();i++) {
-       //         var categoriasDeProductos=categorias.Where(x => x.IdCategoria == categoriaProducto[i]).First().TipoDeCategoria;
-       //         categoriaEncontrada.Add(categoriasDeProductos);
-       //     }
-       //     // Paginación
-       //     var productosPaginados = productosFiltrados.Skip((page - 1) * itemsPerPage).Take(itemsPerPage).ToList();
-
-       //     return StatusCode(StatusCodes.Status200OK,new { productos = productosPaginados, totalItems = productosFiltrados.Count(), categoria = categoriaEncontrada});
-       // }
-
-        //[HttpGet]
-        //public async Task<IActionResult> ObtenerPedidos(string searchTerm = "", int page = 1, int itemsPerPage = 4)
-        //{
-        //    var Pedidolista = await _pedidoService.Lista();
-        //    var clientes = await _clienteService.Lista();  
-        //    var pedidosPendientes = Pedidolista.Where(p => p.Estado.Equals("Nuevo")||p.Estado.Equals("Existe Deuda")).ToList();
-        //    int?IDdeCliente=null;
-        //    if (!string.IsNullOrEmpty(searchTerm))
-        //    {
-        //        IDdeCliente = clientes
-
-        //        .Where(p => p.Apellidos.ToLower().Contains(searchTerm.ToLower()) || p.Nombres.ToLower().Contains(searchTerm.ToLower()))
-        //        .Select(p => (int?)p.IdCliente)
-        //        .FirstOrDefault();
-        //    }
-
-        //    var pedidosFiltrados = pedidosPendientes.Where(p =>
-        //        string.IsNullOrWhiteSpace(searchTerm) || p.Codigo.Contains(searchTerm.ToLower()) ||(IDdeCliente!=null && p.IdCliente.Equals(IDdeCliente))
-        //    );
-
-        //    List<VMPedido> vmPedidos = new List<VMPedido>();
-        //    TimeZoneInfo userTimeZone = _timeZoneService.GetTimeZone(Request);
-        //    foreach (var item in pedidosFiltrados)
-        //    {
-        //        vmPedidos.Add(new VMPedido
-        //        {
-        //            IdPedido = item.IdPedido,
-        //            IdCliente = item.IdCliente,
-        //            Codigo = item.Codigo,
-        //            MontoTotal = Convert.ToString(item.MontoTotal),
-        //            Estado = item.Estado,
-        //            FechaPedido = item.FechaPedido.HasValue ? TimeZoneInfo.ConvertTimeFromUtc(item.FechaPedido.Value,userTimeZone) : null,
-        //            NombresCompletos = await _clienteService.ObtenerNombreCompleto(item.IdCliente)
-
-        //        });
-        //    }
-
-
-        //    // Paginación
-        //    var pedidosPaginados = vmPedidos.Skip((page - 1) * itemsPerPage).Take(itemsPerPage).ToList();
-
-        //    return StatusCode(StatusCodes.Status200OK, new { pedidos = pedidosPaginados, totalItems = vmPedidos.Count() });
-
-
-
-
-        //}
 
         [HttpGet]
         public async Task<IActionResult> ObtenerPedidos(string searchTerm = "", int page = 1, int itemsPerPage = 4)
