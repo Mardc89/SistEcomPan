@@ -367,7 +367,7 @@ function buscarListPedidos(searchTer = '', page = 1) {
 
     if (pago === 0) {
 
-        deudaInput.value = montofinal.toFixed(2);
+        deudaInput.value = montofinal.toFixed(2) - descuentofinal.toFixed(2);
         cambioInput.value = "0.00";
         estadoInput.value = "Sin Efectuar";
 
@@ -380,10 +380,7 @@ function buscarListPedidos(searchTer = '', page = 1) {
 
     }
 
-});
-
-
-
+    });
 
 
 document.getElementById("txtDescuento").addEventListener("input", function (event) {
@@ -438,6 +435,48 @@ document.getElementById("txtDescuento").addEventListener("input", function (even
 
 
 });
+
+document.getElementById("txtDescuento").addEventListener("input", function (event) {
+    let input = event.target;
+
+    // Validación numérica más segura
+    if (!/^\d*\.?\d*$/.test(input.value)) {
+        input.value = input.value.slice(0, -1);
+        return;
+    }
+
+    let descuento = parseFloat(input.value) || 0;
+    let estadoInput = document.getElementById("txtEstado");
+    const idPago = parseInt(document.getElementById("txtIdPago").value) || 0;
+    const montoInput = idPago > 0 ? "txtMontoPago" : "txtMontoPedido";
+
+    const monto = parseFloat(document.getElementById(montoInput).value) || 0;
+    const pago = parseFloat(document.getElementById("txtPagoCliente").value) || 0;
+
+    // 🔴 Validar descuento mayor al monto
+
+    if (descuento === 0) {
+        estadoInput.value = "Sin Efectuar";
+        return;
+    }
+
+    if (descuento > monto) {
+        resetValores(monto);
+        return;
+    }
+
+    Evaluar(pago, descuento, monto);
+});
+
+
+//function resetValores(monto) {
+//    document.getElementById("txtDescuento").value = "0.00";
+//    document.getElementById("txtMontoPago").value = monto.toFixed(2);
+//    document.getElementById("txtDeuda").value = monto.toFixed(2);
+//    document.getElementById("txtPagoCliente").value = "0.00";
+//    document.getElementById("txtCambio").value = "0.00";
+//    document.getElementById("txtEstado").value = "Existe Deuda";
+//}
 
 
 function Evaluar(pago, descuento, monto) {
