@@ -305,18 +305,20 @@ document.getElementById("txtPagoCliente").addEventListener("input", function (ev
         //    monto = document.getElementById("txtMontoPago");
 
         //}
+        let pagoInput = parseFloat(pago) || 0;
 
         if (!/^-?\d*\.?\d*$/.test(pago)) {
         event.target.value = pago.slice(0, -1);
 
         }
-        else if (pago === "" ||  pago===0) {
+        else if (pagoInput === 0 && descuentofinal===0) {
             pago = 0;
 
             document.getElementById("txtDeuda").value = monto.value;
             document.getElementById("txtCambio").value = "0.00";
             document.getElementById("txtEstado").value = "0.00";
             estado.value = "Sin Efectuar";
+            return;
         }
 
 
@@ -386,38 +388,40 @@ document.getElementById("txtPagoCliente").addEventListener("input", function (ev
 
 document.getElementById("txtDescuento").addEventListener("input", function (event) {
     debugger;
-    let descuento = event.target.value;
-    if (!/^-?\d*\.?\d*$/.test(descuento)) {
-        event.target.value = descuento.slice(0, -1);
+    let descuentoPago = event.target.value;
+    if (!/^-?\d*\.?\d*$/.test(descuentoPago)) {
+        event.target.value = descuentoPago.slice(0, -1);
 
     }
     let estadoInput = document.getElementById("txtEstado");
     let idPago = document.getElementById("txtIdPago").value;
     let monto = document.getElementById("txtMontoPedido");
-    let DescuentoPago = document.getElementById("txtDescuento").value;
+    let descuentoFin = document.getElementById("txtDescuento").value;
 
+    let MontoAPagar = document.getElementById("txtMontoPago");
+    let MontoDePago = parseFloat(MontoAPagar.value);
     if (idPago > 0) {
         monto = document.getElementById("txtMontoPago");
     }
     let pago = document.getElementById("txtPagoCliente");
     let pagofinal = parseFloat(pago.value) || 0
     let montofinal = parseFloat(monto.value) || 0
+    let descuento = parseFloat(descuentoFin) || 0;
 
-    if (descuento === "" || DescuentoPago === 0) {
-        let MontoAPagar = document.getElementById("txtPagoAPagar");
-        let MontoDePago = parseFloat(MontoAPagar.value);
-        document.getElementById("txtMontoPago").value = MontoDePago;
-        document.getElementById("txtDeuda").value = MontoDePago;
+    if (descuento ===0 && pagofinal === 0) {
+        document.getElementById("txtMontoPago").value = MontoDePago.toFixed(2);
+        document.getElementById("txtDeuda").value = MontoDePago.toFixed(2);
         document.getElementById("txtCambio").value = "0.00";
         estadoInput.value = "Sin Efectuar";
         descuento = 0.00;
+        return;
 
     }
     else if (parseFloat(descuento)>montofinal) {
         descuento= 0.00;
         document.getElementById("txtDescuento").value = "0.00";
-        document.getElementById("txtMontoPago").value = montofinal;
-        document.getElementById("txtDeuda").value = montofinal;
+        document.getElementById("txtMontoPago").value = montofinal.toFixed(2);
+        document.getElementById("txtDeuda").value = montofinal.toFixed(2);
         document.getElementById("txtPagoCliente").value = "0.00";
         document.getElementById("txtCambio").value = "0.00";
         let estado = montofinal < 0 ? "Error" : montofinal > 0 ? "Existe Deuda" : "Pagado";
@@ -546,36 +550,44 @@ document.getElementById("txtDescuento").addEventListener("input", function (even
 
 function Evaluar(pago, descuento, monto) {
     debugger;
-    let pagos = parseFloat(pago);
+    let pagos = parseFloat(pago)||0;
     let montos = parseFloat(monto);
     let descuentos =descuento; 
     let cambio=0.00;
     let estado = "";
     let deuda = document.getElementById("txtDeuda").value;
     let deudaFinal = parseFloat(deuda);
-    let montofinal = montos - descuento;
+    let montofinal = montos.toFixed(2) - descuento.toFixed(2);
 
-    if (descuentos == 0) {
-        let montoPago = document.getElementById("txtPagoAPagar").value;
-        montos = parseFloat(montoPago);
-        document.getElementById("txtMontoPago").value = montos;
-    }
-    else if (descuento=="") {
-        document.getElementById("txtDescuento").value ="0.00";
+    let montoPago = document.getElementById("txtPagoAPagar").value;
+    //if (descuentos == 0) {
+      
+    //    montos = parseFloat(montoPago);
+    //    document.getElementById("txtMontoPago").value = montos;
+    //}
+    //if (descuento===0) {
+    //    document.getElementById("txtDescuento").value ="0.00";
 
-    }
+    //}
 
-    else {
-        document.getElementById("txtMontoPago").value = monto.toFixed(2);
+    //else {
+    //    document.getElementById("txtMontoPago").value = monto.toFixed(2);
+    //}
+
+    if (pagos === 0) {
+        cambio =0.00;
+        deuda = montofinal;
+        estado = "sin Efectuar";
     }
 
       
-    if (pagos >= montos && pagos >= deudaFinal) {
+    else if (pagos >= montos && pagos >= deudaFinal) {
             cambio = pagos - montofinal;
             deuda = 0.00;
             estado = "Pagado";
     }
-    else {
+    else
+    {
             deuda = montofinal.toFixed(2) - pagos;
             cambio = deuda < 0 ? -1 * (deuda) : 0.00;
             deuda =  deuda > 0 ? deuda : 0.00;
@@ -585,6 +597,7 @@ function Evaluar(pago, descuento, monto) {
     document.getElementById("txtCambio").value = cambio.toFixed(2);
     document.getElementById("txtDeuda").value = deuda.toFixed(2);
     document.getElementById("txtEstado").value = estado;
+    document.getElementById("txtMontoPago").value = montos.toFixed(2);
     VerificarEstado();
  
 }
