@@ -130,27 +130,31 @@ function formatoFecha(fechaOriginal) {
 
 }
 
-function VerificarEstado() {
+function VerificarEstadoPedido() {
     debugger;
+
+    let montoPedido = document.getElementById("txtMontoPedido").value;
+    let montoAPagar = document.getElementById("txtMontoPago").value;
+
     let idPago = document.getElementById("txtIdPago").value;
     let estado = document.getElementById("txtEstado").value;
     let btnEstado = document.getElementById("btnGuardarPago");
     let Opcion1 = document.getElementById("opcion1");
     let Opcion2 = document.getElementById("opcion2");
-    if (estado == "Pagado" && idPago > 0) {
+    if (estado === "Pagado" && idPago > 0) {
         btnEstado.disabled = true;
     }
     else {
         btnEstado.disabled = false;
     }
 
-    if (estado == "Pagado" || estado == "Existe Deuda" || estado=="") {
-        Opcion1.disabled = true;
-        Opcion2.disabled = true;
-    }
-    else {
+    if ((estado === "Pagado" || estado === "Existe Deuda" || estado === "Sin Efectuar") && montoPedido === montoAPagar) {
         Opcion1.disabled = false;
         Opcion2.disabled = false;
+    }
+    else if (((estado === "Pagado" || estado === "Existe Deuda" || estado === "Sin Efectuar") && montoPedido !== montoAPagar)){
+        Opcion1.disabled = true;
+        Opcion2.disabled = true;
     }
 
 
@@ -177,7 +181,7 @@ function mostrarModal(modelo = MODELO_BASE) {
 
     $("#modalDataPago").modal("show")
     DesacticarCamposPago();
-    VerificarEstado();
+    VerificarEstadoPedido();
 }
 
 function DesacticarCamposPago() {

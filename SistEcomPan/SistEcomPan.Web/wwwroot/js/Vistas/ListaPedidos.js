@@ -47,6 +47,9 @@ function ActivarCampos() {
 
 function VerificarEstado() {
     debugger;
+    let montoPedido = document.getElementById("txtMontoPedido").value;
+    let montoAPagar = document.getElementById("txtMontoPago").value;
+
     let idPago = document.getElementById("txtIdPago").value;
     let estado = document.getElementById("txtEstado").value;
     let MontoTotal = document.getElementById("txtMontoPago").value;
