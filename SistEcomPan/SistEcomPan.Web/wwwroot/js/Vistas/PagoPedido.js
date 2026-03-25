@@ -130,6 +130,46 @@ function formatoFecha(fechaOriginal) {
 
 }
 
+function mostrarModal3() {
+    obtenerFecha();
+    buscarPedidos();
+    $("#modalDataPedidos").modal("show");
+
+}
+
+function ActivarCampos() {
+    $("#txtDescuento").prop("disabled", false)
+    $("#txtPagoCliente").prop("disabled", false)
+}
+
+function EstadoPedido() {
+    debugger;
+
+    let MontoTotal = document.getElementById("txtMontoPago").value;
+
+    if (estado == "Pagado" && MontoTotal == "0.00") {
+        btnEstado.disabled = true;
+        Opcion1.disabled = true;
+        Opcion2.disabled = true;
+    }
+
+    else if (estado == "Pagado" || estado == "Existe Deuda") {
+        Opcion1.disabled = true;
+        Opcion2.disabled = true;
+        btnEstado.disabled = false;
+        ActivarCampos();
+    }
+    else if (estado == "Sin Efectuar") {
+        Opcion1.disabled = false;
+        Opcion2.disabled = false;
+        btnEstado.disabled = true;
+        ActivarCampos();
+    }
+
+
+}
+
+
 function VerificarEstadoPedido() {
     debugger;
 
@@ -148,13 +188,15 @@ function VerificarEstadoPedido() {
         btnEstado.disabled = false;
     }
 
-    if ((estado === "Pagado" || estado === "Existe Deuda" || estado === "Sin Efectuar") && montoPedido === montoAPagar) {
+    if ((estado === "Existe Deuda" || estado === "Sin Efectuar") && montoPedido === montoAPagar) {
         Opcion1.disabled = false;
         Opcion2.disabled = false;
+        ActivarCampos();
     }
-    else if (((estado === "Pagado" || estado === "Existe Deuda" || estado === "Sin Efectuar") && montoPedido !== montoAPagar)){
+    else if (estado === "Existe Deuda" && montoPedido !== montoAPagar){
         Opcion1.disabled = true;
         Opcion2.disabled = true;
+        ActivarCampos();
     }
 
 

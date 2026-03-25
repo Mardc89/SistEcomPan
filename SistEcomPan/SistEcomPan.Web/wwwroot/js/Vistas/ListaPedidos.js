@@ -47,42 +47,47 @@ function ActivarCampos() {
 
 function VerificarEstado() {
     debugger;
+    //let montoPedido = document.getElementById("txtMontoPedido").value;
+    //let montoAPagar = document.getElementById("txtMontoPago").value;
+
+    //let idPago = document.getElementById("txtIdPago").value;
+    //let estado = document.getElementById("txtEstado").value;
+    //let MontoTotal = document.getElementById("txtMontoPago").value;
+    //let btnEstado = document.getElementById("btnGuardarPago");
+    //let Opcion1 = document.getElementById("opcion1");
+    //let Opcion2 = document.getElementById("opcion2");
+    //if (estado == "Pagado" && MontoTotal=="0.00") {
+    //    btnEstado.disabled = true;
+    //    Opcion1.disabled = true;
+    //    Opcion2.disabled = true;
+    //}
+
+
     let montoPedido = document.getElementById("txtMontoPedido").value;
     let montoAPagar = document.getElementById("txtMontoPago").value;
 
     let idPago = document.getElementById("txtIdPago").value;
     let estado = document.getElementById("txtEstado").value;
-    let MontoTotal = document.getElementById("txtMontoPago").value;
     let btnEstado = document.getElementById("btnGuardarPago");
     let Opcion1 = document.getElementById("opcion1");
     let Opcion2 = document.getElementById("opcion2");
-    if (estado == "Pagado" && MontoTotal=="0.00") {
-        btnEstado.disabled = true;
+    if (estado === "Pagado" && idPago > 0) {
         Opcion1.disabled = true;
         Opcion2.disabled = true;
+        ActivarCampos();
     }
-    //else if (estado == "Sin Efectuar" && idPago > 0) {
-    //    btnEstado.disabled = true;
-    //}
     //else {
     //    btnEstado.disabled = false;
     //}
 
-    else if (estado == "Pagado" || estado == "Existe Deuda") {
-        Opcion1.disabled = true;
-        Opcion2.disabled = true;
-        btnEstado.disabled = false;
-        ActivarCampos();
-    }
-    //else if (estado == "") {
-    //    Opcion1.disabled = true;
-    //    Opcion2.disabled = true;
-    //    btnEstado.disabled = true;
-    //}
-    else if (estado == "Sin Efectuar") {
+    else if ((estado === "Existe Deuda" || estado === "Sin Efectuar") && montoPedido === montoAPagar) {
         Opcion1.disabled = false;
         Opcion2.disabled = false;
-        btnEstado.disabled = true;
+        ActivarCampos();
+    }
+    else if ((estado === "Existe Deuda" || estado === "Sin Efectuar") && montoPedido !== montoAPagar) {
+        Opcion1.disabled = true;
+        Opcion2.disabled = true;
         ActivarCampos();
     }
 
