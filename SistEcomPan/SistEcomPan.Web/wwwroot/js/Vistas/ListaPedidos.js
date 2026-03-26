@@ -72,8 +72,8 @@ function VerificarEstado() {
     let Opcion1 = document.getElementById("opcion1");
     let Opcion2 = document.getElementById("opcion2");
     if (estado === "Pagado" && idPago > 0) {
-        Opcion1.disabled = true;
-        Opcion2.disabled = true;
+        //Opcion1.disabled = true;
+        //Opcion2.disabled = true;
         ActivarCampos();
     }
     //else {
