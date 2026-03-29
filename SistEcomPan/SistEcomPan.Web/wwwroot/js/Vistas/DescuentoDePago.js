@@ -102,11 +102,11 @@ $("#btnGuardarDescuento").click(function () {
         let descuentoPago = parseFloat(descuentoFinal) || 0;
         let monto = $("#txtImportePedido").val();
         let montoFinal = $("#txtImporteFinal").val();
-        $("#txtMontoPago").val(monto);
-        $("#txtDeuda").val(montoFinal);
-        if (descuentoPago>0) {
-            $("#txtEstado").val("Existe Deuda");
-        }
+        //$("#txtMontoPago").val(monto);
+        //$("#txtDeuda").val(montoFinal);
+        //if (descuentoPago>0) {
+        //    $("#txtEstado").val("Existe Deuda");
+        //}
         GuardarDevolucion();
         enviarDatos();
         $("#modalDataDescuento").modal("hide");
