@@ -65,20 +65,34 @@ $(document).ready(function () {
 
     tablaDataPago = $('#tbdataPago').DataTable({
         responsive: {
-            details: false
+            details: {
+                type: 'column',        // ← Cambia de false a 'column'
+                target: 'tr'
+            }
         },
+        columnDefs: [
+            { responsivePriority: 1, targets: 5 },  // Nombre cliente: siempre visible
+            { responsivePriority: 2, targets: 8 },  // Acciones: siempre visible
+            { responsivePriority: 3, targets: 3 },  // Monto pago: prioritario
+            { responsivePriority: 4, targets: 7 },  // Estado: prioritario
+            { responsivePriority: 5, targets: 6 },  // Fecha pago
+            { responsivePriority: 6, targets: 1 },  // Monto pedido
+            { responsivePriority: 7, targets: 2 },  // Descuento
+            { responsivePriority: 8, targets: 4 },  // Deuda
+            { responsivePriority: 9, targets: 0 },  // IdPago: última prioridad
+        ],
         "ajax": {
             "url": '/Pago/Lista',
             "type": "GET",
             "datatype": "json"
         },
         "columns": [
-            { "data": "idPago", "searchable": false, responsivePriority: 100 },
-            { "data": "montoDePedido", responsivePriority: 100 },
-            { "data": "descuento", responsivePriority: 100 },
-            { "data": "montoTotalDePago", responsivePriority: 100 },
-            { "data": "montoDeuda", responsivePriority: 100 },
-            { "data": "nombreCliente", responsivePriority: 1 },
+            { "data": "idPago", "searchable": false},
+            { "data": "montoDePedido"},
+            { "data": "descuento"},
+            { "data": "montoTotalDePago"},
+            { "data": "montoDeuda"},
+            { "data": "nombreCliente"},
             {
                 "data": "fechaPago", render: function (data) {
                     return cambiarFecha(data);

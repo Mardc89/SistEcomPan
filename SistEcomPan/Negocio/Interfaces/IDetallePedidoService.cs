@@ -12,5 +12,8 @@ namespace Negocio.Interfaces
         Task<List<DetallePedido>> Lista();
 
         Task<int>Buscar(int idPedido);
+
+        Task<List<DetallePedido>> Encontrar(int idPedido);
+
     }
 }

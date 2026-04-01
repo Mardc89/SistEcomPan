@@ -31,6 +31,12 @@ namespace Negocio.Implementacion
             return query.IdPedido;
         }
 
+        public async Task<List<DetallePedido>>Encontrar(int idPedido)
+        {
+            List<DetallePedido> encontrado = await _repositorioDetallePedido.ConsultarDetallePedido(idPedido);
+            return encontrado;
+        }
+
         public async Task<IQueryable<DetallePedido>> ObtenerNombre()
         {
             List<DetallePedido> lista = await _repositorioDetallePedido.Lista();

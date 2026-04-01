@@ -12,5 +12,6 @@ namespace Datos.Interfaces
         Task<List<DetallePedido>> Lista();
         Task<DetallePedido> Buscar(string? c = null, string? p = null, int? d = null);
         Task<List<DetallePedido>> Consultar(string? c = null, string? p = null, string? m = null, int? d = null);
+        Task<List<DetallePedido>> ConsultarDetallePedido(int IdPedido);
     }
 }

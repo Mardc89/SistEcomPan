@@ -207,21 +207,30 @@ namespace Negocio.Implementacion
             if (pedido == null)
                 return (new(), 0);
 
-            var detalles = (await _detallePedidoService.Lista())
-                .Where(d => d.IdPedido == pedido.IdPedido);
+            var detalles = await _detallePedidoService.Encontrar(pedido.IdPedido);
+               
 
             var productos = (await _productoService.ObtenerNombre())
                 .ToDictionary(p => p.IdProducto);
 
             var resultado = detalles
-                .GroupBy(d => d.IdProducto)
+                 .GroupBy(d =>
+                    {
+                        var producto = productos[d.IdProducto];
+                        return new
+                        {
+                            producto.Precio,
+                            producto.IdCategoria
+                        };
+                  })
+
                 .Select(g =>
                 {
-                    var producto = productos[g.Key];
+                    var producto = productos[g.First().IdProducto];
 
                     return new DetallePedidoBO
                     {
-                        IdProducto = g.Key,
+                        IdProducto = g.First().IdProducto,
                         IdCategoria = producto.IdCategoria,
                         DescripcionProducto = producto.Descripcion,
                         Precio = producto.Precio,
