@@ -96,7 +96,7 @@
 </html> *@
 
 
-@model SistEcomPan.Web.Models.ViewModels.VMUsuarioLogin;
+@* @model SistEcomPan.Web.Models.ViewModels.VMUsuarioLogin;
 
 @{
     Layout = null;
@@ -587,6 +587,376 @@
                             Crear una cuenta
                         </a>
                     </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</body>
+
+</html> *@
+
+
+@model SistEcomPan.Web.Models.ViewModels.VMUsuarioLogin;
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="ES">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Mi Tienda - Login</title>
+
+    <link href="~/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+    <link href="~/css/sb-admin-2.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+
+    <style>
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        :root {
+            --brand: #1a56db;
+            --brand-dark: #1340b0;
+            --border: #e5e7eb;
+            --danger: #ef4444;
+        }
+
+        html, body {
+            min-height: 100vh;
+            font-family: 'DM Sans', sans-serif;
+            background: linear-gradient(135deg, #1a56db 0%, #0f3a96 50%, #071d6a 100%);
+        }
+
+        .page-shell {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 24px 16px;
+        }
+
+        /* ── Card ── */
+        .login-card {
+            width: 100%;
+            max-width: 400px;
+            background: #ffffff;
+            border-radius: 18px;
+            box-shadow: 0 24px 64px rgba(0, 0, 0, .18);
+            overflow: hidden;
+            animation: slideUp .4s cubic-bezier(.22, 1, .36, 1) both;
+        }
+
+        @@keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(24px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* ── Logo area ── */
+        .logo-area {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 36px 28px 22px;
+            border-bottom: 1px solid var(--border);
+        }
+
+            .logo-area img {
+                width: 90px;
+                height: 90px;
+                object-fit: cover;
+                border-radius: 50%;
+                margin-bottom: 14px;
+            }
+
+            .logo-area h1 {
+                font-size: 1.25rem;
+                font-weight: 600;
+                color: #111827;
+                margin-bottom: 4px;
+            }
+
+            .logo-area p {
+                font-size: .85rem;
+                color: #6b7280;
+            }
+
+        /* ── Form body ── */
+        .form-body {
+            padding: 28px 28px 24px;
+        }
+
+        /* ── Fields ── */
+        .field-group {
+            margin-bottom: 16px;
+        }
+
+        .field-label {
+            display: block;
+            font-size: .75rem;
+            font-weight: 600;
+            color: #374151;
+            text-transform: uppercase;
+            letter-spacing: .06em;
+            margin-bottom: 6px;
+        }
+
+        .field-wrap {
+            position: relative;
+        }
+
+        .field-icon {
+            position: absolute;
+            left: 13px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #9ca3af;
+            font-size: .85rem;
+            pointer-events: none;
+            transition: color .2s;
+        }
+
+        .field-wrap:focus-within .field-icon {
+            color: var(--brand);
+        }
+
+        .field-input {
+            width: 100%;
+            padding: 12px 12px 12px 38px;
+            border: 1.5px solid var(--border);
+            border-radius: 10px;
+            font-family: 'DM Sans', sans-serif;
+            font-size: .93rem;
+            color: #111827;
+            background: #f9fafb;
+            outline: none;
+            transition: border-color .2s, box-shadow .2s, background .2s;
+            -webkit-appearance: none;
+            appearance: none;
+        }
+
+            .field-input:focus {
+                border-color: var(--brand);
+                background: #ffffff;
+                box-shadow: 0 0 0 3px rgba(26, 86, 219, .12);
+            }
+
+        /* ── Checkbox ── */
+        .check-group {
+            display: flex;
+            align-items: center;
+            gap: 9px;
+            margin-bottom: 20px;
+        }
+
+            .check-group input[type="checkbox"] {
+                width: 17px;
+                height: 17px;
+                accent-color: var(--brand);
+                cursor: pointer;
+                flex-shrink: 0;
+            }
+
+            .check-group label {
+                font-size: .86rem;
+                color: #374151;
+                cursor: pointer;
+                user-select: none;
+            }
+
+        /* ── Alert ── */
+        .alert-danger {
+            background: #fef2f2;
+            border: 1px solid #fecaca;
+            border-radius: 9px;
+            color: var(--danger);
+            font-size: .855rem;
+            padding: 10px 13px;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+        }
+
+            .alert-danger i {
+                margin-top: 2px;
+                flex-shrink: 0;
+            }
+
+        /* ── Submit button ── */
+        .btn-submit {
+            width: 100%;
+            padding: 13px;
+            background: linear-gradient(135deg, #1a56db, #1340b0);
+            color: #ffffff;
+            border: none;
+            border-radius: 10px;
+            font-family: 'DM Sans', sans-serif;
+            font-size: .97rem;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 4px 14px rgba(26, 86, 219, .35);
+            transition: opacity .15s, transform .15s, box-shadow .15s;
+        }
+
+            .btn-submit:hover {
+                opacity: .91;
+                transform: translateY(-1px);
+                box-shadow: 0 6px 20px rgba(26, 86, 219, .45);
+            }
+
+            .btn-submit:active {
+                transform: translateY(0);
+            }
+
+        /* ── Divider ── */
+        .divider {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin: 18px 0;
+            color: #9ca3af;
+            font-size: .78rem;
+        }
+
+            .divider::before,
+            .divider::after {
+                content: '';
+                flex: 1;
+                height: 1px;
+                background: var(--border);
+            }
+
+        /* ── Links ── */
+        .links-area {
+            display: flex;
+            flex-direction: column;
+            gap: 11px;
+            align-items: center;
+        }
+
+        .link-item {
+            font-size: .855rem;
+            color: var(--brand);
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+            .link-item:hover {
+                color: var(--brand-dark);
+                text-decoration: underline;
+            }
+
+        .link-register {
+            display: inline-block;
+            padding: 9px 28px;
+            border: 1.5px solid var(--brand);
+            border-radius: 10px;
+            font-size: .855rem;
+            color: var(--brand);
+            text-decoration: none;
+            font-weight: 600;
+            transition: background .15s, color .15s;
+        }
+
+            .link-register:hover {
+                background: var(--brand);
+                color: #ffffff;
+            }
+
+        @@supports (padding-bottom: env(safe-area-inset-bottom)) {
+            .page-shell {
+                padding-bottom: calc(24px + env(safe-area-inset-bottom));
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="page-shell">
+        <div class="login-card">
+
+            <!-- Logo + título -->
+            <div class="logo-area">
+                <img src="~/ImagenDefault/StorePan.png" alt="Logo Mi Tienda">
+                <h1>Bienvenido</h1>
+                <p>Inicia sesión para continuar</p>
+            </div>
+
+            <!-- Formulario -->
+            <div class="form-body">
+                <form asp-controller="Acceso" asp-action="Login" method="post" novalidate>
+
+                    <div class="field-group">
+                        <label class="field-label" for="Correo">Correo electrónico</label>
+                        <div class="field-wrap">
+                            <i class="fas fa-envelope field-icon"></i>
+                            <input id="Correo"
+                                   type="email"
+                                   class="field-input"
+                                   placeholder="tucorreo@ejemplo.com"
+                                   asp-for="Correo"
+                                   autocomplete="email"
+                                   inputmode="email">
+                        </div>
+                    </div>
+
+                    <div class="field-group">
+                        <label class="field-label" for="Clave">Contraseña</label>
+                        <div class="field-wrap">
+                            <i class="fas fa-lock field-icon"></i>
+                            <input id="Clave"
+                                   type="password"
+                                   class="field-input"
+                                   placeholder="••••••••"
+                                   asp-for="Clave"
+                                   autocomplete="current-password">
+                        </div>
+                    </div>
+
+                    <div class="check-group">
+                        <input type="checkbox" id="chkMantenerSesion" asp-for="MantenerSesion">
+                        <label for="chkMantenerSesion">Mantener sesión iniciada</label>
+                    </div>
+
+                    @if (ViewData["Mensaje"] != null)
+                    {
+                        <div class="alert-danger" role="alert">
+                            <i class="fas fa-exclamation-circle"></i>
+                            <span>@ViewData["Mensaje"]</span>
+                        </div>
+                    }
+
+                    <button type="submit" class="btn-submit">
+                        Ingresar
+                    </button>
+
+                </form>
+
+                <div class="divider">o</div>
+
+                <div class="links-area">
+                    <a class="link-item" href="@Url.Action("RestablecerClave", "Acceso")">
+                        ¿Olvidó su contraseña?
+                    </a>
+                    <a class="link-register" href="@Url.Action("Registrarse", "Acceso")">
+                        Crear una cuenta
+                    </a>
                 </div>
             </div>
 

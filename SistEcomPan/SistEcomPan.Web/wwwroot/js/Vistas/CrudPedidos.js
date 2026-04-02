@@ -128,7 +128,7 @@ function MostrarProduct(TerminoBusqueda = '', pagina = 1) {
         .then(data => {
             const productos = data.productos; // Array de productos obtenidos
             const totalItems = data.totalItems; // Total de productos encontrados
-            const categoria = data.categoria;
+        /*    const categoria = data.categoria;*/
             let i = 0;
             // Actualizar la tabla modal con los productos obtenidos 
             const productTable = document.getElementById('ProductoBuscado');
@@ -139,7 +139,7 @@ function MostrarProduct(TerminoBusqueda = '', pagina = 1) {
                 row.innerHTML = `
             <td>${producto.idProducto}</td>
             <td>${producto.descripcion}</td>
-            <td>${categoria[i]}</td>
+            <td>${producto.tipoDeCategoria}</td>
             <td>${producto.stock}</td>
             <td>${(producto.precio).toFixed(2)}</td>
             <td><input type="text" class="form-control form-control-sm txtCantidad" id="txtCantidad" placeholder="Ingrese Cantidad"></td>

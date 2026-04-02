@@ -1,4 +1,4 @@
-﻿@model SistEcomPan.Web.Models.ViewModels.VMCliente;
+﻿@* @model SistEcomPan.Web.Models.ViewModels.VMCliente;
 
 @{
     Layout = null;
@@ -148,6 +148,287 @@
 
 </body>
 
+</html> *@
+
+
+@model SistEcomPan.Web.Models.ViewModels.VMCliente;
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="ES">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Mi Tienda - Registro</title>
+
+    <link href="~/vendor/fontawesome-free/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        :root {
+            --brand: #1a56db;
+            --border: #e5e7eb;
+            --danger: #ef4444;
+        }
+
+        body {
+            font-family: 'DM Sans', sans-serif;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #1a56db, #0f3a96);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .card {
+            width: 100%;
+            max-width: 900px;
+            background: #fff;
+            border-radius: 18px;
+            box-shadow: 0 20px 60px rgba(0,0,0,.2);
+            padding: 30px;
+            animation: fade .4s ease;
+        }
+
+        @@keyframes fade {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .field {
+            display: flex;
+            flex-direction: column;
+        }
+
+            .field label {
+                font-size: .75rem;
+                margin-bottom: 5px;
+                color: #374151;
+            }
+
+        .input-wrap {
+            position: relative;
+        }
+
+            .input-wrap i {
+                position: absolute;
+                left: 10px;
+                top: 50%;
+                transform: translateY(-50%);
+                color: #9ca3af;
+            }
+
+        .input {
+            width: 100%;
+            padding: 10px 10px 10px 35px;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            background: #f9fafb;
+        }
+
+            .input:focus {
+                border-color: var(--brand);
+                outline: none;
+                background: #fff;
+            }
+
+        select.input {
+            padding-left: 10px;
+        }
+
+        .full {
+            grid-column: span 2;
+        }
+
+        .btn {
+            margin-top: 15px;
+            width: 100%;
+            padding: 12px;
+            background: var(--brand);
+            color: #fff;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+        }
+
+            .btn:hover {
+                opacity: .9;
+            }
+
+        .alert {
+            background: #fee2e2;
+            color: var(--danger);
+            padding: 10px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+        }
+
+        .links {
+            text-align: center;
+            margin-top: 10px;
+        }
+
+            .links a {
+                display: block;
+                color: var(--brand);
+                font-size: .85rem;
+                margin-top: 5px;
+            }
+
+        @@media(max-width: 768px) {
+            .grid {
+                grid-template-columns: 1fr;
+            }
+
+            .full {
+                grid-column: span 1;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="card">
+
+        <h2>Crear Cuenta</h2>
+
+        <form asp-controller="Acceso" asp-action="LoginCliente" method="post">
+
+            @Html.AntiForgeryToken()
+
+            @if (ViewData["Mensaje"] != null)
+            {
+                <div class="alert">@ViewData["Mensaje"]</div>
+            }
+
+            <div class="grid">
+
+                <div class="field">
+                    <label>DNI</label>
+                    <div class="input-wrap">
+                        <i class="fas fa-id-card"></i>
+                        <input class="input" asp-for="Dni" placeholder="Documento">
+                    </div>
+                </div>
+
+                <div class="field">
+                    <label>Teléfono</label>
+                    <div class="input-wrap">
+                        <i class="fas fa-phone"></i>
+                        <input class="input" asp-for="Telefono">
+                    </div>
+                </div>
+
+                <div class="field">
+                    <label>Nombres</label>
+                    <div class="input-wrap">
+                        <i class="fas fa-user"></i>
+                        <input class="input" asp-for="Nombres">
+                    </div>
+                </div>
+
+                <div class="field">
+                    <label>Apellidos</label>
+                    <div class="input-wrap">
+                        <i class="fas fa-user"></i>
+                        <input class="input" asp-for="Apellidos">
+                    </div>
+                </div>
+
+                <div class="field">
+                    <label>Tipo Cliente</label>
+                    <select class="input" asp-for="TipoCliente">
+                        <option disabled selected>Seleccione</option>
+                        <option>Individual</option>
+                        <option>Tienda</option>
+                    </select>
+                </div>
+
+                <div class="field">
+                    <label>Distrito</label>
+                    <select class="input" asp-for="IdDistrito" id="cboDistrito">
+                        <option disabled selected>Seleccione</option>
+                    </select>
+                </div>
+
+                <div class="field full">
+                    <label>Dirección</label>
+                    <div class="input-wrap">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <input class="input" asp-for="Direccion">
+                    </div>
+                </div>
+
+                <div class="field">
+                    <label>Correo</label>
+                    <div class="input-wrap">
+                        <i class="fas fa-envelope"></i>
+                        <input type="email" class="input" asp-for="Correo">
+                    </div>
+                </div>
+
+                <div class="field">
+                    <label>Usuario</label>
+                    <div class="input-wrap">
+                        <i class="fas fa-user-tag"></i>
+                        <input class="input" asp-for="NombreUsuario">
+                    </div>
+                </div>
+
+                <div class="field full">
+                    <label>Contraseña</label>
+                    <div class="input-wrap">
+                        <i class="fas fa-lock"></i>
+                        <input type="password" class="input" asp-for="Clave">
+                    </div>
+                </div>
+
+            </div>
+
+            <button class="btn">Registrar</button>
+
+            <div class="links">
+                <a href="@Url.Action("RestablecerClave", "Acceso")">¿Olvidó su contraseña?</a>
+                <a href="@Url.Action("Login", "Acceso")">¿Ya tienes cuenta? Inicia sesión</a>
+            </div>
+
+        </form>
+
+    </div>
+
+    <script src="~/vendor/jquery/jquery.min.js"></script>
+    <script src="~/js/Vistas/Distritos.js"></script>
+</body>
 </html>
 
 
