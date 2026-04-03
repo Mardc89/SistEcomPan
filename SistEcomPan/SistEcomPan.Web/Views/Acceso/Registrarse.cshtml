@@ -337,85 +337,90 @@
                     <label>DNI</label>
                     <div class="input-wrap">
                         <i class="fas fa-id-card"></i>
-                        <input class="input" asp-for="Dni" placeholder="Documento">
+                        <input type="text" class="input form-control form-control-user" asp-for="Dni" placeholder="Documento">
                     </div>
+         
                 </div>
 
                 <div class="field">
                     <label>Teléfono</label>
                     <div class="input-wrap">
                         <i class="fas fa-phone"></i>
-                        <input class="input" asp-for="Telefono">
+                        <input type="text" class="input  form-control form-control-user" asp-for="Telefono">
                     </div>
+              
                 </div>
 
                 <div class="field">
                     <label>Nombres</label>
                     <div class="input-wrap">
                         <i class="fas fa-user"></i>
-                        <input class="input" asp-for="Nombres">
+                        <input type="text" class="input  form-control form-control-user" asp-for="Nombres">
                     </div>
+             
                 </div>
 
                 <div class="field">
                     <label>Apellidos</label>
                     <div class="input-wrap">
                         <i class="fas fa-user"></i>
-                        <input class="input" asp-for="Apellidos">
+                        <input type="text" class="input  form-control form-control-user" asp-for="Apellidos">
                     </div>
+              
                 </div>
 
                 <div class="field">
                     <label>Tipo Cliente</label>
-                    <select class="input" asp-for="TipoCliente">
+                    <select class="input  form-control form-control-user" asp-for="TipoCliente">
                         <option disabled selected>Seleccione</option>
                         <option>Individual</option>
                         <option>Tienda</option>
                     </select>
                 </div>
-
+        
                 <div class="field">
                     <label>Distrito</label>
-                    <select class="input" asp-for="IdDistrito" id="cboDistrito">
+                    <select class="input  form-control form-control-user" asp-for="IdDistrito" id="cboDistrito">
                         <option disabled selected>Seleccione</option>
                     </select>
                 </div>
-
+          
                 <div class="field full">
                     <label>Dirección</label>
                     <div class="input-wrap">
                         <i class="fas fa-map-marker-alt"></i>
-                        <input class="input" asp-for="Direccion">
+                        <input type="text" class="input  form-control form-control-user" asp-for="Direccion">
                     </div>
                 </div>
-
+         
                 <div class="field">
                     <label>Correo</label>
                     <div class="input-wrap">
                         <i class="fas fa-envelope"></i>
-                        <input type="email" class="input" asp-for="Correo">
+                        <input type="email" class="input form-control form-control-user" asp-for="Correo">
                     </div>
                 </div>
-
+              
                 <div class="field">
                     <label>Usuario</label>
                     <div class="input-wrap">
                         <i class="fas fa-user-tag"></i>
-                        <input class="input" asp-for="NombreUsuario">
+                        <input type="text" class="input  form-control form-control-user" asp-for="NombreUsuario">
                     </div>
                 </div>
-
+           
                 <div class="field full">
                     <label>Contraseña</label>
                     <div class="input-wrap">
                         <i class="fas fa-lock"></i>
-                        <input type="password" class="input" asp-for="Clave">
+                        <input type="password" class="input form-control form-control-user" asp-for="Clave">
                     </div>
                 </div>
-
+           
             </div>
-
-            <button class="btn">Registrar</button>
+            <button type="submit" id="btnRegistroCliente" class="btn">
+                Registrar
+            </button>
 
             <div class="links">
                 <a href="@Url.Action("RestablecerClave", "Acceso")">¿Olvidó su contraseña?</a>
@@ -426,8 +431,20 @@
 
     </div>
 
+
+
     <script src="~/vendor/jquery/jquery.min.js"></script>
-    <script src="~/js/Vistas/Distritos.js"></script>
+
+
+    <!-- Core plugin JavaScript-->
+
+
+    <!-- Custom scripts for all pages-->
+
+    <script src="~/vendor/toastr/toastr.min.js"></script>
+    <script src="~/vendor/sweetalert/sweetalert.js"></script>
+    <script src="~/js/Vistas/Registro.js"></script>
+
 </body>
 </html>
 
