@@ -17,7 +17,8 @@ namespace SistEcomPan.Web.Models.ViewModels
         public string Apellidos { get; set; }
 
         [Required(ErrorMessage = "El teléfono es obligatorio")]
-        [Phone(ErrorMessage = "Teléfono no válido")]
+        [StringLength(9, MinimumLength = 9, ErrorMessage = "El teléfono debe tener 9 dígitos")]
+        [RegularExpression(@"^\d{9}$", ErrorMessage = "El teléfono debe contener solo números")]
         public string Telefono { get; set; }
 
         [Required(ErrorMessage = "Seleccione tipo de cliente")]

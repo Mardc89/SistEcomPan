@@ -24,6 +24,15 @@ $(document).ready(function () {
             }
           
         })
+
+
+    $("#txtDni, #txtTelefono").on("input", function () {
+        this.value = this.value.replace(/\D/g, '');
+    });
+
+    $("#txtNombres,#txtApellidos").on("input", function () {
+        this.value = this.value.replace(/[^\p{L}\s]/gu, '');
+    });
 })
 
 
@@ -90,66 +99,83 @@ function validarFormularioReset(formReset) {
 
 }
 
-    function validarFormulario(form) {
-
+function validarFormulario(form) {
+    debugger;
         const campos = [
-            { id: "txtDni", mensaje: "Debe Completar el campo Dni" ,longitudMaxima:8,tipo:"numerico"},
-            { id: "txtNombres", mensaje: "Debe Ingresar sus Nombres", longitudMinima: 10, longitudMaxima: 30, tipo: "texto" },
-            { id: "txtApellidos", mensaje: "Debe Ingresar sus Apellidos", longitudMinima: 10, longitudMaxima: 30, tipo: "texto" },
-            { id: "txtTelefono", mensaje: "Debe Ingresar su Telefono", longitudMaxima: 9, tipo: "numerico" },
-            { id: "cboTipoCliente", mensaje: "Debes Seleccionar un Tipo de Cliente"},
+         
+            { id: "txtNombres", mensaje: "Debe Ingresar sus Nombres", longitudMinima: 4, longitudMaxima: 30, tipo: "texto" },
+            { id: "txtApellidos", mensaje: "Debe Ingresar sus Apellidos", longitudMinima: 9, longitudMaxima: 30, tipo: "texto" },
+            { id: "txtDni", mensaje: "Debe Completar el campo Dni", longitudMinima: 8, tipo: "numerico" },
+            { id: "txtTelefono", mensaje: "Debe Ingresar su Telefono", longitudMinima: 9, tipo: "numerico" },
+            { id: "cboTipoCliente", mensaje: "Debes Seleccionar un Tipo de Cliente" },
+            { id: "cboDistrito", mensaje: "Debes Seleccionar un Distrito" },
             { id: "txtDireccion", mensaje: "Debe Ingresar su Direccion", longitudMinima: 10, longitudMaxima: 50 },
-            { id: "cboDistrito", mensaje: "Debes Seleccionar un Distrito"},
-            { id: "txtCorreo", mensaje: "Debe Ingresar su Correo", longitudMaxima: 50 },
             { id: "txtNombreUsuario", mensaje: "Debe Ingresar Nombre de Usuario", longitudMinima: 4, longitudMaxima: 50 },
-            { id: "txtPassword", mensaje: "Debe Ingresar su contraseña",longitudMinima:10, longitudMaxima: 90 },
+            { id: "txtPassword", mensaje: "Debe Ingresar su contraseña", longitudMinima: 10, longitudMaxima: 90 },
+            { id: "txtCorreo", mensaje: "Debe Ingresar su Correo", longitudMaxima: 50 ,tipo:"correo"},
+        
         ];
 
-        for (let campo of campos) {
-            const valor = $(`#${campo.id}`).val()?.trim();
-            if (campo.id.startsWith("txt") && valor==="") {          
-                toastr.warning("", campo.mensaje);
-                $(`#${campo.id}`).focus();
-                return;         
-            }
+    for (let campo of campos) {
+        let valor = $(`#${campo.id}`).val();
 
-            if (campo.longitudMinima && valor.length < campo.longitudMinima) {
-                toastr.warning("", `El campo debe tener al menos${campo.longitudMinima} caracteres`);
-                $(`#${campo.id}`).focus();
-                return;  
+        // Evita undefined
+        valor = valor ? valor.trim() : "";
 
-            }
-            if (campo.tipo === "numerico" && !/^\d+$/.test(valor)) {
-                toastr.warning("","Solo se permiten numeros en este campo");
-                $(`#${campo.id}`).focus();
-                return;
-
-            }
-
-            if (campo.tipo === "texto" && !/^[a-zA-Z\s]+$/.test(valor)) {
-                toastr.warning("","Solo se permiten letras en este campo");
-                $(`#${campo.id}`).focus();
-                return;
-
-            }
-
-            if (campo.longitudMaxima && valor.length > campo.longitudMaxima) {
-                toastr.warning("", `El campo no debe tener mas de ${campo.longitudMaxima} caracteres`);
-                $(`#${campo.id}`).focus();
-                return;
-
-            }
-
-            if (campo.id.startsWith("cbo") && !valor) {
-                toastr.warning("", campo.mensaje);
-                $(`#${campo.id}`).focus();
-                return;
-            }
-
+        // 🔹 VALIDAR VACÍO
+        if (campo.id.startsWith("txt") && valor === "") {
+            toastr.warning("", campo.mensaje);
+            $(`#${campo.id}`).focus();
+            return;
         }
 
+        if (campo.id.startsWith("cbo") && !valor) {
+            toastr.warning("", campo.mensaje);
+            $(`#${campo.id}`).focus();
+            return;
+        }
 
-        form.submit();
+        // 🔹 VALIDAR TIPO (solo si hay valor)
+        if (valor) {
+            if (campo.tipo === "numerico" && !/^\d+$/.test(valor)) {
+                toastr.warning("", "Solo se permiten numeros en este campo");
+                $(`#${campo.id}`).focus();
+                return;
+            }
+
+            if (campo.tipo === "texto" && !/^[\p{L}\s]+$/u.test(valor)) {
+                toastr.warning("", "Solo se permiten letras en este campo");
+                $(`#${campo.id}`).focus();
+                return;
+            }
+
+            if (campo.tipo === "correo") {
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                if (!emailRegex.test(valor)) {
+                    toastr.warning("", "Correo no válido");
+                    $(`#${campo.id}`).focus();
+                    return;
+                }
+            }
+        }
+
+        // 🔹 VALIDAR LONGITUD
+        if (campo.longitudMinima && valor.length < campo.longitudMinima) {
+            toastr.warning("", `El campo debe tener al menos ${campo.longitudMinima} caracteres`);
+            $(`#${campo.id}`).focus();
+            return;
+        }
+
+        if (campo.longitudMaxima && valor.length > campo.longitudMaxima) {
+            toastr.warning("", `El campo no debe tener más de ${campo.longitudMaxima} caracteres`);
+            $(`#${campo.id}`).focus();
+            return;
+        }
+    }
+
+
+
+    form.submit();
 
     }
     

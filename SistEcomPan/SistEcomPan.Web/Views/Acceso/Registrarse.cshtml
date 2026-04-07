@@ -165,6 +165,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Mi Tienda - Registro</title>
 
+  
+    <!-- Custom fonts for this template-->
+    <!-- Custom styles for this template-->
+    <link href="~/vendor/toastr/toastr.min.css" rel="stylesheet">
+    <link href="~/vendor/sweetalert/sweetalert.css" rel="stylesheet">
+
     <link href="~/vendor/fontawesome-free/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
 
@@ -321,9 +327,7 @@
     <div class="card">
 
         <h2>Crear Cuenta</h2>
-
-        <form asp-controller="Acceso" asp-action="LoginCliente" method="post">
-
+        <form class="" asp-controller="Acceso" asp-action="LoginCliente" id="FormRegistro" method="post">
             @Html.AntiForgeryToken()
 
             @if (ViewData["Mensaje"] != null)
@@ -333,11 +337,30 @@
 
             <div class="grid">
 
+
+                <div class="field">
+                    <label>Nombres</label>
+                    <div class="input-wrap">
+                        <i class="fas fa-user"></i>
+                        <input type="text" class="input  form-control form-control-user" id="txtNombres" asp-for="Nombres">
+                    </div>
+
+                </div>
+
+                <div class="field">
+                    <label>Apellidos</label>
+                    <div class="input-wrap">
+                        <i class="fas fa-user"></i>
+                        <input type="text" class="input  form-control form-control-user" id="txtApellidos" asp-for="Apellidos">
+                    </div>
+
+                </div>
+
                 <div class="field">
                     <label>DNI</label>
                     <div class="input-wrap">
                         <i class="fas fa-id-card"></i>
-                        <input type="text" class="input form-control form-control-user" asp-for="Dni" placeholder="Documento">
+                        <input type="text" class="input form-control form-control-user" id="txtDni" asp-for="Dni" placeholder="Documento">
                     </div>
          
                 </div>
@@ -346,32 +369,16 @@
                     <label>Teléfono</label>
                     <div class="input-wrap">
                         <i class="fas fa-phone"></i>
-                        <input type="text" class="input  form-control form-control-user" asp-for="Telefono">
+                        <input type="text" class="input  form-control form-control-user" id="txtTelefono" asp-for="Telefono">
                     </div>
               
                 </div>
 
-                <div class="field">
-                    <label>Nombres</label>
-                    <div class="input-wrap">
-                        <i class="fas fa-user"></i>
-                        <input type="text" class="input  form-control form-control-user" asp-for="Nombres">
-                    </div>
-             
-                </div>
 
-                <div class="field">
-                    <label>Apellidos</label>
-                    <div class="input-wrap">
-                        <i class="fas fa-user"></i>
-                        <input type="text" class="input  form-control form-control-user" asp-for="Apellidos">
-                    </div>
-              
-                </div>
 
                 <div class="field">
                     <label>Tipo Cliente</label>
-                    <select class="input  form-control form-control-user" asp-for="TipoCliente">
+                    <select class="input  form-control form-control-user" asp-for="TipoCliente" id="cboTipoCliente">
                         <option disabled selected>Seleccione</option>
                         <option>Individual</option>
                         <option>Tienda</option>
@@ -389,31 +396,32 @@
                     <label>Dirección</label>
                     <div class="input-wrap">
                         <i class="fas fa-map-marker-alt"></i>
-                        <input type="text" class="input  form-control form-control-user" asp-for="Direccion">
+                        <input type="text" class="input  form-control form-control-user" id="txtDireccion" asp-for="Direccion">
                     </div>
                 </div>
          
-                <div class="field">
-                    <label>Correo</label>
-                    <div class="input-wrap">
-                        <i class="fas fa-envelope"></i>
-                        <input type="email" class="input form-control form-control-user" asp-for="Correo">
-                    </div>
-                </div>
+
               
                 <div class="field">
                     <label>Usuario</label>
                     <div class="input-wrap">
                         <i class="fas fa-user-tag"></i>
-                        <input type="text" class="input  form-control form-control-user" asp-for="NombreUsuario">
+                        <input type="text" id="txtNombreUsuario" class="input  form-control form-control-user" asp-for="NombreUsuario">
                     </div>
                 </div>
            
-                <div class="field full">
+                <div class="field">
                     <label>Contraseña</label>
                     <div class="input-wrap">
                         <i class="fas fa-lock"></i>
-                        <input type="password" class="input form-control form-control-user" asp-for="Clave">
+                        <input type="password" id="txtPassword" class="input form-control form-control-user" asp-for="Clave">
+                    </div>
+                </div>
+                <div class="field full">
+                    <label>Correo</label>
+                    <div class="input-wrap">
+                        <i class="fas fa-envelope"></i>
+                        <input type="email" id="txtCorreo" class="input form-control form-control-user" asp-for="Correo">
                     </div>
                 </div>
            
