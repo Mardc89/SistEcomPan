@@ -1,4 +1,4 @@
-﻿
+﻿@* 
 @{
     ViewData["Title"] = "ResetClave";
     Layout = null;
@@ -29,7 +29,179 @@
         <br />
     </div>
 </body>
+</html> *@
+
+
+
+@{
+    ViewData["Title"] = "ResetClave";
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="ES">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Mi Tienda - Nueva Contraseña</title>
+
+    <link href="~/vendor/fontawesome-free/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+
+    <style>
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        :root {
+            --brand: #1a56db;
+            --brand-dark: #1340b0;
+            --border: #e5e7eb;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+        }
+
+        html, body {
+            min-height: 100vh;
+            font-family: 'DM Sans', sans-serif;
+            background: linear-gradient(135deg, #1a56db 0%, #0f3a96 50%, #071d6a 100%);
+        }
+
+        .page-shell {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 24px 16px;
+        }
+
+        .card {
+            width: 100%;
+            max-width: 420px;
+            background: #fff;
+            border-radius: 18px;
+            box-shadow: 0 24px 64px rgba(0,0,0,.18);
+            overflow: hidden;
+            animation: fade .4s ease;
+        }
+
+        @@keyframes fade {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .header {
+            text-align: center;
+            padding: 30px 20px 15px;
+            border-bottom: 1px solid var(--border);
+        }
+
+            .header h1 {
+                font-size: 1.3rem;
+                margin-bottom: 5px;
+            }
+
+            .header p {
+                font-size: .85rem;
+                color: #6b7280;
+            }
+
+        .content {
+            padding: 25px;
+        }
+
+        .alert-warning {
+            background: #fff7ed;
+            color: var(--warning);
+            border-radius: 8px;
+            padding: 12px;
+            font-size: .85rem;
+            margin-bottom: 15px;
+        }
+
+        .alert-info {
+            background: #ecfdf5;
+            color: #065f46;
+            border-radius: 8px;
+            padding: 12px;
+            font-size: .85rem;
+            margin-bottom: 15px;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(135deg, #1a56db, #1340b0);
+            color: #fff;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+            .btn:hover {
+                opacity: .9;
+            }
+
+        .links {
+            text-align: center;
+            margin-top: 10px;
+        }
+
+            .links a {
+                font-size: .85rem;
+                color: var(--brand);
+            }
+    </style>
+</head>
+
+<body>
+
+    <div class="page-shell">
+
+        <div class="card">
+
+            <div class="header">
+                <h1>Nueva contraseña</h1>
+                <p>Su contraseña ha sido generada correctamente</p>
+            </div>
+
+            <div class="content">
+
+                @if (ViewData["Mensaje"] != null)
+                {
+                    <div class="alert-info">
+                        @ViewData["Mensaje"]
+                    </div>
+                }
+
+                <div class="alert-warning">
+                    Le recomendamos cambiar la contraseña una vez inicie sesión.
+                </div>
+
+                <button class="btn" onclick="window.location.href='@Url.Action("Login", "Acceso")'">
+                    Ir al login
+                </button>
+
+                <div class="links">
+                    <a href="@Url.Action("Login", "Acceso")">Volver al login</a>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</body>
 </html>
-
-
-
