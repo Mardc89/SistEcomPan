@@ -1,7 +1,7 @@
 ﻿
 if (userRol === "Administrador") {
 
-function ObtenerDatosUsuario() {
+function ObtenerDatos() {
     fetch("/Home/ObtenerUsuario")
         .then(response => {
             return response.ok ? response.json() : Promise.reject(response);
@@ -9,6 +9,9 @@ function ObtenerDatosUsuario() {
         .then(responseJson => {
             if (responseJson.estado) {
                 const d = responseJson.objeto
+                if (!d.nombreFoto) {
+                    d.nombreFoto = "ImgUser.png";
+                }
                 $("#userDropdown img.img-profile").attr("src", `/ImagenesPerfil/${d.nombreFoto}`);
 
             }
@@ -19,7 +22,7 @@ function ObtenerDatosUsuario() {
 }
 }
 else if (userRol === "Cliente") {
-    function ObtenerDatosCliente() {
+    function ObtenerDatos() {
         fetch("/Home/ObtenerCliente")
             .then(response => {
                 return response.ok ? response.json() : Promise.reject(response);
@@ -27,6 +30,9 @@ else if (userRol === "Cliente") {
             .then(responseJson => {
                 if (responseJson.estado) {
                     const d = responseJson.objeto
+                    if (!d.nombreFoto) {
+                        d.nombreFoto = "ImgUser.png";
+                    }
                     $("#userDropdown img.img-profile").attr("src", `/ImagenesPerfil/${d.nombreFoto}`);
                 }
                 else {
@@ -59,7 +65,7 @@ $(document).ready(function () {
     }
 
 
-    ObtenerDatosUsuario();
+    ObtenerDatos();
     fetch("/Pedido/ListaNombres")
         .then(response => {
             return response.ok ? response.json() : Promise.reject(response);

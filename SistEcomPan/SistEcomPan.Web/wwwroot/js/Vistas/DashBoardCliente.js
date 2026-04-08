@@ -8,6 +8,10 @@ function ObtenerDatosCliente() {
         .then(responseJson => {
             if (responseJson.estado) {
                 const d = responseJson.objeto
+                if (!d.nombreFoto) {
+                    d.nombreFoto = "ImgUser.png";
+                }
+
                 $("#userDropdown img.img-profile").attr("src", `/ImagenesPerfil/${d.nombreFoto}`);
             }
             else {

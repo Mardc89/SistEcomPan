@@ -9,6 +9,9 @@ function ObtenerDatosCliente(){
             .then(responseJson => {
                 if (responseJson.estado) {
                     const d = responseJson.objeto
+                    if (!d.nombreFoto) {
+                        d.nombreFoto = "ImgUser.png";
+                    }
 
                     $("#ImgFoto").attr("src", `/ImagenesPerfil/${d.nombreFoto}`)
                     $("#txtDni").val(d.dni)
