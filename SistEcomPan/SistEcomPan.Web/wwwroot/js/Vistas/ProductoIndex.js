@@ -66,6 +66,9 @@ $(document).ready(function () {
                     let ruta = data;
                     let nombreCarpeta = /ImagenesProducto/;
                     let rutaRelativa = `${nombreCarpeta}${ruta}`;
+                    if (!data.nombreImagen) {
+                        rutaRelativa = '/ImagenDefault/DefaultProduct.png';
+                    }
                     return `<img style="height:60px" src=${rutaRelativa} class="rounded mx-auto d-block"/>`;
                 }
 
@@ -110,7 +113,7 @@ function mostrarModal(modelo = MODELO_BASE) {
     const rutaBase = '/ImagenesProducto/';
     let rutaRelativa = rutaBase + modelo.nombreImagen;
 
-    if (modelo.nombreImagen == "") {
+    if (!modelo.nombreImagen) {
         rutaRelativa = '/ImagenDefault/DefaultProduct.png';
     }
 
