@@ -67,7 +67,7 @@ $(document).ready(function () {
                     let nombreCarpeta = /ImagenesProducto/;
                     let rutaRelativa = `${nombreCarpeta}${ruta}`;
                     if (!data.nombreImagen) {
-                        rutaRelativa = '/ImagenDefault/DefaultProduct.png';
+                        rutaRelativa = '/ImagenesProducto/DefaultProduct.png';
                     }
                     return `<img style="height:60px" src=${rutaRelativa} class="rounded mx-auto d-block"/>`;
                 }
@@ -110,11 +110,12 @@ $(document).ready(function () {
 
 
 function mostrarModal(modelo = MODELO_BASE) {
+    debugger;
     const rutaBase = '/ImagenesProducto/';
     let rutaRelativa = rutaBase + modelo.nombreImagen;
 
     if (!modelo.nombreImagen) {
-        rutaRelativa = '/ImagenDefault/DefaultProduct.png';
+        rutaRelativa = '/ImagenesProducto/DefaultProduct.png';
     }
 
     $("#txtIdProducto").val(modelo.idProducto)
