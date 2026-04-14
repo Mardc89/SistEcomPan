@@ -197,9 +197,12 @@ function VerificarEstadoPedido() {
     let Opcion2 = document.getElementById("opcion2");
     if (estado === "Pagado" && idPago > 0) {
         btnEstado.disabled = true;
+        Opcion1.disabled = true;
+        Opcion2.disabled = true;
     }
-    else {
-        btnEstado.disabled = false;
+    else if (estado === ""){
+        Opcion1.disabled = true;
+        Opcion2.disabled = true;
     }
 
     if ((estado === "Existe Deuda" || estado === "Sin Efectuar") && montoPedido === montoAPagar) {
