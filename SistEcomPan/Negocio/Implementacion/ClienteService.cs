@@ -24,6 +24,9 @@ namespace Negocio.Implementacion
         }
         public async Task<string> ObtenerNombreCompleto(int IdCliente)
         {
+            if (IdCliente == 0)
+                return "";
+
             Clientes clientes = await _repositorio.Buscar(null,null,IdCliente);
             return clientes.Apellidos +" "+ clientes.Nombres;
         }

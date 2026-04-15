@@ -181,14 +181,18 @@ namespace Negocio.Implementacion
             var clientelista = await _clienteService.Lista();
             var Pedidolista = await _repositorioPedido.Lista();
 
-            var idCliente = clientelista
+            int? idCliente = clientelista
                 .Where(x => x.Dni == searchTerm)
                 .Select(x => x.IdCliente)
                 .FirstOrDefault();
-            // Filtro de búsqueda por término de búsqueda (searchTerm)
+
+
             var pedidosFiltrados = Pedidolista.Where(p => p.IdCliente.Equals(idCliente));
 
-            var clientePedido = pedidosFiltrados.FirstOrDefault().IdCliente;
+
+            
+
+            var clientePedido = pedidosFiltrados.FirstOrDefault()?.IdCliente??0;
 
             //var clientes = await _clienteService.ObtenerNombre();
             var clienteEncontrado = await _clienteService.ObtenerNombreCompleto(clientePedido);
