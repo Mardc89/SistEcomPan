@@ -232,6 +232,7 @@ function mostrarModal(modelo = MODELO_BASE) {
     $("#txtDescuento").val("0.00")
     $("#txtDeuda").val(modelo.montoDeuda)
     $("#txtMontoPago").val(modelo.montoDeuda)
+    $("#txtMontoPago").css("background-color","verde")
     $("#txtPagoCliente").val("0.00")
     $("#txtCambio").val("0.00")
     $("#txtEstado").val(modelo.estado)
