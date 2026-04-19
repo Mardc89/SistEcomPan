@@ -15,13 +15,14 @@ namespace SistEcomPan.Web.Controllers
         private readonly IClienteService _clienteService;
         private readonly IPedidoService _pedidoService;
         private readonly IDetallePagoService _detallePagoService;
-
-        public PagoController(IPagoService pagoService, IClienteService clienteService, IPedidoService pedidoService, IDetallePagoService detallePagoService)
+        private readonly ITimeZoneService _timeZoneService;
+        public PagoController(IPagoService pagoService, IClienteService clienteService, IPedidoService pedidoService, IDetallePagoService detallePagoService, ITimeZoneService timeZoneService)
         {
             _pagoService = pagoService;
             _clienteService = clienteService;
             _pedidoService = pedidoService;
             _detallePagoService = detallePagoService;
+            _timeZoneService = timeZoneService;
         }
         public IActionResult Index()
         {
@@ -43,6 +44,7 @@ namespace SistEcomPan.Web.Controllers
         [HttpGet]
         public async Task<IActionResult> Lista()
         {
+            TimeZoneInfo userTimeZone = _timeZoneService.GetTimeZone(Request);
             var Pagolista = await _pagoService.Lista();
             List<VMPago> vmPagolista = new List<VMPago>();
             var pedidoCliente = await _pedidoService.Lista();
@@ -63,7 +65,8 @@ namespace SistEcomPan.Web.Controllers
                     Descuento = Convert.ToString(item.Descuento),
                     MontoTotalDePago =Convert.ToString(item.MontoTotalDePago),
                     MontoDeuda = Convert.ToString(item.MontoDeuda),
-                    FechaPago = Convert.ToDateTime(item.FechaDePago),
+                    //FechaPago = Convert.ToDateTime(item.FechaDePago),
+                    FechaPago = item.FechaDePago.HasValue ? TimeZoneInfo.ConvertTimeFromUtc(item.FechaDePago.Value, userTimeZone) : null,
                     Estado = item.Estado,
                     NombreCliente=nombreCliente,
                     CodigoPedido=codigoPedido,
@@ -79,7 +82,7 @@ namespace SistEcomPan.Web.Controllers
         public async Task<IActionResult> Guardar([FromBody] VMPago modelo)
         {
             GenericResponse<VMPago> gResponse = new GenericResponse<VMPago>();
-
+            TimeZoneInfo userTimeZone = _timeZoneService.GetTimeZone(Request);
             try
             {
                 List<Pagos> listaPagos = new List<Pagos>();         
@@ -121,7 +124,7 @@ namespace SistEcomPan.Web.Controllers
                         MontoTotalDePago = Convert.ToString(pagoCreado.MontoTotalDePago),
                         MontoDeuda =Convert.ToString(pagoCreado.MontoDeuda),
                         Estado = pagoCreado.Estado,
-                        FechaPago=pagoCreado.FechaDePago,
+                        FechaPago = pagoCreado.FechaDePago.HasValue ? TimeZoneInfo.ConvertTimeFromUtc(pagoCreado.FechaDePago.Value, userTimeZone) : null,
                         DetallePago = pagoCreado.DetallePago.Select(detalle => new VMDetallePago
                         {
                             MontoAPagar = Convert.ToString(detalle.MontoAPagar),
@@ -155,7 +158,7 @@ namespace SistEcomPan.Web.Controllers
         public async Task<IActionResult> Editar([FromBody] VMPago modelo)
         {
             GenericResponse<VMPago> gResponse = new GenericResponse<VMPago>();
-
+            TimeZoneInfo userTimeZone = _timeZoneService.GetTimeZone(Request);
             try
             {
                 List<Pagos> listaPagos = new List<Pagos>();
@@ -197,8 +200,9 @@ namespace SistEcomPan.Web.Controllers
                         MontoTotalDePago=modelo.MontoTotalDePago,
                         MontoDePedido=modelo.MontoDePedido,
                         Descuento=modelo.Descuento,                           
-                        FechaPago= Convert.ToDateTime(pagoCreado.FechaDePago),
-                        FechaPedido=fechaPedido,
+                        //FechaPago= Convert.ToDateTime(pagoCreado.FechaDePago),
+                        FechaPago = pagoCreado.FechaDePago.HasValue ? TimeZoneInfo.ConvertTimeFromUtc(pagoCreado.FechaDePago.Value, userTimeZone) : null,
+                        FechaPedido =fechaPedido,
                         DetallePago = pagoCreado.DetallePago.Select(detalle => new VMDetallePago
                         {
                             MontoAPagar = Convert.ToString(detalle.MontoAPagar),
@@ -237,6 +241,8 @@ namespace SistEcomPan.Web.Controllers
             var pagosFiltrados = Pagolista.Where(x => x.IdPedido == searchTerm).ToList();
             var MisPagos = pagosFiltrados;
 
+            TimeZoneInfo userTimeZone = _timeZoneService.GetTimeZone(Request);
+
             List<VMPago> vmPagos = new List<VMPago>();
 
             foreach (var item in MisPagos)
@@ -249,7 +255,7 @@ namespace SistEcomPan.Web.Controllers
                     CodigoPedido = PedidosLista.Where(x => x.IdPedido == item.IdPedido).Select(x => x.Codigo).First(),
                     MontoTotalDePago = Convert.ToString(item.MontoTotalDePago),
                     MontoDeuda = Convert.ToString(item.MontoDeuda),
-                    FechaPago = item.FechaDePago,
+                    FechaPago = item.FechaDePago.HasValue ? TimeZoneInfo.ConvertTimeFromUtc(item.FechaDePago.Value, userTimeZone) : null,
                     Estado = item.Estado
                 });
             }
@@ -268,6 +274,9 @@ namespace SistEcomPan.Web.Controllers
             var Pagolista = await _pagoService.Lista();
             var clientelista = await _clienteService.Lista();
             var PedidosLista = await _pedidoService.Lista();
+
+            TimeZoneInfo userTimeZone = _timeZoneService.GetTimeZone(Request);
+            DateTime? fechaBusquedaUtc = _timeZoneService.ConvertirFecha(busqueda, userTimeZone);
 
             var idCliente = clientelista.Where(x => x.Dni == searchTerm).Select(x => x.IdCliente).FirstOrDefault();
             var idPedido = PedidosLista.Where(x => x.IdCliente == idCliente).Select(x => x.IdPedido).ToList();
@@ -290,7 +299,7 @@ namespace SistEcomPan.Web.Controllers
                     CodigoPedido = PedidosLista.Where(x => x.IdPedido == item.IdPedido).Select(x => x.Codigo).First(),
                     MontoTotalDePago = Convert.ToString(item.MontoTotalDePago),
                     MontoDeuda=Convert.ToString(item.MontoDeuda), 
-                    FechaPago=item.FechaDePago,
+                    FechaPago = item.FechaDePago.HasValue ? TimeZoneInfo.ConvertTimeFromUtc(item.FechaDePago.Value, userTimeZone) : null,
                     Estado = item.Estado
                 }); 
             }

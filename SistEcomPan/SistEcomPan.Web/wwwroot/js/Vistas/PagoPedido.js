@@ -208,11 +208,13 @@ function VerificarEstadoPedido() {
     if ((estado === "Existe Deuda" || estado === "Sin Efectuar") && montoPedido === montoAPagar) {
         Opcion1.disabled = false;
         Opcion2.disabled = false;
+        btnEstado.disabled = false;
         ActivarCampos();
     }
     else if (estado === "Existe Deuda" && montoPedido !== montoAPagar){
         Opcion1.disabled = true;
         Opcion2.disabled = true;
+        btnEstado.disabled = false;
         ActivarCampos();
     }
 
@@ -232,7 +234,7 @@ function mostrarModal(modelo = MODELO_BASE) {
     $("#txtDescuento").val("0.00")
     $("#txtDeuda").val(modelo.montoDeuda)
     $("#txtMontoPago").val(modelo.montoDeuda)
-    $("#txtMontoPago").css("background-color","verde")
+    $("#txtMontoPago").css("background-color","#ffeb3b")
     $("#txtPagoCliente").val("0.00")
     $("#txtCambio").val("0.00")
     $("#txtEstado").val(modelo.estado)

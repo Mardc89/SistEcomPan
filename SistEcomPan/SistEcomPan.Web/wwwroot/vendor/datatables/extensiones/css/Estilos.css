@@ -1,4 +1,4 @@
-﻿
+﻿/*
 @media (max-width: 576px) {
     h6 {
         font-size: 1rem;
@@ -21,5 +21,45 @@
         width:100%;
         margin-bottom:10px;
     }
+}*/
+
+
+@media (max-width: 768px) {
+    .modal-dialog {
+        max-width: 100%;
+        margin: 0;
+        height: 100%;
+    }
+
+    .modal-content {
+        height: 100%;
+        border-radius: 0;
+    }
+
+    .modal-body {
+        overflow-y: auto;
+    }
+
+/*    h6 {
+        font-size: 1rem;
+    }
+
+    .btn {
+        font-size: 0.875rem;
+    }
+
+    .form-control {
+        font-size: 0.875rem;
+    }
+
+    .table-responsive {
+        overflow-x: auto;
+        display: block;
+    }
+
+    #btnNuevoPedido {
+        width: 100%;
+        margin-bottom: 10px;
+    }*/
 }
 

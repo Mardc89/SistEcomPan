@@ -97,7 +97,7 @@ namespace SistEcomPan.Web.Controllers
                     IdCliente = item.IdCliente,
                     TipoCliente = item.TipoCliente,
                     Dni = item.Dni,
-                    NombreCompleto = item.Apellidos + " " + item.Nombres,
+                    NombreCompleto = item.Apellidos+" "+item.Nombres,
                     Correo = item.Correo,
                     Direccion = item.Direccion,
                     Telefono = item.Telefono,
