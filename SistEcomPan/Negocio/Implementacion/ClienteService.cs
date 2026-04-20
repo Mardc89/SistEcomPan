@@ -440,5 +440,10 @@ namespace Negocio.Implementacion
         {
             return await _repositorio.Buscar(null, null, null,null,null,dni);
         }
+
+        public string LimpiarEspacios(string texto)
+        {
+            return string.Join(" ",texto.Split(' ', StringSplitOptions.RemoveEmptyEntries));
+        }
     }
 }
