@@ -174,8 +174,8 @@ namespace SistEcomPan.Web.Controllers
                         {
                             TipoCliente=item.TipoCliente,
                             Dni = item.Dni,       
-                            Nombres = item.Nombres,
-                            Apellidos = item.Apellidos,
+                            Nombres = _clienteServicio.LimpiarEspacios(item.Nombres),
+                            Apellidos = _clienteServicio.LimpiarEspacios(item.Apellidos),
                             Correo = item.Correo,
                             Direccion=item.Direccion,
                             Telefono=item.Telefono,

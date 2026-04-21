@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 18
-VisualStudioVersion = 18.3.11505.172 d18.3
+VisualStudioVersion = 18.3.11505.172
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Entidades", "Entidades\Entidades.csproj", "{6FAF6D04-4519-4A74-8A1F-9A6B465D0CD1}"
 EndProject
@@ -16,6 +16,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleAppPrueba", "ConsoleAppPrueba\ConsoleAppPrueba.csproj", "{4A4FEAF6-5CFD-46A8-B058-1C458DA2309F}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DTO", "DTO\DTO.csproj", "{23AC494B-78C3-491D-B539-D87058E13EDC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Helpers", "Helpers\Helpers.csproj", "{ADBD7066-96C7-4C0E-88A9-A01E4696A3AE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -51,6 +53,10 @@ Global
 		{23AC494B-78C3-491D-B539-D87058E13EDC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{23AC494B-78C3-491D-B539-D87058E13EDC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{23AC494B-78C3-491D-B539-D87058E13EDC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{ADBD7066-96C7-4C0E-88A9-A01E4696A3AE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ADBD7066-96C7-4C0E-88A9-A01E4696A3AE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ADBD7066-96C7-4C0E-88A9-A01E4696A3AE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ADBD7066-96C7-4C0E-88A9-A01E4696A3AE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

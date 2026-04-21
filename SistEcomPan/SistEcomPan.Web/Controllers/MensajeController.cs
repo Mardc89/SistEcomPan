@@ -62,7 +62,7 @@ namespace SistEcomPan.Web.Controllers
                     Asunto = Convert.ToString(item.Asunto),
                     NombreDestinatario = await _destinatarioMensajeService.NombreDelDestinatario(item.IdMensaje),
                     NombreRemitente = await _mensajeService.NombreDelRemitente(item.Remitente, item.IdRemitente),
-                    FechaDeMensaje = item.FechaDeMensaje,
+                    FechaDeMensaje = item.FechaDeMensaje.HasValue ? TimeZoneInfo.ConvertTimeFromUtc(item.FechaDeMensaje.Value, userTimeZone) : null,
                     CorreoRemitente = await _mensajeService.correoRemitente(item.Remitente, item.IdRemitente),
                     CorreoDestinatario = await _destinatarioMensajeService.correoDestinatario(item.IdMensaje)
                 });
@@ -79,7 +79,7 @@ namespace SistEcomPan.Web.Controllers
         public async Task<IActionResult> ObtenerMensajeDeAsunto(string asunto)
         {
             string asuntoAbuscar=asunto.Contains(":")?asunto.Substring(asunto.IndexOf(":") + 1).Trim():asunto;
-            
+            TimeZoneInfo userTimeZone = _timeZoneService.GetTimeZone(Request);
             var ListaDeMensajes = await _mensajeService.Lista();
             var MisMensajes = ListaDeMensajes.Where(p => p.Asunto == asuntoAbuscar || p.Asunto.Contains(asuntoAbuscar)).ToList();
 
@@ -93,7 +93,7 @@ namespace SistEcomPan.Web.Controllers
                     Cuerpo = Convert.ToString(item.Cuerpo),
                     NombreDestinatario = await _destinatarioMensajeService.NombreDelDestinatario(item.IdMensaje),
                     NombreRemitente = await _mensajeService.NombreDelRemitente(item.Remitente, item.IdRemitente),
-                    FechaDeMensaje=item.FechaDeMensaje
+                    FechaDeMensaje = item.FechaDeMensaje.HasValue ? TimeZoneInfo.ConvertTimeFromUtc(item.FechaDeMensaje.Value, userTimeZone) : null,
 
                 });
             }
@@ -110,7 +110,7 @@ namespace SistEcomPan.Web.Controllers
         {
             var DetalleMensajelista = await _mensajeService.Lista();
             var MisMensajes = DetalleMensajelista.Where(p =>p.Asunto.Contains(asunto)&& p.IdRespuestaMensaje!=null).ToList();
-
+            TimeZoneInfo userTimeZone = _timeZoneService.GetTimeZone(Request);
             List<VMMensaje> vmDetalleMensajes = new List<VMMensaje>();
 
             foreach (var item in MisMensajes)
@@ -122,7 +122,7 @@ namespace SistEcomPan.Web.Controllers
                     Cuerpo = Convert.ToString(item.Cuerpo),
                     IdRespuestaMensaje = item.IdRespuestaMensaje,
                     Asunto = Convert.ToString(item.Asunto),
-                    FechaDeMensaje = item.FechaDeMensaje
+                    FechaDeMensaje = item.FechaDeMensaje.HasValue ? TimeZoneInfo.ConvertTimeFromUtc(item.FechaDeMensaje.Value, userTimeZone) : null,
 
                 });
             }
@@ -138,6 +138,7 @@ namespace SistEcomPan.Web.Controllers
         [HttpGet]
         public async Task<IActionResult> ListaMensajes()
         {
+            TimeZoneInfo userTimeZone = _timeZoneService.GetTimeZone(Request);
             var lista = await _mensajeService.Lista();
             List<VMMensaje> vmListaMensajes = new List<VMMensaje>();
             foreach (var item in lista)
@@ -149,8 +150,8 @@ namespace SistEcomPan.Web.Controllers
                     Cuerpo = item.Cuerpo,
                     NombreDestinatario = await _destinatarioMensajeService.NombreDelDestinatario(item.IdMensaje),
                     NombreRemitente = await _mensajeService.NombreDelRemitente(item.Remitente,item.IdRemitente),
-                    FechaDeMensaje = item.FechaDeMensaje,
-                    CorreoRemitente=await _mensajeService.correoRemitente(item.Remitente,item.IdRemitente),
+                    FechaDeMensaje = item.FechaDeMensaje.HasValue ? TimeZoneInfo.ConvertTimeFromUtc(item.FechaDeMensaje.Value, userTimeZone) : null,
+                    CorreoRemitente =await _mensajeService.correoRemitente(item.Remitente,item.IdRemitente),
                     CorreoDestinatario=await _destinatarioMensajeService.correoDestinatario(item.IdMensaje)
 
                 });
@@ -163,7 +164,7 @@ namespace SistEcomPan.Web.Controllers
         public async Task<IActionResult> EnviarMensajeRespuesta([FromBody] VMRemitenteDestinatario modelo)
         {
             GenericResponse<VMMensaje> gResponse = new GenericResponse<VMMensaje>();
-
+            TimeZoneInfo userTimeZone = _timeZoneService.GetTimeZone(Request);
             try
             {
                 List<Mensajes> listaMensajes = new List<Mensajes>();
@@ -215,7 +216,7 @@ namespace SistEcomPan.Web.Controllers
                             Cuerpo = item.Cuerpo,
                             NombreDestinatario = await _destinatarioMensajeService.NombreDelDestinatario(item.IdMensaje),
                             NombreRemitente = await _mensajeService.NombreDelRemitente(item.Remitente, item.IdRemitente),
-                            FechaDeMensaje= item.FechaDeMensaje
+                            FechaDeMensaje = item.FechaDeMensaje.HasValue ? TimeZoneInfo.ConvertTimeFromUtc(item.FechaDeMensaje.Value, userTimeZone) : null,
 
                         }); 
                     }
@@ -243,7 +244,7 @@ namespace SistEcomPan.Web.Controllers
         public async Task<IActionResult> Crear([FromBody] VMRemitenteDestinatario modelo)
         {
             GenericResponse<VMMensaje> gResponse = new GenericResponse<VMMensaje>();
-
+            TimeZoneInfo userTimeZone = _timeZoneService.GetTimeZone(Request);
 
 
             try
@@ -298,8 +299,7 @@ namespace SistEcomPan.Web.Controllers
                         Cuerpo = mensajeCreado.Cuerpo,
                         NombreDestinatario = await _destinatarioMensajeService.NombreDelDestinatario(mensajeCreado.IdMensaje),
                         NombreRemitente = await _mensajeService.NombreDelRemitente(mensajeCreado.Remitente, mensajeCreado.IdRemitente),
-                        FechaDeMensaje = mensajeCreado.FechaDeMensaje
-
+                    FechaDeMensaje = item.FechaDeMensaje.HasValue ? TimeZoneInfo.ConvertTimeFromUtc(item.FechaDeMensaje.Value, userTimeZone) : null,
                     });  
 
 
