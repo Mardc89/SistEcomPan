@@ -11,6 +11,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Entidades;
 using Negocio.Implementacion;
 using Negocio.Interfaces;
+using Mapster;
+using Helpers;
 
 namespace IOC
 {
@@ -18,6 +20,9 @@ namespace IOC
     {
         public static void InyectarDependencias(this IServiceCollection services)
         {
+            services.AddMapster();
+            MappinConfig.Register(TypeAdapterConfig.GlobalSettings);
+
             services.AddScoped<IPedidoNew, PedidoRepository>();
             services.AddScoped<IProductoNew, ProductoRepository>();
             services.AddScoped<IDevolucionNew, DevolucionRepository>();

@@ -1,4 +1,6 @@
 ﻿using Entidades;
+using Mapster;
+using MapsterMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Negocio.Implementacion;
@@ -18,11 +20,13 @@ namespace SistEcomPan.Web.Controllers
         private readonly IMensajeService _mensajeService;
         private readonly IDestinatarioMensajeService _destinatarioMensajeService;
         private readonly ITimeZoneService _timeZoneService;
-        public MensajeController(IMensajeService mensajeService, IDestinatarioMensajeService destinatarioMensajeService, ITimeZoneService timeZoneService)
+        private readonly IMapper _mapper;
+        public MensajeController(IMensajeService mensajeService, IDestinatarioMensajeService destinatarioMensajeService, ITimeZoneService timeZoneService, IMapper mapper)
         {
             _mensajeService = mensajeService;
             _destinatarioMensajeService = destinatarioMensajeService;
             _timeZoneService = timeZoneService;
+            _mapper = mapper;
         }
         public IActionResult Index()
         {
@@ -240,86 +244,147 @@ namespace SistEcomPan.Web.Controllers
 
         }
 
+
         [HttpPost]
         public async Task<IActionResult> Crear([FromBody] VMRemitenteDestinatario modelo)
         {
             GenericResponse<VMMensaje> gResponse = new GenericResponse<VMMensaje>();
             TimeZoneInfo userTimeZone = _timeZoneService.GetTimeZone(Request);
 
-
             try
             {
-                List<Mensajes> listaMensajes = new List<Mensajes>();
-                List<VMRemitenteDestinatario> listaVMMensajes = new List<VMRemitenteDestinatario>();
-                List<DestinatarioMensaje> listaDestinoMensajes = new List<DestinatarioMensaje>();
-                List<VMDestinatarioMensaje> listaDestinoVMMensajes = new List<VMDestinatarioMensaje>();
-                if (modelo != null)
+                if (modelo == null)
                 {
-                    listaVMMensajes.Add(modelo);
-                    foreach (var item in listaVMMensajes)
-                    {
-                        listaMensajes.Add(new Mensajes
-                        {
-                            IdMensaje = Convert.ToInt32(modelo.RemitenteMensaje.IdMensaje),
-                            IdRemitente = await _mensajeService.IdRemitente(modelo.RemitenteMensaje.CorreoRemitente),
-                            Asunto = modelo.RemitenteMensaje.Asunto,
-                            Cuerpo = modelo.RemitenteMensaje.Cuerpo,
-                            Remitente = await _mensajeService.Remitente(modelo.RemitenteMensaje.CorreoRemitente),
-                            IdRespuestaMensaje = modelo.RemitenteMensaje.IdRespuestaMensaje
-                        });
-                    }
-
-                    foreach (var item in listaVMMensajes)
-                    {
-                        listaDestinoMensajes.Add(new DestinatarioMensaje
-                        {
-                            IdMensaje = Convert.ToInt32(modelo.DestinatarioMensaje.IdMensaje),
-                            IdDestinatario = await _mensajeService.IdDestinatario(modelo.DestinatarioMensaje.CorreoDestinatario),
-                            Destinatario = await _mensajeService.Destinatario(modelo.DestinatarioMensaje.CorreoDestinatario)
-                        });
-
-                    }
+                    gResponse.Estado = false;
+                    gResponse.Mensaje = "Modelo vacío";
+                    return Ok(gResponse);
                 }
-                                     
-               
-                Mensajes mensajeCreado = await _mensajeService.Registrar(listaMensajes.First(), listaDestinoMensajes.First());
 
-                List<VMMensaje> vmMensajelista = new List<VMMensaje>();
-                List<Mensajes> listMensajes = new List<Mensajes>();
-                if (mensajeCreado != null)
+                // 🔥 Mapster aquí
+                //var mensaje = modelo.Adapt<Mensajes>();
+                var mensaje = _mapper.Map<Mensajes>(modelo);
+                //var destinatario = modelo.Adapt<DestinatarioMensaje>();
+                var destinatario = _mapper.Map<DestinatarioMensaje>(modelo);
+
+                // Campos que requieren lógica async
+                mensaje.IdRemitente = await _mensajeService.IdRemitente(modelo.RemitenteMensaje.CorreoRemitente);
+                mensaje.Remitente = await _mensajeService.Remitente(modelo.RemitenteMensaje.CorreoRemitente);
+
+                destinatario.IdDestinatario = await _mensajeService.IdDestinatario(modelo.DestinatarioMensaje.CorreoDestinatario);
+                destinatario.Destinatario = await _mensajeService.Destinatario(modelo.DestinatarioMensaje.CorreoDestinatario);
+
+                var mensajeCreado = await _mensajeService.Registrar(mensaje, destinatario);
+
+                if (mensajeCreado == null)
                 {
-                    listMensajes.Add(mensajeCreado);
-                    foreach (var item in listMensajes)
-                    {                  
-
-                    vmMensajelista.Add(new VMMensaje
-                    {
-                        IdMensaje = Convert.ToInt32(mensajeCreado.IdMensaje),
-                        Asunto = mensajeCreado.Asunto,
-                        Cuerpo = mensajeCreado.Cuerpo,
-                        NombreDestinatario = await _destinatarioMensajeService.NombreDelDestinatario(mensajeCreado.IdMensaje),
-                        NombreRemitente = await _mensajeService.NombreDelRemitente(mensajeCreado.Remitente, mensajeCreado.IdRemitente),
-                    FechaDeMensaje = item.FechaDeMensaje.HasValue ? TimeZoneInfo.ConvertTimeFromUtc(item.FechaDeMensaje.Value, userTimeZone) : null,
-                    });  
-
-
-                    }
+                    gResponse.Estado = false;
+                    gResponse.Mensaje = "No se pudo crear el mensaje";
+                    return Ok(gResponse);
                 }
+
+                // 🔥 Mapster otra vez
+                //var vm = mensajeCreado.Adapt<VMMensaje>();
+                var vm = _mapper.Map<VMMensaje>(mensajeCreado);
+
+                vm.NombreDestinatario = await _destinatarioMensajeService.NombreDelDestinatario(mensajeCreado.IdMensaje);
+                vm.NombreRemitente = await _mensajeService.NombreDelRemitente(mensajeCreado.Remitente, mensajeCreado.IdRemitente);
+                vm.FechaDeMensaje = mensajeCreado.FechaDeMensaje.HasValue
+                    ? TimeZoneInfo.ConvertTimeFromUtc(mensajeCreado.FechaDeMensaje.Value, userTimeZone)
+                    : null;
 
                 gResponse.Estado = true;
-                gResponse.objeto = vmMensajelista.First();
-
+                gResponse.objeto = vm;
             }
             catch (Exception ex)
             {
                 gResponse.Estado = false;
                 gResponse.Mensaje = ex.Message;
-
             }
 
-            return StatusCode(StatusCodes.Status200OK, gResponse);
-
+            return Ok(gResponse);
         }
+
+
+        //[HttpPost]
+        //public async Task<IActionResult> Crear([FromBody] VMRemitenteDestinatario modelo)
+        //{
+        //    GenericResponse<VMMensaje> gResponse = new GenericResponse<VMMensaje>();
+        //    TimeZoneInfo userTimeZone = _timeZoneService.GetTimeZone(Request);
+
+
+        //    try
+        //    {
+        //        List<Mensajes> listaMensajes = new List<Mensajes>();
+        //        List<VMRemitenteDestinatario> listaVMMensajes = new List<VMRemitenteDestinatario>();
+        //        List<DestinatarioMensaje> listaDestinoMensajes = new List<DestinatarioMensaje>();
+        //        List<VMDestinatarioMensaje> listaDestinoVMMensajes = new List<VMDestinatarioMensaje>();
+        //        if (modelo != null)
+        //        {
+        //            listaVMMensajes.Add(modelo);
+        //            foreach (var item in listaVMMensajes)
+        //            {
+        //                listaMensajes.Add(new Mensajes
+        //                {
+        //                    IdMensaje = Convert.ToInt32(modelo.RemitenteMensaje.IdMensaje),
+        //                    IdRemitente = await _mensajeService.IdRemitente(modelo.RemitenteMensaje.CorreoRemitente),
+        //                    Asunto = modelo.RemitenteMensaje.Asunto,
+        //                    Cuerpo = modelo.RemitenteMensaje.Cuerpo,
+        //                    Remitente = await _mensajeService.Remitente(modelo.RemitenteMensaje.CorreoRemitente),
+        //                    IdRespuestaMensaje = modelo.RemitenteMensaje.IdRespuestaMensaje
+        //                });
+        //            }
+
+        //            foreach (var item in listaVMMensajes)
+        //            {
+        //                listaDestinoMensajes.Add(new DestinatarioMensaje
+        //                {
+        //                    IdMensaje = Convert.ToInt32(modelo.DestinatarioMensaje.IdMensaje),
+        //                    IdDestinatario = await _mensajeService.IdDestinatario(modelo.DestinatarioMensaje.CorreoDestinatario),
+        //                    Destinatario = await _mensajeService.Destinatario(modelo.DestinatarioMensaje.CorreoDestinatario)
+        //                });
+
+        //            }
+        //        }
+                                     
+               
+        //        Mensajes mensajeCreado = await _mensajeService.Registrar(listaMensajes.First(), listaDestinoMensajes.First());
+
+        //        List<VMMensaje> vmMensajelista = new List<VMMensaje>();
+        //        List<Mensajes> listMensajes = new List<Mensajes>();
+        //        if (mensajeCreado != null)
+        //        {
+        //            listMensajes.Add(mensajeCreado);
+        //            foreach (var item in listMensajes)
+        //            {                  
+
+        //            vmMensajelista.Add(new VMMensaje
+        //            {
+        //                IdMensaje = Convert.ToInt32(mensajeCreado.IdMensaje),
+        //                Asunto = mensajeCreado.Asunto,
+        //                Cuerpo = mensajeCreado.Cuerpo,
+        //                NombreDestinatario = await _destinatarioMensajeService.NombreDelDestinatario(mensajeCreado.IdMensaje),
+        //                NombreRemitente = await _mensajeService.NombreDelRemitente(mensajeCreado.Remitente, mensajeCreado.IdRemitente),
+        //            FechaDeMensaje = item.FechaDeMensaje.HasValue ? TimeZoneInfo.ConvertTimeFromUtc(item.FechaDeMensaje.Value, userTimeZone) : null,
+        //            });  
+
+
+        //            }
+        //        }
+
+        //        gResponse.Estado = true;
+        //        gResponse.objeto = vmMensajelista.First();
+
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        gResponse.Estado = false;
+        //        gResponse.Mensaje = ex.Message;
+
+        //    }
+
+        //    return StatusCode(StatusCodes.Status200OK, gResponse);
+
+        //}
 
         [HttpPut]
         public async Task<IActionResult> Editar([FromBody] VMRemitenteDestinatario modelo)
