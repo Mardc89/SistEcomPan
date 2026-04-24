@@ -289,7 +289,7 @@ namespace SistEcomPan.Web.Controllers
                 vm.FechaDeMensaje = mensajeCreado.FechaDeMensaje.HasValue
                     ? TimeZoneInfo.ConvertTimeFromUtc(mensajeCreado.FechaDeMensaje.Value, userTimeZone)
                     : null;
-                //            FechaDeMensaje = item.FechaDeMensaje.HasValue ? TimeZoneInfo.ConvertTimeFromUtc(item.FechaDeMensaje.Value, userTimeZone) : null,
+
 
                 gResponse.Estado = true;
                 gResponse.objeto = vm;
