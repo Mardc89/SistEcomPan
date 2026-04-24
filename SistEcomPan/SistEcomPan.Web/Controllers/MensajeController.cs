@@ -260,10 +260,8 @@ namespace SistEcomPan.Web.Controllers
                     return Ok(gResponse);
                 }
 
-                // 🔥 Mapster aquí
-                //var mensaje = modelo.Adapt<Mensajes>();
+
                 var mensaje = _mapper.Map<Mensajes>(modelo);
-                //var destinatario = modelo.Adapt<DestinatarioMensaje>();
                 var destinatario = _mapper.Map<DestinatarioMensaje>(modelo);
 
                 // Campos que requieren lógica async
@@ -291,6 +289,7 @@ namespace SistEcomPan.Web.Controllers
                 vm.FechaDeMensaje = mensajeCreado.FechaDeMensaje.HasValue
                     ? TimeZoneInfo.ConvertTimeFromUtc(mensajeCreado.FechaDeMensaje.Value, userTimeZone)
                     : null;
+                //            FechaDeMensaje = item.FechaDeMensaje.HasValue ? TimeZoneInfo.ConvertTimeFromUtc(item.FechaDeMensaje.Value, userTimeZone) : null,
 
                 gResponse.Estado = true;
                 gResponse.objeto = vm;

@@ -1,11 +1,18 @@
 using IOC;
-
-
+using Mapster;
+using MapsterMapper;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using SistEcomPan.Web.Helpers;
 using SistEcomPan.Web.Tools.Handler;
 
 
 var builder = WebApplication.CreateBuilder(args);
+
+var config = TypeAdapterConfig.GlobalSettings;
+MappinConfig.Register(config);
+
+builder.Services.AddSingleton(config);
+builder.Services.AddScoped<IMapper, ServiceMapper>();
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();

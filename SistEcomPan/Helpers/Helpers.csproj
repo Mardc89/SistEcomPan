@@ -12,7 +12,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Entidades\Entidades.csproj" />
     <ProjectReference Include="..\SistEcomPan.Web\SistEcomPan.Web.csproj" />
+
+
   </ItemGroup>
+
+
 
 </Project>
