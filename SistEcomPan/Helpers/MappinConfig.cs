@@ -20,6 +20,18 @@ namespace Helpers
 
             config.NewConfig<VMRemitenteDestinatario, DestinatarioMensaje>()
                 .Map(dest => dest.IdMensaje, src => src.DestinatarioMensaje.IdMensaje);
+
+            config.NewConfig<VMMensaje, Mensajes>().TwoWays();
+
+            config.NewConfig<Mensajes, VMMensaje>()
+                .Map(dest => dest.IdMensaje, src => src.IdMensaje)
+                .Map(dest => dest.Remitente, src => src.Remitente)
+                .Map(dest => dest.Cuerpo, src => src.Cuerpo)
+                .Map(dest => dest.IdRespuestaMensaje, src => src.IdRespuestaMensaje)
+                .Map(dest => dest.Asunto, src => src.Asunto)
+                .Ignore(dest => dest.FechaDeMensaje);
+
+
         }
     }
 }

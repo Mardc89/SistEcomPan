@@ -15,6 +15,16 @@ namespace SistEcomPan.Web.Helpers
 
             config.NewConfig<VMRemitenteDestinatario, DestinatarioMensaje>()
                 .Map(dest => dest.IdMensaje, src => src.DestinatarioMensaje.IdMensaje);
+
+            config.NewConfig<Mensajes,VMMensaje>()
+                .Map(dest => dest.IdMensaje, src => src.IdMensaje)
+                .Map(dest => dest.Asunto, src => src.Asunto)
+                .Map(dest => dest.Cuerpo, src => src.Cuerpo)
+                .Ignore(dest => dest.NombreDestinatario)
+                .Ignore(dest => dest.NombreRemitente)
+                .Ignore(dest => dest.CorreoRemitente)
+                .Ignore(dest => dest.CorreoDestinatario)
+                .Ignore(dest => dest.FechaDeMensaje);
         }
     }
 }

@@ -4,6 +4,7 @@ using Negocio.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -298,6 +299,17 @@ namespace Negocio.Implementacion
             return MisMensajes.ToList();
 
 
+        }
+
+        public async Task<Mensajes> EnvioMensajes(Mensajes mensaje, DestinatarioMensaje destinatario,string correoRemitente,string correoDestino)
+        {
+            mensaje.IdRemitente = await IdRemitente(correoRemitente);
+            mensaje.Remitente = await Remitente(correoRemitente);
+
+            destinatario.IdDestinatario = await IdDestinatario(correoDestino);
+            destinatario.Destinatario = await Destinatario(correoDestino);
+
+            return await Registrar(mensaje, destinatario);
         }
     }
 }

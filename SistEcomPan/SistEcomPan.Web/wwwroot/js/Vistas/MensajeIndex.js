@@ -65,7 +65,14 @@ $(document).ready(function () {
             { "data": "idMensaje", responsivePriority: 100, "searchable": false },
             { "data": "asunto", responsivePriority: 100 },
             { "data": "cuerpo", responsivePriority: 100 },
-            { "data": "nombreRemitente", responsivePriority: 1 },
+            {
+                "data": "nombreRemitente", render: function (data) {
+                    if (data != null)
+                        NombreDelRemitente = data;
+                    return NombreDelRemitente;
+                }
+            },
+     /*       { "data": "nombreRemitente", responsivePriority: 1 },*/
             {
                 "data": "nombreDestinatario", render: function (data) {
                     if (data!=null) 

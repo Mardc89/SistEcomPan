@@ -26,7 +26,9 @@ namespace Negocio.Interfaces
         Task<int> IdRemitente(string correo);
         Task<string> Destinatario(string correo);
         Task<string> Remitente(string correo);
-      
+
+        Task<Mensajes> EnvioMensajes(Mensajes entidad, DestinatarioMensaje destino,string correoInicio,string correoFinal);
+
 
     }
 }
