@@ -525,7 +525,8 @@ $("#btnGuardarMensaje").click(function () {
             })
             .then(responseJson => {
                 if (responseJson.estado) {
-                    tablaDataMensaje.row.add(responseJson.objeto).draw(false)
+                    /*    tablaDataMensaje.row.add(responseJson.objeto).draw(false)*/
+                    tablaDataMensaje.ajax.reload(null, false);
                     $("#modalDataMensaje").modal("hide")
                     swal("Listo", "el mensaje fue creado", "success")
                 }
@@ -549,7 +550,8 @@ $("#btnGuardarMensaje").click(function () {
 
                 if (responseJson.estado) {
 
-                    tablaDataMensaje.row(filaSeleccionada).data(responseJson.objeto).draw(false);
+                    /*   tablaDataMensaje.row(filaSeleccionada).data(responseJson.objeto).draw(false);*/
+                    tablaDataMensaje.ajax.reload(null, false);
                     filaSeleccionada = null;
                     $("#modalDataMensaje").modal("hide")
                     swal("Listo", "el mensaje fue modificado", "success")

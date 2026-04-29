@@ -42,71 +42,142 @@ namespace SistEcomPan.Web.Controllers
         }
 
 
-        [HttpGet]
-        public async Task<IActionResult> ObtenerMisMensajes(string searchTerm, string busqueda = "")
-        {
-    
-            TimeZoneInfo userTimeZone=_timeZoneService.GetTimeZone(Request);
-            DateTime? fechaBusquedaUtc =_timeZoneService.ConvertirFecha(busqueda,userTimeZone);
-            //var MisMensajes = mensajes.Where(p =>
-            //string.IsNullOrWhiteSpace(busqueda) || p.Asunto.ToLower().Contains(busqueda.ToLower()) ||
-            //p.FechaDeMensaje.Date == (DateTime.TryParse(busqueda, out DateTime fechaBusqueda) ? fechaBusqueda.Date : p.FechaDeMensaje.Date)
-            //);
-            var MisMensajes = await _mensajeService.BuscarFechas(searchTerm, fechaBusquedaUtc, busqueda);
-
-            List<VMMensaje> vmMensajes = new List<VMMensaje>();
-
-            foreach (var item in MisMensajes)
-            {
-                vmMensajes.Add(new VMMensaje
-                {
-                    IdMensaje = item.IdMensaje,
-                    Cuerpo = Convert.ToString(item.Cuerpo),
-                    IdRespuestaMensaje = item.IdRespuestaMensaje,
-                    Asunto = Convert.ToString(item.Asunto),
-                    NombreDestinatario = await _destinatarioMensajeService.NombreDelDestinatario(item.IdMensaje),
-                    NombreRemitente = await _mensajeService.NombreDelRemitente(item.Remitente, item.IdRemitente),
-                    FechaDeMensaje = item.FechaDeMensaje.HasValue ? TimeZoneInfo.ConvertTimeFromUtc(item.FechaDeMensaje.Value, userTimeZone) : null,
-                    CorreoRemitente = await _mensajeService.correoRemitente(item.Remitente, item.IdRemitente),
-                    CorreoDestinatario = await _destinatarioMensajeService.correoDestinatario(item.IdMensaje)
-                });
-            }
-
-
-            // Paginación
-            var misMensajesPaginados = vmMensajes.ToList();
-
-            return StatusCode(StatusCodes.Status200OK, new { data = misMensajesPaginados, totalItems = vmMensajes.Count() });
+        [HttpGet] public async Task<IActionResult> ObtenerMisMensajes(string searchTerm, string busqueda = "") 
+        { 
+            TimeZoneInfo userTimeZone = _timeZoneService.GetTimeZone(Request); 
+            DateTime? fechaBusquedaUtc = _timeZoneService.ConvertirFecha(busqueda, userTimeZone); 
+            var misMensajes = await _mensajeService.BuscarFechas(searchTerm, fechaBusquedaUtc, busqueda); 
+            if (misMensajes == null || !misMensajes.Any()) 
+            { 
+                return Ok(new { data = Array.Empty<VMMensaje>(), totalItems = 0 }); 
+            } 
+            var tareas = misMensajes.Select(async item =>
+            { 
+                var vm = _mapper.Map<VMMensaje>(item); 
+                vm.NombreDestinatario = await _destinatarioMensajeService.NombreDelDestinatario(item.IdMensaje); 
+                vm.NombreRemitente = await _mensajeService.NombreDelRemitente(item.Remitente, item.IdRemitente); 
+                vm.CorreoRemitente = await _mensajeService.correoRemitente(item.Remitente, item.IdRemitente); 
+                vm.CorreoDestinatario = await _destinatarioMensajeService.correoDestinatario(item.IdMensaje); 
+                vm.FechaDeMensaje = item.FechaDeMensaje.HasValue ? TimeZoneInfo.ConvertTimeFromUtc(item.FechaDeMensaje.Value, userTimeZone) : null;
+                return vm; 
+            }); 
+            var resultado = await Task.WhenAll(tareas); 
+            var data = resultado.OrderByDescending(x => x.IdMensaje).ToList(); 
+            return Ok(new { data, totalItems = data.Count }); 
         }
+
+        //[HttpGet]
+        //public async Task<IActionResult> ObtenerMisMensajes(string searchTerm, string busqueda = "")
+        //{
+
+        //    TimeZoneInfo userTimeZone=_timeZoneService.GetTimeZone(Request);
+        //    DateTime? fechaBusquedaUtc =_timeZoneService.ConvertirFecha(busqueda,userTimeZone);
+        //    //var MisMensajes = mensajes.Where(p =>
+        //    //string.IsNullOrWhiteSpace(busqueda) || p.Asunto.ToLower().Contains(busqueda.ToLower()) ||
+        //    //p.FechaDeMensaje.Date == (DateTime.TryParse(busqueda, out DateTime fechaBusqueda) ? fechaBusqueda.Date : p.FechaDeMensaje.Date)
+        //    //);
+        //    var MisMensajes = await _mensajeService.BuscarFechas(searchTerm, fechaBusquedaUtc, busqueda);
+
+        //    List<VMMensaje> vmMensajes = new List<VMMensaje>();
+
+        //    foreach (var item in MisMensajes)
+        //    {
+        //        vmMensajes.Add(new VMMensaje
+        //        {
+        //            IdMensaje = item.IdMensaje,
+        //            Cuerpo = Convert.ToString(item.Cuerpo),
+        //            IdRespuestaMensaje = item.IdRespuestaMensaje,
+        //            Asunto = Convert.ToString(item.Asunto),
+        //            NombreDestinatario = await _destinatarioMensajeService.NombreDelDestinatario(item.IdMensaje),
+        //            NombreRemitente = await _mensajeService.NombreDelRemitente(item.Remitente, item.IdRemitente),
+        //            FechaDeMensaje = item.FechaDeMensaje.HasValue ? TimeZoneInfo.ConvertTimeFromUtc(item.FechaDeMensaje.Value, userTimeZone) : null,
+        //            CorreoRemitente = await _mensajeService.correoRemitente(item.Remitente, item.IdRemitente),
+        //            CorreoDestinatario = await _destinatarioMensajeService.correoDestinatario(item.IdMensaje)
+        //        });
+        //    }
+
+
+        //    // Paginación
+        //    var misMensajesPaginados = vmMensajes.ToList();
+
+        //    return StatusCode(StatusCodes.Status200OK, new { data = misMensajesPaginados, totalItems = vmMensajes.Count() });
+        //}
+
+        //[HttpGet]
+        //public async Task<IActionResult> ObtenerMensajeDeAsunto(string asunto)
+        //{
+        //    string asuntoAbuscar=asunto.Contains(":")?asunto.Substring(asunto.IndexOf(":") + 1).Trim():asunto;
+        //    TimeZoneInfo userTimeZone = _timeZoneService.GetTimeZone(Request);
+        //    var ListaDeMensajes = await _mensajeService.Lista();
+        //    var MisMensajes = ListaDeMensajes.Where(p => p.Asunto == asuntoAbuscar || p.Asunto.Contains(asuntoAbuscar)).ToList();
+
+        //    List<VMMensaje> vmMensajes = new List<VMMensaje>();
+
+        //    foreach (var item in MisMensajes)
+        //    {
+        //        vmMensajes.Add(new VMMensaje
+        //        {
+        //            IdMensaje = item.IdMensaje,
+        //            Cuerpo = Convert.ToString(item.Cuerpo),
+        //            NombreDestinatario = await _destinatarioMensajeService.NombreDelDestinatario(item.IdMensaje),
+        //            NombreRemitente = await _mensajeService.NombreDelRemitente(item.Remitente, item.IdRemitente),
+        //            FechaDeMensaje = item.FechaDeMensaje.HasValue ? TimeZoneInfo.ConvertTimeFromUtc(item.FechaDeMensaje.Value, userTimeZone) : null,
+
+        //        });
+        //    }
+
+        //    var mensajeAsunto = vmMensajes.ToList();
+
+        //    return StatusCode(StatusCodes.Status200OK, new { data = mensajeAsunto, totalItems = vmMensajes.Count() });
+        //}
 
         [HttpGet]
         public async Task<IActionResult> ObtenerMensajeDeAsunto(string asunto)
         {
-            string asuntoAbuscar=asunto.Contains(":")?asunto.Substring(asunto.IndexOf(":") + 1).Trim():asunto;
+            if (string.IsNullOrWhiteSpace(asunto))
+                return BadRequest(new { mensaje = "Debe ingresar un asunto." });
+
+            string asuntoAbuscar = asunto.Contains(":")
+                ? asunto[(asunto.IndexOf(":") + 1)..].Trim()
+                : asunto.Trim();
+
             TimeZoneInfo userTimeZone = _timeZoneService.GetTimeZone(Request);
-            var ListaDeMensajes = await _mensajeService.Lista();
-            var MisMensajes = ListaDeMensajes.Where(p => p.Asunto == asuntoAbuscar || p.Asunto.Contains(asuntoAbuscar)).ToList();
 
-            List<VMMensaje> vmMensajes = new List<VMMensaje>();
+            var listaMensajes = await _mensajeService.Lista();
 
-            foreach (var item in MisMensajes)
+            var mensajesFiltrados = listaMensajes
+                .Where(x =>
+                    !string.IsNullOrWhiteSpace(x.Asunto) &&
+                    (x.Asunto.Equals(asuntoAbuscar, StringComparison.OrdinalIgnoreCase) ||
+                     x.Asunto.Contains(asuntoAbuscar, StringComparison.OrdinalIgnoreCase)))
+                .OrderBy(x => x.FechaDeMensaje)
+                .ToList();
+
+            var tareas = mensajesFiltrados.Select(async item =>
             {
-                vmMensajes.Add(new VMMensaje
-                {
-                    IdMensaje = item.IdMensaje,
-                    Cuerpo = Convert.ToString(item.Cuerpo),
-                    NombreDestinatario = await _destinatarioMensajeService.NombreDelDestinatario(item.IdMensaje),
-                    NombreRemitente = await _mensajeService.NombreDelRemitente(item.Remitente, item.IdRemitente),
-                    FechaDeMensaje = item.FechaDeMensaje.HasValue ? TimeZoneInfo.ConvertTimeFromUtc(item.FechaDeMensaje.Value, userTimeZone) : null,
+                var vm = _mapper.Map<VMMensaje>(item);
 
-                });
-            }
+                vm.NombreDestinatario =
+                    await _destinatarioMensajeService.NombreDelDestinatario(item.IdMensaje);
 
-            var mensajeAsunto = vmMensajes.ToList();
+                vm.NombreRemitente =
+                    await _mensajeService.NombreDelRemitente(item.Remitente, item.IdRemitente);
 
-            return StatusCode(StatusCodes.Status200OK, new { data = mensajeAsunto, totalItems = vmMensajes.Count() });
+                vm.FechaDeMensaje = item.FechaDeMensaje.HasValue
+                    ? TimeZoneInfo.ConvertTimeFromUtc(item.FechaDeMensaje.Value, userTimeZone)
+                    : null;
+
+                return vm;
+            });
+
+            var resultado = await Task.WhenAll(tareas);
+
+            return Ok(new
+            {
+                data = resultado,
+                totalItems = resultado.Length
+            });
         }
-
 
 
         //[HttpGet]
@@ -427,7 +498,9 @@ namespace SistEcomPan.Web.Controllers
 
                 vm.NombreDestinatario = await _destinatarioMensajeService.NombreDelDestinatario(mensajeCreado.IdMensaje);
                 vm.NombreRemitente = await _mensajeService.NombreDelRemitente(mensajeCreado.Remitente, mensajeCreado.IdRemitente);
-                vm.FechaDeMensaje = mensajeCreado.FechaDeMensaje?.ToUniversalTime();
+                vm.FechaDeMensaje = mensajeCreado.FechaDeMensaje.HasValue
+                    ? TimeZoneInfo.ConvertTimeFromUtc(mensajeCreado.FechaDeMensaje.Value, userTimeZone)
+                    : null;
 
 
                 gResponse.Estado = true;
@@ -588,7 +661,7 @@ namespace SistEcomPan.Web.Controllers
         public async Task<IActionResult> Editar([FromBody] VMRemitenteDestinatario modelo)
         {
             var gResponse = new GenericResponse<VMMensaje>();
-
+            TimeZoneInfo userTimeZone = _timeZoneService.GetTimeZone(Request);
             try
             {
                 if (modelo == null || modelo.RemitenteMensaje == null)
@@ -600,6 +673,9 @@ namespace SistEcomPan.Web.Controllers
                 var mensaje = _mapper.Map<Mensajes>(modelo.RemitenteMensaje);
                 var mensajeEditado = await _mensajeService.Editar(mensaje);
                 var vmMensaje =_mapper.Map<VMMensaje>(mensajeEditado);
+                vmMensaje.FechaDeMensaje= mensajeEditado.FechaDeMensaje.HasValue
+                    ? TimeZoneInfo.ConvertTimeFromUtc(mensajeEditado.FechaDeMensaje.Value, userTimeZone)
+                    : null;
 
                 gResponse.Estado = true;
                 gResponse.objeto = vmMensaje;

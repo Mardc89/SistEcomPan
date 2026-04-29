@@ -305,9 +305,11 @@ namespace Negocio.Implementacion
         {
             mensaje.IdRemitente = await IdRemitente(correoRemitente);
             mensaje.Remitente = await Remitente(correoRemitente);
+            mensaje.FechaDeMensaje = DateTime.UtcNow;
 
             destinatario.IdDestinatario = await IdDestinatario(correoDestino);
             destinatario.Destinatario = await Destinatario(correoDestino);
+
 
             return await Registrar(mensaje, destinatario);
         }
