@@ -138,84 +138,118 @@ namespace SistEcomPan.Web.Helpers
                 .Ignore(dest => dest.Destinatario);
 
 
-            // =====================================================
+            ConfigPago(config);
+            ConfigDetallePago(config);
+
+        }
+
+        private static void ConfigPago(TypeAdapterConfig config)
+        {
+            // ---------------------------------------------
             // VMPago -> Pagos
-            // Para Guardar / Editar
-            // =====================================================
+            // Guardar / Editar
+            // ---------------------------------------------
             config.NewConfig<VMPago, Pagos>()
-                .Map(dest => dest.IdPago, src => src.IdPago)
-                .Map(dest => dest.IdPedido, src => src.IdPedido)
-                .Map(dest => dest.MontoDePedido, src => ToDecimal(src.MontoDePedido))
-                .Map(dest => dest.Descuento, src => ToDecimal(src.Descuento))
-                .Map(dest => dest.MontoTotalDePago, src => ToNullableDecimal(src.MontoTotalDePago))
-                .Map(dest => dest.MontoDeuda, src => ToDecimal(src.MontoDeuda))
-                .Map(dest => dest.Estado, src => src.Estado)
-                .Map(dest => dest.DetallePago, src => src.DetallePago);
+                .MapWith(src => new Pagos
+                {
+                    IdPago = src.IdPago,
+                    IdPedido = src.IdPedido,
+                    MontoDePedido = ToDecimal(src.MontoDePedido),
+                    Descuento = ToDecimal(src.Descuento),
+                    MontoTotalDePago = ToNullableDecimal(src.MontoTotalDePago),
+                    MontoDeuda = ToDecimal(src.MontoDeuda),
+                    Estado = src.Estado,
+                    DetallePago = src.DetallePago == null
+                        ? new List<DetallePago>()
+                        : src.DetallePago.Adapt<List<DetallePago>>()
+                });
 
-            config.NewConfig<VMPago, Pagos>()
-            .MapWith(src => new Pagos
-            {
-                IdPedido = src.IdPedido,
-                MontoDePedido = Convert.ToDecimal(src.MontoDePedido),
-                Descuento = Convert.ToDecimal(src.Descuento),
-                MontoTotalDePago = Convert.ToDecimal(src.MontoTotalDePago),
-                MontoDeuda = Convert.ToDecimal(src.MontoDeuda),
-                Estado = src.Estado,
-                DetallePago = src.DetallePago.Adapt<List<DetallePago>>()
-            });
-
-
-            // =====================================================
+            // ---------------------------------------------
             // Pagos -> VMPago
-            // Para Lista / Guardar / Editar / ObtenerMisPagos / ObtenerPagoPedido
-            // =====================================================
-            config.NewConfig<Pagos, VMPago>()
+            // Lista / Guardar / Editar / ObtenerPagos
+            // ---------------------------------------------
+            TypeAdapterConfig<Pagos, VMPago>
+                .NewConfig()
                 .Map(dest => dest.IdPago, src => src.IdPago)
                 .Map(dest => dest.IdPedido, src => src.IdPedido)
                 .Map(dest => dest.MontoDePedido, src => src.MontoDePedido.ToString())
                 .Map(dest => dest.Descuento, src => src.Descuento.ToString())
-                .Map(dest => dest.MontoTotalDePago, src => src.MontoTotalDePago.HasValue ? src.MontoTotalDePago.Value.ToString() : "0")
+                .Map(dest => dest.MontoTotalDePago,
+                    src => src.MontoTotalDePago.HasValue
+                        ? src.MontoTotalDePago.Value.ToString()
+                        : "0")
                 .Map(dest => dest.MontoDeuda, src => src.MontoDeuda.ToString())
                 .Map(dest => dest.FechaPago, src => src.FechaDePago)
                 .Map(dest => dest.Estado, src => src.Estado)
                 .Map(dest => dest.DetallePago, src => src.DetallePago)
 
-                // Campos externos (manuales en controlador)
+                // Campos externos
                 .Ignore(dest => dest.NombreCliente)
                 .Ignore(dest => dest.CodigoPedido)
                 .Ignore(dest => dest.FechaPedido);
         }
 
-        private static void ConfigDetallePago()
-        {
-            // =====================================================
-            // VMDetallePago -> DetallePago
-            // Para Guardar / Editar
-            // =====================================================
-            TypeAdapterConfig<VMDetallePago, DetallePago>
-                .NewConfig()
-                .Map(dest => dest.IdDetallePago, src => src.IdDetallePago)
-                .Map(dest => dest.IdPago, src => src.IdPago)
-                .Map(dest => dest.MontoAPagar, src => ToNullableDecimal(src.MontoAPagar))
-                .Map(dest => dest.PagoDelCliente, src => ToNullableDecimal(src.PagoDelCliente))
-                .Map(dest => dest.DeudaDelCliente, src => ToDecimal(src.DeudaDelCliente))
-                .Map(dest => dest.CambioDelCliente, src => ToDecimal(src.CambioDelCliente))
-                .Map(dest => dest.FechaPago, src => src.FechaPago);
 
-            // =====================================================
+
+
+
+        // =====================================================
+        // DETALLE PAGO
+        // =====================================================
+        private static void ConfigDetallePago(TypeAdapterConfig config)
+        {
+            // ---------------------------------------------
+            // VMDetallePago -> DetallePago
+            // ---------------------------------------------
+            config.NewConfig<VMDetallePago, DetallePago>()
+                .MapWith(src => new DetallePago
+                {
+                    IdDetallePago = src.IdDetallePago,
+                    IdPago = src.IdPago,
+                    MontoAPagar = ToNullableDecimal(src.MontoAPagar),
+                    PagoDelCliente = ToNullableDecimal(src.PagoDelCliente),
+                    DeudaDelCliente = ToDecimal(src.DeudaDelCliente),
+                    CambioDelCliente = ToDecimal(src.CambioDelCliente),
+                    FechaPago = src.FechaPago
+                });
+
+            // ---------------------------------------------
             // DetallePago -> VMDetallePago
-            // Para ObtenerMiDetallePago / Guardar / Editar
-            // =====================================================
+            // ---------------------------------------------
             TypeAdapterConfig<DetallePago, VMDetallePago>
                 .NewConfig()
                 .Map(dest => dest.IdDetallePago, src => src.IdDetallePago)
                 .Map(dest => dest.IdPago, src => src.IdPago)
-                .Map(dest => dest.MontoAPagar, src => src.MontoAPagar.HasValue ? src.MontoAPagar.Value.ToString() : "")
-                .Map(dest => dest.PagoDelCliente, src => src.PagoDelCliente.HasValue ? src.PagoDelCliente.Value.ToString() : "")
-                .Map(dest => dest.DeudaDelCliente, src => src.DeudaDelCliente.ToString())
-                .Map(dest => dest.CambioDelCliente, src => src.CambioDelCliente.ToString())
+                .Map(dest => dest.MontoAPagar,
+                    src => src.MontoAPagar.HasValue
+                        ? src.MontoAPagar.Value.ToString()
+                        : "")
+                .Map(dest => dest.PagoDelCliente,
+                    src => src.PagoDelCliente.HasValue
+                        ? src.PagoDelCliente.Value.ToString()
+                        : "")
+                .Map(dest => dest.DeudaDelCliente,
+                    src => src.DeudaDelCliente.ToString())
+                .Map(dest => dest.CambioDelCliente,
+                    src => src.CambioDelCliente.ToString())
                 .Map(dest => dest.FechaPago, src => src.FechaPago);
+        }
 
+        // =====================================================
+        // HELPERS
+        // =====================================================
+        private static decimal ToDecimal(string? value)
+        {
+            return decimal.TryParse(value, out var result)
+                ? result
+                : 0;
+        }
+
+        private static decimal? ToNullableDecimal(string? value)
+        {
+            return decimal.TryParse(value, out var result)
+                ? result
+                : null;
         }
     }
 }

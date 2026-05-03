@@ -473,13 +473,6 @@ namespace SistEcomPan.Web.Controllers
 
                 var mensaje = _mapper.Map<Mensajes>(modelo);
                 var destinatario = _mapper.Map<DestinatarioMensaje>(modelo);
-
-                // Campos que requieren lógica async
-                //mensaje.IdRemitente = await _mensajeService.IdRemitente(modelo.RemitenteMensaje.CorreoRemitente);
-                //mensaje.Remitente = await _mensajeService.Remitente(modelo.RemitenteMensaje.CorreoRemitente);
-
-                //destinatario.IdDestinatario = await _mensajeService.IdDestinatario(modelo.DestinatarioMensaje.CorreoDestinatario);
-                //destinatario.Destinatario = await _mensajeService.Destinatario(modelo.DestinatarioMensaje.CorreoDestinatario);
                 var correoRemitente = modelo.RemitenteMensaje.CorreoRemitente;
                 var correoDestinatario = modelo.DestinatarioMensaje.CorreoDestinatario;
 
@@ -492,8 +485,6 @@ namespace SistEcomPan.Web.Controllers
                     return Ok(gResponse);
                 }
 
-                // 🔥 Mapster otra vez
-                //var vm = mensajeCreado.Adapt<VMMensaje>();
                 var vm = _mapper.Map<VMMensaje>(mensajeCreado);
 
                 vm.NombreDestinatario = await _destinatarioMensajeService.NombreDelDestinatario(mensajeCreado.IdMensaje);
