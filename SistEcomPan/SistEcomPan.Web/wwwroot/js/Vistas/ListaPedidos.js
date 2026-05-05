@@ -152,8 +152,8 @@ document.addEventListener("DOMContentLoaded", function () {
             document.getElementById('txtMontoPedido').value = montoTotal;
             document.getElementById('txtEstado').value = estado;
             document.getElementById('txtFechaPedido').value = fecha;
-            document.getElementById('txtMontoPago').value = montoTotal;
-            document.getElementById('txtDeuda').value = montoTotal;
+            //document.getElementById('txtMontoPago').value = montoTotal;
+            //document.getElementById('txtDeuda').value = montoTotal;
             ActivarCampos();
             VerificarEstado();
         
