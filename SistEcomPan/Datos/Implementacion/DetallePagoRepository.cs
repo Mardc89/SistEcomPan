@@ -76,8 +76,8 @@ namespace Datos.Implementacion
                             PagoDelCliente = Convert.ToDecimal(dr["PagoDelCliente"]),
                             DeudaDelCliente = Convert.ToDecimal(dr["DeudaDelCliente"]),
                             CambioDelCliente = Convert.ToDecimal(dr["CambioDelCliente"]),
-                            FechaPago = dr.IsDBNull(dr.GetOrdinal("FechaPago")) ? null : DateTime.SpecifyKind(
-                            dr.GetDateTime(dr.GetOrdinal("FechaPago")), DateTimeKind.Utc),
+                            FechaDetallePago = dr.IsDBNull(dr.GetOrdinal("FechaDetallePago")) ? null : DateTime.SpecifyKind(
+                            dr.GetDateTime(dr.GetOrdinal("FechaDetallePago")), DateTimeKind.Utc),
                            
                         });
                     }

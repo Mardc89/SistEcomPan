@@ -8,7 +8,7 @@
         public string? PagoDelCliente { get; set; }
         public string? DeudaDelCliente { get; set; }
         public string? CambioDelCliente{ get; set; }
-        public DateTime? FechaPago { get; set; }
+        public DateTime? FechaDetallePago { get; set; }
 
     }
 }

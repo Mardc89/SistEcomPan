@@ -109,61 +109,142 @@ function Estado() {
 }
 
 
+
 document.addEventListener("DOMContentLoaded", function () {
-    document.getElementById('PedidoBuscado').addEventListener('click', function (event) {
 
+    const tabla = document.getElementById('PedidoBuscado');
 
-        if (event.target.tagName == 'TD') {
-            debugger
-            const fila = event.target.parentNode;
-            const idPedido = fila.cells[0].textContent;
-            const codigo = fila.cells[1].textContent;
-            const nombres = fila.cells[2].textContent;
-            const montoTotal = fila.cells[3].textContent;
-            let estado = fila.cells[4].textContent;
-            const fecha = fila.cells[5].textContent;
-            if (estado.toString() == "Nuevo") { estado = "Sin Efectuar" };
+    tabla.addEventListener('click', async function (event) {
 
-            fetch(`/Pago/ObtenerPagoPedido?searchTerm=${idPedido}`)
-                .then(response => response.json())
-                .then(data => {
-                    const pagos = data.data; // Array de productos obtenidos
-                    if (pagos && pagos.length > 0) {
-                        const Pagos = pagos[0];
-                        /* const totalItems = data.totalItems; */
-                        /*  const nombre = data.nombresCompletos;*/
-                        // Actualizar la tabla modal con los productos obtenidos
-                        document.getElementById('txtDescuento').value = Pagos.descuento;
-                        document.getElementById('txtMontoPago').value = Pagos.montoDeuda;
-                        document.getElementById('txtDeuda').value = Pagos.montoDeuda;
-                        document.getElementById('txtIdPago').value = Pagos.idPago;
-                        document.getElementById('txtPagoAPagar').value = Pagos.montoDeuda;
-                    } else {
-                        console.error("No se encontraron Pagos");
-                    }
-                })
-                .catch(error => {
-                    console.error('Error al buscar Pagos:', error);
-                });
-      
-            document.getElementById('txtIdPedido').value = idPedido;
-            document.getElementById('txtCodigoPedido').value = codigo;
-            document.getElementById('txtNombres').value = nombres;
-            document.getElementById('txtMontoPedido').value = montoTotal;
-            document.getElementById('txtEstado').value = estado;
-            document.getElementById('txtFechaPedido').value = fecha;
-            //document.getElementById('txtMontoPago').value = montoTotal;
-            //document.getElementById('txtDeuda').value = montoTotal;
+        if (event.target.tagName !== 'TD') return;
+
+        const fila = event.target.parentNode;
+
+        // 🔹 1. Obtener datos de la fila
+        const pedido = {
+            idPedido: fila.cells[0].textContent,
+            codigo: fila.cells[1].textContent,
+            nombres: fila.cells[2].textContent,
+            montoTotal: parseFloat(fila.cells[3].textContent),
+            estado: fila.cells[4].textContent === "Nuevo" ? "Sin Efectuar" : fila.cells[4].textContent,
+            fecha: fila.cells[5].textContent
+        };
+
+        try {
+            // 🔹 2. Obtener pago desde backend
+            const response = await fetch(`/Pago/ObtenerPagoPedido?searchTerm=${pedido.idPedido}`);
+            const data = await response.json();
+            const pagos = data.data;
+
+            let pago = null;
+
+            if (pagos && pagos.length > 0) {
+                pago = pagos[0];
+            }
+
+            // 🔹 3. Cargar datos en el formulario
+            cargarFormulario(pedido, pago);
+
+            // 🔹 4. UI
             ActivarCampos();
             VerificarEstado();
-        
+
             $("#modalDataPedidos").modal("hide");
+
+        } catch (error) {
+            console.error('Error al obtener pagos:', error);
         }
 
-
-
     });
+
 });
+
+
+// 🔹 Función para cargar formulario (UN SOLO PUNTO DE VERDAD)
+function cargarFormulario(pedido, pago) {
+
+    document.getElementById('txtIdPedido').value = pedido.idPedido;
+    document.getElementById('txtCodigoPedido').value = pedido.codigo;
+    document.getElementById('txtNombres').value = pedido.nombres;
+    document.getElementById('txtMontoPedido').value = pedido.montoTotal;
+    document.getElementById('txtEstado').value = pedido.estado;
+    document.getElementById('txtFechaPedido').value = pedido.fecha;
+
+    if (pago) {
+        // 👉 Caso: ya existe pago
+        document.getElementById('txtDescuento').value = pago.descuento;
+        document.getElementById('txtMontoPago').value = pago.montoDeuda;
+        document.getElementById('txtDeuda').value = pago.montoDeuda;
+        document.getElementById('txtIdPago').value = pago.idPago;
+        document.getElementById('txtPagoAPagar').value = pago.montoDeuda;
+    } else {
+        // 👉 Caso: pedido nuevo
+        document.getElementById('txtDescuento').value = "0.00";
+        document.getElementById('txtMontoPago').value = pedido.montoTotal;
+        document.getElementById('txtDeuda').value = pedido.montoTotal;
+        document.getElementById('txtIdPago').value = 0;
+        document.getElementById('txtPagoAPagar').value = pedido.montoTotal;
+    }
+}
+
+
+
+
+//document.addEventListener("DOMContentLoaded", function () {
+//    document.getElementById('PedidoBuscado').addEventListener('click', function (event) {
+
+
+//        if (event.target.tagName == 'TD') {
+//            debugger
+//            const fila = event.target.parentNode;
+//            const idPedido = fila.cells[0].textContent;
+//            const codigo = fila.cells[1].textContent;
+//            const nombres = fila.cells[2].textContent;
+//            const montoTotal = fila.cells[3].textContent;
+//            let estado = fila.cells[4].textContent;
+//            const fecha = fila.cells[5].textContent;
+//            if (estado.toString() == "Nuevo") { estado = "Sin Efectuar" };
+
+//            fetch(`/Pago/ObtenerPagoPedido?searchTerm=${idPedido}`)
+//                .then(response => response.json())
+//                .then(data => {
+//                    const pagos = data.data; // Array de productos obtenidos
+//                    if (pagos && pagos.length > 0) {
+//                        const Pagos = pagos[0];
+//                        /* const totalItems = data.totalItems; */
+//                        /*  const nombre = data.nombresCompletos;*/
+//                        // Actualizar la tabla modal con los productos obtenidos
+//                        document.getElementById('txtDescuento').value = Pagos.descuento;
+//                        document.getElementById('txtMontoPago').value = Pagos.montoDeuda;
+//                        document.getElementById('txtDeuda').value = Pagos.montoDeuda;
+//                        document.getElementById('txtIdPago').value = Pagos.idPago;
+//                        document.getElementById('txtPagoAPagar').value = Pagos.montoDeuda;
+//                    } else {
+//                        console.error("No se encontraron Pagos");
+//                    }
+//                })
+//                .catch(error => {
+//                    console.error('Error al buscar Pagos:', error);
+//                });
+      
+//            document.getElementById('txtIdPedido').value = idPedido;
+//            document.getElementById('txtCodigoPedido').value = codigo;
+//            document.getElementById('txtNombres').value = nombres;
+//            document.getElementById('txtMontoPedido').value = montoTotal;
+//            document.getElementById('txtEstado').value = estado;
+//            document.getElementById('txtFechaPedido').value = fecha;
+//            //document.getElementById('txtMontoPago').value = montoTotal;
+//            //document.getElementById('txtDeuda').value = montoTotal;
+//            ActivarCampos();
+//            VerificarEstado();
+        
+//            $("#modalDataPedidos").modal("hide");
+//        }
+
+
+
+//    });
+//});
 
 
 const ProductosPorPagina = 4; // Cantidad de productos por página

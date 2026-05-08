@@ -210,7 +210,7 @@ namespace SistEcomPan.Web.Helpers
                     PagoDelCliente = ToNullableDecimal(src.PagoDelCliente),
                     DeudaDelCliente = ToDecimal(src.DeudaDelCliente),
                     CambioDelCliente = ToDecimal(src.CambioDelCliente),
-                    FechaPago = src.FechaPago
+                    FechaDetallePago = src.FechaDetallePago
                 });
 
             // ---------------------------------------------
@@ -232,7 +232,7 @@ namespace SistEcomPan.Web.Helpers
                     src => src.DeudaDelCliente.ToString())
                 .Map(dest => dest.CambioDelCliente,
                     src => src.CambioDelCliente.ToString())
-                .Map(dest => dest.FechaPago, src => src.FechaPago);
+                .Map(dest => dest.FechaDetallePago, src => src.FechaDetallePago);
         }
 
         // =====================================================

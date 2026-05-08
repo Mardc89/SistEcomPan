@@ -182,10 +182,10 @@ namespace Negocio.Implementacion
             try
             {
                 List<DetallePago> query = await _repositorioDetallePagos
-                    .ConsultarDetallePagos(FechaInicio.Date);
+                    .ConsultarDetallePagos(FechaInicio);
 
                 Dictionary<string, decimal?> resultado = query
-                    .GroupBy(v => v.FechaPago.Value.Date).OrderBy(g => g.Key)
+                    .GroupBy(v => v.FechaDetallePago.Value.Date).OrderBy(g => g.Key)
                     .Select(dv => new { fecha = dv.Key.ToString("dd/MM/yyyy"), total = dv.Sum(x=> x.MontoAPagar > x.PagoDelCliente ? x.PagoDelCliente : x.MontoAPagar) })
                     .ToDictionary(keySelector: r => r.fecha, elementSelector: r => r.total);
 
@@ -229,7 +229,7 @@ namespace Negocio.Implementacion
             {
                 List<DetallePedido> detallePedidos = new List<DetallePedido>();
                 List<DetallePedido> detallePedidosFinal = new List<DetallePedido>();
-                List<Pedidos> query = await _repositorioPedidos.ConsultarTotalDePedidos(FechaInicio.Date);
+                List<Pedidos> query = await _repositorioPedidos.ConsultarTotalDePedidos(FechaInicio);
                 var ListPedidos = query.Select(x => x.IdPedido).ToList();
               
                 foreach (var elemento in ListPedidos)
