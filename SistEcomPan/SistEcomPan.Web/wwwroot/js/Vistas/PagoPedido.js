@@ -200,12 +200,18 @@ function VerificarEstadoPedido() {
         Opcion1.disabled = true;
         Opcion2.disabled = true;
     }
-    else if (estado === ""){
+    else if (estado === "") {
         Opcion1.disabled = true;
         Opcion2.disabled = true;
     }
+    else if (estado === "Sin Efectuar" && montoPedido === montoAPagar){
+        Opcion1.disabled = false;
+        Opcion2.disabled = false;
+        btnEstado.disabled = true;
+        ActivarCampos();
+    }
 
-    if ((estado === "Existe Deuda" || estado === "Sin Efectuar") && montoPedido === montoAPagar) {
+    if (estado === "Existe Deuda"  && montoPedido === montoAPagar) {
         Opcion1.disabled = false;
         Opcion2.disabled = false;
         btnEstado.disabled = false;

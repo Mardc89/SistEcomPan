@@ -78,16 +78,36 @@ function VerificarEstado() {
     }
     //else {
     //    btnEstado.disabled = false;
-    //}
+        //}
 
-    else if ((estado === "Existe Deuda" || estado === "Sin Efectuar") && montoPedido === montoAPagar) {
+    if (estado === "Pagado" && idPago > 0) {
+        btnEstado.disabled = false;
         Opcion1.disabled = false;
         Opcion2.disabled = false;
-        ActivarCampos();
     }
-    else if ((estado === "Existe Deuda" || estado === "Sin Efectuar") && montoPedido !== montoAPagar) {
+    else if (estado === "Pagado" && montoPedido !== montoAPagar) {
+        btnEstado.disabled = true;
         Opcion1.disabled = true;
         Opcion2.disabled = true;
+    }
+
+    else if (estado === "" || estado === "Sin Efectuar") {
+        Opcion1.disabled = true;
+        Opcion2.disabled = true;
+        btnEstado.disabled = true;
+        ActivarCampos();
+    }
+
+    else if (estado === "Existe Deuda" && montoPedido === montoAPagar) {
+        Opcion1.disabled = false;
+        Opcion2.disabled = false;
+        btnEstado.disabled = false;
+        ActivarCampos();
+    }
+    else if (estado === "Existe Deuda" && montoPedido !== montoAPagar) {
+        Opcion1.disabled = true;
+        Opcion2.disabled = true;
+        btnEstado.disabled = false;
         ActivarCampos();
     }
 
@@ -166,7 +186,7 @@ function cargarFormulario(pedido, pago) {
     document.getElementById('txtIdPedido').value = pedido.idPedido;
     document.getElementById('txtCodigoPedido').value = pedido.codigo;
     document.getElementById('txtNombres').value = pedido.nombres;
-    document.getElementById('txtMontoPedido').value = pedido.montoTotal;
+    document.getElementById('txtMontoPedido').value = pedido.montoTotal.toFixed(2);
     document.getElementById('txtEstado').value = pedido.estado;
     document.getElementById('txtFechaPedido').value = pedido.fecha;
 

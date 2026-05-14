@@ -81,7 +81,7 @@ $(document).ready(function () {
             { "data": "montoTotalDePago", responsivePriority: 100 },
             { "data": "montoDeuda", responsivePriority: 100 },
             {
-                "data": "fechaPago", responsivePriority: 100, render: function (data) {
+                "data": "fechaPago", responsivePriority: 1, render: function (data) {
                     return cambiarFecha(data);
                 }
             },
