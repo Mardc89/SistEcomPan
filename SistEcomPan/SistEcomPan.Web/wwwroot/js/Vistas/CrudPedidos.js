@@ -76,9 +76,14 @@ $(document).ready(function () {
                     return NombresCompletos;
                 }
             },
-            { "data": "montoTotal" },
             {
-                "data": "fechaDeEntrega", render: function (data) {
+                "data": "montoTotal",
+                render: function (data) {
+                    return parseFloat(data).toFixed(2);
+                }
+            },
+            {
+                "data": "fechaPedido", render: function (data) {
                     return cambiarFecha(data);
                 }
             },

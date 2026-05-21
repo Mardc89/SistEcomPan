@@ -435,6 +435,7 @@ $("#btnGuardarPago").click(function () {
             montoDeuda: $("#txtDeuda").val(),
             estado: $("#txtEstado").val(),
             montoAPagar: $("#txtPagoAPagar").val(),
+            codigoPedido: $("#txtCodigoPedido").val(),
             DetallePago: vmDetallePago
 
         }

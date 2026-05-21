@@ -354,9 +354,10 @@ namespace SistEcomPan.Web.Controllers
                     .FechaPedido;
 
                 // Convertir Entity -> ViewModel
-                VMPago vmPago = pagoEditado.Adapt<VMPago>();
+                VMPago vmPago = _mapper.Map<VMPago>(pagoEditado);
 
                 // Propiedades adicionales que no vienen del entity
+                vmPago.CodigoPedido = modelo.CodigoPedido;
                 vmPago.NombreCliente = modelo.NombreCliente;
                 vmPago.MontoTotalDePago = modelo.MontoTotalDePago;
                 vmPago.MontoDePedido = modelo.MontoDePedido;

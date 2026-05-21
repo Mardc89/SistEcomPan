@@ -30,12 +30,26 @@ function cambiarFecha(fecha) {
     const año = fechaOriginal.getFullYear();
     const horas = fechaOriginal.getHours();
     const minutos = fechaOriginal.getMinutes();
-
-    const fechaFormateada = `${dia}/${mes}/${año} ${horas}${minutos}`;
+    const fechaFormateada = `${dia.toString().padStart(2, '0')}/${mes.toString().padStart(2, '0')}/${año} ${horas.toString().padStart(2, '0')}:${minutos.toString().padStart(2, '0')} min`;
 
     return fechaFormateada;
 
 }
+
+
+function cambiarFechaMisMensajes(fecha) {
+
+    const fechaOriginal = new Date(fecha);
+    const dia = fechaOriginal.getDate();
+    const mes = fechaOriginal.getMonth() + 1;
+    const año = fechaOriginal.getFullYear();
+
+    const fechaFormateada = `${dia}/${mes}/${año}`;
+
+    return fechaFormateada;
+
+}
+
 
 function ObtenerDatosCliente() {
     fetch("/Home/ObtenerCliente")
@@ -89,8 +103,8 @@ $(document).ready(function () {
             { "data": "correoDestinatario", "visible": false, responsivePriority: 100 },
             { "data": "idRespuestaMensaje", "visible": false, responsivePriority: 100 },
             {
-                "data": "fechaDeMensaje", responsivePriority: 100 , render: function (data) {
-                    return cambiarFecha(data);
+                "data": "fechaDeMensaje", responsivePriority: 100, render: function (data) {
+                    return cambiarFechaMisMensajes(data);
                 }
             },
             {

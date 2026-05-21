@@ -190,7 +190,7 @@ namespace SistEcomPan.Web.Controllers
                     Codigo = item.Codigo,
                     MontoTotal = Convert.ToString(item.MontoTotal),
                     Estado = item.Estado,
-                    FechaDeEntrega = item.FechaDeEntrega.HasValue ? TimeZoneInfo.ConvertTimeFromUtc(item.FechaDeEntrega.Value, userTimeZone) : null,
+                    FechaPedido = item.FechaPedido.HasValue ? TimeZoneInfo.ConvertTimeFromUtc(item.FechaPedido.Value, userTimeZone) : null,
                     NombresCompletos = await _clienteService.ObtenerNombreCompleto(item.IdCliente)
 
                 });
