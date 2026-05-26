@@ -1,13 +1,14 @@
 ﻿
-using Microsoft.AspNetCore.Mvc;
 using Datos.Interfaces;
 using Entidades;
-using Negocio.Interfaces;
-using Negocio.Implementacion;
-using SistEcomPan.Web.Models.ViewModels;
-using Newtonsoft.Json;
-using SistEcomPan.Web.Tools.Response;
+using Mapster;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Negocio.Implementacion;
+using Negocio.Interfaces;
+using Newtonsoft.Json;
+using SistEcomPan.Web.Models.ViewModels;
+using SistEcomPan.Web.Tools.Response;
 
 namespace SistEcomPan.Web.Controllers
 {
@@ -30,285 +31,406 @@ namespace SistEcomPan.Web.Controllers
             return View();
         }
 
-        
+
+        //[HttpGet]
+        //[AllowAnonymous]
+        //public async Task<IActionResult> ListaDistritos()
+        //{
+        //    var lista = await _distritoService.Lista();
+        //    List<VMDistrito> vmListaDistritos = new List<VMDistrito>();
+        //    foreach (var item in lista)
+        //    {
+        //        vmListaDistritos.Add(new VMDistrito
+        //        {
+        //            IdDistrito = item.IdDistrito,
+        //            NombreDistrito = item.NombreDistrito
+        //        });
+        //    }
+        //    return StatusCode(StatusCodes.Status200OK, vmListaDistritos);
+        //}
+
         [HttpGet]
         [AllowAnonymous]
         public async Task<IActionResult> ListaDistritos()
         {
             var lista = await _distritoService.Lista();
-            List<VMDistrito> vmListaDistritos = new List<VMDistrito>();
-            foreach (var item in lista)
-            {
-                vmListaDistritos.Add(new VMDistrito
-                {
-                    IdDistrito = item.IdDistrito,
-                    NombreDistrito = item.NombreDistrito
-                });
-            }
-            return StatusCode(StatusCodes.Status200OK, vmListaDistritos);
+
+            var vmLista = lista.Adapt<List<VMDistrito>>();
+
+            return Ok(vmLista);
         }
+
 
         [HttpGet]
         public async Task<IActionResult> Lista()
         {
-            var clienteLista = await _clienteService.Lista();
-            List<VMCliente> vmClienteLista = new List<VMCliente>();
-            //var nombreDistrito = await _distritoService.ObtenerNombre();
-            foreach (var item in clienteLista)
-            {
-                vmClienteLista.Add(new VMCliente
-                {
-                    IdCliente = item.IdCliente,
-                    TipoCliente = item.TipoCliente,
-                    Dni = item.Dni,
-                    Nombres = item.Nombres,
-                    Apellidos = item.Apellidos,
-                    NombreCompleto= _clienteService.LimpiarEspacios(item.Apellidos + " " + item.Nombres),
-                    Correo = item.Correo,
-                    Direccion = item.Direccion,
-                    Telefono =item.Telefono,
-                    IdDistrito = item.IdDistrito,
-                    NombreUsuario = item.NombreUsuario,
-                    Clave = _encriptService.DesencriptarPassword(item.Clave),   
-                    Estado = Convert.ToInt32(item.Estado),
-                    UrlFoto = item.UrlFoto,
-                    NombreFoto =item.NombreFoto,
-                    //NombreDistrito = nombreDistrito.Where(x => x.IdDistrito == item.IdDistrito).First().NombreDistrito,
-                    NombreDistrito = await _distritoService.ConsultarDistrito(item.IdDistrito)
+            var clientes = await _clienteService.Lista();
 
-                });
-            }
-            return StatusCode(StatusCodes.Status200OK, new { data = vmClienteLista });
+            var vmLista = clientes.Adapt<List<VMCliente>>();
+
+            return Ok(new { data = vmLista });
         }
 
+        //[HttpGet]
+        //public async Task<IActionResult> Lista()
+        //{
+        //    var clienteLista = await _clienteService.Lista();
+        //    List<VMCliente> vmClienteLista = new List<VMCliente>();
+        //    //var nombreDistrito = await _distritoService.ObtenerNombre();
+        //    foreach (var item in clienteLista)
+        //    {
+        //        vmClienteLista.Add(new VMCliente
+        //        {
+        //            IdCliente = item.IdCliente,
+        //            TipoCliente = item.TipoCliente,
+        //            Dni = item.Dni,
+        //            Nombres = item.Nombres,
+        //            Apellidos = item.Apellidos,
+        //            NombreCompleto= _clienteService.LimpiarEspacios(item.Apellidos + " " + item.Nombres),
+        //            Correo = item.Correo,
+        //            Direccion = item.Direccion,
+        //            Telefono =item.Telefono,
+        //            IdDistrito = item.IdDistrito,
+        //            NombreUsuario = item.NombreUsuario,
+        //            Clave = _encriptService.DesencriptarPassword(item.Clave),   
+        //            Estado = Convert.ToInt32(item.Estado),
+        //            UrlFoto = item.UrlFoto,
+        //            NombreFoto =item.NombreFoto,
+        //            //NombreDistrito = nombreDistrito.Where(x => x.IdDistrito == item.IdDistrito).First().NombreDistrito,
+        //            NombreDistrito = await _distritoService.ConsultarDistrito(item.IdDistrito)
+
+        //        });
+        //    }
+        //    return StatusCode(StatusCodes.Status200OK, new { data = vmClienteLista });
+        //}
 
         [HttpGet]
         public async Task<IActionResult> ObtenerClientes(string searchTerm = "", int page = 1, int itemsPerPage = 4)
-       {
-            //var clienteLista = await _clienteService.Lista();                       
-            var pedidosFiltrados = await _clienteService.ClienteFiltrado(searchTerm);
+        {
+            var clientes = await _clienteService.ClienteFiltrado(searchTerm);
 
-            List<VMCliente> vmClienteLista = new List<VMCliente>();
-            //var nombreDistrito = await _distritoService.ObtenerNombre();
-            foreach (var item in pedidosFiltrados)
+            var vmLista = clientes.Adapt<List<VMCliente>>();
+
+            var paginados = vmLista
+                .Skip((page - 1) * itemsPerPage)
+                .Take(itemsPerPage)
+                .ToList();
+
+            return Ok(new
             {
-                vmClienteLista.Add(new VMCliente
-                {
-                    IdCliente = item.IdCliente,
-                    TipoCliente = item.TipoCliente,
-                    Dni = item.Dni,
-                    NombreCompleto = _clienteService.LimpiarEspacios(item.Apellidos + " " + item.Nombres),
-                    Correo = item.Correo,
-                    Direccion = item.Direccion,
-                    Telefono = item.Telefono,
-                    NombreUsuario = item.NombreUsuario,
-                    //NombreFoto = item.NombreFoto,
-                    NombreDistrito = await _distritoService.ConsultarDistrito(item.IdDistrito)
-
-                });
-            }
-
-            var pedidosPaginados = vmClienteLista.Skip((page - 1) * itemsPerPage).Take(itemsPerPage).ToList();
-
-            return StatusCode(StatusCodes.Status200OK, new { clientes = pedidosPaginados, totalItems = vmClienteLista.Count() });
+                clientes = paginados,
+                totalItems = vmLista.Count
+            });
         }
+
+
+        // [HttpGet]
+        // public async Task<IActionResult> ObtenerClientes(string searchTerm = "", int page = 1, int itemsPerPage = 4)
+        //{
+        //     //var clienteLista = await _clienteService.Lista();                       
+        //     var pedidosFiltrados = await _clienteService.ClienteFiltrado(searchTerm);
+
+        //     List<VMCliente> vmClienteLista = new List<VMCliente>();
+        //     //var nombreDistrito = await _distritoService.ObtenerNombre();
+        //     foreach (var item in pedidosFiltrados)
+        //     {
+        //         vmClienteLista.Add(new VMCliente
+        //         {
+        //             IdCliente = item.IdCliente,
+        //             TipoCliente = item.TipoCliente,
+        //             Dni = item.Dni,
+        //             NombreCompleto = _clienteService.LimpiarEspacios(item.Apellidos + " " + item.Nombres),
+        //             Correo = item.Correo,
+        //             Direccion = item.Direccion,
+        //             Telefono = item.Telefono,
+        //             NombreUsuario = item.NombreUsuario,
+        //             //NombreFoto = item.NombreFoto,
+        //             NombreDistrito = await _distritoService.ConsultarDistrito(item.IdDistrito)
+
+        //         });
+        //     }
+
+        //     var pedidosPaginados = vmClienteLista.Skip((page - 1) * itemsPerPage).Take(itemsPerPage).ToList();
+
+        //     return StatusCode(StatusCodes.Status200OK, new { clientes = pedidosPaginados, totalItems = vmClienteLista.Count() });
+        // }
+
 
         [HttpPost]
         public async Task<IActionResult> Crear([FromForm] IFormFile foto, [FromForm] string modelo)
         {
-            GenericResponse<VMCliente> gResponse = new GenericResponse<VMCliente>();
+            var response = new GenericResponse<VMCliente>();
 
             try
             {
-                VMCliente vmCliente = JsonConvert.DeserializeObject<VMCliente>(modelo);
-                string NombreFoto = "";
+                var vmCliente = JsonConvert.DeserializeObject<VMCliente>(modelo);
+
+                var cliente = vmCliente.Adapt<Clientes>();
+
+                string nombreFoto = "";
                 Stream fotoStream = null;
 
                 if (foto != null && foto.Length > 0)
                 {
-                    string nombreCodigo = Guid.NewGuid().ToString("N");
-                    string extension = Path.GetExtension(foto.FileName);
-                    NombreFoto = string.Concat(nombreCodigo, extension);
+                    nombreFoto = $"{Guid.NewGuid():N}{Path.GetExtension(foto.FileName)}";
                     fotoStream = foto.OpenReadStream();
-
-                }
-                string urlPlantillaCorreo = $"{this.Request.Scheme}://{this.Request.Host}/Plantilla/EnviarClave?correo=[correo]&clave=[clave]";
-                var Clientelista = await _clienteService.Lista();
-
-
-                List<Clientes> listaClientes = new List<Clientes>();
-                List<VMCliente> listaVMClientes = new List<VMCliente>();
-                if (vmCliente != null)
-                {
-                    listaVMClientes.Add(vmCliente);
-                    foreach (var item in listaVMClientes)
-                    {
-                        listaClientes.Add(new Clientes
-                        {
-                            IdCliente = item.IdCliente,
-                            TipoCliente=item.TipoCliente,
-                            Dni = item.Dni,
-                            Nombres = item.Nombres,
-                            Apellidos = item.Apellidos,
-                            Correo = item.Correo,
-                            Direccion=item.Direccion,
-                            Telefono=item.Telefono,  
-                            IdDistrito = item.IdDistrito,
-                            NombreUsuario = item.NombreUsuario,
-                            Clave = item.Clave,                         
-                            Estado = Convert.ToBoolean(item.Estado),
-                            UrlFoto = item.UrlFoto
-
-                        });
-                    }
                 }
 
-                Clientes usuarioCreado = await _clienteService.Crear(listaClientes.First(), fotoStream, NombreFoto, urlPlantillaCorreo);
+                string urlPlantillaCorreo = $"{Request.Scheme}://{Request.Host}/Plantilla/EnviarClave?correo=[correo]&clave=[clave]";
 
-                List<VMCliente> vmClientelista = new List<VMCliente>();
-                List<Clientes> listClientes = new List<Clientes>();
-                //var nombreDistrito = await _distritoService.ObtenerNombre();
-                if (usuarioCreado != null)
-                {
-                    listClientes.Add(usuarioCreado);
+                var creado = await _clienteService.Crear(cliente, fotoStream, nombreFoto, urlPlantillaCorreo);
 
+                var vm = creado.Adapt<VMCliente>();
 
-                    foreach (var item in listClientes)
-                    {
-                        vmClientelista.Add(new VMCliente
-                        {
-                            IdCliente = item.IdCliente,
-                            TipoCliente=item.TipoCliente,
-                            Dni = item.Dni,
-                            Nombres = item.Nombres,
-                            Apellidos = item.Apellidos,
-                            Correo = item.Correo,
-                            Direccion=item.Direccion,
-                            Telefono=item.Telefono, 
-                            IdDistrito = item.IdDistrito,
-                            NombreUsuario = item.NombreUsuario,
-                            Clave = _encriptService.DesencriptarPassword(item.Clave),  
-                            Estado = Convert.ToInt32(item.Estado),                          
-                            NombreDistrito = await _distritoService.ConsultarDistrito(item.IdDistrito),
-                            UrlFoto = item.UrlFoto,
-                          
-                        });
-                    }
-                }
+                // solo lo que NO hace Mapster
+                vm.Clave = _encriptService.DesencriptarPassword(creado.Clave);
 
-                gResponse.Estado = true;
-                gResponse.objeto = vmClientelista.First();
-
+                response.Estado = true;
+                response.objeto = vm;
             }
             catch (Exception ex)
             {
-                gResponse.Estado = false;
-                gResponse.Mensaje = ex.Message;
-
+                response.Estado = false;
+                response.Mensaje = ex.Message;
             }
 
-            return StatusCode(StatusCodes.Status200OK, gResponse);
-
+            return Ok(response);
         }
+
+        //[HttpPost]
+        //public async Task<IActionResult> Crear([FromForm] IFormFile foto, [FromForm] string modelo)
+        //{
+        //    GenericResponse<VMCliente> gResponse = new GenericResponse<VMCliente>();
+
+        //    try
+        //    {
+        //        VMCliente vmCliente = JsonConvert.DeserializeObject<VMCliente>(modelo);
+        //        string NombreFoto = "";
+        //        Stream fotoStream = null;
+
+        //        if (foto != null && foto.Length > 0)
+        //        {
+        //            string nombreCodigo = Guid.NewGuid().ToString("N");
+        //            string extension = Path.GetExtension(foto.FileName);
+        //            NombreFoto = string.Concat(nombreCodigo, extension);
+        //            fotoStream = foto.OpenReadStream();
+
+        //        }
+        //        string urlPlantillaCorreo = $"{this.Request.Scheme}://{this.Request.Host}/Plantilla/EnviarClave?correo=[correo]&clave=[clave]";
+        //        var Clientelista = await _clienteService.Lista();
+
+
+        //        List<Clientes> listaClientes = new List<Clientes>();
+        //        List<VMCliente> listaVMClientes = new List<VMCliente>();
+        //        if (vmCliente != null)
+        //        {
+        //            listaVMClientes.Add(vmCliente);
+        //            foreach (var item in listaVMClientes)
+        //            {
+        //                listaClientes.Add(new Clientes
+        //                {
+        //                    IdCliente = item.IdCliente,
+        //                    TipoCliente=item.TipoCliente,
+        //                    Dni = item.Dni,
+        //                    Nombres = item.Nombres,
+        //                    Apellidos = item.Apellidos,
+        //                    Correo = item.Correo,
+        //                    Direccion=item.Direccion,
+        //                    Telefono=item.Telefono,  
+        //                    IdDistrito = item.IdDistrito,
+        //                    NombreUsuario = item.NombreUsuario,
+        //                    Clave = item.Clave,                         
+        //                    Estado = Convert.ToBoolean(item.Estado),
+        //                    UrlFoto = item.UrlFoto
+
+        //                });
+        //            }
+        //        }
+
+        //        Clientes usuarioCreado = await _clienteService.Crear(listaClientes.First(), fotoStream, NombreFoto, urlPlantillaCorreo);
+
+        //        List<VMCliente> vmClientelista = new List<VMCliente>();
+        //        List<Clientes> listClientes = new List<Clientes>();
+        //        //var nombreDistrito = await _distritoService.ObtenerNombre();
+        //        if (usuarioCreado != null)
+        //        {
+        //            listClientes.Add(usuarioCreado);
+
+
+        //            foreach (var item in listClientes)
+        //            {
+        //                vmClientelista.Add(new VMCliente
+        //                {
+        //                    IdCliente = item.IdCliente,
+        //                    TipoCliente=item.TipoCliente,
+        //                    Dni = item.Dni,
+        //                    Nombres = item.Nombres,
+        //                    Apellidos = item.Apellidos,
+        //                    Correo = item.Correo,
+        //                    Direccion=item.Direccion,
+        //                    Telefono=item.Telefono, 
+        //                    IdDistrito = item.IdDistrito,
+        //                    NombreUsuario = item.NombreUsuario,
+        //                    Clave = _encriptService.DesencriptarPassword(item.Clave),  
+        //                    Estado = Convert.ToInt32(item.Estado),                          
+        //                    NombreDistrito = await _distritoService.ConsultarDistrito(item.IdDistrito),
+        //                    UrlFoto = item.UrlFoto,
+
+        //                });
+        //            }
+        //        }
+
+        //        gResponse.Estado = true;
+        //        gResponse.objeto = vmClientelista.First();
+
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        gResponse.Estado = false;
+        //        gResponse.Mensaje = ex.Message;
+
+        //    }
+
+        //    return StatusCode(StatusCodes.Status200OK, gResponse);
+
+        //}
 
         [HttpPut]
         public async Task<IActionResult> Editar([FromForm] IFormFile foto, [FromForm] string modelo)
         {
-            GenericResponse<VMCliente> gResponse = new GenericResponse<VMCliente>();
+            var response = new GenericResponse<VMCliente>();
 
             try
             {
-                VMCliente vmCliente = JsonConvert.DeserializeObject<VMCliente>(modelo);
-                string NombreFoto = "";
+                var vmCliente = JsonConvert.DeserializeObject<VMCliente>(modelo);
+
+                var cliente = vmCliente.Adapt<Clientes>();
+
+                string nombreFoto = "";
                 Stream fotoStream = null;
 
                 if (foto != null && foto.Length > 0)
                 {
-                    string nombreCodigo = Guid.NewGuid().ToString("N");
-                    string extension = Path.GetExtension(foto.FileName);
-                    NombreFoto = string.Concat(nombreCodigo, extension);
+                    nombreFoto = $"{Guid.NewGuid():N}{Path.GetExtension(foto.FileName)}";
                     fotoStream = foto.OpenReadStream();
-
                 }
 
-                var Clientelista = await _clienteService.Lista();
+                var editado = await _clienteService.Editar(cliente, fotoStream, nombreFoto);
 
+                var vm = editado.Adapt<VMCliente>();
 
-                List<Clientes> listaClientes = new List<Clientes>();
-                List<VMCliente> listaVMClientes = new List<VMCliente>();
-                if (vmCliente != null)
-                {
-                    listaVMClientes.Add(vmCliente);
-                    foreach (var item in listaVMClientes)
-                    {
-                        listaClientes.Add(new Clientes
-                        {
-                            IdCliente = item.IdCliente,
-                            TipoCliente=item.TipoCliente,
-                            Dni = item.Dni,
-                            Nombres = item.Nombres,
-                            Apellidos = item.Apellidos,
-                            Correo = item.Correo,
-                            Direccion=item.Direccion,
-                            Telefono=item.Telefono,   
-                            IdDistrito = item.IdDistrito,
-                            NombreUsuario = item.NombreUsuario,
-                            Clave = item.Clave,                        
-                            Estado = Convert.ToBoolean(item.Estado),
-                            UrlFoto = item.UrlFoto
+                vm.Clave = _encriptService.DesencriptarPassword(editado.Clave);
 
-                        });
-                    }
-                }
-
-                Clientes clienteEditado = await _clienteService.Editar(listaClientes.First(), fotoStream, NombreFoto);
-
-                List<Clientes> listClientes = new List<Clientes>();
-                List<VMCliente> vmClientelista = new List<VMCliente>();
-                if (clienteEditado != null)
-                {
-                    listClientes.Add(clienteEditado);
-
-
-                    //var nombreDistrito = await _distritoService.ObtenerNombre();
-                    foreach (var item in listClientes)
-                    {
-                        vmClientelista.Add(new VMCliente
-                        {
-                            IdCliente = item.IdCliente,
-                            TipoCliente=item.TipoCliente,
-                            Dni = item.Dni,
-                            Nombres = item.Nombres,
-                            Apellidos = item.Apellidos,
-                            Correo = item.Correo,
-                            Direccion=item.Direccion,
-                            Telefono=item.Telefono,   
-                            IdDistrito = item.IdDistrito,
-                            NombreUsuario = item.NombreUsuario,
-                            Clave = _encriptService.DesencriptarPassword(item.Clave),
-                            Estado = Convert.ToInt32(item.Estado),
-                            NombreDistrito = await _distritoService.ConsultarDistrito(item.IdDistrito),
-                            UrlFoto = item.UrlFoto,
-                          
-
-                        });
-                    }
-                }
-
-                gResponse.Estado = true;
-                gResponse.objeto = vmClientelista.First();
-
+                response.Estado = true;
+                response.objeto = vm;
             }
             catch (Exception ex)
             {
-                gResponse.Estado = false;
-                gResponse.Mensaje = ex.Message;
-
+                response.Estado = false;
+                response.Mensaje = ex.Message;
             }
 
-            return StatusCode(StatusCodes.Status200OK, gResponse);
-
+            return Ok(response);
         }
+
+        //[HttpPut]
+        //public async Task<IActionResult> Editar([FromForm] IFormFile foto, [FromForm] string modelo)
+        //{
+        //    GenericResponse<VMCliente> gResponse = new GenericResponse<VMCliente>();
+
+        //    try
+        //    {
+        //        VMCliente vmCliente = JsonConvert.DeserializeObject<VMCliente>(modelo);
+        //        string NombreFoto = "";
+        //        Stream fotoStream = null;
+
+        //        if (foto != null && foto.Length > 0)
+        //        {
+        //            string nombreCodigo = Guid.NewGuid().ToString("N");
+        //            string extension = Path.GetExtension(foto.FileName);
+        //            NombreFoto = string.Concat(nombreCodigo, extension);
+        //            fotoStream = foto.OpenReadStream();
+
+        //        }
+
+        //        var Clientelista = await _clienteService.Lista();
+
+
+        //        List<Clientes> listaClientes = new List<Clientes>();
+        //        List<VMCliente> listaVMClientes = new List<VMCliente>();
+        //        if (vmCliente != null)
+        //        {
+        //            listaVMClientes.Add(vmCliente);
+        //            foreach (var item in listaVMClientes)
+        //            {
+        //                listaClientes.Add(new Clientes
+        //                {
+        //                    IdCliente = item.IdCliente,
+        //                    TipoCliente=item.TipoCliente,
+        //                    Dni = item.Dni,
+        //                    Nombres = item.Nombres,
+        //                    Apellidos = item.Apellidos,
+        //                    Correo = item.Correo,
+        //                    Direccion=item.Direccion,
+        //                    Telefono=item.Telefono,   
+        //                    IdDistrito = item.IdDistrito,
+        //                    NombreUsuario = item.NombreUsuario,
+        //                    Clave = item.Clave,                        
+        //                    Estado = Convert.ToBoolean(item.Estado),
+        //                    UrlFoto = item.UrlFoto
+
+        //                });
+        //            }
+        //        }
+
+        //        Clientes clienteEditado = await _clienteService.Editar(listaClientes.First(), fotoStream, NombreFoto);
+
+        //        List<Clientes> listClientes = new List<Clientes>();
+        //        List<VMCliente> vmClientelista = new List<VMCliente>();
+        //        if (clienteEditado != null)
+        //        {
+        //            listClientes.Add(clienteEditado);
+
+
+        //            //var nombreDistrito = await _distritoService.ObtenerNombre();
+        //            foreach (var item in listClientes)
+        //            {
+        //                vmClientelista.Add(new VMCliente
+        //                {
+        //                    IdCliente = item.IdCliente,
+        //                    TipoCliente=item.TipoCliente,
+        //                    Dni = item.Dni,
+        //                    Nombres = item.Nombres,
+        //                    Apellidos = item.Apellidos,
+        //                    Correo = item.Correo,
+        //                    Direccion=item.Direccion,
+        //                    Telefono=item.Telefono,   
+        //                    IdDistrito = item.IdDistrito,
+        //                    NombreUsuario = item.NombreUsuario,
+        //                    Clave = _encriptService.DesencriptarPassword(item.Clave),
+        //                    Estado = Convert.ToInt32(item.Estado),
+        //                    NombreDistrito = await _distritoService.ConsultarDistrito(item.IdDistrito),
+        //                    UrlFoto = item.UrlFoto,
+
+
+        //                });
+        //            }
+        //        }
+
+        //        gResponse.Estado = true;
+        //        gResponse.objeto = vmClientelista.First();
+
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        gResponse.Estado = false;
+        //        gResponse.Mensaje = ex.Message;
+
+        //    }
+
+        //    return StatusCode(StatusCodes.Status200OK, gResponse);
+
+        //}
 
         [HttpDelete]
         public async Task<IActionResult> Eliminar(int IdCliente)
