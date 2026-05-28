@@ -2,6 +2,7 @@
 using Datos.Interfaces;
 using Entidades;
 using Mapster;
+using MapsterMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Negocio.Implementacion;
@@ -18,12 +19,14 @@ namespace SistEcomPan.Web.Controllers
         private readonly IClienteService _clienteService;
         private readonly IDistritoService _distritoService;
         private readonly IEncriptService _encriptService;
+        private readonly IMapper _mapper;
 
-        public ClienteController(IClienteService clienteService, IDistritoService distritoService, IEncriptService encriptService)
+        public ClienteController(IClienteService clienteService, IDistritoService distritoService, IEncriptService encriptService,IMapper mapper)
         {
             _clienteService = clienteService;
             _distritoService = distritoService;
             _encriptService = encriptService;
+            _mapper = mapper;
         }
         public IActionResult Index()
         {
@@ -55,7 +58,7 @@ namespace SistEcomPan.Web.Controllers
         {
             var lista = await _distritoService.Lista();
 
-            var vmLista = lista.Adapt<List<VMDistrito>>();
+            var vmLista = _mapper.Map<List<VMDistrito>>(lista);
 
             return Ok(vmLista);
         }
@@ -66,7 +69,13 @@ namespace SistEcomPan.Web.Controllers
         {
             var clientes = await _clienteService.Lista();
 
-            var vmLista = clientes.Adapt<List<VMCliente>>();
+            var vmLista = _mapper.Map<List<VMCliente>>(clientes);
+
+            foreach (var item in vmLista) 
+            {
+                item.Clave = _encriptService.DesencriptarPassword(item.Clave);
+            
+            }
 
             return Ok(new { data = vmLista });
         }
@@ -86,16 +95,16 @@ namespace SistEcomPan.Web.Controllers
         //            Dni = item.Dni,
         //            Nombres = item.Nombres,
         //            Apellidos = item.Apellidos,
-        //            NombreCompleto= _clienteService.LimpiarEspacios(item.Apellidos + " " + item.Nombres),
+        //            NombreCompleto = _clienteService.LimpiarEspacios(item.Apellidos + " " + item.Nombres),
         //            Correo = item.Correo,
         //            Direccion = item.Direccion,
-        //            Telefono =item.Telefono,
+        //            Telefono = item.Telefono,
         //            IdDistrito = item.IdDistrito,
         //            NombreUsuario = item.NombreUsuario,
-        //            Clave = _encriptService.DesencriptarPassword(item.Clave),   
+        //            Clave = _encriptService.DesencriptarPassword(item.Clave),
         //            Estado = Convert.ToInt32(item.Estado),
         //            UrlFoto = item.UrlFoto,
-        //            NombreFoto =item.NombreFoto,
+        //            NombreFoto = item.NombreFoto,
         //            //NombreDistrito = nombreDistrito.Where(x => x.IdDistrito == item.IdDistrito).First().NombreDistrito,
         //            NombreDistrito = await _distritoService.ConsultarDistrito(item.IdDistrito)
 
@@ -109,7 +118,7 @@ namespace SistEcomPan.Web.Controllers
         {
             var clientes = await _clienteService.ClienteFiltrado(searchTerm);
 
-            var vmLista = clientes.Adapt<List<VMCliente>>();
+            var vmLista = _mapper.Map<List<VMCliente>>(clientes);
 
             var paginados = vmLista
                 .Skip((page - 1) * itemsPerPage)
@@ -165,7 +174,7 @@ namespace SistEcomPan.Web.Controllers
             {
                 var vmCliente = JsonConvert.DeserializeObject<VMCliente>(modelo);
 
-                var cliente = vmCliente.Adapt<Clientes>();
+                var cliente = _mapper.Map<Clientes>(vmCliente);
 
                 string nombreFoto = "";
                 Stream fotoStream = null;
@@ -180,7 +189,7 @@ namespace SistEcomPan.Web.Controllers
 
                 var creado = await _clienteService.Crear(cliente, fotoStream, nombreFoto, urlPlantillaCorreo);
 
-                var vm = creado.Adapt<VMCliente>();
+                var vm = _mapper.Map<VMCliente>(creado);
 
                 // solo lo que NO hace Mapster
                 vm.Clave = _encriptService.DesencriptarPassword(creado.Clave);
@@ -304,7 +313,7 @@ namespace SistEcomPan.Web.Controllers
             {
                 var vmCliente = JsonConvert.DeserializeObject<VMCliente>(modelo);
 
-                var cliente = vmCliente.Adapt<Clientes>();
+                var cliente = _mapper.Map<Clientes>(vmCliente);
 
                 string nombreFoto = "";
                 Stream fotoStream = null;

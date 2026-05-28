@@ -9,7 +9,7 @@ using SistEcomPan.Web.Tools.Handler;
 var builder = WebApplication.CreateBuilder(args);
 
 var config = TypeAdapterConfig.GlobalSettings;
-MappinConfig.Register(config);
+config.Scan(typeof(Program).Assembly);
 
 builder.Services.AddSingleton(config);
 builder.Services.AddScoped<IMapper, ServiceMapper>();
