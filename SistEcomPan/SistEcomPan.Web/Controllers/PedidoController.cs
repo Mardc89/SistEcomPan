@@ -1,14 +1,15 @@
 ﻿
-using Microsoft.AspNetCore.Mvc;
 using Datos.Interfaces;
 using Entidades;
-using Negocio.Interfaces;
-using Negocio.Implementacion;
-using SistEcomPan.Web.Models.ViewModels;
-using Newtonsoft.Json;
-using SistEcomPan.Web.Tools.Response;
-using Microsoft.AspNetCore.Mvc.RazorPages;
+using Mapster;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
+using Negocio.Implementacion;
+using Negocio.Interfaces;
+using Newtonsoft.Json;
+using SistEcomPan.Web.Models.ViewModels;
+using SistEcomPan.Web.Tools.Response;
 using System;
 
 namespace SistEcomPan.Web.Controllers
@@ -101,32 +102,58 @@ namespace SistEcomPan.Web.Controllers
             return StatusCode(StatusCodes.Status200OK, vmListaPedidos);
         }
 
-        [HttpGet]
+        //[HttpGet]
+        //public async Task<IActionResult> Lista()
+        //{
+        //    var lista = await _pedidoService.Lista();
+        //    List<VMPedido> vmListaPedidos = new List<VMPedido>();
+
+        //    //var timeZoneId = Request.Headers["X-TimeZone"].ToString();
+
+        //    //var tz = TimeZoneInfo.FindSystemTimeZoneById(string.IsNullOrEmpty(timeZoneId)? "UTC" : timeZoneId);
+        //    TimeZoneInfo userTimeZone = _timeZoneService.GetTimeZone(Request);
+
+        //    foreach (var item in lista)
+        //    {
+        //        vmListaPedidos.Add(new VMPedido
+        //        {
+        //            IdPedido = item.IdPedido,
+        //            IdCliente = item.IdCliente,
+        //            Codigo = item.Codigo,
+        //            MontoTotal = Convert.ToString(item.MontoTotal),
+        //            Estado = item.Estado,
+        //            NombresCompletos = await _clienteService.ObtenerNombreCompleto(item.IdCliente),
+        //            FechaPedido = item.FechaPedido.HasValue?TimeZoneInfo.ConvertTimeFromUtc(item.FechaPedido.Value,userTimeZone):null
+
+        //        }) ;
+        //    }
+        //    return StatusCode(StatusCodes.Status200OK, new { data = vmListaPedidos });
+        //}
+
         public async Task<IActionResult> Lista()
         {
-            var lista = await _pedidoService.Lista();
-            List<VMPedido> vmListaPedidos = new List<VMPedido>();
+            var pedidos = await _pedidoService.Lista();
+            var clientes = await _clienteService.Lista();
+            var userTimeZone = _timeZoneService.GetTimeZone(Request);
 
-            //var timeZoneId = Request.Headers["X-TimeZone"].ToString();
+            var clientesDict = clientes.ToDictionary(x => x.IdCliente);
 
-            //var tz = TimeZoneInfo.FindSystemTimeZoneById(string.IsNullOrEmpty(timeZoneId)? "UTC" : timeZoneId);
-            TimeZoneInfo userTimeZone = _timeZoneService.GetTimeZone(Request);
+            var vm = pedidos.Adapt<List<VMPedido>>();
 
-            foreach (var item in lista)
+            vm.ForEach(p =>
             {
-                vmListaPedidos.Add(new VMPedido
-                {
-                    IdPedido = item.IdPedido,
-                    IdCliente = item.IdCliente,
-                    Codigo = item.Codigo,
-                    MontoTotal = Convert.ToString(item.MontoTotal),
-                    Estado = item.Estado,
-                    NombresCompletos = await _clienteService.ObtenerNombreCompleto(item.IdCliente),
-                    FechaPedido = item.FechaPedido.HasValue?TimeZoneInfo.ConvertTimeFromUtc(item.FechaPedido.Value,userTimeZone):null
+                var c = clientesDict[p.IdCliente];
 
-                }) ;
-            }
-            return StatusCode(StatusCodes.Status200OK, new { data = vmListaPedidos });
+                p.Nombres = c.Nombres;
+                p.Apellidos = c.Apellidos;
+                p.Dni = c.Dni;
+                p.NombresCompletos = $"{c.Apellidos} {c.Nombres}";
+
+                if (p.FechaPedido.HasValue)
+                    p.FechaPedido = TimeZoneInfo.ConvertTimeFromUtc(p.FechaPedido.Value, userTimeZone);
+            });
+
+            return Ok(new { data = vm });
         }
 
         [HttpGet]
