@@ -277,7 +277,7 @@
 
         .btn {
             margin-top: 15px;
-            width: 100%;
+            width: 60%;
             padding: 12px;
             background: var(--brand);
             color: #fff;
@@ -392,11 +392,18 @@
                     </select>
                 </div>
           
-                <div class="field full">
+                <div class="field">
                     <label>Dirección</label>
                     <div class="input-wrap">
                         <i class="fas fa-map-marker-alt"></i>
                         <input type="text" class="input  form-control form-control-user" id="txtDireccion" asp-for="Direccion">
+                    </div>
+                </div>
+                <div class="field">
+                    <label>Correo</label>
+                    <div class="input-wrap">
+                        <i class="fas fa-envelope"></i>
+                        <input type="email" id="txtCorreo" class="input form-control form-control-user" asp-for="Correo">
                     </div>
                 </div>
          
@@ -417,16 +424,10 @@
                         <input type="password" id="txtPassword" class="input form-control form-control-user" asp-for="Clave">
                     </div>
                 </div>
-                <div class="field full">
-                    <label>Correo</label>
-                    <div class="input-wrap">
-                        <i class="fas fa-envelope"></i>
-                        <input type="email" id="txtCorreo" class="input form-control form-control-user" asp-for="Correo">
-                    </div>
-                </div>
+
            
             </div>
-            <button type="submit" id="btnRegistroCliente" class="btn">
+            <button type="submit" id="btnRegistroCliente" class="btn align-self-center">
                 Registrar
             </button>
 
