@@ -107,7 +107,7 @@ function validarFormulario(form) {
             { id: "txtApellidos", mensaje: "Debe Ingresar sus Apellidos", longitudMinima: 9, longitudMaxima: 30, tipo: "texto" },
             { id: "txtDni", mensaje: "Debe Completar el campo Dni", longitudMinima: 8, tipo: "numerico" },
             { id: "txtTelefono", mensaje: "Debe Ingresar su Telefono", longitudMinima: 9, tipo: "numerico" },
-            { id: "cboTipoCliente", mensaje: "Debes Seleccionar un Tipo de Cliente" },
+            { id: "cboTipoCliente", mensaje: "Debes Seleccionar el Tipo de Cliente" },
             { id: "cboDistrito", mensaje: "Debes Seleccionar un Distrito" },
             { id: "txtDireccion", mensaje: "Debe Ingresar su Direccion", longitudMinima: 10, longitudMaxima: 50 },
             { id: "txtNombreUsuario", mensaje: "Debe Ingresar Nombre de Usuario", longitudMinima: 4, longitudMaxima: 50 },
