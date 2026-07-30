@@ -35,23 +35,6 @@ namespace SistEcomPan.Web.Controllers
         }
 
 
-        //[HttpGet]
-        //[AllowAnonymous]
-        //public async Task<IActionResult> ListaDistritos()
-        //{
-        //    var lista = await _distritoService.Lista();
-        //    List<VMDistrito> vmListaDistritos = new List<VMDistrito>();
-        //    foreach (var item in lista)
-        //    {
-        //        vmListaDistritos.Add(new VMDistrito
-        //        {
-        //            IdDistrito = item.IdDistrito,
-        //            NombreDistrito = item.NombreDistrito
-        //        });
-        //    }
-        //    return StatusCode(StatusCodes.Status200OK, vmListaDistritos);
-        //}
-
         [HttpGet]
         [AllowAnonymous]
         public async Task<IActionResult> ListaDistritos()
@@ -79,39 +62,6 @@ namespace SistEcomPan.Web.Controllers
 
             return Ok(new { data = vmLista });
         }
-
-        //[HttpGet]
-        //public async Task<IActionResult> Lista()
-        //{
-        //    var clienteLista = await _clienteService.Lista();
-        //    List<VMCliente> vmClienteLista = new List<VMCliente>();
-        //    //var nombreDistrito = await _distritoService.ObtenerNombre();
-        //    foreach (var item in clienteLista)
-        //    {
-        //        vmClienteLista.Add(new VMCliente
-        //        {
-        //            IdCliente = item.IdCliente,
-        //            TipoCliente = item.TipoCliente,
-        //            Dni = item.Dni,
-        //            Nombres = item.Nombres,
-        //            Apellidos = item.Apellidos,
-        //            NombreCompleto = _clienteService.LimpiarEspacios(item.Apellidos + " " + item.Nombres),
-        //            Correo = item.Correo,
-        //            Direccion = item.Direccion,
-        //            Telefono = item.Telefono,
-        //            IdDistrito = item.IdDistrito,
-        //            NombreUsuario = item.NombreUsuario,
-        //            Clave = _encriptService.DesencriptarPassword(item.Clave),
-        //            Estado = Convert.ToInt32(item.Estado),
-        //            UrlFoto = item.UrlFoto,
-        //            NombreFoto = item.NombreFoto,
-        //            //NombreDistrito = nombreDistrito.Where(x => x.IdDistrito == item.IdDistrito).First().NombreDistrito,
-        //            NombreDistrito = await _distritoService.ConsultarDistrito(item.IdDistrito)
-
-        //        });
-        //    }
-        //    return StatusCode(StatusCodes.Status200OK, new { data = vmClienteLista });
-        //}
 
         [HttpGet]
         public async Task<IActionResult> ObtenerClientes(string searchTerm = "", int page = 1, int itemsPerPage = 4)
