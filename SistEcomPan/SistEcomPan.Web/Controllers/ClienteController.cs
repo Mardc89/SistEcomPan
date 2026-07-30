@@ -133,37 +133,6 @@ namespace SistEcomPan.Web.Controllers
         }
 
 
-        // [HttpGet]
-        // public async Task<IActionResult> ObtenerClientes(string searchTerm = "", int page = 1, int itemsPerPage = 4)
-        //{
-        //     //var clienteLista = await _clienteService.Lista();                       
-        //     var pedidosFiltrados = await _clienteService.ClienteFiltrado(searchTerm);
-
-        //     List<VMCliente> vmClienteLista = new List<VMCliente>();
-        //     //var nombreDistrito = await _distritoService.ObtenerNombre();
-        //     foreach (var item in pedidosFiltrados)
-        //     {
-        //         vmClienteLista.Add(new VMCliente
-        //         {
-        //             IdCliente = item.IdCliente,
-        //             TipoCliente = item.TipoCliente,
-        //             Dni = item.Dni,
-        //             NombreCompleto = _clienteService.LimpiarEspacios(item.Apellidos + " " + item.Nombres),
-        //             Correo = item.Correo,
-        //             Direccion = item.Direccion,
-        //             Telefono = item.Telefono,
-        //             NombreUsuario = item.NombreUsuario,
-        //             //NombreFoto = item.NombreFoto,
-        //             NombreDistrito = await _distritoService.ConsultarDistrito(item.IdDistrito)
-
-        //         });
-        //     }
-
-        //     var pedidosPaginados = vmClienteLista.Skip((page - 1) * itemsPerPage).Take(itemsPerPage).ToList();
-
-        //     return StatusCode(StatusCodes.Status200OK, new { clientes = pedidosPaginados, totalItems = vmClienteLista.Count() });
-        // }
-
 
         [HttpPost]
         public async Task<IActionResult> Crear([FromForm] IFormFile foto, [FromForm] string modelo)
