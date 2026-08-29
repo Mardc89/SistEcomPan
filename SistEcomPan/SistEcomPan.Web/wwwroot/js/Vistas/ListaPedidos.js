@@ -450,14 +450,14 @@ document.getElementById("txtPagoCliente").addEventListener("input", function (ev
 document.getElementById("txtDescuento").addEventListener("input", function (event) {
     debugger;
     let descuentoPago = event.target.value;
-    if (!/^-?\d*\.?\d*$/.test(descuentoPago)) {
-        event.target.value = descuentoPago.slice(0, -1);
+    // if (!/^-?\d*\.?\d*$/.test(descuentoPago)) {
+    //     event.target.value = descuentoPago.slice(0, -1);
 
+    // }
+    if (!/^\d*\.?\d{0,2}$/.test(descuentoPago)) {
+       event.target.value = descuentoPago.slice(0, -1);
+       return;
     }
-    //if (!/^\d*\.?\d{0,2}$/.test(descuentoPago)) {
-    //    event.target.value = descuento.slice(0, -1);
-    //    return;
-    //}
 
     let estadoInput = document.getElementById("txtEstado");
     let idPago = document.getElementById("txtIdPago").value;
